@@ -13,8 +13,6 @@ spring:
     show-sql: true
 
 
-# C?u h�nh CORS
+# Cau lenh CORS
 
-#C?u h�nh JWT
-
-#
+#Cau lenh JWT
