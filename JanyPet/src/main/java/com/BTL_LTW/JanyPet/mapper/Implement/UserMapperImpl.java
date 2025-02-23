@@ -1,13 +1,14 @@
-package com.BTL_LTW.JanyPet.mapper;
+package com.BTL_LTW.JanyPet.mapper.Implement;
 
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
+import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapperImpl implements UserMapper{
+public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserResponse toDTO(User entity) {

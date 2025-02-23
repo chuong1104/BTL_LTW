@@ -4,11 +4,12 @@ import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
-//import com.BTL_LTW.JanyPet.mapper.UserMapper;
-import com.BTL_LTW.JanyPet.mapper.UserMapper;
-import com.BTL_LTW.JanyPet.mapper.UserMapperImpl;
+//import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
+import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
+import com.BTL_LTW.JanyPet.mapper.Implement.UserMapperImpl;
 import com.BTL_LTW.JanyPet.repository.UserRepository;
 import com.BTL_LTW.JanyPet.service.Interface.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
     // Tra ve danh sach tat ca nguoi dung
     @Override
     public List<UserResponse> getUsers(){
-        return userRepository.findAll().stream()
+        return userRepository.findActiveUsers().stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -61,8 +62,10 @@ public class UserServiceImpl implements UserService {
 
 
     // Xoa nguoi dung
-    @Override
-    public void deleteUser(String id){
-        userRepository.deleteById(id);
+    @Transactional
+    public void softDeleteUser(Integer Id){
+        userRepository.softDeleteUser(Id);
     }
+
+
 }

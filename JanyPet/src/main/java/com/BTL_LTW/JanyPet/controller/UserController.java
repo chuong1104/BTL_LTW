@@ -5,16 +5,17 @@ import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
-import com.BTL_LTW.JanyPet.mapper.UserMapperImpl;
+import com.BTL_LTW.JanyPet.mapper.Implement.UserMapperImpl;
 import com.BTL_LTW.JanyPet.service.implement.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController  {
 
     @Autowired
@@ -54,9 +55,9 @@ public class UserController  {
 
     // Xoa nguoi dung
     @DeleteMapping("/{id}")
-    String deleteUser(@PathVariable("id") String id){
-        userServiceImpl.deleteUser(id);
-        return "User đã được xóa";
+    public ResponseEntity<String> softDeleteUser(@PathVariable Integer id) {
+        userServiceImpl.softDeleteUser(id);
+        return ResponseEntity.ok("User has been deactivated!");
     }
 
 

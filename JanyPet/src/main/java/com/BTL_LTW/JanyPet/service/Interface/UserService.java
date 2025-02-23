@@ -15,5 +15,5 @@ public interface UserService {
     // cap nhat thong tin nguoi dung qua id
     UserResponse updateUser(String id, UserUpdateRequest request);
 
-    void deleteUser(String userId);
+    //void deleteUser(String userId);
 }
