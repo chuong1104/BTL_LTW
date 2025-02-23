@@ -1,7 +1,7 @@
 package com.BTL_LTW.JanyPet.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+//import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 
 @MappedSuperclass
-@Data
+//@Data
 public class BaseEntity<T extends Serializable> implements Serializable { //generic class, T la một kieu du lieu tuy chinh, Sizeable giup class co the duoc chuyen thanh byte stream
 
     @Id
@@ -28,4 +28,35 @@ public class BaseEntity<T extends Serializable> implements Serializable { //gene
     @Column(name = "is_active",nullable = false)
     private Boolean isActive = true;
 
+    public T getId() {
+        return id;
+    }
+
+    public void setId(T id) {
+        this.id = id;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 }

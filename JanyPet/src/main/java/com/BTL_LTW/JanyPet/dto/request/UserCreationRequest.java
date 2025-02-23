@@ -3,21 +3,61 @@ package com.BTL_LTW.JanyPet.dto.request;
 
 import com.BTL_LTW.JanyPet.common.Gender;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserCreationRequest {
-    private String name;
+    private String username;
     private String email;
     @Size(min = 6, message = "INVALID_PASSWORD")
     private String password;
     private Gender gender;
     private String address;
     private String phoneNumber;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public @Size(min = 6, message = "INVALID_PASSWORD") String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@Size(min = 6, message = "INVALID_PASSWORD") String password) {
+        this.password = password;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

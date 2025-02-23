@@ -8,15 +8,15 @@ import jakarta.persistence.ManyToOne;
 
 import java.time.Instant;
 
-public class booking extends BaseEntity<Integer>{
+public class Booking extends BaseEntity<Integer>{
 
     @ManyToOne
     @JoinColumn(name = "userId",nullable = false)
-    private user user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "serviceId",nullable = false)
-    private service service;
+    private Service service;
 
     private Instant bookingDate;
 

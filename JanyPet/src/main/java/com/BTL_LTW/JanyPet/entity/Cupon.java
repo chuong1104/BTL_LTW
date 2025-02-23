@@ -6,18 +6,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Data
+
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-public class cupon extends BaseEntity<Integer> {
+
+public class Cupon extends BaseEntity<Integer> {
 
     @Column(unique = true, nullable = false)
     private String code;

@@ -4,29 +4,34 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class orderDetails extends BaseEntity<Integer>{
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+public class OrderDetails extends BaseEntity<Integer>{
 
     @ManyToOne
     @JoinColumn(name="orderId", nullable = false)
-    private orders orders;
+    private Orders orders;
 
     @ManyToOne
     @JoinColumn(name="productId", nullable = false)
-    private product product;
+    private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
 
     private BigDecimal unitPrice;
     private BigDecimal discount = BigDecimal.ZERO;
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
+    }
 }
