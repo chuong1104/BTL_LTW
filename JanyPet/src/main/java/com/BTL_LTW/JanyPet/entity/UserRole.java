@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 
-public class UserRole extends BaseEntity<Integer>{
+public class UserRole extends BaseEntity<String>{
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)

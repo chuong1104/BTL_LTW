@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 
 
 @Entity
-public class CartDetails extends BaseEntity<Integer> {
+public class CartDetails extends BaseEntity<String> {
 
     @ManyToOne
     @JoinColumn(name = "shoppingCartid", nullable = false)

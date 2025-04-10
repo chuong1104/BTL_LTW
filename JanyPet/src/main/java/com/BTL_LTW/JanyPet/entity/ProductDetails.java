@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 
 
 @Entity
-public class ProductDetails extends BaseEntity<Integer>{
+public class ProductDetails extends BaseEntity<String>{
 
   @ManyToOne
   @JoinColumn(name="productId",nullable = false)

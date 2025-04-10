@@ -44,7 +44,7 @@ public class UserController  {
     // Lay ra mot nguoi dung dua tren Id
     @GetMapping("/{id}")
     UserResponse getUser(@PathVariable("id") String id){
-        return userServiceImpl.getUser(id);
+        return userServiceImpl.getUserById(id);
     }
 
     // Cap nhat thong tin

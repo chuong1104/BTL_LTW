@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
-public class Payment extends BaseEntity<Integer> {
+public class Payment extends BaseEntity<String> {
 
     @ManyToOne
     @JoinColumn(name = "orderId",nullable = false)

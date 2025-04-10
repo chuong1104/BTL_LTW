@@ -10,7 +10,10 @@ import java.util.List;
 public interface UserService {
     User createUser(UserCreationRequest request);
     List<UserResponse> getUsers();
-    UserResponse getUser(String id);
+    UserResponse getUserById(String id);
+
+    // Lay ra nguoi dung dua tren id, neu khong se tra ra ngoai le
+    //UserResponse getUser(String id);
 
     // cap nhat thong tin nguoi dung qua id
     UserResponse updateUser(String id, UserUpdateRequest request);

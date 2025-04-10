@@ -1,40 +1,20 @@
-package com.BTL_LTW.JanyPet.entity;
+
+package com.BTL_LTW.JanyPet.dto.request;
 
 import com.BTL_LTW.JanyPet.common.ServiceCategory;
-import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-public class Service extends BaseEntity<String> {
-
-    @Column(nullable = false)
+public class ServiceUpdateRequest {
     private String name;
-
     private String description;
-
-    @Column(nullable = false)
     private BigDecimal price;
-
     private String images;
-
-    private Integer maxPetsPerSlot = 1;
-
-    private Boolean requiresVaccination = false;
-
-    @Enumerated(EnumType.STRING)
+    private Integer maxPetsPerSlot;
+    private Boolean requiresVaccination;
     private ServiceCategory category;
+    private Boolean active;
 
-    private Boolean active = true;
-
-    @ManyToMany(mappedBy = "services")
-    private Set<Booking> bookings = new HashSet<>();
-
-
-
-    // === GETTERS & SETTERS ===
     public String getName() {
         return name;
     }
@@ -97,13 +77,5 @@ public class Service extends BaseEntity<String> {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public Set<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(Set<Booking> bookings) {
-        this.bookings = bookings;
     }
 }

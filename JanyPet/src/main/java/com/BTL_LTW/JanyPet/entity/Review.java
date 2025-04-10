@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 
-public class Review extends BaseEntity<Integer>{
+public class Review extends BaseEntity<String>{
 
     @ManyToOne
     @JoinColumn(name = "userId",nullable = false)

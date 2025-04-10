@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
-public class Product extends BaseEntity<Integer> {
+public class Product extends BaseEntity<String> {
     @Column(nullable = false, length = 255)
     private String name;
 
@@ -22,6 +22,18 @@ public class Product extends BaseEntity<Integer> {
 
     @Column(columnDefinition = "JSON")
     private String image;
+
+    public Product(String name, String description, BigDecimal price, Integer stock, String image) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.image = image;
+    }
+
+    public Product() {
+
+    }
 
     public String getName() {
         return name;

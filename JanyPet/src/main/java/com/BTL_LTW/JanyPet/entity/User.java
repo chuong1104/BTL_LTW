@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity<Integer> {
+public class User extends BaseEntity<String> {
 
     @Column(name= "username" ,nullable = false, length = 100)
     private String username;

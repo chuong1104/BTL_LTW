@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,String> {
     boolean existsByUsername(String name);
     Optional<User> findByUsername(String name);
-
+    Optional<User> findById(String id);
     @Modifying
     @Query("UPDATE User u Set u.isActive = false WHERE u.id = :userId")
     void softDeleteUser(@Param("userId") Integer userId);
@@ -22,5 +22,6 @@ public interface UserRepository extends JpaRepository<User,String> {
     //Chi lay User dang hoat dong
     @Query("SELECT u FROM User u WHERE u.isActive = true")
     List<User> findActiveUsers();
+
 
 }

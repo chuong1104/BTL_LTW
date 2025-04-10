@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 public class BaseEntity<T extends Serializable> implements Serializable { //generic class, T la một kieu du lieu tuy chinh, Sizeable giup class co the duoc chuyen thanh byte stream
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy =GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
     T id; // la thuoc tinh co du lieu tuy chinh (Interger, Long, String, UUID)
 
     @Column(name = "created_at",nullable = false, updatable = false)
@@ -28,8 +28,8 @@ public class BaseEntity<T extends Serializable> implements Serializable { //gene
     @Column(name = "is_active",nullable = false)
     private Boolean isActive = true;
 
-    public T getId() {
-        return id;
+    public String getId() {
+        return (String) id;
     }
 
     public void setId(T id) {

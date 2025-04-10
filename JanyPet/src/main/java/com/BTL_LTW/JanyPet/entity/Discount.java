@@ -13,7 +13,7 @@ import java.time.Instant;
 //@Data
 //@AllArgsConstructor
 //@NoArgsConstructor
-public class Discount extends BaseEntity<Integer> {
+public class Discount extends BaseEntity<String> {
 
     @ManyToOne
     @JoinColumn(name = "productId",nullable = false)

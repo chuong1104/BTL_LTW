@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 //@Data
 //@AllArgsConstructor
 //@NoArgsConstructor
-public class OrderDetails extends BaseEntity<Integer>{
+public class OrderDetails extends BaseEntity<String>{
 
     @ManyToOne
     @JoinColumn(name="orderId", nullable = false)

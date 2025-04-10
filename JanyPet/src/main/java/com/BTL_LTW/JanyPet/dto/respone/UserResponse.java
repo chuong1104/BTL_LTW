@@ -5,7 +5,7 @@ package com.BTL_LTW.JanyPet.dto.respone;
 import java.sql.Timestamp;
 
 public class UserResponse {
-    private Integer id;
+    private String id;
     private String username;
     private String email;
     private String gender;
@@ -15,7 +15,7 @@ public class UserResponse {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public UserResponse(Integer id, String username, String email, String gender, String address, String phoneNumber, Boolean isVerified, Timestamp createdAt, Timestamp updatedAt) {
+    public UserResponse(String id, String username, String email, String gender, String address, String phoneNumber, Boolean isVerified, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -27,6 +27,7 @@ public class UserResponse {
         this.updatedAt = updatedAt;
     }
 
+
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
@@ -35,11 +36,11 @@ public class UserResponse {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

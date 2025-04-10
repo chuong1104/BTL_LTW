@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 
-public class ShoppingCart extends BaseEntity<Long> {
+public class ShoppingCart extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
     private User user;

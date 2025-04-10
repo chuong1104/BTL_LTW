@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-public class Orders extends BaseEntity<Integer>{
+public class Orders extends BaseEntity<String>{
 
     @ManyToOne
     @JoinColumn(name="userId",nullable = false)

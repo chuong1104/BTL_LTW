@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 //@Data
 //@AllArgsConstructor
 //@NoArgsConstructor
-public class Category extends BaseEntity<Integer>{
+public class Category extends BaseEntity<String>{
     @Column(name = "name", unique = true, nullable = false, length = 100)
     private String name;
 

@@ -14,7 +14,7 @@ import java.time.Instant;
 
 @Entity
 
-public class Cupon extends BaseEntity<Integer> {
+public class Cupon extends BaseEntity<String> {
 
     @Column(unique = true, nullable = false)
     private String code;

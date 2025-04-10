@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     // Lay ra nguoi dung dua tren id, neu khong se tra ra ngoai le
     @Override
-    public UserResponse getUser(String id){
+    public UserResponse getUserById(String id){
         return userMapper.toDTO(userRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("user not found")));
     }
