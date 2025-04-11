@@ -17,6 +17,7 @@ public class UserMapperImpl implements UserMapper {
         return new UserResponse(
                 entity.getId(),
                 entity.getUsername(), // Chuyển `username` thành `name`
+                entity.getRole(),
                 entity.getEmail(),
                 entity.getGender() != null ? entity.getGender().name() : null,
                 entity.getAddress(),
@@ -34,6 +35,7 @@ public class UserMapperImpl implements UserMapper {
         User user = new User();
         user.setUsername(creationDTO.getUsername()); // Chuyển `name` thành `username`
         user.setEmail(creationDTO.getEmail());
+        user.setRole(creationDTO.getRole());
         user.setPassword(creationDTO.getPassword());
         user.setGender(creationDTO.getGender());
         user.setAddress(creationDTO.getAddress());

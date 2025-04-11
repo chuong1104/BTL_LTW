@@ -2,6 +2,7 @@ package com.BTL_LTW.JanyPet.entity;
 
 
 import com.BTL_LTW.JanyPet.common.Gender;
+import com.BTL_LTW.JanyPet.common.Role;
 import jakarta.persistence.*;
 
 
@@ -28,15 +29,23 @@ public class User extends BaseEntity<String> {
     @Column(name = "address",columnDefinition = "TEXT")
     private String address;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Column(name="phone_number",nullable = false, unique = true, length = 15)
     private String phoneNumber;
 
     @Column(name = "is_verified",nullable = false)
     private Boolean isVerified = false;
 
-    // Thể hiện mối quan hệ 1 - N: user - userRole
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRole> UserRoles = new ArrayList<>();
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;
@@ -94,11 +103,4 @@ public class User extends BaseEntity<String> {
         isVerified = verified;
     }
 
-    public List<UserRole> getUserRoles() {
-        return UserRoles;
-    }
-
-    public void setUserRoles(List<UserRole> userRoles) {
-        UserRoles = userRoles;
-    }
 }

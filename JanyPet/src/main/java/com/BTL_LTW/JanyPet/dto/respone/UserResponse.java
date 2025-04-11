@@ -2,11 +2,14 @@ package com.BTL_LTW.JanyPet.dto.respone;
 
 
 
+import com.BTL_LTW.JanyPet.common.Role;
+
 import java.sql.Timestamp;
 
 public class UserResponse {
     private String id;
     private String username;
+    private Role role;
     private String email;
     private String gender;
     private String address;
@@ -15,9 +18,10 @@ public class UserResponse {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public UserResponse(String id, String username, String email, String gender, String address, String phoneNumber, Boolean isVerified, Timestamp createdAt, Timestamp updatedAt) {
+    public UserResponse(String id, String username, Role role, String email, String gender, String address, String phoneNumber, Boolean isVerified, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.username = username;
+        this.role = role;
         this.email = email;
         this.gender = gender;
         this.address = address;
@@ -27,6 +31,13 @@ public class UserResponse {
         this.updatedAt = updatedAt;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;

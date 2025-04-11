@@ -28,6 +28,7 @@ public class BookingMapperImpl implements BookingMapper {
         UserResponse customerDto = customer == null ? null : new UserResponse(
                 customer.getId(),
                 customer.getUsername(),
+                customer.getRole(),
                 customer.getEmail(),
                 customer.getGender() != null ? customer.getGender().name() : null,
                 customer.getAddress(),
@@ -64,7 +65,7 @@ public class BookingMapperImpl implements BookingMapper {
                         s.getImages(),
                        s.getMaxPetsPerSlot(),
                         s.getRequiresVaccination(),
-                 s.getCategory(),
+                        s.getCategory(),
                         s.getActive(),
                         s.getCreatedAt(),
                         s.getUpdatedAt()
@@ -75,6 +76,7 @@ public class BookingMapperImpl implements BookingMapper {
         UserResponse staffDto = staff == null ? null : new UserResponse(
                 staff.getId(),
                 staff.getUsername(),
+                staff.getRole() != null ? staff.getRole() : null,
                 staff.getEmail(),
                 staff.getGender() != null ? staff.getGender().name() : null,
                 staff.getAddress(),
