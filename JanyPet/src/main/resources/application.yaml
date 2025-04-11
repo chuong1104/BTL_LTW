@@ -16,6 +16,10 @@ spring:
         format_sql: true
 
 
-# Cau lenh CORS
+  # Cau lenh CORS
 
-#Cau lenh JWT
+  #Cau lenh JWT
+jwt:
+  secret: uHqYj4Pk3mZqKmJ9Y2Ey2K8MdGnM9N9uRPv4RYjUDe4GHZ3xJv1pUlWHez2WUkcFZyrK52xVbbFwCWXEtZxpWg==
+  expiration: 86400000  # Token hết hạn sau 24 giờ (ms)
+     # Token hết hạn sau 24 giờ (ms)

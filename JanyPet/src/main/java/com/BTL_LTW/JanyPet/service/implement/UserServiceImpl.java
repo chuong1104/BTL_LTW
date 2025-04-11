@@ -1,5 +1,6 @@
 package com.BTL_LTW.JanyPet.service.implement;
 
+import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
@@ -11,6 +12,8 @@ import com.BTL_LTW.JanyPet.repository.UserRepository;
 import com.BTL_LTW.JanyPet.service.Interface.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +26,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapperImpl) {
+    public UserServiceImpl(UserRepository userRepository, UserMapperImpl userMapperImpl, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapperImpl;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -67,5 +72,23 @@ public class UserServiceImpl implements UserService {
         userRepository.softDeleteUser(Id);
     }
 
-
+    @Override
+    public User registerUser(String userName,
+                             String email,
+                             String phoneNumber,
+                             String password,
+                             Role role) {
+        User u = new User();
+        u.setUsername(userName);
+        u.setEmail(email);
+        u.setPhoneNumber(phoneNumber);
+        u.setPassword(passwordEncoder.encode(password));
+        u.setRole(role);
+        return userRepository.save(u);
+    }
+    @Override
+    public User findByPhoneNumber(String phoneNumber) {
+        return (User) userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }

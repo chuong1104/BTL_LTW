@@ -1,5 +1,6 @@
 package com.BTL_LTW.JanyPet.service.Interface;
 
+import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
@@ -12,11 +13,8 @@ public interface UserService {
     List<UserResponse> getUsers();
     UserResponse getUserById(String id);
 
-    // Lay ra nguoi dung dua tren id, neu khong se tra ra ngoai le
-    //UserResponse getUser(String id);
-
     // cap nhat thong tin nguoi dung qua id
     UserResponse updateUser(String id, UserUpdateRequest request);
-
-    //void deleteUser(String userId);
+    User registerUser(String userName, String email, String phoneNumber, String password, Role role);
+    User findByPhoneNumber(String phoneNumber);
 }
