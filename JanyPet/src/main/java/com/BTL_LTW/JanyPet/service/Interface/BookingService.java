@@ -2,8 +2,7 @@ package com.BTL_LTW.JanyPet.service;
 
 import com.BTL_LTW.JanyPet.dto.request.BookingCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.BookingUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.BookingResponse;
-import org.springframework.transaction.annotation.Transactional;
+import com.BTL_LTW.JanyPet.dto.response.BookingResponse;
 
 import java.util.List;
 

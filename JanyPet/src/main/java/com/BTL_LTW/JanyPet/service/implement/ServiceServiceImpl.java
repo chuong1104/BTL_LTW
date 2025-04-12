@@ -2,7 +2,7 @@ package com.BTL_LTW.JanyPet.service.implement;
 
 import com.BTL_LTW.JanyPet.dto.request.ServiceCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.ServiceUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.ServiceResponse;
+import com.BTL_LTW.JanyPet.dto.response.ServiceResponse;
 import com.BTL_LTW.JanyPet.entity.Service;
 import com.BTL_LTW.JanyPet.mapper.Interface.ServiceMapper;
 import com.BTL_LTW.JanyPet.repository.ServiceRepository;

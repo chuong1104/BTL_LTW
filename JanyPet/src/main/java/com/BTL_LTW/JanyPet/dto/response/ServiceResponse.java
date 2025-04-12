@@ -1,9 +1,8 @@
-package com.BTL_LTW.JanyPet.dto.respone;
+package com.BTL_LTW.JanyPet.dto.response;
 
 import com.BTL_LTW.JanyPet.common.ServiceCategory;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 public class ServiceResponse {

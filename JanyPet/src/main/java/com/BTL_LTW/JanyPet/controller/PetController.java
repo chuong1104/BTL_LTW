@@ -2,7 +2,7 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.PetCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.PetUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.PetResponse;
+import com.BTL_LTW.JanyPet.dto.response.PetResponse;
 import com.BTL_LTW.JanyPet.service.Interface.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

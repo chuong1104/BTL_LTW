@@ -1,53 +1,49 @@
 package com.BTL_LTW.JanyPet.entity;
 
-import com.BTL_LTW.JanyPet.common.PaymentMethod;
+import com.BTL_LTW.JanyPet.common.PaymentStatus;
+import com.BTL_LTW.JanyPet.entity.BaseEntity;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "payments")
+
 public class Payment extends BaseEntity<String> {
 
-    @ManyToOne
-    @JoinColumn(name = "orderId",nullable = false)
-    private Orders orders;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod method;
 
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+    @Column(name = "amount")
     private BigDecimal amount;
-    private Instant paymentDate;
 
-    public Orders getOrders() {
-        return orders;
-    }
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 
-    public void setOrders(Orders orders) {
-        this.orders = orders;
-    }
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
-    public PaymentMethod getMethod() {
-        return method;
-    }
+    @Column(name = "response_code")
+    private String responseCode;
 
-    public void setMethod(PaymentMethod method) {
-        this.method = method;
-    }
+    @Column(name = "bank_code")
+    private String bankCode;
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+    @Column(name = "payment_info")
+    private String paymentInfo;
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
 
-    public Instant getPaymentDate() {
-        return paymentDate;
-    }
 
-    public void setPaymentDate(Instant paymentDate) {
-        this.paymentDate = paymentDate;
-    }
+
+
 }

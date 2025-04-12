@@ -1,8 +1,6 @@
 package com.BTL_LTW.JanyPet.entity;
 
 import com.BTL_LTW.JanyPet.common.BookingStatus;
-import com.BTL_LTW.JanyPet.dto.respone.PetResponse;
-import com.BTL_LTW.JanyPet.dto.respone.ServiceResponse;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

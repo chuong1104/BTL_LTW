@@ -2,7 +2,7 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.BookingCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.BookingUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.BookingResponse;
+import com.BTL_LTW.JanyPet.dto.response.BookingResponse;
 import com.BTL_LTW.JanyPet.service.BookingService;
 import com.BTL_LTW.JanyPet.service.implement.BookingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

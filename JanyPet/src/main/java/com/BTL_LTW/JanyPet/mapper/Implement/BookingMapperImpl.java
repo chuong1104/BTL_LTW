@@ -2,13 +2,12 @@ package com.BTL_LTW.JanyPet.mapper.Implement;
 
 import com.BTL_LTW.JanyPet.dto.request.BookingCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.BookingUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.BookingResponse;
-import com.BTL_LTW.JanyPet.dto.respone.PetResponse;
-import com.BTL_LTW.JanyPet.dto.respone.ServiceResponse;
-import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
+import com.BTL_LTW.JanyPet.dto.response.BookingResponse;
+import com.BTL_LTW.JanyPet.dto.response.PetResponse;
+import com.BTL_LTW.JanyPet.dto.response.ServiceResponse;
+import com.BTL_LTW.JanyPet.dto.response.UserResponse;
 import com.BTL_LTW.JanyPet.entity.Booking;
 import com.BTL_LTW.JanyPet.entity.Pet;
-import com.BTL_LTW.JanyPet.entity.Service;
 import com.BTL_LTW.JanyPet.entity.User;
 import com.BTL_LTW.JanyPet.mapper.Interface.BookingMapper;
 import org.springframework.stereotype.Component;

@@ -3,7 +3,7 @@ package com.BTL_LTW.JanyPet.service.Interface;
 import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
+import com.BTL_LTW.JanyPet.dto.response.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
 
 import java.util.List;

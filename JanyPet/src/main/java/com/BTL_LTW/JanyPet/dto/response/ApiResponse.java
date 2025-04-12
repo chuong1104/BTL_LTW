@@ -1,4 +1,4 @@
-package com.BTL_LTW.JanyPet.dto.respone;
+package com.BTL_LTW.JanyPet.dto.response;
 
 public class ApiResponse<T> {
     private boolean success;

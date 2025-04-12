@@ -3,7 +3,7 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
-import com.BTL_LTW.JanyPet.dto.respone.UserResponse;
+import com.BTL_LTW.JanyPet.dto.response.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
 import com.BTL_LTW.JanyPet.mapper.Implement.UserMapperImpl;
 import com.BTL_LTW.JanyPet.service.implement.UserServiceImpl;

@@ -1,9 +1,7 @@
-// src/main/java/com/BTL_LTW/JanyPet/dto/respone/PetResponse.java
-package com.BTL_LTW.JanyPet.dto.respone;
+package com.BTL_LTW.JanyPet.dto.response;
 
 import com.BTL_LTW.JanyPet.entity.User;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
