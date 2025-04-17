@@ -1,6 +1,5 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
-
 import com.BTL_LTW.JanyPet.common.Gender;
 import com.BTL_LTW.JanyPet.common.Role;
 import jakarta.validation.constraints.Size;
@@ -14,14 +13,6 @@ public class UserCreationRequest {
     private String address;
     private String phoneNumber;
     private Role role;
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public String getUsername() {
         return username;
@@ -69,5 +60,13 @@ public class UserCreationRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

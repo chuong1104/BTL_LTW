@@ -5,11 +5,20 @@ public class UserUpdateRequest {
     private String username;
     private String address;
     private String email;
+    private String password;
     private String phoneNumber;
     private Boolean isActive;
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setEmail(String email) {

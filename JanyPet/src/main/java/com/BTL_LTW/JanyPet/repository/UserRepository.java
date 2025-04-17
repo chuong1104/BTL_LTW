@@ -4,25 +4,31 @@ import com.BTL_LTW.JanyPet.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,String> {
-    boolean existsByUsername(String name);
-    Optional<User> findByUsername(String name);
-    Optional<User> findById(String id);
-    @Modifying
-    @Query("UPDATE User u Set u.isActive = false WHERE u.id = :userId")
-    void softDeleteUser(@Param("userId") Integer userId);
+public interface UserRepository extends JpaRepository<User, String> {
+    Optional<User> findByUsername(String username);
 
-    //Chi lay User dang hoat dong
-    @Query("SELECT u FROM User u WHERE u.isActive = true")
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByPhoneNumber(String phoneNumber);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
+    Boolean existsByPhoneNumber(String phoneNumber);
+
+    @Query("SELECT u FROM User u WHERE u.isDeleted = false")
     List<User> findActiveUsers();
 
-    boolean existsByPhoneNumber(String phoneNumber);
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    @Modifying
+    @Query("UPDATE User u SET u.isDeleted = true WHERE u.id = :id")
+    void softDeleteUser(String id);
+
+    Optional<User> findByRefreshToken(String refreshToken);
 }

@@ -1,34 +1,50 @@
 package com.BTL_LTW.JanyPet.dto.response;
 
-
-
+import com.BTL_LTW.JanyPet.common.Gender;
 import com.BTL_LTW.JanyPet.common.Role;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class UserResponse {
-    private String id;
     private String username;
     private Role role;
     private String email;
-    private String gender;
+    private Gender gender;
     private String address;
     private String phoneNumber;
-    private Boolean isVerified;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private boolean verified;
+    private Timestamp createdAt; // Ngày tạo
+    private Timestamp updatedAt; // Ngày cập nhật
 
-    public UserResponse(String id, String username, Role role, String email, String gender, String address, String phoneNumber, Boolean isVerified, Timestamp createdAt, Timestamp updatedAt) {
-        this.id = id;
+    // Constructor đã cập nhật, thêm cả createdAt và updatedAt nếu có
+    public UserResponse(String username, Role role, String email, Gender gender, String address,
+                        String phoneNumber, boolean verified, Timestamp createdAt, Timestamp updatedAt) {
         this.username = username;
         this.role = role;
         this.email = email;
         this.gender = gender;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.isVerified = isVerified;
+        this.verified = verified;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    // Nếu không có thông tin createdAt/updatedAt trong constructor, vẫn có setter:
+    public UserResponse(String username, Role role, String email, Gender gender, String address,
+                        String phoneNumber, boolean verified) {
+        this(username, role, email, gender, address, phoneNumber, verified, null, null);
+    }
+
+    // Getters and setters
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Role getRole() {
@@ -39,30 +55,6 @@ public class UserResponse {
         this.role = role;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -71,11 +63,11 @@ public class UserResponse {
         this.email = email;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -95,12 +87,27 @@ public class UserResponse {
         this.phoneNumber = phoneNumber;
     }
 
-    public Boolean getVerified() {
-        return isVerified;
+    public boolean isVerified() {
+        return verified;
     }
 
-    public void setVerified(Boolean verified) {
-        isVerified = verified;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

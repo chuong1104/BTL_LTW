@@ -1,15 +1,19 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class LoginRequest {
-    private String phoneNumber;
+    // Cho phép map từ key "user" hoặc "username" sang biến này
+    @JsonAlias({"user", "username"})
+    private String username;
     private String password;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

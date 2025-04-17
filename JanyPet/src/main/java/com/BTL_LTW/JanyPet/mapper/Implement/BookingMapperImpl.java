@@ -25,16 +25,13 @@ public class BookingMapperImpl implements BookingMapper {
         // Convert User to UserResponse (Customer)
         User customer = entity.getUser();
         UserResponse customerDto = customer == null ? null : new UserResponse(
-                customer.getId(),
                 customer.getUsername(),
                 customer.getRole(),
                 customer.getEmail(),
-                customer.getGender() != null ? customer.getGender().name() : null,
+                customer.getGender(),
                 customer.getAddress(),
                 customer.getPhoneNumber(),
-                customer.getVerified(),
-                customer.getCreatedAt(),
-                customer.getUpdatedAt()
+                customer.getVerified()
         );
 
         // Convert Pet to PetResponse
@@ -73,16 +70,13 @@ public class BookingMapperImpl implements BookingMapper {
         // Convert Assigned Staff
         User staff = entity.getAssignedStaff();
         UserResponse staffDto = staff == null ? null : new UserResponse(
-                staff.getId(),
                 staff.getUsername(),
                 staff.getRole() != null ? staff.getRole() : null,
                 staff.getEmail(),
-                staff.getGender() != null ? staff.getGender().name() : null,
+                staff.getGender(),
                 staff.getAddress(),
                 staff.getPhoneNumber(),
-                staff.getVerified(),
-                staff.getCreatedAt(),
-                staff.getUpdatedAt()
+                staff.getVerified()
         );
 
         return new BookingResponse(

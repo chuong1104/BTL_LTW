@@ -1,14 +1,19 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
 public class RegisterRequest {
-    private String userName;
+    private String username;
     private String email;
     private String password;
     private String confirmPassword;
     private String phoneNumber;
 
-    public String getUserName() { return userName; }
-    public void setUserName(String userName) { this.userName = userName; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

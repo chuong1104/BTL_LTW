@@ -5,24 +5,23 @@ import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
-//import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
-import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
 import com.BTL_LTW.JanyPet.mapper.Implement.UserMapperImpl;
+import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
 import com.BTL_LTW.JanyPet.repository.UserRepository;
 import com.BTL_LTW.JanyPet.service.Interface.UserService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-
 public class UserServiceImpl implements UserService {
-
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -36,59 +35,146 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserCreationRequest request){
-        User user = userMapper.toEntity(request);
+    public User createUser(UserCreationRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email đã được sử dụng");
+        }
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RuntimeException("Số điện thoại đã được sử dụng");
+        }
+
+        User user = userMapper.toEntity(request); // đã encode password trong mapper
         return userRepository.save(user);
     }
 
-    // Tra ve danh sach tat ca nguoi dung
     @Override
-    public List<UserResponse> getUsers(){
+    public List<UserResponse> getUsers() {
         return userRepository.findActiveUsers().stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    // Lay ra nguoi dung dua tren id, neu khong se tra ra ngoai le
     @Override
-    public UserResponse getUserById(String id){
+    public UserResponse getUserById(String id) {
         return userMapper.toDTO(userRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("user not found")));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng")));
     }
 
-    // cap nhat thong tin nguoi dung qua id
     @Override
-    public UserResponse updateUser(String id, UserUpdateRequest request){
-        // Lay ra nguoi dung thong qua id tu phuong thuc getUser() ben tren
-        User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("user not found"));
-        userMapper.updateEntity(user,request);
+    public UserResponse getCurrentUserProfile() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new UsernameNotFoundException("No authenticated user found");
+        }
+
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof User) {
+            // Principal is now directly a User entity
+            User user = (User) principal;
+            return userMapper.toDTO(user);
+        } else if (principal instanceof String) {
+            // This case handles when the principal is a username string
+            String username = (String) principal;
+            User user = userRepository.findByEmail(username)
+                    .orElseGet(() -> userRepository.findByPhoneNumber(username)
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username)));
+            return userMapper.toDTO(user);
+        }
+
+        throw new UsernameNotFoundException("Unexpected principal type: " + principal.getClass());
+    }
+
+    @Override
+    public UserResponse updateUser(String id, UserUpdateRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())
+                && userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email đã được sử dụng");
+        }
+
+        if (request.getPhoneNumber() != null && !request.getPhoneNumber().equals(user.getPhoneNumber())
+                && userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RuntimeException("Số điện thoại đã được sử dụng");
+        }
+
+        userMapper.updateEntity(user, request);
+
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
         return userMapper.toDTO(userRepository.save(user));
     }
 
-
-    // Xoa nguoi dung
     @Transactional
-    public void softDeleteUser(Integer Id){
-        userRepository.softDeleteUser(Id);
+    public void softDeleteUser(String id) {
+        userRepository.softDeleteUser(id);
     }
 
     @Override
-    public User registerUser(String userName,
-                             String email,
-                             String phoneNumber,
-                             String password,
-                             Role role) {
+    public User registerUser(String userName, String email, String phoneNumber, String password, Role role) {
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email đã được sử dụng");
+        }
+
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new RuntimeException("Số điện thoại đã được sử dụng");
+        }
+
         User u = new User();
         u.setUsername(userName);
         u.setEmail(email);
         u.setPhoneNumber(phoneNumber);
         u.setPassword(passwordEncoder.encode(password));
         u.setRole(role);
+        u.setVerified(true);
+
         return userRepository.save(u);
     }
+
     @Override
     public User findByPhoneNumber(String phoneNumber) {
-        return (User) userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng"));
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public void saveRefreshToken(String userId, String refreshToken) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        user.setRefreshToken(refreshToken);
+        user.setTokenExpiry(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void clearRefreshToken(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        user.setRefreshToken(null);
+        user.setTokenExpiry(null);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void toggleLockUser(String id, boolean locked) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        user.setLocked(locked);
+        userRepository.save(user);
     }
 }

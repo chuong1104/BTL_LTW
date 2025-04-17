@@ -10,11 +10,28 @@ import java.util.List;
 
 public interface UserService {
     User createUser(UserCreationRequest request);
+
     List<UserResponse> getUsers();
+
     UserResponse getUserById(String id);
 
-    // cap nhat thong tin nguoi dung qua id
+    UserResponse getCurrentUserProfile();
+
     UserResponse updateUser(String id, UserUpdateRequest request);
+
+    void softDeleteUser(String Id);
+
     User registerUser(String userName, String email, String phoneNumber, String password, Role role);
+
     User findByPhoneNumber(String phoneNumber);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    void saveRefreshToken(String userId, String refreshToken);
+
+    void clearRefreshToken(String userId);
+
+    void toggleLockUser(String id, boolean locked);
 }
