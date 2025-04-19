@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JanyPet - Thanh Toán</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: #e74c3c;
+            font-size: 24px;
+        }
+        
+        .payment-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .payment-header {
+            background-color: #0a5eb7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .payment-header h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .payment-header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .payment-content {
+            padding: 30px;
+        }
+        
+        .order-summary {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .order-summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .order-item {
+            margin-bottom: 10px;
+        }
+        
+        .order-item span {
+            display: block;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .order-item strong {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .total-amount {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+            text-align: right;
+            font-size: 20px;
+        }
+        
+        .payment-method {
+            margin-bottom: 30px;
+        }
+        
+        .payment-method h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .vnpay-option {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .vnpay-option.selected {
+            border-color: #0a5eb7;
+            background-color: #e6f4ff;
+        }
+        
+        .vnpay-option img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        
+        .vnpay-info {
+            flex: 1;
+        }
+        
+        .vnpay-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .vnpay-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .payment-actions {
+            text-align: center;
+            padding-top: 20px;
+        }
+        
+        .payment-btn {
+            background-color: #0a5eb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .payment-btn:hover {
+            background-color: #084c96;
+        }
+        
+        .payment-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .cancel-btn {
+            background-color: transparent;
+            color: #666;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        
+        .cancel-btn:hover {
+            color: #e74c3c;
+        }
+        
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0a5eb7;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .bank-selection {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .bank-selection h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .bank-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .bank-option {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bank-option:hover {
+            border-color: #0a5eb7;
+            background-color: #f0f8ff;
+        }
+        
+        .bank-option.selected {
+            border-color: #0a5eb7;
+            background-color: #e6f4ff;
+        }
+        
+        .bank-option img {
+            height: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .bank-option span {
+            display: block;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .bank-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="/api/placeholder/50/50" alt="JanyPet Logo">
+                <h1>JanyPet</h1>
+            </div>
+            <div class="user-info">
+                <span id="currentTime"></span>
+            </div>
+        </div>
+        
+        <div class="payment-container">
+            <div class="payment-header">
+                <h2>Thanh Toán Đơn Hàng</h2>
+                <p>Vui lòng kiểm tra thông tin và chọn phương thức thanh toán</p>
+            </div>
+            
+            <div class="payment-content">
+                <div class="order-summary">
+                    <h3>Thông Tin Đơn Hàng</h3>
+                    <div class="order-details">
+                        <div class="order-item">
+                            <span>Mã đơn hàng</span>
+                            <strong id="order-id">ORD-12345</strong>
+                        </div>
+                        <div class="order-item">
+                            <span>Ngày đặt hàng</span>
+                            <strong id="order-date">12/04/2025</strong>
+                        </div>
+                        <div class="order-item">
+                            <span>Trạng thái</span>
+                            <strong id="order-status">Chờ thanh toán</strong>
+                        </div>
+                        <div class="order-item">
+                            <span>Phương thức vận chuyển</span>
+                            <strong id="shipping-method">Giao hàng tận nơi</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="total-amount">
+                        Tổng thanh toán: <strong id="total-amount">1,250,000 VNĐ</strong>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <h3>Phương Thức Thanh Toán</h3>
+                    <div class="vnpay-option selected" id="vnpay-option">
+                        <img src="/api/placeholder/100/40" alt="VNPAY Logo">
+                        <div class="vnpay-info">
+                            <h4>Thanh toán qua VNPAY</h4>
+                            <p>Thanh toán an toàn với nhiều phương thức khác nhau</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bank-selection" id="bank-selection">
+                        <h4>Chọn Ngân Hàng</h4>
+                        <div class="bank-options">
+                            <div class="bank-option" data-bank="VNPAYQR">
+                                <img src="/api/placeholder/60/40" alt="VNPAY QR">
+                                <span>VNPAY QR</span>
+                            </div>
+                            <div class="bank-option" data-bank="VIETCOMBANK">
+                                <img src="/api/placeholder/60/40" alt="Vietcombank">
+                                <span>Vietcombank</span>
+                            </div>
+                            <div class="bank-option" data-bank="BIDV">
+                                <img src="/api/placeholder/60/40" alt="BIDV">
+                                <span>BIDV</span>
+                            </div>
+                            <div class="bank-option" data-bank="AGRIBANK">
+                                <img src="/api/placeholder/60/40" alt="Agribank">
+                                <span>Agribank</span>
+                            </div>
+                            <div class="bank-option" data-bank="TECHCOMBANK">
+                                <img src="/api/placeholder/60/40" alt="Techcombank">
+                                <span>Techcombank</span>
+                            </div>
+                            <div class="bank-option" data-bank="MB">
+                                <img src="/api/placeholder/60/40" alt="MB Bank">
+                                <span>MB Bank</span>
+                            </div>
+                            <div class="bank-option" data-bank="ACB">
+                                <img src="/api/placeholder/60/40" alt="ACB">
+                                <span>ACB</span>
+                            </div>
+                            <div class="bank-option" data-bank="TPB">
+                                <img src="/api/placeholder/60/40" alt="TPBank">
+                                <span>TPBank</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-actions">
+                    <button class="payment-btn" id="payment-btn">Thanh Toán Ngay</button>
+                    <button class="cancel-btn" id="cancel-btn">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Đang xử lý thanh toán...</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display current date and time
+            const currentTimeElement = document.getElementById('currentTime');
+            const updateTime = () => {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                currentTimeElement.textContent = now.toLocaleDateString('vi-VN', options);
+            };
+            updateTime();
+            setInterval(updateTime, 60000);
+            
+            // Get order information from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId') || 'ORD-12345';
+            const amount = urlParams.get('amount') || '1,250,000';
+            
+            // Update order information
+            document.getElementById('order-id').textContent = orderId;
+            document.getElementById('total-amount').textContent = `${amount} VNĐ`;
+            
+            // Set today's date
+            const today = new Date();
+            document.getElementById('order-date').textContent = today.toLocaleDateString('vi-VN');
+            
+            // Show bank selection when VNPAY option is clicked
+            const vnpayOption = document.getElementById('vnpay-option');
+            const bankSelection = document.getElementById('bank-selection');
+            
+            vnpayOption.addEventListener('click', function() {
+                bankSelection.style.display = 'block';
+            });
+            
+            // Bank selection
+            const bankOptions = document.querySelectorAll('.bank-option');
+            let selectedBank = null;
+            
+            bankOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from all options
+                    bankOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selection to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store selected bank
+                    selectedBank = this.getAttribute('data-bank');
+                });
+            });
+            
+            // Handle payment process
+            const paymentBtn = document.getElementById('payment-btn');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const cancelBtn = document.getElementById('cancel-btn');
+            
+            paymentBtn.addEventListener('click', function() {
+                // Check if bank is selected
+                if (!selectedBank) {
+                    alert('Vui lòng chọn ngân hàng để thanh toán');
+                    return;
+                }
+                
+                // Show loading overlay
+                loadingOverlay.style.display = 'flex';
+                
+                // Create payment request
+                const paymentRequest = {
+                    orderId: orderId.replace('ORD-', ''),
+                    returnUrl: window.location.origin + '/payment-result'
+                };
+                
+                // Send payment request to API
+                fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentRequest)
+                })
+                .then(response => response.text())
+                .then(paymentUrl => {
+                    // Redirect to VNPAY payment page
+                    window.location.href = paymentUrl + '&vnp_BankCode=' + selectedBank;
+                })
+                .catch(error => {
+                    console.error('Error creating payment:', error);
+                    alert('Có lỗi xảy ra khi tạo yêu cầu thanh toán. Vui lòng thử lại sau.');
+                    loadingOverlay.style.display = 'none';
+                });
+            });
+            
+            // Handle cancel button
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn hủy thanh toán?')) {
+                    window.location.href = '/cart';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

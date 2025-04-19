@@ -1,66 +1,116 @@
 package com.BTL_LTW.JanyPet.mapper.Implement;
 
+
 import com.BTL_LTW.JanyPet.dto.request.PetCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.PetUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.PetResponse;
 import com.BTL_LTW.JanyPet.entity.Pet;
 import com.BTL_LTW.JanyPet.mapper.Interface.PetMapper;
+import com.BTL_LTW.JanyPet.mapper.Interface.UserMapper;
+import com.BTL_LTW.JanyPet.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class PetMapperImpl implements PetMapper {
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public PetResponse toDTO(Pet entity) {
-        if (entity == null) return null;
+        if (entity == null) {
+            return null;
+        }
 
-        return new PetResponse(
-                entity.getId(),
-                entity.getName(),
-                entity.getSpecies(),
-                entity.getBreed(),
-                entity.getBirthDate(),
-                entity.getGender(),
-                entity.getWeight(),
-                entity.getVaccinated(),
-                entity.getHealthNotes(),
-                entity.getOwner(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
-        );
+        PetResponse dto = new PetResponse();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setSpecies(entity.getSpecies());
+        dto.setBreed(entity.getBreed());
+        dto.setWeight(entity.getWeight());
+        dto.setGender(entity.getGender());
+
+
+        dto.setCreatedAt(entity.getCreatedAt());
+        dto.setUpdatedAt(entity.getUpdatedAt());
+
+        return dto;
+    }
+
+    @Override
+    public List<PetResponse> toDTOList(List<Pet> entities) {
+        if (entities == null) {
+            return new ArrayList<>();
+        }
+
+        return entities.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Pet toEntity(PetCreationRequest creationDTO) {
-        if (creationDTO == null) return null;
+        if (creationDTO == null) {
+            return null;
+        }
 
         Pet pet = new Pet();
         pet.setName(creationDTO.getName());
         pet.setSpecies(creationDTO.getSpecies());
         pet.setBreed(creationDTO.getBreed());
-        pet.setBirthDate(creationDTO.getBirthDate());
+    ;   pet.setBirthDate(creationDTO.getBirthDate());
         pet.setGender(creationDTO.getGender());
         pet.setWeight(creationDTO.getWeight());
         pet.setVaccinated(creationDTO.getVaccinated());
         pet.setHealthNotes(creationDTO.getHealthNotes());
+        if (creationDTO.getOwnerId() != null) {
+            userRepository.findById(creationDTO.getOwnerId())
+                    .ifPresent(pet::setOwner);
+        }
 
-        // Quan hệ với owner sẽ được set ở tầng service
         return pet;
     }
 
     @Override
     public void updateEntity(Pet entity, PetUpdateRequest updateDTO) {
-        if (entity == null || updateDTO == null) return;
+        if (entity == null || updateDTO == null) {
+            return;
+        }
 
-        if (updateDTO.getName() != null) entity.setName(updateDTO.getName());
-        if (updateDTO.getSpecies() != null) entity.setSpecies(updateDTO.getSpecies());
-        if (updateDTO.getBreed() != null) entity.setBreed(updateDTO.getBreed());
-        if (updateDTO.getBirthDate() != null) entity.setBirthDate(updateDTO.getBirthDate());
-        if (updateDTO.getGender() != null) entity.setGender(updateDTO.getGender());
-        if (updateDTO.getWeight() != null) entity.setWeight(updateDTO.getWeight());
-        if (updateDTO.getVaccinated() != null) entity.setVaccinated(updateDTO.getVaccinated());
-        if (updateDTO.getHealthNotes() != null) entity.setHealthNotes(updateDTO.getHealthNotes());
+        // Only update fields that are not null in the DTO
+        if (updateDTO.getName() != null) {
+            entity.setName(updateDTO.getName());
+        }
 
-        // Owner update cũng nên handle ở tầng service nếu có
+        if (updateDTO.getSpecies() != null) {
+            entity.setSpecies(updateDTO.getSpecies());
+        }
+
+        if (updateDTO.getBreed() != null) {
+            entity.setBreed(updateDTO.getBreed());
+        }
+        entity.setBirthDate(updateDTO.getBirthDate());
+        entity.setGender(updateDTO.getGender());
+
+
+        if (updateDTO.getWeight() != null) {
+            entity.setWeight(updateDTO.getWeight());
+        }
+        entity.setVaccinated(updateDTO.getVaccinated());
+        entity.setHealthNotes(updateDTO.getHealthNotes());
+
+
+        if (updateDTO.getOwnerId() != null) {
+            userRepository.findById(updateDTO.getOwnerId())
+                    .ifPresent(entity::setOwner);
+        }
     }
 }

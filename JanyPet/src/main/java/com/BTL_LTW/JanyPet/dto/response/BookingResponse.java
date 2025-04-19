@@ -5,64 +5,39 @@ import com.BTL_LTW.JanyPet.common.BookingStatus;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
-public class BookingResponse  {
-
+public class BookingResponse {
     private String id;
-
+    private UserResponse user;
     private PetResponse pet;
-
-    private UserResponse customer;
-
-    private List<ServiceResponse> services;
-
+    private List<ServiceResponse> services; // Changed to List<ServiceResponseDTO>
     private LocalDate bookingDate;
-
     private LocalTime startTime;
-
     private LocalTime endTime;
-
     private BookingStatus status;
-
     private String notes;
-
-    private UserResponse assignedStaff;
-
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public BookingResponse(String id, PetResponse pet, UserResponse customer, List<ServiceResponse> services, LocalDate bookingDate, LocalTime startTime, LocalTime endTime, BookingStatus status, String notes, UserResponse assignedStaff, Timestamp createdAt, Timestamp updatedAt) {
+    public BookingResponse(String id, UserResponse user, PetResponse pet, List<ServiceResponse> services, LocalDate bookingDate, LocalTime startTime, LocalTime endTime, BookingStatus status, String notes, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
+        this.user = user;
         this.pet = pet;
-        this.customer = customer;
         this.services = services;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
         this.notes = notes;
-        this.assignedStaff = assignedStaff;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
+    public BookingResponse() {
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
     }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    // --- getters & setters ---
 
     public String getId() {
         return id;
@@ -72,20 +47,20 @@ public class BookingResponse  {
         this.id = id;
     }
 
+    public UserResponse getUser() {
+        return user;
+    }
+
+    public void setUser(UserResponse user) {
+        this.user = user;
+    }
+
     public PetResponse getPet() {
         return pet;
     }
 
     public void setPet(PetResponse pet) {
         this.pet = pet;
-    }
-
-    public UserResponse getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(UserResponse customer) {
-        this.customer = customer;
     }
 
     public List<ServiceResponse> getServices() {
@@ -136,11 +111,19 @@ public class BookingResponse  {
         this.notes = notes;
     }
 
-    public UserResponse getAssignedStaff() {
-        return assignedStaff;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setAssignedStaff(UserResponse assignedStaff) {
-        this.assignedStaff = assignedStaff;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

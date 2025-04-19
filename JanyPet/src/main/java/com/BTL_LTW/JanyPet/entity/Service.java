@@ -1,6 +1,9 @@
 package com.BTL_LTW.JanyPet.entity;
 
 import com.BTL_LTW.JanyPet.common.ServiceCategory;
+import com.BTL_LTW.JanyPet.entity.BaseEntity;
+import com.BTL_LTW.JanyPet.entity.Booking;
+
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -13,11 +16,13 @@ public class Service extends BaseEntity<String> {
     @Column(nullable = false)
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(columnDefinition = "TEXT")
     private String images;
 
     private Integer maxPetsPerSlot = 1;
@@ -29,12 +34,14 @@ public class Service extends BaseEntity<String> {
 
     private Boolean active = true;
 
+    private Integer duration; // Duration in minutes
+
+    private String availability; // Days of week available
+
     @ManyToMany(mappedBy = "services")
     private Set<Booking> bookings = new HashSet<>();
 
-
-
-    // === GETTERS & SETTERS ===
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -97,6 +104,22 @@ public class Service extends BaseEntity<String> {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(String availability) {
+        this.availability = availability;
     }
 
     public Set<Booking> getBookings() {

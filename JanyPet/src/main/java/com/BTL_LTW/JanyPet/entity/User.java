@@ -41,6 +41,17 @@ public class User extends BaseEntity<String> implements UserDetails {
     private Boolean isVerified = false;
 
     private boolean isDeleted;
+    private Boolean active;
+
+    @Override
+    public Boolean getActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
     @Column(name = "refresh_token")
     private String refreshToken;

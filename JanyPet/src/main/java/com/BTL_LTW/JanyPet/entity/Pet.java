@@ -131,4 +131,7 @@ public class Pet extends BaseEntity<String>{
 
     public Pet() {
     }
+
+    public void getSpecies(String species) {
+    }
 }

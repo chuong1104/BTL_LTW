@@ -24,6 +24,19 @@ public class ServiceResponse {
     private ServiceCategory category;
 
     private Boolean active;
+    private Integer duration; // Duration in minutes
+
+    public ServiceResponse() {
+
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
 
     // timestamps from BaseEntity
     private Timestamp createdAt;
@@ -146,4 +159,6 @@ public class ServiceResponse {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
 }

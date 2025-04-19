@@ -52,8 +52,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setServices(services);
 
         // --- optional Staff ---
-        if (req.getAssignedStaffId() != null) {
-            User staff = userRepo.findById(String.valueOf(req.getAssignedStaffId()))
+        if (req.getStaffId() != null) {
+            User staff = userRepo.findById(req.getStaffId())
                     .orElseThrow(() -> new IllegalArgumentException("Staff not found"));
             booking.setAssignedStaff(staff);
         }
@@ -90,8 +90,8 @@ public class BookingServiceImpl implements BookingService {
             booking.setServices(services);
         }
 
-        if (req.getAssignedStaffId() != null) {
-            User staff = userRepo.findById(String.valueOf(req.getAssignedStaffId()))
+        if (req.getStaffId() != null) {
+            User staff = userRepo.findById(req.getStaffId())
                     .orElseThrow(() -> new IllegalArgumentException("Staff not found"));
             booking.setAssignedStaff(staff);
         }

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Spa Services - Book Your Appointment</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader-wrapper">
+    <div class="preloader"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container-fluid">
+      <div class="row py-3 border-bottom">
+        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+          <div class="main-logo">
+            <a href="index.html">
+              <img src="https://via.placeholder.com/165x50?text=PetSpa" alt="logo" class="img-fluid">
+            </a>
+          </div>
+        </div>
+        <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+          <div class="search-bar border rounded-pill">
+            <form action="#" class="search-form d-flex align-items-center">
+              <input type="text" class="form-control border-0 bg-transparent" placeholder="Search for services, products...">
+              <button type="submit" class="btn bg-transparent">
+                <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
+          <div class="auth-container">
+            <button class="btn btn-outline-dark login-button">Login</button>
+            <button class="btn btn-primary register-button">Register</button>
+            <div class="user-info">
+              <span>Welcome, <strong id="username">User</strong></span>
+            </div>
+            <button class="btn btn-outline-dark logout-btn">Logout</button>
+            <a href="admin.html" class="btn btn-outline-primary admin-link">Admin Panel</a>
+          </div>
+          <ul class="d-flex justify-content-end list-unstyled m-0">
+            <li>
+              <a href="#" class="rounded-circle bg-light p-2 mx-1">
+                <iconify-icon icon="ph:heart-bold" class="fs-5"></iconify-icon>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="rounded-circle bg-light p-2 mx-1">
+                <iconify-icon icon="ph:shopping-cart-simple-bold" class="fs-5"></iconify-icon>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row py-3">
+        <div class="col-12">
+          <nav class="navbar navbar-expand-lg py-0">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-start flex-grow-1 gap-1 gap-md-5">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="service.html">Book Services</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Shop</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownPages" data-bs-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">My Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownPages">
+                      <li><a class="dropdown-item" href="#" id="my-bookings-link">My Bookings</a></li>
+                      <li><a class="dropdown-item" href="#">My Pets</a></li>
+                      <li><a class="dropdown-item" href="#">Profile</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Banner -->
+  <section class="py-5 bg-light-primary">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="display-4 fw-normal">Pet Spa Services</h2>
+          <p class="lead">Pamper your furry friend with our premium spa treatments</p>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Book Services</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-md-6 d-flex align-items-center justify-content-end">
+          <img src="https://via.placeholder.com/400x200?text=Pet+Spa" alt="Pet Spa" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center mb-5">
+          <h2 class="display-5">Book Your Pet's Spa Day</h2>
+          <p class="lead">Choose from our range of premium services for your beloved pet</p>
+        </div>
+      </div>
+
+      <!-- Booking Steps -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="booking-steps">
+            <ul class="nav nav-pills nav-justified mb-5" id="bookingSteps" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="step1-tab" data-bs-toggle="pill" data-bs-target="#step1" type="button" role="tab" aria-controls="step1" aria-selected="true">
+                  <span class="step-number">1</span>
+                  <span class="step-title">Select Services</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="step2-tab" data-bs-toggle="pill" data-bs-target="#step2" type="button" role="tab" aria-controls="step2" aria-selected="false">
+                  <span class="step-number">2</span>
+                  <span class="step-title">Choose Pet</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="step3-tab" data-bs-toggle="pill" data-bs-target="#step3" type="button" role="tab" aria-controls="step3" aria-selected="false">
+                  <span class="step-number">3</span>
+                  <span class="step-title">Select Date & Time</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="step4-tab" data-bs-toggle="pill" data-bs-target="#step4" type="button" role="tab" aria-controls="step4" aria-selected="false">
+                  <span class="step-number">4</span>
+                  <span class="step-title">Confirm Booking</span>
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content p-4 bg-light rounded" id="bookingStepsContent">
+              <!-- Step 1: Select Services -->
+              <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
+                <h3 class="mb-4">Select Services</h3>
+                <div class="row" id="services-container">
+                  <!-- Services will be loaded here dynamically -->
+                  <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading services...</p>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-outline-dark" disabled>Previous</button>
+                  <button class="btn btn-primary next-step" data-next="step2-tab">Next</button>
+                </div>
+              </div>
+
+              <!-- Step 2: Choose Pet -->
+              <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
+                <h3 class="mb-4">Choose Your Pet</h3>
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <div class="card mb-3" id="pet-selection-card">
+                      <div class="card-body">
+                        <h5 class="card-title">Select Pet</h5>
+                        <div id="pet-list">
+                          <!-- Pets will be loaded here dynamically -->
+                          <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading pets...</p>
+                          </div>
+                        </div>
+                        <button class="btn btn-outline-primary mt-3" id="add-new-pet-btn">
+                          <iconify-icon icon="akar-icons:plus"></iconify-icon> Add New Pet
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card" id="pet-details-card">
+                      <div class="card-body">
+                        <h5 class="card-title">Pet Details</h5>
+                        <div id="selected-pet-details">
+                          <p class="text-muted">Please select a pet to see details</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-outline-dark prev-step" data-prev="step1-tab">Previous</button>
+                  <button class="btn btn-primary next-step" data-next="step3-tab">Next</button>
+                </div>
+              </div>
+
+              <!-- Step 3: Select Date & Time -->
+              <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
+                <h3 class="mb-4">Select Date & Time</h3>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-4">
+                      <label for="booking-date" class="form-label">Appointment Date</label>
+                      <input type="date" class="form-control" id="booking-date" min="" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-4">
+                      <label for="booking-time" class="form-label">Appointment Time</label>
+                      <select class="form-control" id="booking-time" required>
+                        <option value="">Select a time slot</option>
+                        <option value="09:00:00">9:00 AM</option>
+                        <option value="09:30:00">9:30 AM</option>
+                        <option value="10:00:00">10:00 AM</option>
+                        <option value="10:30:00">10:30 AM</option>
+                        <option value="11:00:00">11:00 AM</option>
+                        <option value="11:30:00">11:30 AM</option>
+                        <option value="13:00:00">1:00 PM</option>
+                        <option value="13:30:00">1:30 PM</option>
+                        <option value="14:00:00">2:00 PM</option>
+                        <option value="14:30:00">2:30 PM</option>
+                        <option value="15:00:00">3:00 PM</option>
+                        <option value="15:30:00">3:30 PM</option>
+                        <option value="16:00:00">4:00 PM</option>
+                        <option value="16:30:00">4:30 PM</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="booking-notes" class="form-label">Special Instructions or Notes</label>
+                  <textarea class="form-control" id="booking-notes" rows="3" placeholder="Any special requests or information we should know about your pet..."></textarea>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-outline-dark prev-step" data-prev="step2-tab">Previous</button>
+                  <button class="btn btn-primary next-step" data-next="step4-tab">Next</button>
+                </div>
+              </div>
+
+              <!-- Step 4: Confirm Booking -->
+              <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
+                <h3 class="mb-4">Confirm Your Booking</h3>
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <h5 class="card-title">Booking Summary</h5>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Selected Services</h6>
+                        <ul id="summary-services" class="list-group list-group-flush mb-3">
+                          <!-- Selected services will be displayed here -->
+                        </ul>
+                        <p class="fw-bold">Total: <span id="summary-total">$0.00</span></p>
+                      </div>
+                      <div class="col-md-6">
+                        <h6>Appointment Details</h6>
+                        <p><strong>Pet:</strong> <span id="summary-pet">Not selected</span></p>
+                        <p><strong>Date:</strong> <span id="summary-date">Not selected</span></p>
+                        <p><strong>Time:</strong> <span id="summary-time">Not selected</span></p>
+                        <p><strong>Notes:</strong> <span id="summary-notes">None</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-check mb-4">
+                  <input class="form-check-input" type="checkbox" id="terms-checkbox" required>
+                  <label class="form-check-label" for="terms-checkbox">
+                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+                  </label>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-outline-dark prev-step" data-prev="step3-tab">Previous</button>
+                  <button class="btn btn-primary" id="confirm-booking-btn">Confirm Booking</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- My Bookings Modal -->
+  <div class="modal fade" id="myBookingsModal" tabindex="-1" aria-labelledby="myBookingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myBookingsModalLabel">My Bookings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Pet</th>
+                  <th>Services</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookings-table-body">
+                <!-- Bookings will be loaded here dynamically -->
+                <tr>
+                  <td colspan="6" class="text-center">Loading your bookings...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Pet Modal -->
+  <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPetModalLabel">Add New Pet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-pet-form">
+            <div class="mb-3">
+              <label for="pet-name" class="form-label">Pet Name</label>
+              <input type="text" class="form-control" id="pet-name" required>
+            </div>
+            <div class="mb-3">
+              <label for="pet-species" class="form-label">Species</label>
+              <select class="form-control" id="pet-species" required>
+                <option value="">Select species</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Rabbit">Rabbit</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="pet-breed" class="form-label">Breed</label>
+              <input type="text" class="form-control" id="pet-breed">
+            </div>
+            <div class="mb-3">
+              <label for="pet-birthdate" class="form-label">Birth Date</label>
+              <input type="date" class="form-control" id="pet-birthdate">
+            </div>
+            <div class="mb-3">
+              <label for="pet-gender" class="form-label">Gender</label>
+              <select class="form-control" id="pet-gender" required>
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="pet-weight" class="form-label">Weight (kg)</label>
+              <input type="number" step="0.1" class="form-control" id="pet-weight">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="pet-vaccinated">
+              <label class="form-check-label" for="pet-vaccinated">Vaccinated</label>
+            </div>
+            <div class="mb-3">
+              <label for="pet-health-notes" class="form-label">Health Notes</label>
+              <textarea class="form-control" id="pet-health-notes" rows="3" placeholder="Allergies, medical conditions, etc."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-pet-btn">Save Pet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms and Conditions Modal -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Pet Spa Booking Terms</h6>
+          <p>By booking a service with our Pet Spa, you agree to the following terms:</p>
+          <ol>
+            <li>Appointments must be canceled at least 24 hours in advance to avoid cancellation fees.</li>
+            <li>Pets must be up-to-date on vaccinations for services that require it.</li>
+            <li>We reserve the right to refuse service to pets that show signs of aggression or illness.</li>
+            <li>Payment is due at the time of service.</li>
+            <li>Please arrive 10 minutes before your scheduled appointment time.</li>
+          </ol>
+          <h6>Privacy Policy</h6>
+          <p>We collect personal information to provide and improve our services. Your data is protected and will not be shared with third parties except as required by law.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="successModalLabel">Booking Successful!</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <iconify-icon icon="mdi:check-circle" style="font-size: 64px; color: #28a745;"></iconify-icon>
+          <h4 class="mt-3">Thank You!</h4>
+          <p>Your booking has been confirmed. We've sent a confirmation email with all the details.</p>
+          <div class="alert alert-info mt-3">
+            <strong>Booking ID:</strong> <span id="success-booking-id"></span><br>
+            <strong>Date:</strong> <span id="success-date"></span><br>
+            <strong>Time:</strong> <span id="success-time"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="view-bookings-btn">View My Bookings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="login-form">
+            <div class="mb-3">
+              <label for="login-email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="login-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="login-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="login-password" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="remember-me">
+              <label class="form-check-label" for="remember-me">Remember me</label>
+            </div>
+            <div class="alert alert-danger d-none" id="login-error"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link" id="show-register-btn">Create an account</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="login-submit-btn">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Create an Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="register-form">
+            <div class="mb-3">
+              <label for="register-email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="register-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="register-password" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-confirm-password" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="register-confirm-password" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="register-phone" required>
+            </div>
+            <div class="mb-3">
+              <label for="register-address" class="form-label">Address</label>
+              <input type="text" class="form-control" id="register-address">
+            </div>
+            <div class="mb-3">
+              <label for="register-gender" class="form-label">Gender</label>
+              <select class="form-control" id="register-gender">
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="alert alert-danger d-none" id="register-error"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link" id="show-login-btn">Already have an account?</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="register-submit-btn">Register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="row g-4 pb-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-widget">
+            <h4 class="widget-title">About Us</h4>
+            <p>We provide premium pet spa services with love and care for your furry friends.</p>
+            <ul class="social-links list-unstyled d-flex flex-wrap gap-3">
+              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:facebook-fill"></iconify-icon></a></li>
+              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:twitter-fill"></iconify-icon></a></li>
+              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:instagram-fill"></iconify-icon></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-widget">
+            <h4 class="widget-title">Quick Links</h4>
+            <ul class="list-unstyled">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="booking.html">Book Services</a></li>
+              <li><a href="#">Shop</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-widget">
+            <h4 class="widget-title">Services</h4>
+            <ul class="list-unstyled">
+              <li><a href="#">Pet Grooming</a></li>
+              <li><a href="#">Health Checkups</a></li>
+              <li><a href="#">Spa Treatments</a></li>
+              <li><a href="#">Pet Training</a></li>
+              <li><a href="#">Pet Boarding</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-widget">
+            <h4 class="widget-title">Contact Info</h4>
+            <ul class="list-unstyled">
+              <li><iconify-icon icon="mdi:map-marker"></iconify-icon> 123 Pet Street, City</li>
+              <li><iconify-icon icon="mdi:phone"></iconify-icon> +1 234 567 8900</li>
+              <li><iconify-icon icon="mdi:email"></iconify-icon> info@petspa.com</li>
+              <li><iconify-icon icon="mdi:clock"></iconify-icon> Mon-Sat: 9AM - 6PM</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="py-4 border-top">
+            <p class="m-0 text-center">© 2025 Pet Spa. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="service.js"></script>
+</body>
+</html>

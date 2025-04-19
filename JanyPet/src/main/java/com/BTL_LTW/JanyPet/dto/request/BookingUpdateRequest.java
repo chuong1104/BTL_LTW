@@ -7,23 +7,24 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class BookingUpdateRequest {
-
+    private String userId;
     private String petId;
-
     private List<String> serviceIds;
-
+    private String staffId;
     private LocalDate bookingDate;
-
     private LocalTime startTime;
-
+    private LocalTime endTime;
     private BookingStatus status;
-
     private String notes;
 
-    private String assignedStaffId;
+    // Getters and Setters
+    public String getUserId() {
+        return userId;
+    }
 
-    // --- getters & setters ---
-
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getPetId() {
         return petId;
@@ -39,6 +40,14 @@ public class BookingUpdateRequest {
 
     public void setServiceIds(List<String> serviceIds) {
         this.serviceIds = serviceIds;
+    }
+
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
     public LocalDate getBookingDate() {
@@ -57,6 +66,14 @@ public class BookingUpdateRequest {
         this.startTime = startTime;
     }
 
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
     public BookingStatus getStatus() {
         return status;
     }
@@ -71,13 +88,5 @@ public class BookingUpdateRequest {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public String getAssignedStaffId() {
-        return assignedStaffId;
-    }
-
-    public void setAssignedStaffId(String assignedStaffId) {
-        this.assignedStaffId = assignedStaffId;
     }
 }

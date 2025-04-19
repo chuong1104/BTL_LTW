@@ -1,4 +1,3 @@
-// src/main/java/com/BTL_LTW/JanyPet/dto/request/PetCreationRequest.java
 package com.BTL_LTW.JanyPet.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class PetCreationRequest {
-
     @NotBlank(message = "Pet name is required")
     private String name;
 
@@ -16,22 +14,20 @@ public class PetCreationRequest {
 
     private String breed;
 
-    @NotNull(message = "Birth date is required")
     private LocalDate birthDate;
 
     private String gender;
 
     private Double weight;
 
-    private Boolean vaccinated = false;
+    private Boolean vaccinated;
 
     private String healthNotes;
 
     @NotNull(message = "Owner ID is required")
     private String ownerId;
 
-    // --- getters & setters ---
-
+    // Getters and Setters
     public String getName() {
         return name;
     }

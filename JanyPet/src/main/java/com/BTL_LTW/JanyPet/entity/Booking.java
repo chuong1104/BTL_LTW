@@ -113,4 +113,5 @@ public class Booking extends BaseEntity<String> {
         this.endTime = endTime;
     }
 
+
 }

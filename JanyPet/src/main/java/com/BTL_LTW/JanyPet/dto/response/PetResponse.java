@@ -46,6 +46,10 @@ public class PetResponse {
         this.updatedAt = updatedAt;
     }
 
+    public PetResponse() {
+
+    }
+
     public String getId() {
         return id;
     }
@@ -62,8 +66,8 @@ public class PetResponse {
         this.name = name;
     }
 
-    public String getSpecies() {
-        return species;
+    public String getSpecies(String species) {
+        return this.species;
     }
 
     public void setSpecies(String species) {

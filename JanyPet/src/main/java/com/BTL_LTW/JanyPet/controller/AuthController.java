@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://127.0.0.1:5500"}, allowCredentials = "true")
+//@CrossOrigin(origins = {"http://127.0.0.1:5500"}, allowCredentials = "true")
 public class AuthController {
 
     private final UserService userService;
