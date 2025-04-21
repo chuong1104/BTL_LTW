@@ -17,29 +17,37 @@ import java.util.UUID;
 public class FileStorageServiceImpl implements FileStorageService {
 
     private final Path fileStorageLocation;
-    private final String fileAccessUrl;
 
-    public FileStorageServiceImpl(
-            @Value("${file.upload-dir:uploads}") String uploadDir,
-            @Value("${file.access-url:http://localhost:8080/uploads/}") String fileAccessUrl) {
-        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-        this.fileAccessUrl = fileAccessUrl;
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
+
+    @Value("${app.base-url:http://localhost:8080}")
+    private String baseUrl;
+
+    public FileStorageServiceImpl() {
+        this.fileStorageLocation = Paths.get("uploads")
+                .toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileStorageLocation);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
 
     @Override
-    public String storeFile(MultipartFile file) throws IOException {
+    public String storeFile(MultipartFile file) {
+        // Check if file is null or empty
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("File is empty or null");
+        }
+
         // Normalize file name
         String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-        // Check if the file's name contains invalid characters
+        // Verify if file name contains invalid characters
         if (originalFileName.contains("..")) {
-            throw new IllegalArgumentException("Filename contains invalid path sequence " + originalFileName);
+            throw new RuntimeException("Filename contains invalid path sequence " + originalFileName);
         }
 
         // Generate unique file name
@@ -49,16 +57,34 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
         String fileName = UUID.randomUUID().toString() + fileExtension;
 
-        // Copy file to the target location
-        Path targetLocation = this.fileStorageLocation.resolve(fileName);
-        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        // Copy file to target location
+        try {
+            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+        }
+    }
 
-        return fileAccessUrl + fileName;
+    @Override
+    public String getFileUrl(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("File name cannot be null or empty");
+        }
+        return baseUrl + "/api/files/" + fileName;
     }
 
     @Override
     public void deleteFile(String fileUrl) throws IOException {
-        if (fileUrl == null || fileUrl.isEmpty() || !fileUrl.startsWith(fileAccessUrl)) {
+        if (fileUrl == null || fileUrl.isEmpty()) {
+            throw new IllegalArgumentException("File URL cannot be null or empty");
+        }
+
+        // Construct the base file access URL
+        String fileAccessUrl = baseUrl + "/api/files/";
+
+        if (!fileUrl.startsWith(fileAccessUrl)) {
             throw new IllegalArgumentException("Invalid file URL");
         }
 

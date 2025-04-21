@@ -1,7 +1,10 @@
 package com.BTL_LTW.JanyPet.controller;
 
+import com.BTL_LTW.JanyPet.common.Gender;
+import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.dto.request.UserCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.UserUpdateRequest;
+import com.BTL_LTW.JanyPet.dto.response.MessageResponse;
 import com.BTL_LTW.JanyPet.dto.response.UserResponse;
 import com.BTL_LTW.JanyPet.entity.User;
 import com.BTL_LTW.JanyPet.repository.UserRepository;
@@ -17,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 public class UserController {
 
     private final UserService userService;
@@ -32,7 +35,7 @@ public class UserController {
 
     // Tạo mới người dùng - chỉ admin mới có quyền
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserCreationRequest request) {
         // Hàm createUser đã được mã hóa password trong mapper, tránh double encoding
         User user = userService.createUser(request);
@@ -41,9 +44,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // Lấy ra danh sách người dùng - chỉ admin mới có quyền
+    // Lấy ra danh sách người dùng - admin và employee có quyền
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EMPLOYEE')")
     public ResponseEntity<List<UserResponse>> getUsers() {
         List<UserResponse> users = userService.getUsers();
         return ResponseEntity.ok(users);
@@ -51,7 +54,7 @@ public class UserController {
 
     // Lấy ra thông tin người dùng dựa trên Id
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'EMPLOYEE') or #id == authentication.principal.id")
     public ResponseEntity<UserResponse> getUser(@PathVariable("id") String id) {
         UserResponse response = userService.getUserById(id);
         return ResponseEntity.ok(response);
@@ -72,7 +75,7 @@ public class UserController {
 
     // Cập nhật thông tin người dùng
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody UserUpdateRequest request) {
         UserResponse response = userService.updateUser(id, request);
         return ResponseEntity.ok(response);
@@ -80,10 +83,10 @@ public class UserController {
 
     // Xóa người dùng - chỉ admin mới có quyền
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> softDeleteUser(@PathVariable("id") String id) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
         userService.softDeleteUser(id);
-        return ResponseEntity.ok("Người dùng đã bị vô hiệu hóa!");
+        return ResponseEntity.ok("Người dùng đã bị vô hiệu hóa");
     }
 
     // Khóa/mở khóa tài khoản người dùng - chỉ admin mới có quyền
@@ -94,4 +97,42 @@ public class UserController {
         String message = locked ? "Tài khoản đã bị khóa" : "Tài khoản đã được mở khóa";
         return ResponseEntity.ok(message);
     }
+
+    // Thêm endpoint mới cho việc đăng ký admin
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserCreationRequest request) {
+        // Kiểm tra xem đã có admin chưa
+        if (userService.existsAdminUser()) {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new MessageResponse("Admin user already exists"));
+        }
+        
+        request.setRole(Role.ADMIN);
+        User admin = userService.createUser(request);
+        UserResponse response = userService.getUserById(admin.getId());
+        return ResponseEntity.ok(response);
+    }
+
+     // Endpoint để khởi tạo admin đầu tiên
+     @PostMapping("/init-admin")
+     public ResponseEntity<?> initializeAdmin() {
+         if (userService.existsAdminUser()) {
+             return ResponseEntity
+                 .status(HttpStatus.FORBIDDEN)
+                 .body(new MessageResponse("Admin user already exists"));
+         }
+
+         UserCreationRequest defaultAdmin = new UserCreationRequest();
+         defaultAdmin.setUsername("admin");
+         defaultAdmin.setEmail("chuongdo2811@example.com");
+         defaultAdmin.setPassword("admin123");
+         defaultAdmin.setGender(Gender.FEMALE);
+         defaultAdmin.setAddress("BacNinh");
+         defaultAdmin.setPhoneNumber("0398467238");
+         defaultAdmin.setRole(Role.ADMIN);
+        
+         User admin = userService.createUser(defaultAdmin);
+         return ResponseEntity.ok(new MessageResponse("Default admin created successfully"));
+     }
 }

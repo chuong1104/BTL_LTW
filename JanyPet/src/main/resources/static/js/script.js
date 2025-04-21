@@ -1,5 +1,5 @@
 // DOM Elements
-//const sidebar = document.getElementById("sidebar")
+const sidebar = document.getElementById("sidebar")
 const menuToggle = document.getElementById("menu-toggle")
 const toggleSidebar = document.getElementById("toggle-sidebar")
 const contentSections = document.querySelectorAll(".content-section")
@@ -56,7 +56,7 @@ let quill
 const productService = {
   getAllProducts: async () => {
     // Replace with your actual API endpoint
-    const response = await fetch("https://fakestoreapi.com/products?limit=5")
+    const response = await fetch("http://localhost:8080/products?limit=5")
     const data = await response.json()
     return data.map((product) => ({
       id: product.id,
@@ -72,7 +72,7 @@ const productService = {
   },
   createProduct: async (productData) => {
     // Replace with your actual API endpoint
-    const response = await fetch("https://fakestoreapi.com/products", {
+    const response = await fetch("http://localhost:8080/products", {
       method: "POST",
       body: JSON.stringify(productData),
     })
@@ -80,7 +80,7 @@ const productService = {
   },
   updateProduct: async (productId, productData) => {
     // Replace with your actual API endpoint
-    const response = await fetch(`https://fakestoreapi.com/products/${productId}`, {
+    const response = await fetch(`http://localhost:8080/products/${productId}`, {
       method: "PUT",
       body: JSON.stringify(productData),
     })
@@ -88,88 +88,39 @@ const productService = {
   },
   deleteProduct: async (productId) => {
     // Replace with your actual API endpoint
-    const response = await fetch(`https://fakestoreapi.com/products/${productId}`, {
+    const response = await fetch(`http://localhost:8080/products/${productId}`, {
       method: "DELETE",
     })
     return await response.json()
   },
   getProductById: async (productId) => {
-    const response = await fetch(`https://fakestoreapi.com/products/${productId}`)
+    const response = await fetch(`http://localhost:8080/products/${productId}`)
     return await response.json()
   },
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize Quill editor
-  quill = new Quill("#editor-container", {
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ color: [] }, { background: [] }],
-        ["link", "image"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Write a detailed product description...",
-    theme: "snow",
-  })
-})
+  // Validate DOM elements existence
+  const requiredElements = [
+    "sidebar",
+    "menu-toggle", 
+    "toggle-sidebar",
+    "products-table-body",
+    "product-modal",
+    "toast"
+  ];
+  
+  const missingElements = requiredElements.filter(id => !document.getElementById(id));
+  
+  if(missingElements.length > 0) {
+    console.error("Missing required DOM elements:", missingElements);
+    return;
+  }
 
-// Sample Product Data
-let products = [
-  {
-    id: 1,
-    name: "Premium Dog Food",
-    category: "Pet Food",
-    sku: "PF-001",
-    price: 29.99,
-    stock: 50,
-    status: "In Stock",
-    image: "https://via.placeholder.com/50?text=Dog+Food",
-  },
-  {
-    id: 2,
-    name: "Cat Play Tower",
-    category: "Toys",
-    sku: "TY-023",
-    price: 49.99,
-    stock: 15,
-    status: "In Stock",
-    image: "https://via.placeholder.com/50?text=Cat+Tower",
-  },
-  {
-    id: 3,
-    name: "Dog Collar - Medium",
-    category: "Accessories",
-    sku: "AC-112",
-    price: 12.99,
-    stock: 30,
-    status: "In Stock",
-    image: "https://via.placeholder.com/50?text=Collar",
-  },
-  {
-    id: 4,
-    name: "Pet Vitamins",
-    category: "Medicine",
-    sku: "MD-045",
-    price: 19.99,
-    stock: 5,
-    status: "Low Stock",
-    image: "https://via.placeholder.com/50?text=Vitamins",
-  },
-  {
-    id: 5,
-    name: "Bird Cage - Large",
-    category: "Accessories",
-    sku: "AC-067",
-    price: 89.99,
-    stock: 0,
-    status: "Out of Stock",
-    image: "https://via.placeholder.com/50?text=Bird+Cage",
-  },
-]
+  // Initialize
+  renderProducts();
+  setupEventListeners();
+})
 
 // Sample Templates
 const productTemplates = {
@@ -503,16 +454,56 @@ async function renderProducts() {
 
 // Thay thế hàm saveProduct hiện tại
 async function saveProduct() {
-  const name = productNameInput.value.trim()
-  // const category = productCategoryInput.value
-  const price = Number.parseFloat(productPriceInput.value)
-  const stock = Number.parseInt(productStockInput.value) || 0
-  const sku = productSkuInput.value.trim()
+  // Kiểm tra các phần tử DOM trước khi truy cập
+  const nameInput = document.getElementById("product-name")
+  const priceInput = document.getElementById("product-price")
+  const stockInput = document.getElementById("product-stock")
 
-  if (!name || !category || isNaN(price)) {
-    showToast("Please fill all required fields", "error")
+  if (!nameInput || !priceInput) {
+    showToast("Không thể tìm thấy các trường dữ liệu cần thiết", "error")
+    return
+  }
+
+  const name = nameInput.value.trim()
+  const price = Number.parseFloat(priceInput.value)
+  const stock = stockInput ? Number.parseInt(stockInput.value) || 0 : 0
+
+  if (!name || isNaN(price)) {
+    showToast("Vui lòng điền đầy đủ thông tin bắt buộc", "error")
     tabs[0].click()
     return
+  }
+
+  // Lấy mô tả sản phẩm từ phương thức đang được chọn
+  let description = ""
+  try {
+    const activeOption = document.querySelector(".option-btn.active")
+    if (activeOption) {
+      const optionId = activeOption.getAttribute("data-option")
+
+      if (optionId === "manual" && quill) {
+        description = quill.root.innerHTML
+      } else if (optionId === "ai") {
+        const aiResultElement = document.querySelector("#ai-result .generated-text")
+        if (aiResultElement) {
+          description = aiResultElement.innerHTML
+        }
+      } else if (optionId === "template") {
+        const templateTextElement = document.querySelector("#template-preview .template-text")
+        if (templateTextElement) {
+          description = templateTextElement.innerHTML
+        }
+      } else if (optionId === "import") {
+        const importedDescriptionElement = document.getElementById("imported-description")
+        if (importedDescriptionElement) {
+          description = importedDescriptionElement.innerHTML
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error getting description:", error)
+    // Fallback to empty description if there's an error
+    description = ""
   }
 
   // Determine status based on stock
@@ -523,35 +514,43 @@ async function saveProduct() {
     status = "Low Stock"
   }
 
-  const productId = productIdInput.value ? Number.parseInt(productIdInput.value) : null
+  const productId = document.getElementById("product-id") ? document.getElementById("product-id").value : null
 
-  // Prepare product data
+  // Lấy hình ảnh
+  const images = []
+  const imagePreviewContainer = document.getElementById("image-preview-container")
+  if (imagePreviewContainer) {
+    imagePreviewContainer.querySelectorAll("img").forEach((img) => {
+      images.push(img.src)
+    })
+  }
+
+  // Chuẩn bị dữ liệu sản phẩm
   const productData = {
     name,
-    category,
     price,
     stock,
-    sku,
     status,
-    // Add other fields as needed
+    description,
+    image: images.length > 0 ? JSON.stringify({ url: images[0] }) : null,
   }
 
   try {
     if (productId) {
-      // Update existing product
+      // Cập nhật sản phẩm hiện có
       await productService.updateProduct(productId, productData)
-      showToast("Product updated successfully")
+      showToast("Cập nhật sản phẩm thành công")
     } else {
-      // Create new product
+      // Tạo sản phẩm mới
       await productService.createProduct(productData)
-      showToast("Product added successfully")
+      showToast("Thêm sản phẩm mới thành công")
     }
 
-    // Reload products from server
+    // Tải lại danh sách sản phẩm
     await renderProducts()
     closeProductModal()
   } catch (error) {
-    showToast("Error saving product: " + error.message, "error")
+    showToast("Lỗi khi lưu sản phẩm: " + error.message, "error")
   }
 }
 
@@ -680,9 +679,20 @@ function updateNavigationButtons() {
 }
 
 function showToast(message, type = "success") {
-  const toastContent = toast.querySelector(".toast-content i")
-  const toastMessage = toast.querySelector(".toast-message")
-  const toastProgress = toast.querySelector(".toast-progress")
+  const toast = document.getElementById("toast");
+  if (!toast) {
+    console.warn("Toast element not found");
+    return;
+  }
+
+  const toastContent = toast.querySelector(".toast-content i");
+  const toastMessage = toast.querySelector(".toast-message");
+  const toastProgress = toast.querySelector(".toast-progress");
+
+  if (!toastContent || !toastMessage || !toastProgress) {
+    console.warn("Toast child elements not found"); 
+    return;
+  }
 
   // Set icon and color based on type
   if (type === "success") {
@@ -870,21 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 })
-document.addEventListener("DOMContentLoaded", () => {
-  // Initialize the rich text editor
-  const quill = new Quill("#editor-container", {
-    modules: {
-      toolbar: [
-        ["bold", "italic", "underline"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ align: [] }],
-        ["link", "image"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Enter detailed product description...",
-    theme: "snow",
-  })
+
 
   // Global search functionality
   const globalSearch = document.querySelector(".search-container input")
@@ -1957,41 +1953,39 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.classList.remove("show")
     }, 3000)
   }
-
   // Filter and sort products
   document.getElementById("filter-category").addEventListener("change", filterProducts)
   document.getElementById("filter-status").addEventListener("change", filterProducts)
   document.getElementById("sort-by").addEventListener("change", filterProducts)
 
   function filterProducts() {
-    const categoryFilter = document.getElementById("filter-category").value
-    const statusFilter = document.getElementById("filter-status").value
-    const sortBy = document.getElementById("sort-by").value
+    const categoryFilter = document.getElementById("filter-category");
+    const statusFilter = document.getElementById("filter-status"); 
+    const sortBy = document.getElementById("sort-by");
+
+    if (!categoryFilter || !statusFilter || !sortBy) {
+      console.warn("Filter elements not found");
+      return;
+    }
+
+    // Get filter values
+    const categoryValue = categoryFilter.value;
+    const statusValue = statusFilter.value;
+    const sortByValue = sortBy.value;
 
     // Filter products
-    let filteredProducts = [...products]
+    let filteredProducts = [...products];
 
-    if (categoryFilter) {
-      filteredProducts = filteredProducts.filter((p) => p.category === categoryFilter)
+    if (categoryValue) {
+      filteredProducts = filteredProducts.filter((p) => p.category === categoryValue);
     }
 
-    if (statusFilter) {
-      filteredProducts = filteredProducts.filter((p) => p.status === statusFilter)
+    if (statusValue) {
+      filteredProducts = filteredProducts.filter((p) => p.status === statusValue); 
     }
 
-    // Sort products
-    if (sortBy === "name-asc") {
-      filteredProducts.sort((a, b) => a.name.localeCompare(b.name))
-    } else if (sortBy === "name-desc") {
-      filteredProducts.sort((a, b) => b.name.localeCompare(a.name))
-    } else if (sortBy === "price-asc") {
-      filteredProducts.sort((a, b) => a.price - b.price)
-    } else if (sortBy === "price-desc") {
-      filteredProducts.sort((a, b) => b.price - a.price)
-    }
-
-    // Update table
-    renderProductsTable(filteredProducts)
+    // Sort products...
+    renderProductsTable(filteredProducts);
   }
 
   // Edit product function
@@ -2000,18 +1994,240 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Select all checkbox
-  document.querySelector(".select-all").addEventListener("change", function () {
-    const isChecked = this.checked
-    document.querySelectorAll(".select-item").forEach((checkbox) => {
-      checkbox.checked = isChecked
-    })
-  })
-})
+  document.addEventListener("DOMContentLoaded", () => {
+    const selectAll = document.querySelector(".select-all");
+    if (selectAll) {
+      selectAll.addEventListener("change", function() {
+        const selectItems = document.querySelectorAll(".select-item");
+        if (selectItems.length) {
+          const isChecked = this.checked;
+          selectItems.forEach((checkbox) => {
+            checkbox.checked = isChecked;
+          });
+        }
+      });
+    }
+  });
 
-// // Check if user is logged in
-// const authToken = localStorage.getItem('authToken');
-// if (!authToken && window.location.pathname !== '/login.html') {
-//     // Redirect to login page if not logged in
-//     window.location.href = 'login.html';
-//     return;
-//}
+ 
+// Thêm xử lý cho phương thức nhập mô tả từ file hoặc URL
+document.addEventListener("DOMContentLoaded", () => {
+  // Xử lý nhập mô tả từ file
+  const descriptionFileInput = document.getElementById("description-file");
+  if (descriptionFileInput) {
+    descriptionFileInput.addEventListener("change", handleDescriptionFileUpload);
+  }
+
+  // Xử lý nhập mô tả từ URL
+  const fetchUrlBtn = document.getElementById("fetch-url-btn");
+  if (fetchUrlBtn) {
+    fetchUrlBtn.addEventListener("click", fetchDescriptionFromUrl);
+  }
+
+  // Ẩn container mô tả đã nhập ban đầu
+  const importedDescriptionContainer = document.getElementById("imported-description-container");
+  if (importedDescriptionContainer) {
+    importedDescriptionContainer.style.display = "none";
+  }
+});
+
+// Hàm xử lý tải lên file mô tả
+function handleDescriptionFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  const importedDescriptionContainer = document.getElementById("imported-description-container");
+  const importedDescription = document.getElementById("imported-description");
+
+  reader.onload = (e) => {
+    let content = e.target.result;
+
+    // Xử lý nội dung dựa trên loại file
+    const fileType = file.name.split(".").pop().toLowerCase();
+
+    if (fileType === "html") {
+      // Đã là HTML, không cần xử lý thêm
+    } else if (fileType === "md") {
+      // Chuyển đổi Markdown sang HTML đơn giản
+      content = convertMarkdownToHtml(content);
+    } else {
+      // Đối với file text, bọc mỗi dòng trong thẻ <p>
+      content = "<p>" + content.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
+    }
+
+    importedDescription.innerHTML = content;
+    importedDescriptionContainer.style.display = "block";
+
+    showToast("Đã tải mô tả từ file thành công", "success");
+  };
+
+  reader.onerror = () => {
+    showToast("Lỗi khi đọc file", "error");
+  };
+
+  reader.readAsText(file);
+}
+
+// Hàm chuyển đổi Markdown sang HTML đơn giản
+function convertMarkdownToHtml(markdown) {
+  // Chuyển đổi tiêu đề
+  let html = markdown
+    .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+    .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+    .replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+  // Chuyển đổi định dạng văn bản
+  html = html
+    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+    .replace(/~~(.*?)~~/gim, "<del>$1</del>");
+
+  // Chuyển đổi danh sách
+  html = html
+    .replace(/^\s*\n\* (.*)/gim, "<ul>\n<li>$1</li>")
+    .replace(/^\* (.*)/gim, "<li>$1</li>")
+    .replace(/^\s*\n- (.*)/gim, "<ul>\n<li>$1</li>")
+    .replace(/^- (.*)/gim, "<li>$1</li>")
+    .replace(/^\s*\n\d+\. (.*)/gim, "<ol>\n<li>$1</li>")
+    .replace(/^\d+\. (.*)/gim, "<li>$1</li>");
+
+  // Chuyển đổi đoạn văn
+  html = html
+    .replace(/^\s*\n\s*\n/gim, "</ul>\n\n")
+    .replace(/^\s*\n\s*\n/gim, "</ol>\n\n")
+    .replace(/^\s*\n/gim, "<br />");
+
+  // Bọc nội dung trong thẻ <p>
+  html = "<p>" + html.replace(/\n\n/g, "</p><p>") + "</p>";
+
+  return html;
+}
+
+// Hàm tải mô tả từ URL
+async function fetchDescriptionFromUrl() {
+  const urlInput = document.getElementById("description-url");
+  const url = urlInput.value.trim();
+
+  if (!url) {
+    showToast("Vui lòng nhập URL hợp lệ", "error");
+    return;
+  }
+
+  const importedDescriptionContainer = document.getElementById("imported-description-container");
+  const importedDescription = document.getElementById("imported-description");
+
+  try {
+    // Hiển thị trạng thái đang tải
+    importedDescription.innerHTML = '<div class="loading-spinner"></div>';
+    importedDescriptionContainer.style.display = "block";
+
+    // Trong thực tế, bạn cần một proxy server để tránh vấn đề CORS
+    // Đây là mô phỏng
+    setTimeout(() => {
+      // Mô phỏng nội dung tải về
+      const sampleContent = `
+        <h2>Mô tả sản phẩm từ URL</h2>
+        <p>Đây là mô tả sản phẩm được tải từ URL. Trong môi trường thực tế, nội dung này sẽ được tải từ URL bạn đã cung cấp.</p>
+        <p>Lưu ý: Để tải nội dung từ URL khác domain, bạn cần một proxy server để tránh vấn đề CORS.</p>
+        <ul>
+          <li>Tính năng 1</li>
+          <li>Tính năng 2</li>
+          <li>Tính năng 3</li>
+        </ul>
+      `;
+
+      importedDescription.innerHTML = sampleContent;
+      showToast("Đã tải mô tả từ URL thành công", "success");
+    }, 1500);
+  } catch (error) {
+    importedDescription.innerHTML = '<p class="error-text">Không thể tải nội dung từ URL này.</p>';
+    showToast("Lỗi khi tải nội dung từ URL", "error");
+  }
+}
+
+// Cập nhật hàm updatePreview để hỗ trợ phương thức nhập mới
+function updatePreview() {
+  const productName = document.getElementById("product-name").value || "Tên sản phẩm";
+  document.getElementById("preview-title").textContent = productName;
+
+  const activeOption = document.querySelector(".option-btn.active").getAttribute("data-option");
+  let content = "";
+
+  if (activeOption === "manual") {
+    content = quill.root.innerHTML;
+  } else if (activeOption === "ai") {
+    const aiResult = document.querySelector("#ai-result .generated-text").innerHTML;
+    content = aiResult || "<p>Chưa có mô tả được tạo bởi AI</p>";
+  } else if (activeOption === "template") {
+    const templateText = document.querySelector("#template-preview .template-text").innerHTML;
+    content = templateText || "<p>Chưa chọn mẫu</p>";
+  } else if (activeOption === "import") {
+    const importedText = document.getElementById("imported-description").innerHTML;
+    content = importedText || "<p>Chưa nhập mô tả từ file hoặc URL</p>";
+  }
+
+  document.getElementById("preview-content").innerHTML = content;
+}
+
+// Cập nhật CSS cho phần nhập mô tả từ file/URL
+document.addEventListener("DOMContentLoaded", () => {
+  const style = document.createElement("style");
+  style.textContent = `
+    .input-with-button {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-with-button input {
+      flex: 1;
+    }
+
+    .help-text {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .loading-spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-text {
+      color: var(--danger-color);
+    }
+
+    #imported-description-container {
+      margin-top: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 15px;
+    }
+
+    #imported-description {
+      margin-top: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  `;
+  document.head.appendChild(style);
+});
+
+// Check if user is logged in
+const authToken = localStorage.getItem('token');
+if (!authToken && window.location.pathname !== '/login.html') {
+    // Redirect to login page if not logged in
+    window.location.href = 'login.html';
+    return;
+}

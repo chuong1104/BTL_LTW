@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public interface FileStorageService {
 
+    String getFileUrl(String fileName);
     /**
      * Store a file and return the URL
      */

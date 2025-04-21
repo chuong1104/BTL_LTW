@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Spa Admin Dashboard</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="preloader-wrapper">
+    <div class="preloader"></div>
+  </div>
+
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-light border-end" id="sidebar">
+      <div class="sidebar-header p-3 border-bottom">
+        <a href="index.html" class="d-flex align-items-center text-decoration-none">
+          <img src="https://via.placeholder.com/40x40?text=PS" alt="logo" class="me-2">
+          <h5 class="mb-0">Pet Spa Admin</h5>
+        </a>
+      </div>
+      <div class="sidebar-body p-0">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a href="#dashboard" class="nav-link active" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:view-dashboard" class="me-2"></iconify-icon> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#bookings" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:calendar-check" class="me-2"></iconify-icon> Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#services" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:spa" class="me-2"></iconify-icon> Services
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#customers" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:account-group" class="me-2"></iconify-icon> Customers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#staff" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:account-tie" class="me-2"></iconify-icon> Staff
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#reports" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:chart-bar" class="me-2"></iconify-icon> Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#settings" class="nav-link" data-bs-toggle="tab">
+              <iconify-icon icon="mdi:cog" class="me-2"></iconify-icon> Settings
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="sidebar-footer p-3 border-top">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="user-info d-flex align-items-center">
+            <img src="https://via.placeholder.com/40x40?text=Admin" alt="Admin" class="rounded-circle me-2">
+            <div>
+              <small class="d-block">Logged in as</small>
+              <span id="admin-name">Admin</span>
+            </div>
+          </div>
+          <button class="btn btn-outline-danger btn-sm" id="logout-btn">
+            <iconify-icon icon="mdi:logout" class="me-1"></iconify-icon> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+      <!-- Header -->
+      <header class="bg-white border-bottom p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <button class="btn btn-sm" id="toggle-sidebar">
+            <iconify-icon icon="mdi:menu" style="font-size: 24px;"></iconify-icon>
+          </button>
+          <div class="d-flex align-items-center">
+            <div class="dropdown me-3">
+              <button class="btn btn-sm position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <iconify-icon icon="mdi:bell" style="font-size: 24px;"></iconify-icon>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  3
+                </span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                <li><h6 class="dropdown-header">Notifications</h6></li>
+                <li><a class="dropdown-item" href="#">New booking request</a></li>
+                <li><a class="dropdown-item" href="#">Staff assignment needed</a></li>
+                <li><a class="dropdown-item" href="#">Booking cancellation</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">View all notifications</a></li>
+              </ul>
+            </div>
+            <a href="index.html" class="btn btn-outline-primary btn-sm">
+              <iconify-icon icon="mdi:web" class="me-1"></iconify-icon> View Website
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content p-4">
+        <div class="tab-content">
+          <!-- Dashboard Tab -->
+          <div class="tab-pane fade show active" id="dashboard">
+            <h2 class="mb-4">Dashboard</h2>
+            
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Total Bookings</h6>
+                        <h2 class="card-title mb-0" id="total-bookings">0</h2>
+                      </div>
+                      <iconify-icon icon="mdi:calendar-check" style="font-size: 48px; color: #DEAD6F;"></iconify-icon>
+                    </div>
+                    <div class="mt-3">
+                      <small class="text-success">
+                        <iconify-icon icon="mdi:arrow-up"></iconify-icon> 12% from last month
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Pending Bookings</h6>
+                        <h2 class="card-title mb-0" id="pending-bookings">0</h2>
+                      </div>
+                      <iconify-icon icon="mdi:clock-outline" style="font-size: 48px; color: #FFC107;"></iconify-icon>
+                    </div>
+                    <div class="mt-3">
+                      <small class="text-danger">
+                        <iconify-icon icon="mdi:arrow-up"></iconify-icon> 5% from last week
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Total Customers</h6>
+                        <h2 class="card-title mb-0" id="total-customers">0</h2>
+                      </div>
+                      <iconify-icon icon="mdi:account-group" style="font-size: 48px; color: #0D6EFD;"></iconify-icon>
+                    </div>
+                    <div class="mt-3">
+                      <small class="text-success">
+                        <iconify-icon icon="mdi:arrow-up"></iconify-icon> 8% from last month
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Total Revenue</h6>
+                        <h2 class="card-title mb-0" id="total-revenue">₫0</h2>
+                      </div>
+                      <iconify-icon icon="mdi:currency-usd" style="font-size: 48px; color: #198754;"></iconify-icon>
+                    </div>
+                    <div class="mt-3">
+                      <small class="text-success">
+                        <iconify-icon icon="mdi:arrow-up"></iconify-icon> 15% from last month
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="row g-4 mb-4">
+              <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Booking Trends</h5>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="bookingTrendsChart" height="300"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Popular Services</h5>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="popularServicesChart" height="300"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Bookings -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Recent Bookings</h5>
+                <a href="#bookings" class="btn btn-sm btn-outline-primary" data-bs-toggle="tab">View All</a>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Pet</th>
+                        <th>Services</th>
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recent-bookings-table">
+                      <tr>
+                        <td colspan="7" class="text-center">Loading recent bookings...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Bookings Tab -->
+          <div class="tab-pane fade" id="bookings">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2>Bookings</h2>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookingModal">
+                <iconify-icon icon="mdi:plus" class="me-1"></iconify-icon> Add Booking
+              </button>
+            </div>
+            
+            <!-- Filters -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label for="booking-status-filter" class="form-label">Status</label>
+                    <select class="form-select" id="booking-status-filter">
+                      <option value="">All Statuses</option>
+                      <option value="PENDING">Pending</option>
+                      <option value="CONFIRMED">Confirmed</option>
+                      <option value="COMPLETED">Completed</option>
+                      <option value="CANCELLED">Cancelled</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="booking-date-from" class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="booking-date-from">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="booking-date-to" class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="booking-date-to">
+                  </div>
+                  <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" id="apply-booking-filters">
+                      <iconify-icon icon="mdi:filter" class="me-1"></iconify-icon> Apply Filters
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Bookings Table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Pet</th>
+                        <th>Services</th>
+                        <th>Date & Time</th>
+                        <th>Staff</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="bookings-table">
+                      <tr>
+                        <td colspan="8" class="text-center">Loading bookings...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Bookings pagination" class="mt-4">
+                  <ul class="pagination justify-content-center" id="bookings-pagination">
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Services Tab -->
+          <div class="tab-pane fade" id="services">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2>Services</h2>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                <iconify-icon icon="mdi:plus" class="me-1"></iconify-icon> Add Service
+              </button>
+            </div>
+            
+            <!-- Services Table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Max Pets</th>
+                        <th>Requires Vaccination</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="services-table">
+                      <tr>
+                        <td colspan="8" class="text-center">Loading services...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Customers Tab -->
+          <div class="tab-pane fade" id="customers">
+            <h2 class="mb-4">Customers</h2>
+            
+            <!-- Customers Table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Pets</th>
+                        <th>Bookings</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customers-table">
+                      <tr>
+                        <td colspan="7" class="text-center">Loading customers...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Customers pagination" class="mt-4">
+                  <ul class="pagination justify-content-center" id="customers-pagination">
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Staff Tab -->
+          <div class="tab-pane fade" id="staff">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2>Staff</h2>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                <iconify-icon icon="mdi:plus" class="me-1"></iconify-icon> Add Staff
+              </button>
+            </div>
+            
+            <!-- Staff Table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Assigned Bookings</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="staff-table">
+                      <tr>
+                        <td colspan="7" class="text-center">Loading staff...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Reports Tab -->
+          <div class="tab-pane fade" id="reports">
+            <h2 class="mb-4">Reports</h2>
+            
+            <!-- Report Filters -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label for="report-type" class="form-label">Report Type</label>
+                    <select class="form-select" id="report-type">
+                      <option value="revenue">Revenue Report</option>
+                      <option value="bookings">Bookings Report</option>
+                      <option value="services">Services Report</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="report-date-from" class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="report-date-from">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="report-date-to" class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="report-date-to">
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" id="generate-report">
+                      <iconify-icon icon="mdi:file-chart" class="me-1"></iconify-icon> Generate
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Report Content -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0" id="report-title">Revenue Report</h5>
+                <button class="btn btn-sm btn-outline-primary" id="export-report">
+                  <iconify-icon icon="mdi:file-export" class="me-1"></iconify-icon> Export
+                </button>
+              </div>
+              <div class="card-body">
+                <div id="report-content">
+                  <p class="text-center text-muted">Select report type and date range to generate a report</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Settings Tab -->
+          <div class="tab-pane fade" id="settings">
+            <h2 class="mb-4">Settings</h2>
+            
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <!-- General Settings -->
+                <div class="card border-0 shadow-sm mb-4">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">General Settings</h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="general-settings-form">
+                      <div class="mb-3">
+                        <label for="business-name" class="form-label">Business Name</label>
+                        <input type="text" class="form-control" id="business-name" value="Pet Spa">
+                      </div>
+                      <div class="mb-3">
+                        <label for="business-email" class="form-label">Business Email</label>
+                        <input type="email" class="form-control" id="business-email" value="info@petspa.com">
+                      </div>
+                      <div class="mb-3">
+                        <label for="business-phone" class="form-label">Business Phone</label>
+                        <input type="tel" class="form-control" id="business-phone" value="+1 234 567 8900">
+                      </div>
+                      <div class="mb-3">
+                        <label for="business-address" class="form-label">Business Address</label>
+                        <textarea class="form-control" id="business-address" rows="3">123 Pet Street, City</textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6">
+                <!-- Booking Settings -->
+                <div class="card border-0 shadow-sm mb-4">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Booking Settings</h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="booking-settings-form">
+                      <div class="mb-3">
+                        <label for="business-hours-start" class="form-label">Business Hours Start</label>
+                        <input type="time" class="form-control" id="business-hours-start" value="09:00">
+                      </div>
+                      <div class="mb-3">
+                        <label for="business-hours-end" class="form-label">Business Hours End</label>
+                        <input type="time" class="form-control" id="business-hours-end" value="17:00">
+                      </div>
+                      <div class="mb-3">
+                        <label for="slot-duration" class="form-label">Slot Duration (minutes)</label>
+                        <input type="number" class="form-control" id="slot-duration" value="30">
+                      </div>
+                      <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="allow-same-day-booking" checked>
+                        <label class="form-check-label" for="allow-same-day-booking">Allow Same Day Booking</label>
+                      </div>
+                      <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="require-approval" checked>
+                        <label class="form-check-label" for="require-approval">Require Admin Approval</label>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Booking Modal -->
+  <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addBookingModalLabel">Add New Booking</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-booking-form">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="booking-customer" class="form-label">Customer</label>
+                <select class="form-select" id="booking-customer" required>
+                  <option value="">Select Customer</option>
+                  <!-- Customers will be loaded here -->
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="booking-pet" class="form-label">Pet</label>
+                <select class="form-select" id="booking-pet" required>
+                  <option value="">Select Pet</option>
+                  <!-- Pets will be loaded here -->
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="booking-date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="booking-date" required>
+              </div>
+              <div class="col-md-6">
+                <label for="booking-time" class="form-label">Time</label>
+                <select class="form-select" id="booking-time" required>
+                  <option value="">Select Time</option>
+                  <!-- Time slots will be loaded here -->
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Services</label>
+                <div id="booking-services-list" class="mb-3">
+                  <!-- Services will be loaded here -->
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="booking-staff" class="form-label">Assigned Staff</label>
+                <select class="form-select" id="booking-staff">
+                  <option value="">Select Staff (Optional)</option>
+                  <!-- Staff will be loaded here -->
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="booking-status" class="form-label">Status</label>
+                <select class="form-select" id="booking-status" required>
+                  <option value="PENDING">Pending</option>
+                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label for="booking-notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="booking-notes" rows="3"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-booking-btn">Save Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Service Modal -->
+  <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addServiceModalLabel">Add New Service</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-service-form">
+            <div class="mb-3">
+              <label for="service-name" class="form-label">Service Name</label>
+              <input type="text" class="form-control" id="service-name" required>
+            </div>
+            <div class="mb-3">
+              <label for="service-description" class="form-label">Description</label>
+              <textarea class="form-control" id="service-description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="service-price" class="form-label">Price (VND)</label>
+              <input type="number" class="form-control" id="service-price" required>
+            </div>
+            <div class="mb-3">
+              <label for="service-category" class="form-label">Category</label>
+              <select class="form-select" id="service-category" required>
+                <option value="">Select Category</option>
+                <option value="GROOMING">Grooming</option>
+                <option value="MEDICAL">Medical</option>
+                <option value="TRAINING">Training</option>
+                <option value="BOARDING">Boarding</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="service-image" class="form-label">Image URL</label>
+              <input type="text" class="form-control" id="service-image" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="mb-3">
+              <label for="service-max-pets" class="form-label">Max Pets Per Slot</label>
+              <input type="number" class="form-control" id="service-max-pets" value="1" min="1" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="service-requires-vaccination">
+              <label class="form-check-label" for="service-requires-vaccination">Requires Vaccination</label>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="service-active" checked>
+              <label class="form-check-label" for="service-active">Active</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-service-btn">Save Service</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Staff Modal -->
+  <div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStaffModalLabel">Add New Staff</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-staff-form">
+            <div class="mb-3">
+              <label for="staff-email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="staff-email" required>
+            </div>
+            <div class="mb-3">
+              <label for="staff-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="staff-password" required>
+            </div>
+            <div class="mb-3">
+              <label for="staff-phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="staff-phone" required>
+            </div>
+            <div class="mb-3">
+              <label for="staff-address" class="form-label">Address</label>
+              <input type="text" class="form-control" id="staff-address">
+            </div>
+            <div class="mb-3">
+              <label for="staff-gender" class="form-label">Gender</label>
+              <select class="form-select" id="staff-gender">
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-staff-btn">Save Staff</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Booking Modal -->
+  <div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewBookingModalLabel">Booking Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Booking Information</h6>
+              <p><strong>ID:</strong> <span id="view-booking-id"></span></p>
+              <p><strong>Date:</strong> <span id="view-booking-date"></span></p>
+              <p><strong>Time:</strong> <span id="view-booking-time"></span></p>
+              <p><strong>Status:</strong> <span id="view-booking-status"></span></p>
+              <p><strong>Notes:</strong> <span id="view-booking-notes"></span></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Customer & Pet Information</h6>
+              <p><strong>Customer:</strong> <span id="view-booking-customer"></span></p>
+              <p><strong>Email:</strong> <span id="view-booking-email"></span></p>
+              <p><strong>Phone:</strong> <span id="view-booking-phone"></span></p>
+              <p><strong>Pet:</strong> <span id="view-booking-pet"></span></p>
+              <p><strong>Assigned Staff:</strong> <span id="view-booking-staff"></span></p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h6>Services</h6>
+            <ul id="view-booking-services" class="list-group">
+              <!-- Services will be loaded here -->
+            </ul>
+            <p class="mt-3"><strong>Total:</strong> <span id="view-booking-total"></span></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="edit-booking-btn">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="admin-service.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

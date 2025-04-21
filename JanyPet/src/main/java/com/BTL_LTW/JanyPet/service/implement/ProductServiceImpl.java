@@ -35,9 +35,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(String id, ProductUpdateRequest request) {
         Optional<Product> optionalProduct = productRepository.findById(id);
+        // Kiểm tra sản phẩm có tên tương tự đã tồn tại chưa
+        List<Product> existingProducts = productRepository.findByName(request.getName());
         if(optionalProduct.isEmpty()){
             // Tùy vào cách xử lý lỗi của bạn, có thể ném exception
             throw new RuntimeException("Không tìm thấy sản phẩm với id: " + id);
+        }
+        // Nếu có sản phẩm cùng tên, kiểm tra thêm các thuộc tính khác
+        for (Product existingProduct : existingProducts) {
+            if (isSimilarProduct(existingProduct, request)) {
+                throw new RuntimeException("Sản phẩm tương tự đã tồn tại!");
+                // Hoặc có thể trả về sản phẩm đã tồn tại thay vì ném exception
+                // return mapToResponse(existingProduct);
+            }
         }
         Product product = optionalProduct.get();
         product.setName(request.getName());
@@ -48,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
         product = productRepository.save(product);
         return mapToResponse(product);
     }
+
 
     @Override
     public ProductResponse getProductById(String id) {
@@ -82,5 +93,18 @@ public class ProductServiceImpl implements ProductService {
         response.setStock(product.getStock());
         response.setImage(product.getImage());
         return response;
+    }
+
+    // Thêm phương thức để kiểm tra sản phẩm tương tự
+    private boolean isSimilarProduct(Product product, ProductUpdateRequest request) {
+        // So sánh các thuộc tính quan trọng
+        boolean sameName = product.getName().equals(request.getName());
+        boolean sameDescription = (product.getDescription() == null && request.getDescription() == null) ||
+                (product.getDescription() != null &&
+                        product.getDescription().equals(request.getDescription()));
+        boolean samePrice = product.getPrice().equals(request.getPrice());
+
+        // Có thể thêm điều kiện khác tùy theo yêu cầu
+        return sameName && sameDescription && samePrice;
     }
 }

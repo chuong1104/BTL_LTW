@@ -1,24 +1,29 @@
 // Login page script
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  // Generate captcha immediately when page loads
+  generateCaptcha();
+  generateCaptcha("register"); 
+  generateCaptcha("forgotPassword");
+
+  // Then wait for auth service
+  while (!window.authService) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
   // Check if auth service is loaded
   if (!window.authService) {
     console.error("Authentication service not loaded");
     return;
   }
 
-  // Initialize captcha
-  generateCaptcha();
-  generateCaptcha("register");
-  generateCaptcha("forgotPassword");
+  // Initialize other components
+  setupFormListeners();
 
   // Check URL parameters for tab selection
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("register") === "true") {
     toggleForms("register");
   }
-
-  // Set up form event listeners
-  setupFormListeners();
 });
 
 // Set up form event listeners
@@ -49,13 +54,12 @@ function setupFormListeners() {
 }
 
 // Handle login form submission
-// Handle login form submission
 async function handleLoginSubmit(e) {
-  e.preventDefault();
+  e.preventDefault(); // Prevent form submission
   hideAlert("login");
 
   const form = document.getElementById("loginForm");
-  const username = form.querySelector('input[name="username"]').value; // Lấy từ field username mới
+  const username = form.querySelector('input[name="username"]').value;
   const password = form.querySelector('input[name="password"]').value;
   const captchaInput = form.querySelector('input[name="captcha"]').value;
   const rememberMe = form.querySelector("#rememberMe")?.checked || false;
@@ -79,42 +83,22 @@ async function handleLoginSubmit(e) {
   submitBtn.disabled = true;
 
   try {
-    // Call auth service login
-    const result = await window.authService.login(
-      username,
-      password,
-      rememberMe
-    );
+    const result = await window.authService.login(username, password, rememberMe);
 
     if (result.success) {
-      console.log("User data:", result.user);
-
-      // Handle roles more flexibly
-      let roles = result.user.roles || [];
-
-      // Convert to array if it's a string
-      if (typeof roles === "string") {
-        roles = [roles];
-      } else if (!Array.isArray(roles)) {
-        roles = [];
-      }
-
-      console.log("Processed roles:", roles);
-
-      localStorage.setItem("token", result.user.token);
-      if (!rememberMe) {
-        sessionStorage.setItem("token", result.user.token);
-      }
-
-      // Check for admin role with more flexibility
-      if (roles.some((role) => role.includes("ADMIN"))) {
-        window.location.href = "/admin.html";
-      } else if (roles.some((role) => role.includes("CUSTOMER"))) {
-        window.location.href = "/index.html";
+      showAlert("login", "Đăng nhập thành công!", "success");
+      
+      // Redirect based on user role
+      const user = window.authService.getCurrentUser();
+      if (user && window.authService.hasRole("ADMIN")) {
+        showAlert("login", "Tài khoản admin không được phép đăng nhập tại đây. Vui lòng sử dụng trang đăng nhập admin.", "danger");
+        setTimeout(() => {
+          window.location.href = "/login_admin.html";
+        }, 2000);
       } else {
-        console.warn("Unknown role:", roles);
-        // Default to index page instead of throwing error
-        window.location.href = "/index.html";
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 1000);
       }
     } else {
       showAlert("login", result.message || "Đăng nhập thất bại", "danger");
@@ -122,18 +106,14 @@ async function handleLoginSubmit(e) {
     }
   } catch (error) {
     console.error("Login error:", error);
-    showAlert(
-      "login",
-      "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.",
-      "danger"
-    );
+    showAlert("login", "Đã xảy ra lỗi khi đăng nhập", "danger");
     generateCaptcha();
   } finally {
-    // Restore button state
     submitBtn.innerHTML = originalText;
     submitBtn.disabled = false;
   }
 }
+
 // Handle register form submission
 async function handleRegisterSubmit(e) {
   e.preventDefault();
@@ -144,9 +124,7 @@ async function handleRegisterSubmit(e) {
   const email = form.querySelector('input[name="email"]').value;
   const phoneNumber = form.querySelector('input[name="phoneNumber"]').value;
   const password = form.querySelector('input[name="password"]').value;
-  const confirmPassword = form.querySelector(
-    'input[name="confirmPassword"]'
-  ).value;
+  const confirmPassword = form.querySelector('input[name="confirmPassword"]').value;
   const captchaInput = form.querySelector('input[name="captcha"]').value;
 
   // Validate inputs
@@ -183,24 +161,18 @@ async function handleRegisterSubmit(e) {
   submitBtn.disabled = true;
 
   try {
-    // Call auth service register
     const result = await window.authService.register({
-      userName,
       username: userName,
       email,
       phoneNumber,
       password,
+      confirmPassword
     });
 
     if (result.success) {
-      showAlert(
-        "register",
-        "Đăng ký thành công! Vui lòng đăng nhập.",
-        "success"
-      );
+      showAlert("register", "Đăng ký thành công! Vui lòng đăng nhập.", "success");
       form.reset();
 
-      // Redirect to login after a delay
       setTimeout(() => {
         toggleForms("login");
       }, 2000);
@@ -210,14 +182,9 @@ async function handleRegisterSubmit(e) {
     }
   } catch (error) {
     console.error("Registration error:", error);
-    showAlert(
-      "register",
-      "Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại sau.",
-      "danger"
-    );
+    showAlert("register", "Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại sau.", "danger");
     generateCaptcha("register");
   } finally {
-    // Restore button state
     submitBtn.innerHTML = originalText;
     submitBtn.disabled = false;
   }
@@ -232,13 +199,8 @@ async function handleForgotPasswordSubmit(e) {
   const emailOrPhone = form.querySelector('input[name="emailOrPhone"]').value;
   const captchaInput = form.querySelector('input[name="captcha"]').value;
 
-  // Validate inputs
   if (!emailOrPhone) {
-    showAlert(
-      "forgotPassword",
-      "Vui lòng nhập email hoặc số điện thoại",
-      "danger"
-    );
+    showAlert("forgotPassword", "Vui lòng nhập email hoặc số điện thoại", "danger");
     return;
   }
 
@@ -248,37 +210,23 @@ async function handleForgotPasswordSubmit(e) {
     return;
   }
 
-  // Show loading state
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalText = submitBtn.innerHTML;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
   submitBtn.disabled = true;
 
   try {
-    // In a real app, this would call an API endpoint
-    // For demo purposes, we'll simulate a successful request
     setTimeout(() => {
-      showAlert(
-        "forgotPassword",
-        "Link đặt lại mật khẩu đã được gửi đến email/số điện thoại của bạn",
-        "success"
-      );
-
-      // For demo, we'll show the reset password form after a delay
+      showAlert("forgotPassword", "Link đặt lại mật khẩu đã được gửi đến email/số điện thoại của bạn", "success");
       setTimeout(() => {
         toggleForms("resetPassword");
       }, 2000);
     }, 1500);
   } catch (error) {
     console.error("Forgot password error:", error);
-    showAlert(
-      "forgotPassword",
-      "Đã xảy ra lỗi. Vui lòng thử lại sau.",
-      "danger"
-    );
+    showAlert("forgotPassword", "Đã xảy ra lỗi. Vui lòng thử lại sau.", "danger");
     generateCaptcha("forgotPassword");
   } finally {
-    // Restore button state after a delay (for demo purposes)
     setTimeout(() => {
       submitBtn.innerHTML = originalText;
       submitBtn.disabled = false;
@@ -293,11 +241,8 @@ async function handleResetPasswordSubmit(e) {
 
   const form = document.getElementById("resetPasswordForm");
   const newPassword = form.querySelector('input[name="newPassword"]').value;
-  const confirmNewPassword = form.querySelector(
-    'input[name="confirmNewPassword"]'
-  ).value;
+  const confirmNewPassword = form.querySelector('input[name="confirmNewPassword"]').value;
 
-  // Validate inputs
   if (!newPassword || !confirmNewPassword) {
     showAlert("resetPassword", "Vui lòng nhập đầy đủ thông tin", "danger");
     return;
@@ -308,36 +253,22 @@ async function handleResetPasswordSubmit(e) {
     return;
   }
 
-  // Show loading state
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalText = submitBtn.innerHTML;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
   submitBtn.disabled = true;
 
   try {
-    // In a real app, this would call an API endpoint
-    // For demo purposes, we'll simulate a successful request
     setTimeout(() => {
-      showAlert(
-        "resetPassword",
-        "Mật khẩu đã được cập nhật thành công!",
-        "success"
-      );
-
-      // Redirect to login after a delay
+      showAlert("resetPassword", "Mật khẩu đã được cập nhật thành công!", "success");
       setTimeout(() => {
         toggleForms("login");
       }, 2000);
     }, 1500);
   } catch (error) {
     console.error("Reset password error:", error);
-    showAlert(
-      "resetPassword",
-      "Đã xảy ra lỗi. Vui lòng thử lại sau.",
-      "danger"
-    );
+    showAlert("resetPassword", "Đã xảy ra lỗi. Vui lòng thử lại sau.", "danger");
   } finally {
-    // Restore button state after a delay (for demo purposes)
     setTimeout(() => {
       submitBtn.innerHTML = originalText;
       submitBtn.disabled = false;
@@ -354,16 +285,12 @@ function toggleForms(formType) {
     resetPassword: document.getElementById("resetPasswordForm"),
   };
 
-  // Hide all forms
   Object.values(forms).forEach((form) => {
     if (form) form.className = "hide";
   });
 
-  // Show selected form
   if (forms[formType]) {
     forms[formType].className = "form-active";
-
-    // Generate captcha if needed
     if (formType === "register") {
       generateCaptcha("register");
     } else if (formType === "forgotPassword") {
@@ -373,12 +300,10 @@ function toggleForms(formType) {
     }
   }
 
-  // Clear alerts for all forms
   Object.keys(forms).forEach((key) => {
     if (forms[key]) hideAlert(key);
   });
 
-  // Adjust container height
   const formsContainer = document.getElementById("formsContainer");
   if (formsContainer && forms[formType]) {
     formsContainer.style.height = forms[formType].offsetHeight + "px";
@@ -406,8 +331,7 @@ function togglePassword(icon) {
 
 // Generate CAPTCHA
 function generateCaptcha(formPrefix = "") {
-  const chars =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   let captcha = "";
   for (let i = 0; i < 6; i++) {
     captcha += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -434,25 +358,18 @@ function checkPasswordStrength() {
   const meter = document.getElementById("passwordStrengthMeter");
   const text = document.getElementById("passwordStrengthText");
 
-  // Reset
   meter.className = "";
   meter.style.width = "0";
   text.textContent = "";
 
-  // Check strength
   if (password.length === 0) return;
 
   let strength = 0;
-
-  // Length check
   if (password.length >= 8) strength += 1;
-
-  // Character variety checks
   if (/[A-Z]/.test(password)) strength += 1;
   if (/[0-9]/.test(password)) strength += 1;
   if (/[^A-Za-z0-9]/.test(password)) strength += 1;
 
-  // Update UI based on strength
   if (strength <= 2) {
     meter.className = "weak";
     text.textContent = "Yếu";
@@ -473,25 +390,18 @@ function checkNewPasswordStrength() {
   const meter = document.getElementById("newPasswordStrengthMeter");
   const text = document.getElementById("newPasswordStrengthText");
 
-  // Reset
   meter.className = "";
   meter.style.width = "0";
   text.textContent = "";
 
-  // Check strength
   if (password.length === 0) return;
 
   let strength = 0;
-
-  // Length check
   if (password.length >= 8) strength += 1;
-
-  // Character variety checks
   if (/[A-Z]/.test(password)) strength += 1;
   if (/[0-9]/.test(password)) strength += 1;
   if (/[^A-Za-z0-9]/.test(password)) strength += 1;
 
-  // Update UI based on strength
   if (strength <= 2) {
     meter.className = "weak";
     text.textContent = "Yếu";
@@ -523,11 +433,7 @@ function showAlert(formId, message, type) {
   const alertEl = document.getElementById(formId + "Alert");
   if (!alertEl) return;
 
-  alertEl.innerHTML =
-    message +
-    '<span class="close-btn" onclick="closeAlert(\'' +
-    formId +
-    '\')"><i class="fas fa-times"></i></span>';
+  alertEl.innerHTML = message + '<span class="close-btn" onclick="closeAlert(\'' + formId + '\')"><i class="fas fa-times"></i></span>';
   alertEl.className = "alert alert-" + type;
 }
 

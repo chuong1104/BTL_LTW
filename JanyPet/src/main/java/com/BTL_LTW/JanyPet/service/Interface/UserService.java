@@ -29,9 +29,13 @@ public interface UserService {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    void saveRefreshToken(String userId, String refreshToken);
+    void saveRefreshToken(String userId, String refreshToken, Long tokenExpiry);
 
     void clearRefreshToken(String userId);
 
+    User findByRefreshToken(String refreshToken);
+
     void toggleLockUser(String id, boolean locked);
+
+    boolean existsAdminUser();
 }
