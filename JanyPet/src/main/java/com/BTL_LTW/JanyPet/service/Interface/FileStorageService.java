@@ -1,19 +1,13 @@
 package com.BTL_LTW.JanyPet.service.Interface;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface FileStorageService {
-
-    String getFileUrl(String fileName);
-    /**
-     * Store a file and return the URL
-     */
     String storeFile(MultipartFile file) throws IOException;
-
-    /**
-     * Delete a file by URL
-     */
-    void deleteFile(String fileUrl) throws IOException;
+    String getFileUrl(String fileName);
+    void deleteFile(String fileName) throws IOException;
+    Resource loadFileAsResource(String fileName);
 }

@@ -1,10 +1,11 @@
 /**
- * Product Service - Xử lý các thao tác liên quan đến sản phẩm
+ * Product Service - Handles product-related operations
  */
 import api from './api-service.js';
+import { fileUploadService } from './file-upload-service.js';
 
 const ProductService = {
-  // Lấy tất cả sản phẩm
+  // Get all products
   getAllProducts: async () => {
     try {
       return await api.get('/products');
@@ -14,7 +15,7 @@ const ProductService = {
     }
   },
 
-  // Lấy sản phẩm theo ID
+  // Get product by ID
   getProductById: async (productId) => {
     try {
       return await api.get(`/products/${productId}`);
@@ -24,9 +25,16 @@ const ProductService = {
     }
   },
 
-  // Tạo sản phẩm mới
+  // Create a new product
   createProduct: async (productData) => {
     try {
+      // Handle file upload separately if imageFile is present
+      if (productData.imageFile) {
+        const uploadResult = await ProductService.uploadProductImage(productData.imageFile);
+        productData.imageUrl = uploadResult.data.filename || uploadResult.data.url;
+        delete productData.imageFile; // Remove the file object before sending JSON
+      }
+
       return await api.post('/products', productData);
     } catch (error) {
       console.error('Error creating product:', error);
@@ -34,9 +42,16 @@ const ProductService = {
     }
   },
 
-  // Cập nhật sản phẩm
+  // Update product
   updateProduct: async (productId, productData) => {
     try {
+      // Handle file upload separately if imageFile is present
+      if (productData.imageFile) {
+        const uploadResult = await ProductService.uploadProductImage(productData.imageFile);
+        productData.imageUrl = uploadResult.data.filename || uploadResult.data.url;
+        delete productData.imageFile; // Remove the file object before sending JSON
+      }
+
       return await api.put(`/products/${productId}`, productData);
     } catch (error) {
       console.error(`Error updating product ${productId}:`, error);
@@ -44,24 +59,43 @@ const ProductService = {
     }
   },
 
-  // Xóa sản phẩm
+  // Delete product
   deleteProduct: async (productId) => {
     try {
-      return await api.delete(`/products/${productId}`);
+      await api.delete(`/products/${productId}`);
     } catch (error) {
-      console.error(`Error deleting product ${productId}:`, error);
+      console.error('Error deleting product:', error);
       throw error;
     }
   },
 
-  // Upload hình ảnh sản phẩm
+  // Upload product image
   uploadProductImage: async (file) => {
     try {
-      return await api.upload('/upload/file', file);
+      const result = await fileUploadService.uploadFile(file, '/api/upload/file');
+      if (!result.success) {
+        throw new Error(result.message || 'Image upload failed');
+      }
+      return result;
     } catch (error) {
       console.error('Error uploading product image:', error);
       throw error;
     }
+  },
+
+  // Get image URL with proper context path
+  getImageUrl: (imageUrl) => {
+    if (!imageUrl) {
+      return 'https://via.placeholder.com/80?text=No+Image';
+    }
+
+    // Return as is if it's already a full URL
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
+    // Handle image path from the server
+    return `/uploads/${imageUrl}`;
   }
 };
 

@@ -1,94 +1,101 @@
 /**
  * API Service - Handles API requests
  */
-const API_BASE_URL = "http://localhost:8080/api"
-
-/**
- * Handle API response
- * @param {Response} response - Fetch response
- * @returns {Promise<any>} Parsed response data
- * @throws {Error} If response is not ok
- */
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: "Unknown error occurred" }))
-    throw new Error(error.message || "Something went wrong")
+class ApiService {
+  constructor() {
+    this.baseUrl = '/api'; // Use relative URL to respect context path
   }
-  return response.json()
-}
 
-/**
- * API service object with methods for different HTTP requests
- */
-const api = {
-  /**
-   * Make a GET request
-   * @param {string} endpoint - API endpoint
-   * @returns {Promise<any>} Response data
-   */
-  get: async (endpoint) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "GET",
+  // Helper method to handle API responses
+  async handleResponse(response) {
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorMessage;
+
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+      } catch (e) {
+        errorMessage = `HTTP error! status: ${response.status}`;
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  }
+
+  // GET request
+  async get(endpoint) {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'Accept': 'application/json'
       },
-    })
-    return handleResponse(response)
-  },
+      credentials: 'include'
+    });
 
-  /**
-   * Make a POST request
-   * @param {string} endpoint - API endpoint
-   * @param {Object} data - Request body data
-   * @returns {Promise<any>} Response data
-   */
-  post: async (endpoint, data) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(data),
-    })
-    return handleResponse(response)
-  },
+    return this.handleResponse(response);
+  }
 
-  /**
-   * Make a PUT request
-   * @param {string} endpoint - API endpoint
-   * @param {Object} data - Request body data
-   * @returns {Promise<any>} Response data
-   */
-  put: async (endpoint, data) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "PUT",
+  // POST request
+  async post(endpoint, data) {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify(data),
-    })
-    return handleResponse(response)
-  },
+      credentials: 'include'
+    });
 
-  /**
-   * Make a DELETE request
-   * @param {string} endpoint - API endpoint
-   * @returns {Promise<any>} Response data
-   */
-  delete: async (endpoint) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "DELETE",
+    return this.handleResponse(response);
+  }
+
+  // PUT request
+  async put(endpoint, data) {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-    })
-    return handleResponse(response)
-  },
+      body: JSON.stringify(data),
+      credentials: 'include'
+    });
+
+    return this.handleResponse(response);
+  }
+
+  // DELETE request
+  async delete(endpoint) {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return true;
+  }
+
+  // Upload file
+  async upload(endpoint, file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    });
+
+    return this.handleResponse(response);
+  }
 }
 
-// Export the API service
-export default api
+const api = new ApiService();
+export default api;

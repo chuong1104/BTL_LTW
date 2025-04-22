@@ -3,14 +3,13 @@ package com.BTL_LTW.JanyPet.dto.response;
 import java.math.BigDecimal;
 
 public class ProductResponse {
-    private String id; // có thể lấy từ BaseEntity
+    private String id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private String image;
+    private String imageUrl; // Trả về URL đầy đủ để hiển thị trên giao diện
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -51,11 +50,11 @@ public class ProductResponse {
         this.stock = stock;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

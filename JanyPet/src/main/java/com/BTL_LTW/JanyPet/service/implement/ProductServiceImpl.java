@@ -5,11 +5,12 @@ import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
 import com.BTL_LTW.JanyPet.entity.Product;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
-
+import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +21,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
         Product product = new Product();
@@ -27,7 +31,18 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setImage(request.getImage());
+
+        // Lưu ảnh và lấy tên file
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            String fileName = null;
+            try {
+                fileName = fileStorageService.storeFile(request.getImage());
+                product.setImage(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store image file: " + e.getMessage());
+            }
+        }
+
         product = productRepository.save(product);
         return mapToResponse(product);
     }
@@ -35,30 +50,48 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(String id, ProductUpdateRequest request) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        // Kiểm tra sản phẩm có tên tương tự đã tồn tại chưa
-        List<Product> existingProducts = productRepository.findByName(request.getName());
-        if(optionalProduct.isEmpty()){
-            // Tùy vào cách xử lý lỗi của bạn, có thể ném exception
+        if (optionalProduct.isEmpty()) {
             throw new RuntimeException("Không tìm thấy sản phẩm với id: " + id);
         }
-        // Nếu có sản phẩm cùng tên, kiểm tra thêm các thuộc tính khác
+
+        // Kiểm tra sản phẩm tương tự
+        List<Product> existingProducts = productRepository.findByName(request.getName());
         for (Product existingProduct : existingProducts) {
-            if (isSimilarProduct(existingProduct, request)) {
+            if (!existingProduct.getId().equals(id) && isSimilarProduct(existingProduct, request)) {
                 throw new RuntimeException("Sản phẩm tương tự đã tồn tại!");
-                // Hoặc có thể trả về sản phẩm đã tồn tại thay vì ném exception
-                // return mapToResponse(existingProduct);
             }
         }
+
         Product product = optionalProduct.get();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setImage(request.getImage());
+
+        // Cập nhật ảnh nếu có
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            // Xóa ảnh cũ nếu tồn tại
+            if (product.getImage() != null && !product.getImage().isEmpty()) {
+                try {
+                    fileStorageService.deleteFile(product.getImage());
+                } catch (Exception e) {
+                    // Log lỗi nếu cần, nhưng không làm gián đoạn quá trình
+                    System.err.println("Failed to delete old image: " + e.getMessage());
+                }
+            }
+
+            String fileName = null;
+            try {
+                fileName = fileStorageService.storeFile(request.getImage());
+                product.setImage(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store updated image file: " + e.getMessage());
+            }
+        }
+
         product = productRepository.save(product);
         return mapToResponse(product);
     }
-
 
     @Override
     public ProductResponse getProductById(String id) {
@@ -77,13 +110,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(String id) {
-        if(!productRepository.existsById(id)){
-            throw new RuntimeException("Không tìm thấy sản phẩm với id: " + id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với id: " + id));
+        // Xóa ảnh nếu tồn tại
+        if (product.getImage() != null && !product.getImage().isEmpty()) {
+            try {
+                fileStorageService.deleteFile(product.getImage());
+            } catch (Exception e) {
+                // Log lỗi nếu cần
+                System.err.println("Failed to delete image during product deletion: " + e.getMessage());
+            }
         }
         productRepository.deleteById(id);
     }
 
-    // Phương thức chuyển đổi Entity -> DTO response
     private ProductResponse mapToResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
@@ -91,20 +131,19 @@ public class ProductServiceImpl implements ProductService {
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
         response.setStock(product.getStock());
-        response.setImage(product.getImage());
+        // Chuyển tên file thành URL đầy đủ
+        if (product.getImage() != null && !product.getImage().isEmpty()) {
+            response.setImageUrl(fileStorageService.getFileUrl(product.getImage()));
+        }
         return response;
     }
 
-    // Thêm phương thức để kiểm tra sản phẩm tương tự
     private boolean isSimilarProduct(Product product, ProductUpdateRequest request) {
-        // So sánh các thuộc tính quan trọng
         boolean sameName = product.getName().equals(request.getName());
         boolean sameDescription = (product.getDescription() == null && request.getDescription() == null) ||
                 (product.getDescription() != null &&
                         product.getDescription().equals(request.getDescription()));
         boolean samePrice = product.getPrice().equals(request.getPrice());
-
-        // Có thể thêm điều kiện khác tùy theo yêu cầu
         return sameName && sameDescription && samePrice;
     }
 }

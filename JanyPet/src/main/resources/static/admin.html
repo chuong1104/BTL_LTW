@@ -95,13 +95,13 @@
     </nav>
     <div class="sidebar-footer">
       <div class="user-info">
-        <!-- <img
+        <img
           src="https://via.placeholder.com/50"
           alt="Admin"
           class="avatar"
-        /> -->
+        />
         <div class="user-details">
-          <h4 id="admin-username">Admin User</h4>
+          <h4>PetShop Admin</h4>
           <p>Administrator</p>
         </div>
       </div>
@@ -1853,154 +1853,53 @@ United States</textarea
 </div>
 
 <!-- Add/Edit Product Modal -->
+<!-- This is a partial HTML snippet to fix the product modal -->
+<!-- Replace the existing product modal in your HTML with this -->
 <div id="product-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
       <h2 id="modal-title">Add New Product</h2>
-      <span class="close">&times;</span>
+      <button class="close">&times;</button>
     </div>
     <div class="modal-body">
-      <div class="tabs">
-        <div class="tab active" data-tab="basic-details">Basic Details</div>
-        <div class="tab" data-tab="description">Description</div>
-        <div class="tab" data-tab="images">Images</div>
-      </div>
-
-      <form id="product-basic-form">
-        <input type="hidden" id="product-id">
-
-        <!-- Basic Details Tab -->
-        <div id="basic-details" class="tab-pane active">
-          <div class="form-group">
-            <label for="product-name">Product Name</label>
-            <input type="text" id="product-name" required>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="product-price">Price</label>
-              <input type="number" id="product-price" step="0.01" required>
-            </div>
-            <div class="form-group">
-              <label for="product-stock">Stock</label>
-              <input type="number" id="product-stock" min="0" required>
-            </div>
-          </div>
-
-          <!-- <div class="form-group">
-            <label for="short-description">Description</label>
-            <textarea id="short-description" rows="3" required></textarea>
-          </div> -->
+      <form id="product-form">
+        <input type="hidden" id="product-id" name="id">
+        
+        <div class="form-group">
+          <label for="product-name">Product Name*</label>
+          <input type="text" id="product-name" name="name" required>
         </div>
 
-        <!-- Description Tab -->
-        <div id="description" class="tab-pane">
-          <div class="description-options">
-            <button type="button" class="option-btn active" data-option="manual">Manual Entry</button>
-            <button type="button" class="option-btn" data-option="ai">AI Generated</button>
-            <button type="button" class="option-btn" data-option="template">Template</button>
-            <button type="button" class="option-btn" data-option="import">Import</button>
-            <button type="button" class="preview-btn" id="preview-toggle">
-              <i class="fas fa-eye"></i> Preview
-            </button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-price">Price*</label>
+            <input type="number" id="product-price" name="price" min="0" step="0.01" required>
           </div>
-
-          <div class="description-content">
-            <!-- Manual Entry -->
-            <div class="description-option active" id="manual-entry">
-              <div class="form-group">
-                <label>Product Description</label>
-                <div id="editor-container"></div>
-              </div>
-            </div>
-
-            <!-- AI Generated -->
-            <div class="description-option" id="ai-option">
-              <div class="form-group">
-                <label for="ai-prompt">Describe your product</label>
-                <textarea id="ai-prompt" placeholder="Enter details about your product (features, benefits, materials, etc.)"></textarea>
-              </div>
-              <button type="button" class="primary-btn" id="generate-btn">
-                <i class="fas fa-magic"></i> Generate Description
-              </button>
-              <div class="generated-content" id="ai-result">
-                <label>Generated Description</label>
-                <div class="generated-text"></div>
-              </div>
-            </div>
-
-            <!-- Templates -->
-            <div class="description-option" id="template-option">
-              <div class="form-group">
-                <label for="template-select">Select Template</label>
-                <select id="template-select">
-                  <option value="">Select a template</option>
-                  <option value="food">Pet Food Template</option>
-                  <option value="toy">Pet Toy Template</option>
-                  <option value="accessory">Pet Accessory Template</option>
-                  <option value="medicine">Pet Medicine Template</option>
-                </select>
-              </div>
-              <div class="template-preview" id="template-preview">
-                <label>Template Preview</label>
-                <div class="template-text"></div>
-              </div>
-            </div>
-
-            <!-- Import from File/URL -->
-            <div class="description-option" id="import-option">
-              <div class="form-group">
-                <label>Import from File</label>
-                <input type="file" id="description-file" accept=".txt,.html,.md">
-                <p class="help-text">Supports .txt, .html, .md files</p>
-              </div>
-              <div class="form-group">
-                <label>Or import from URL</label>
-                <div class="input-with-button">
-                  <input type="url" id="description-url" placeholder="https://example.com/product-description">
-                  <button type="button" class="primary-btn" id="fetch-url-btn">Fetch</button>
-                </div>
-              </div>
-              <div id="imported-description-container">
-                <label>Imported Description</label>
-                <div id="imported-description"></div>
-              </div>
-            </div>
-
-            <!-- Preview -->
-            <div class="description-preview" id="description-preview">
-              <div class="preview-card">
-                <h3 id="preview-title">Product Name</h3>
-                <div class="preview-content" id="preview-content"></div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="product-stock">Stock*</label>
+            <input type="number" id="product-stock" name="stock" min="0" required>
           </div>
         </div>
 
-        <!-- Images Tab -->
-        <div id="images" class="tab-pane">
-          <div class="form-group">
-            <label>Product Images</label>
-            <div class="upload-area">
-              <input type="file" id="product-images" accept="image/*" multiple style="display: none;">
-              <button type="button" class="upload-btn">
-                <i class="fas fa-cloud-upload-alt"></i> Upload Images
-              </button>
-              <p class="drag-text">or drag and drop images here</p>
-            </div>
-            <div id="image-preview-container" class="image-preview"></div>
-          </div>
+        <div class="form-group">
+          <label for="product-description">Description*</label>
+          <div id="editor-container"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="product-image">Product Image</label>
+          <input type="file" id="product-image" name="image" accept="image/*">
+          <div id="image-preview"></div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" id="back-btn" class="secondary-btn">Back</button>
-      <button type="button" id="next-btn" class="primary-btn">Next</button>
-      <button type="button" id="save-btn" class="primary-btn">Save Product</button>
-      <button type="button" id="cancel-btn" class="secondary-btn">Cancel</button>
+      <button type="button" class="btn secondary-btn" id="cancel-btn">Cancel</button>
+      <button type="button" class="btn primary-btn" id="save-product-btn">Save Product</button>
     </div>
   </div>
 </div>
+
 
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" class="modal">
@@ -2020,6 +1919,28 @@ United States</textarea
   </div>
 </div>
 
+<div id="delete-confirmation-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Confirm Delete</h2>
+      <span class="close">&times;</span>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="confirm-delete-btn" class="danger-btn">Delete</button>
+      <button type="button" id="cancel-delete-btn" class="secondary-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Thêm vào cuối body trước các script -->
+<div id="image-preview-modal" class="image-preview-modal">
+    <span class="close" onclick="this.parentElement.style.display='none'">&times;</span>
+    <img id="preview-image" src="">
+</div>
+
 <!-- Toast Notification -->
 <div class="toast" id="toast">
   <div class="toast-content">
@@ -2029,15 +1950,36 @@ United States</textarea
   <div class="toast-progress"></div>
 </div>
 
-<!-- Scripts -->
+<!-- Thư viện bên thứ 3 -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<!-- Core services -->
+<script src="js/api-service.js"></script>
 <script src="js/toast-service.js"></script>
 <script src="js/auth_service.js"></script>
+
+<!-- Handlers -->
+<script src="js/event-handlers.js"></script>
+<script src="js/modal-handlers.js"></script>
+<script src="js/form-handlers.js"></script>
+<script type="module" src="js/product-handlers.js"></script>
+<script src="js/order-handlers.js"></script>
+<script src="js/report-handlers.js"></script>
+<script src="js/settings-handlers.js"></script>
+
+<!-- Main script -->
 <script src="js/admin-script.js"></script>
+
+<!-- Initialize -->
 <script>
-  // Initialize Quill editor when the page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Quill editor
+  document.addEventListener("DOMContentLoaded", () => {
+    // Initialize core services first
+    if (!window.authService) {
+      console.error("Auth service not loaded");
+      return;
+    }
+
+    // Initialize UI components
     window.quill = new Quill('#editor-container', {
       theme: 'snow',
       modules: {
@@ -2045,9 +1987,6 @@ United States</textarea
           ['bold', 'italic', 'underline', 'strike'],
           ['blockquote', 'code-block'],
           [{ 'header': 1 }, { 'header': 2 }],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [{ 'script': 'sub' }, { 'script': 'super' }],
-          [{ 'indent': '-1' }, { 'indent': '+1' }],
           [{ 'size': ['small', false, 'large', 'huge'] }],
           [{ 'color': [] }, { 'background': [] }],
           [{ 'align': [] }],
@@ -2057,6 +1996,20 @@ United States</textarea
       },
       placeholder: 'Enter product description...'
     });
+
+    // Initialize handlers
+    if (window.ProductHandlers) {
+      ProductHandlers.initializeProductEvents();
+    }
+    if (window.OrderHandlers) {
+      OrderHandlers.initializeOrderEvents();
+    }
+    if (window.ReportHandlers) {
+      ReportHandlers.initializeReportEvents();
+    }
+    if (window.SettingsHandlers) {
+      SettingsHandlers.initializeSettingsEvents();
+    }
   });
 </script>
 </body>

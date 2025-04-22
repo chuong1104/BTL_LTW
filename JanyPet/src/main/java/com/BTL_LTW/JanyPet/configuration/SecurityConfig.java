@@ -72,60 +72,47 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .cors().and()  // Enable CORS
-                .authorizeHttpRequests(authz -> authz
-                        // In a real app, you'd restrict based on roles/permissions
-                        .anyRequest().permitAll()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/login",
+                                "/",
+                                "/index.html",
+                                "/login.html",
+                                "/register.html",
+                                "/favicon.ico",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/uploads/**",
+                                "/api/upload/files/**", // Cho phép truy cập công khai vào hình ảnh
+                                "/admin.html"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/**",
+                                "/api/auth/**",
+                                "/api/users/register-admin",
+                                "/api/users/init-admin",
+                                "/api/**"
+                        ).permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
+                        .requestMatchers("/api/users/**").hasAnyRole(
+                                Role.ADMIN.name(),
+                                Role.EMPLOYEE.name(),
+                                Role.CUSTOMER.name()
+                        )
+//                        .anyRequest().authenticated()
                 );
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(authenticationProvider());
 
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//            .csrf(csrf -> csrf.disable())
-//            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//            .authorizeHttpRequests(auth -> auth
-//                .requestMatchers(
-//                    "/login",
-//                    "/** ",
-//                    "/",
-//                    "/index.html",
-//                    "/login.html",
-//                    "/register.html",
-//                    "/favicon.ico",
-//                    "/css/**",
-//                    "/js/**",
-//                    "/images/**",
-//                    "/uploads/**",
-//                        "/admin"
-//                ).permitAll()
-//                .requestMatchers(
-//                    "/api/auth/**",
-//                    "/api/users/register-admin",  // Add this line to allow admin registration
-//                    "/api/users/init-admin",
-//                    "/api/**"// Add this line for initial admin setup
-//
-//                ).permitAll()
-//                .requestMatchers("/api/admin/**").hasRole("ADMIN")  // Spring sẽ tự thêm ROLE_
-//                .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
-//                .requestMatchers("/api/users/**").hasAnyRole(
-//                    Role.ADMIN.name(),      // Sẽ thành ROLE_ADMIN
-//                    Role.EMPLOYEE.name(),   // Sẽ thành ROLE_EMPLOYEE
-//                    Role.CUSTOMER.name()    // Sẽ thành ROLE_CUSTOMER
-//                )
-//                .anyRequest().authenticated()
-//            );
-//
-//        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.authenticationProvider(authenticationProvider());
-//
-//        return http.build();
-//    }
 }

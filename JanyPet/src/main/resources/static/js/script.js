@@ -20,7 +20,6 @@ const productStockInput = document.getElementById("product-stock")
 const productSkuInput = document.getElementById("product-sku")
 const addProductBtn = document.getElementById("add-product-btn")
 const cancelBtn = document.getElementById("cancel-btn")
-const saveBtn = document.getElementById("save-btn")
 const nextBtn = document.getElementById("next-btn")
 const backBtn = document.getElementById("back-btn")
 const deleteProductBtn = document.querySelectorAll(".delete-btn")
@@ -56,7 +55,7 @@ let quill
 const productService = {
   getAllProducts: async () => {
     // Replace with your actual API endpoint
-    const response = await fetch("http://localhost:8080/products?limit=5")
+    const response = await fetch("http://localhost:8080/api/products?limit=5")
     const data = await response.json()
     return data.map((product) => ({
       id: product.id,
@@ -72,7 +71,7 @@ const productService = {
   },
   createProduct: async (productData) => {
     // Replace with your actual API endpoint
-    const response = await fetch("http://localhost:8080/products", {
+    const response = await fetch("http://localhost:8080/api/products", {
       method: "POST",
       body: JSON.stringify(productData),
     })
@@ -80,7 +79,7 @@ const productService = {
   },
   updateProduct: async (productId, productData) => {
     // Replace with your actual API endpoint
-    const response = await fetch(`http://localhost:8080/products/${productId}`, {
+    const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
       method: "PUT",
       body: JSON.stringify(productData),
     })
@@ -88,13 +87,13 @@ const productService = {
   },
   deleteProduct: async (productId) => {
     // Replace with your actual API endpoint
-    const response = await fetch(`http://localhost:8080/products/${productId}`, {
+    const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
       method: "DELETE",
     })
     return await response.json()
   },
   getProductById: async (productId) => {
-    const response = await fetch(`http://localhost:8080/products/${productId}`)
+    const response = await fetch(`http://localhost:8080/api/products/${productId}`)
     return await response.json()
   },
 }
@@ -315,9 +314,9 @@ function setupEventListeners() {
   })
 
   // Save Product button
-  saveBtn.addEventListener("click", () => {
-    saveProduct()
-  })
+  // saveBtn.addEventListener("click", () => {
+  //   saveProduct()
+  // })
 
   // Next button in modal
   nextBtn.addEventListener("click", () => {
@@ -453,106 +452,106 @@ async function renderProducts() {
 }
 
 // Thay thế hàm saveProduct hiện tại
-async function saveProduct() {
-  // Kiểm tra các phần tử DOM trước khi truy cập
-  const nameInput = document.getElementById("product-name")
-  const priceInput = document.getElementById("product-price")
-  const stockInput = document.getElementById("product-stock")
+// async function saveProduct() {
+//   // Kiểm tra các phần tử DOM trước khi truy cập
+//   const nameInput = document.getElementById("product-name")
+//   const priceInput = document.getElementById("product-price")
+//   const stockInput = document.getElementById("product-stock")
 
-  if (!nameInput || !priceInput) {
-    showToast("Không thể tìm thấy các trường dữ liệu cần thiết", "error")
-    return
-  }
+//   if (!nameInput || !priceInput) {
+//     showToast("Không thể tìm thấy các trường dữ liệu cần thiết", "error")
+//     return
+//   }
 
-  const name = nameInput.value.trim()
-  const price = Number.parseFloat(priceInput.value)
-  const stock = stockInput ? Number.parseInt(stockInput.value) || 0 : 0
+//   const name = nameInput.value.trim()
+//   const price = Number.parseFloat(priceInput.value)
+//   const stock = stockInput ? Number.parseInt(stockInput.value) || 0 : 0
 
-  if (!name || isNaN(price)) {
-    showToast("Vui lòng điền đầy đủ thông tin bắt buộc", "error")
-    tabs[0].click()
-    return
-  }
+//   if (!name || isNaN(price)) {
+//     showToast("Vui lòng điền đầy đủ thông tin bắt buộc", "error")
+//     tabs[0].click()
+//     return
+//   }
 
-  // Lấy mô tả sản phẩm từ phương thức đang được chọn
-  let description = ""
-  try {
-    const activeOption = document.querySelector(".option-btn.active")
-    if (activeOption) {
-      const optionId = activeOption.getAttribute("data-option")
+//   // Lấy mô tả sản phẩm từ phương thức đang được chọn
+//   let description = ""
+//   try {
+//     const activeOption = document.querySelector(".option-btn.active")
+//     if (activeOption) {
+//       const optionId = activeOption.getAttribute("data-option")
 
-      if (optionId === "manual" && quill) {
-        description = quill.root.innerHTML
-      } else if (optionId === "ai") {
-        const aiResultElement = document.querySelector("#ai-result .generated-text")
-        if (aiResultElement) {
-          description = aiResultElement.innerHTML
-        }
-      } else if (optionId === "template") {
-        const templateTextElement = document.querySelector("#template-preview .template-text")
-        if (templateTextElement) {
-          description = templateTextElement.innerHTML
-        }
-      } else if (optionId === "import") {
-        const importedDescriptionElement = document.getElementById("imported-description")
-        if (importedDescriptionElement) {
-          description = importedDescriptionElement.innerHTML
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error getting description:", error)
-    // Fallback to empty description if there's an error
-    description = ""
-  }
+//       if (optionId === "manual" && quill) {
+//         description = quill.root.innerHTML
+//       } else if (optionId === "ai") {
+//         const aiResultElement = document.querySelector("#ai-result .generated-text")
+//         if (aiResultElement) {
+//           description = aiResultElement.innerHTML
+//         }
+//       } else if (optionId === "template") {
+//         const templateTextElement = document.querySelector("#template-preview .template-text")
+//         if (templateTextElement) {
+//           description = templateTextElement.innerHTML
+//         }
+//       } else if (optionId === "import") {
+//         const importedDescriptionElement = document.getElementById("imported-description")
+//         if (importedDescriptionElement) {
+//           description = importedDescriptionElement.innerHTML
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error getting description:", error)
+//     // Fallback to empty description if there's an error
+//     description = ""
+//   }
 
-  // Determine status based on stock
-  let status = "In Stock"
-  if (stock <= 0) {
-    status = "Out of Stock"
-  } else if (stock <= 5) {
-    status = "Low Stock"
-  }
+//   // Determine status based on stock
+//   let status = "In Stock"
+//   if (stock <= 0) {
+//     status = "Out of Stock"
+//   } else if (stock <= 5) {
+//     status = "Low Stock"
+//   }
 
-  const productId = document.getElementById("product-id") ? document.getElementById("product-id").value : null
+//   const productId = document.getElementById("product-id") ? document.getElementById("product-id").value : null
 
-  // Lấy hình ảnh
-  const images = []
-  const imagePreviewContainer = document.getElementById("image-preview-container")
-  if (imagePreviewContainer) {
-    imagePreviewContainer.querySelectorAll("img").forEach((img) => {
-      images.push(img.src)
-    })
-  }
+//   // Lấy hình ảnh
+//   const images = []
+//   const imagePreviewContainer = document.getElementById("image-preview-container")
+//   if (imagePreviewContainer) {
+//     imagePreviewContainer.querySelectorAll("img").forEach((img) => {
+//       images.push(img.src)
+//     })
+//   }
 
-  // Chuẩn bị dữ liệu sản phẩm
-  const productData = {
-    name,
-    price,
-    stock,
-    status,
-    description,
-    image: images.length > 0 ? JSON.stringify({ url: images[0] }) : null,
-  }
+//   // Chuẩn bị dữ liệu sản phẩm
+//   const productData = {
+//     name,
+//     price,
+//     stock,
+//     status,
+//     description,
+//     image: images.length > 0 ? JSON.stringify({ url: images[0] }) : null,
+//   }
 
-  try {
-    if (productId) {
-      // Cập nhật sản phẩm hiện có
-      await productService.updateProduct(productId, productData)
-      showToast("Cập nhật sản phẩm thành công")
-    } else {
-      // Tạo sản phẩm mới
-      await productService.createProduct(productData)
-      showToast("Thêm sản phẩm mới thành công")
-    }
+//   try {
+//     if (productId) {
+//       // Cập nhật sản phẩm hiện có
+//       await productService.updateProduct(productId, productData)
+//       showToast("Cập nhật sản phẩm thành công")
+//     } else {
+//       // Tạo sản phẩm mới
+//       await productService.createProduct(productData)
+//       showToast("Thêm sản phẩm mới thành công")
+//     }
 
-    // Tải lại danh sách sản phẩm
-    await renderProducts()
-    closeProductModal()
-  } catch (error) {
-    showToast("Lỗi khi lưu sản phẩm: " + error.message, "error")
-  }
-}
+//     // Tải lại danh sách sản phẩm
+//     await renderProducts()
+//     closeProductModal()
+//   } catch (error) {
+//     showToast("Lỗi khi lưu sản phẩm: " + error.message, "error")
+//   }
+// }
 
 // Thay thế hàm deleteProduct hiện tại
 async function deleteProduct(productId) {
@@ -1418,7 +1417,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reset buttons
     document.getElementById("back-btn").style.display = "none"
     document.getElementById("next-btn").style.display = "inline-block"
-    document.getElementById("save-btn").style.display = "none"
+
 
     // Set modal title
     document.getElementById("modal-title").textContent = productId ? "Edit Product" : "Add New Product"
@@ -1469,15 +1468,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tabId === "basic-details") {
         document.getElementById("back-btn").style.display = "none"
         document.getElementById("next-btn").style.display = "inline-block"
-        document.getElementById("save-btn").style.display = "none"
+
       } else if (tabId === "description") {
         document.getElementById("back-btn").style.display = "inline-block"
         document.getElementById("next-btn").style.display = "inline-block"
-        document.getElementById("save-btn").style.display = "none"
+       // document.getElementById("save-btn").style.display = "none"
       } else if (tabId === "images") {
         document.getElementById("back-btn").style.display = "inline-block"
         document.getElementById("next-btn").style.display = "none"
-        document.getElementById("save-btn").style.display = "inline-block"
+       // document.getElementById("save-btn").style.display = "inline-block"
       }
     })
   })
@@ -1717,81 +1716,81 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   // Save Product
-  document.getElementById("save-btn").addEventListener("click", () => {
-    // Get form data
-    const productId = document.getElementById("product-id").value
-    const name = document.getElementById("product-name").value
-    const category = document.getElementById("product-category").value
-    const price = Number.parseFloat(document.getElementById("product-price").value)
-    const stock = Number.parseInt(document.getElementById("product-stock").value) || 0
-    const sku = document.getElementById("product-sku").value
+  // document.getElementById("save-btn").addEventListener("click", () => {
+  //   // Get form data
+  //   const productId = document.getElementById("product-id").value
+  //   const name = document.getElementById("product-name").value
+  //   const category = document.getElementById("product-category").value
+  //   const price = Number.parseFloat(document.getElementById("product-price").value)
+  //   const stock = Number.parseInt(document.getElementById("product-stock").value) || 0
+  //   const sku = document.getElementById("product-sku").value
 
-    // Get description based on active option
-    const activeOption = document.querySelector(".option-btn.active").getAttribute("data-option")
-    let description = ""
+  //   // Get description based on active option
+  //   const activeOption = document.querySelector(".option-btn.active").getAttribute("data-option")
+  //   let description = ""
 
-    if (activeOption === "manual") {
-      description = quill.root.innerHTML
-    } else if (activeOption === "ai") {
-      description = document.querySelector("#ai-result .generated-text").innerHTML
-    } else if (activeOption === "template") {
-      description = document.querySelector("#template-preview .template-text").innerHTML
-    }
+  //   if (activeOption === "manual") {
+  //     description = quill.root.innerHTML
+  //   } else if (activeOption === "ai") {
+  //     description = document.querySelector("#ai-result .generated-text").innerHTML
+  //   } else if (activeOption === "template") {
+  //     description = document.querySelector("#template-preview .template-text").innerHTML
+  //   }
 
-    // Get images
-    const images = []
-    document.querySelectorAll("#image-preview-container img").forEach((img) => {
-      images.push(img.src)
-    })
+  //   // Get images
+  //   const images = []
+  //   document.querySelectorAll("#image-preview-container img").forEach((img) => {
+  //     images.push(img.src)
+  //   })
 
-    // Validate required fields
-    if (!name || !category || isNaN(price)) {
-      showToast("Please fill in all required fields", "error")
-      return
-    }
+  //   // Validate required fields
+  //   if (!name || !category || isNaN(price)) {
+  //     showToast("Please fill in all required fields", "error")
+  //     return
+  //   }
 
-    // Determine status based on stock
-    let status = "In Stock"
-    if (stock === 0) {
-      status = "Out of Stock"
-    } else if (stock <= 5) {
-      status = "Low Stock"
-    }
+  //   // Determine status based on stock
+  //   let status = "In Stock"
+  //   if (stock === 0) {
+  //     status = "Out of Stock"
+  //   } else if (stock <= 5) {
+  //     status = "Low Stock"
+  //   }
 
-    // Create product object
-    const product = {
-      id: productId ? Number.parseInt(productId) : Date.now(),
-      name,
-      category,
-      sku,
-      price,
-      stock,
-      status,
-      description,
-      images: images.length > 0 ? images : ["https://via.placeholder.com/100"],
-    }
+  //   // Create product object
+  //   const product = {
+  //     id: productId ? Number.parseInt(productId) : Date.now(),
+  //     name,
+  //     category,
+  //     sku,
+  //     price,
+  //     stock,
+  //     status,
+  //     description,
+  //     images: images.length > 0 ? images : ["https://via.placeholder.com/100"],
+  //   }
 
-    // Add or update product
-    if (productId) {
-      // Update existing product
-      const index = products.findIndex((p) => p.id === Number.parseInt(productId))
-      if (index !== -1) {
-        products[index] = product
-      }
-    } else {
-      // Add new product
-      products.push(product)
-    }
+  //   // Add or update product
+  //   if (productId) {
+  //     // Update existing product
+  //     const index = products.findIndex((p) => p.id === Number.parseInt(productId))
+  //     if (index !== -1) {
+  //       products[index] = product
+  //     }
+  //   } else {
+  //     // Add new product
+  //     products.push(product)
+  //   }
 
-    // Reload products table
-    renderProductsTable()
+  //   // Reload products table
+  //   renderProductsTable()
 
-    // Close modal
-    closeProductModal()
+  //   // Close modal
+  //   closeProductModal()
 
-    // Show success message
-    showToast(productId ? "Product updated successfully" : "Product added successfully")
-  })
+  //   // Show success message
+  //   showToast(productId ? "Product updated successfully" : "Product added successfully")
+  // })
 
   // Delete Product
   function openDeleteModal(productId) {

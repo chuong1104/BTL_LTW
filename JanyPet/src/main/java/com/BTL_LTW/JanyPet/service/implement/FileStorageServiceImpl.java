@@ -1,96 +1,108 @@
 package com.BTL_LTW.JanyPet.service.implement;
 
 import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
     private final Path fileStorageLocation;
 
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
-
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
-    public FileStorageServiceImpl() {
-        this.fileStorageLocation = Paths.get("uploads")
+    @Autowired
+    public FileStorageServiceImpl(@Value("${file.upload-dir:D:/BTL_LTW/uploads}") String uploadDir) {
+        this.fileStorageLocation = Paths.get(uploadDir)
                 .toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileStorageLocation);
+            System.out.println("File storage location: " + this.fileStorageLocation.toString());
         } catch (Exception ex) {
             throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
 
     @Override
-    public String storeFile(MultipartFile file) {
-        // Check if file is null or empty
+    public String storeFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("File is empty or null");
+            throw new RuntimeException("Failed to store empty file");
         }
 
-        // Normalize file name
         String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        // Verify if file name contains invalid characters
         if (originalFileName.contains("..")) {
-            throw new RuntimeException("Filename contains invalid path sequence " + originalFileName);
+            throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
         }
 
-        // Generate unique file name
-        String fileExtension = "";
-        if (originalFileName.contains(".")) {
-            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        }
-        String fileName = UUID.randomUUID().toString() + fileExtension;
+        // Using timestamp for unique filenames
+        String newFileName = System.currentTimeMillis() + "_" + originalFileName;
 
-        // Copy file to target location
         try {
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = this.fileStorageLocation.resolve(newFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return fileName;
+            System.out.println("File saved at: " + targetLocation.toString());
+            return newFileName;
         } catch (IOException ex) {
-            throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+            throw new IOException("Could not store file " + newFileName, ex);
         }
     }
 
     @Override
     public String getFileUrl(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            throw new IllegalArgumentException("File name cannot be null or empty");
+            return null;
         }
-        return baseUrl + "/api/files/" + fileName;
+
+        // Direct URL to the uploads directory (leveraging the resource handler)
+        return baseUrl + "/uploads/" + fileName;
     }
 
     @Override
-    public void deleteFile(String fileUrl) throws IOException {
-        if (fileUrl == null || fileUrl.isEmpty()) {
-            throw new IllegalArgumentException("File URL cannot be null or empty");
+    public void deleteFile(String fileName) throws IOException {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
         }
 
-        // Construct the base file access URL
-        String fileAccessUrl = baseUrl + "/api/files/";
-
-        if (!fileUrl.startsWith(fileAccessUrl)) {
-            throw new IllegalArgumentException("Invalid file URL");
+        // Extract just the filename if a full URL was provided
+        if (fileName.contains("/")) {
+            fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
         }
 
-        String fileName = fileUrl.substring(fileAccessUrl.length());
-        Path filePath = this.fileStorageLocation.resolve(fileName);
+        Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+        boolean deleted = Files.deleteIfExists(filePath);
+        if (deleted) {
+            System.out.println("File deleted successfully: " + filePath);
+        } else {
+            System.out.println("File not found for deletion: " + filePath);
+        }
+    }
 
-        Files.deleteIfExists(filePath);
+    @Override
+    public Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new RuntimeException("File not found: " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("File not found: " + fileName, ex);
+        }
     }
 }

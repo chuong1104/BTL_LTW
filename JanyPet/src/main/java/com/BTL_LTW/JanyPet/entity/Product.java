@@ -2,7 +2,7 @@ package com.BTL_LTW.JanyPet.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.Transient;
 
 import java.math.BigDecimal;
 
@@ -14,14 +14,17 @@ public class Product extends BaseEntity<String> {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2) //DECIMAL(10,2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
     @Column(nullable = false)
     private Integer stock = 0;
 
-    @Column(columnDefinition = "JSON")
+    @Column(length = 255) // Lưu tên file ảnh hoặc đường dẫn tương đối
     private String image;
+
+    public Product() {
+    }
 
     public Product(String name, String description, BigDecimal price, Integer stock, String image) {
         this.name = name;
@@ -29,10 +32,6 @@ public class Product extends BaseEntity<String> {
         this.price = price;
         this.stock = stock;
         this.image = image;
-    }
-
-    public Product() {
-
     }
 
     public String getName() {

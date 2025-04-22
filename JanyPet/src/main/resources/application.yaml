@@ -15,6 +15,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     open-in-view: false
   servlet:
@@ -23,18 +24,29 @@ spring:
       max-request-size: 10MB
   web:
     resources:
-      static-locations: classpath:/static/
+      static-locations: classpath:/static/,file:${file.upload-dir}/
+      add-mappings: true
   mvc:
     static-path-pattern: /**
 
+logging:
+  level:
+    com.BTL_LTW.JanyPet.configuration: DEBUG
+    org.springframework.web: INFO
+
 file:
-  upload-dir: ./uploads
+  # Nếu bạn chạy trên Windows, giữ nguyên D:/…; nếu trên Linux/Mac, có thể chuyển thành ./uploads
+  upload-dir: D:/BTL_LTW/uploads
+
 app:
+  base-url: http://localhost:8080
   jwtSecret: uHqYj4Pk3mZqKmJ9Y2Ey2K8MdGnM9N9uRPv4RYjUDe4GHZ3xJv1pUlWHez2WUkcFZyrK52xVbbFwCWXEtZxpWg==
   jwtExpirationMs: 86400000
   jwtRefreshExpirationMs: 604800000
+
 vnpay:
   payUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
   returnUrl: https://your-domain.com/api/payment/return
   tmnCode: YOUR_VNP_TMN_CODE
   hashSecret: YOUR_VNP_HASH_SECRET
+
