@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-        import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,18 +19,34 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Tạo mới sản phẩm với upload ảnh
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // Tạo mới sản phẩm - hỗ trợ cả form data và JSON
+    @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
+            @RequestBody ProductCreationRequest request) {
+        ProductResponse response = productService.createProduct(request);
+        return ResponseEntity.ok(response);
+    }
+    
+    // Tạo mới sản phẩm với upload ảnh qua form data
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> createProductWithFormData(
             @ModelAttribute ProductCreationRequest request) {
-        // request.getImage() chứa MultipartFile để xử lý lưu file
         ProductResponse response = productService.createProduct(request);
         return ResponseEntity.ok(response);
     }
 
-    // Cập nhật sản phẩm theo id (có thể tương tự nếu cần upload ảnh mới)
-    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // Cập nhật sản phẩm theo id với JSON
+    @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable String id,
+            @RequestBody ProductUpdateRequest request) {
+        ProductResponse response = productService.updateProduct(id, request);
+        return ResponseEntity.ok(response);
+    }
+    
+    // Cập nhật sản phẩm theo id với form data và file upload
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> updateProductWithFormData(
             @PathVariable String id,
             @ModelAttribute ProductUpdateRequest request) {
         ProductResponse response = productService.updateProduct(id, request);

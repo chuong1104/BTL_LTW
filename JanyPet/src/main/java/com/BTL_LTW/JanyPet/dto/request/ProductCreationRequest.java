@@ -11,14 +11,19 @@ public class ProductCreationRequest {
     private BigDecimal price;
     private Integer stock;
     @Transient
-    private MultipartFile image;
+    private MultipartFile imageFile;
+    
+    private String imagePath;
 
-    public ProductCreationRequest(String name, String description, BigDecimal price, Integer stock, MultipartFile image) {
+    public ProductCreationRequest() {
+    }
+
+    public ProductCreationRequest(String name, String description, BigDecimal price, Integer stock, MultipartFile imageFile) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.image = image;
+        this.imageFile = imageFile;
     }
 
     // Getters and Setters
@@ -54,11 +59,19 @@ public class ProductCreationRequest {
         this.stock = stock;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public MultipartFile getImageFile() {
+        return imageFile;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+    
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

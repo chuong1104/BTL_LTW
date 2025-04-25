@@ -11,7 +11,12 @@ public class ProductUpdateRequest {
     private BigDecimal price;
     private Integer stock;
     @Transient
-    private MultipartFile image;
+    private MultipartFile imageFile;
+    private String imagePath;
+
+    // Constructor
+    public ProductUpdateRequest() {
+    }
 
     // Getters and Setters
     public String getName() {
@@ -46,11 +51,28 @@ public class ProductUpdateRequest {
         this.stock = stock;
     }
 
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+    
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    
+    // Để duy trì compatibility với code cũ
     public MultipartFile getImage() {
-        return image;
+        return imageFile;
     }
 
     public void setImage(MultipartFile image) {
-        this.image = image;
+        this.imageFile = image;
     }
 }

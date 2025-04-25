@@ -48,6 +48,14 @@ const ProductHandlers = {
       })
     }
 
+    // Delete cancel button
+    const deleteCancelBtn = document.getElementById("delete-cancel-btn")
+    if (deleteCancelBtn) {
+      deleteCancelBtn.addEventListener("click", () => {
+        document.getElementById("delete-modal").style.display = "none"
+      })
+    }
+
     // Load products on initialization
     this.loadProducts()
 
@@ -55,14 +63,19 @@ const ProductHandlers = {
     this.initializeImagePreview()
 
     // Xử lý click vào ảnh để xem lớn
-    document.querySelector('#products-table-body').addEventListener('click', (e) => {
+    const productsTableBody = document.querySelector('#products-table-body')
+    if (productsTableBody) {
+      productsTableBody.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG') {
-            const modal = document.getElementById('image-preview-modal');
-            const modalImg = document.getElementById('preview-image');
+          const modal = document.getElementById('image-preview-modal');
+          const modalImg = document.getElementById('preview-image');
+          if (modal && modalImg) {
             modal.style.display = "block";
             modalImg.src = e.target.src;
+          }
         }
-    });
+      });
+    }
   },
 
   // Open product modal for add/edit
@@ -101,87 +114,68 @@ const ProductHandlers = {
   // Get image URL from filename
   getImageUrl(filename) {
     if (!filename) {
-        return 'https://via.placeholder.com/50?text=No+Image';
+        return '/images/no-image.png';  // Sử dụng ảnh local thay vì placeholder.com
     }
 
     // Nếu là URL đầy đủ
     if (filename.startsWith('http://') || filename.startsWith('https://')) {
         return filename;
     }
+    
+    // Nếu là đường dẫn /uploads/
+    if (filename.startsWith('/uploads/')) {
+        return filename;
+    }
 
     // Tạo URL từ tên file
-    return `/api/upload/files/${encodeURIComponent(filename)}`;
+    return `/uploads/${encodeURIComponent(filename)}`;
   },
 
   // Load product data for editing
   async loadProductData(productId) {
     try {
+      let product;
+      
       if (window.ApiService) {
-        const product = await ApiService.getProduct(productId)
-        console.log("Loaded product data:", product)
-
-        // Populate form fields
-        document.getElementById("product-name").value = product.name || ""
-        document.getElementById("product-price").value = product.price || ""
-        document.getElementById("product-stock").value = product.stock || ""
-
-        // Set description in Quill editor
-        if (window.quill && product.description) {
-          window.quill.root.innerHTML = product.description
-        }
-
-        // Show image preview if available
-        if (product.image) {
-          const imageUrl = this.getImageUrl(product.image)
-          if (imageUrl) {
-            const imagePreview = document.getElementById("image-preview")
-            imagePreview.innerHTML = `
-              <div class="preview-container">
-                <img src="${imageUrl}" alt="${product.name}" style="max-width: 100%; max-height: 200px;">
-                <p class="mt-2 text-sm text-gray-500">Current image: ${product.image}</p>
-              </div>
-            `
-          }
-        }
+        product = await window.ApiService.getProduct(productId);
       } else {
-        const response = await fetch(`http://localhost:8080/api/products/${productId}`)
+        const response = await fetch(`/api/products/${productId}`);
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        product = await response.json();
+      }
+      
+      console.log("Loaded product data:", product);
 
-        const product = await response.json()
-        console.log("Loaded product data:", product)
+      // Populate form fields
+      document.getElementById("product-name").value = product.name || "";
+      document.getElementById("product-price").value = product.price || "";
+      document.getElementById("product-stock").value = product.stock || "";
 
-        // Populate form fields
-        document.getElementById("product-name").value = product.name || ""
-        document.getElementById("product-price").value = product.price || ""
-        document.getElementById("product-stock").value = product.stock || ""
+      // Set description in Quill editor
+      if (window.quill && product.description) {
+        window.quill.root.innerHTML = product.description;
+      }
 
-        // Set description in Quill editor
-        if (window.quill && product.description) {
-          window.quill.root.innerHTML = product.description
-        }
-
-        // Show image preview if available
-        if (product.image) {
-          const imageUrl = this.getImageUrl(product.image)
-          if (imageUrl) {
-            const imagePreview = document.getElementById("image-preview")
-            imagePreview.innerHTML = `
-              <div class="preview-container">
-                <img src="${imageUrl}" alt="${product.name}" style="max-width: 100%; max-height: 200px;">
-                <p class="mt-2 text-sm text-gray-500">Current image: ${product.image}</p>
-              </div>
-            `
-          }
-        }
+      // Show image preview if available
+      const imageUrl = product.imageUrl || this.getImageUrl(product.image);
+      if (imageUrl) {
+        const imagePreview = document.getElementById("image-preview");
+        imagePreview.innerHTML = `
+          <div class="preview-container">
+            <img src="${imageUrl}" alt="${product.name}" style="max-width: 100%; max-height: 200px;">
+            <p class="mt-2 text-sm text-gray-500">Current image: ${product.image || product.imageUrl}</p>
+            <input type="hidden" name="imagePath" value="${imageUrl}">
+          </div>
+        `;
       }
     } catch (error) {
-      console.error("Error loading product data:", error)
+      console.error("Error loading product data:", error);
       if (window.ToastService) {
-        ToastService.error("Failed to load product data")
+        window.ToastService.error("Failed to load product data");
       } else {
-        this.showToast("Failed to load product data", "error")
+        this.showToast("Failed to load product data", "error");
       }
     }
   },
@@ -189,111 +183,110 @@ const ProductHandlers = {
   // Save product (create or update)
   async saveProduct() {
     try {
-      console.log("Saving product...")
-      const productId = document.getElementById("product-id").value
-      const productName = document.getElementById("product-name").value
-      const productPrice = document.getElementById("product-price").value
-      const productStock = document.getElementById("product-stock").value
+      console.log("Saving product...");
+      const productId = document.getElementById("product-id").value;
+      const productName = document.getElementById("product-name").value;
+      const productPrice = document.getElementById("product-price").value;
+      const productStock = document.getElementById("product-stock").value;
 
       // Validate form
       if (!productName || !productPrice || !productStock) {
         if (window.ToastService) {
-          ToastService.error("Please fill all required fields")
+          window.ToastService.error("Please fill all required fields");
         } else {
-          this.showToast("Please fill all required fields", "error")
+          this.showToast("Please fill all required fields", "error");
         }
-        return
+        return;
       }
 
       // Get description from Quill editor
-      let description = ""
+      let description = "";
       if (window.quill) {
-        description = window.quill.root.innerHTML
+        description = window.quill.root.innerHTML;
       }
 
-      // Create FormData object for file upload
-      const formData = new FormData()
-      formData.append("name", productName)
-      formData.append("price", productPrice)
-      formData.append("stock", productStock)
-      formData.append("description", description)
+      // Create product data object
+      const productData = {
+        name: productName,
+        price: productPrice,
+        stock: productStock,
+        description: description
+      };
 
       // Handle file upload
-      const imageInput = document.getElementById("product-image")
+      const imageInput = document.getElementById("product-image");
       if (imageInput.files && imageInput.files[0]) {
-        const file = imageInput.files[0]
+        const file = imageInput.files[0];
         
         // First upload the file
-        const uploadFormData = new FormData()
-        uploadFormData.append("file", file)
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
         
-        const uploadResponse = await fetch("/api/upload/file", {
+        const uploadResponse = await fetch("/api/upload", {
           method: "POST",
           body: uploadFormData
-        })
+        });
         
         if (!uploadResponse.ok) {
-          throw new Error("Failed to upload image")
+          throw new Error("Failed to upload image");
         }
         
-        const uploadResult = await uploadResponse.json()
-        // Add the filename to the product form data
-        formData.append("image", uploadResult.fileName)
-      }
-
-      // Log FormData entries for debugging
-      for (const pair of formData.entries()) {
-        console.log(pair[0] + ": " + (pair[0] === "image" ? "File object" : pair[1]))
-      }
-
-      // Use ApiService if available, otherwise use fetch directly
-      if (window.ApiService) {
-        if (productId) {
-          await ApiService.updateProduct(productId, formData)
-        } else {
-          await ApiService.createProduct(formData)
-        }
+        const uploadResult = await uploadResponse.json();
+        // Add the image path to the product data
+        productData.imagePath = uploadResult.url;
       } else {
-        let url = "http://localhost:8080/api/products"
-        let method = "POST"
-
-        // If editing, use PUT method and include ID in URL
-        if (productId) {
-          url = `${url}/${productId}`
-          method = "PUT"
+        // If no new file is uploaded, check if there's an existing image path
+        const imagePreview = document.getElementById("image-preview");
+        const existingImagePath = imagePreview.querySelector('input[name="imagePath"]')?.value;
+        if (existingImagePath) {
+          productData.imagePath = existingImagePath;
         }
+      }
 
-        console.log(`Sending ${method} request to ${url}`)
+      console.log("Sending product data:", productData);
 
-        // Send request to API
-        const response = await fetch(url, {
-          method: method,
-          body: formData,
-        })
-
-        if (!response.ok) {
-          const errorText = await response.text()
-          console.error("API error response:", errorText)
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
+      // Make API request
+      let url = "/api/products";
+      let method = "POST";
+      
+      // If editing, use PUT method and include ID in URL
+      if (productId) {
+        url = `${url}/${productId}`;
+        method = "PUT";
+      }
+      
+      console.log(`Sending ${method} request to ${url}`);
+      
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("API error response:", errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       // Show success message
       if (window.ToastService) {
-        ToastService.success(productId ? "Product updated successfully" : "Product added successfully")
+        window.ToastService.success(productId ? "Product updated successfully" : "Product added successfully");
       } else {
-        this.showToast(productId ? "Product updated successfully" : "Product added successfully", "success")
+        this.showToast(productId ? "Product updated successfully" : "Product added successfully", "success");
       }
 
       // Close modal and reload products
-      this.closeProductModal()
-      this.loadProducts()
+      this.closeProductModal();
+      this.loadProducts();
     } catch (error) {
-      console.error("Error saving product:", error)
+      console.error("Error saving product:", error);
       if (window.ToastService) {
-        ToastService.error("Failed to save product: " + error.message)
+        window.ToastService.error("Failed to save product: " + error.message);
       } else {
-        this.showToast("Failed to save product: " + error.message, "error")
+        this.showToast("Failed to save product: " + error.message, "error");
       }
     }
   },
@@ -301,67 +294,71 @@ const ProductHandlers = {
   // Load all products
   async loadProducts() {
     try {
-      const productsTableBody = document.getElementById("products-table-body")
+      const productsTableBody = document.getElementById("products-table-body");
       if (!productsTableBody) {
-        console.error("Products table body not found")
-        return
+        console.error("Products table body not found");
+        return;
       }
 
       // Show loading state
-      productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Loading products...</td></tr>'
+      productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Loading products...</td></tr>';
 
-      let products = []
+      let products = [];
 
       // Use ApiService if available, otherwise use fetch directly
       if (window.ApiService) {
-        products = await ApiService.getAllProducts()
+        products = await window.ApiService.getAllProducts();
       } else {
-        const response = await fetch("http://localhost:8080/api/products")
+        const response = await fetch("/api/products");
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        products = await response.json()
+        products = await response.json();
       }
 
-      console.log("Loaded products:", products)
+      console.log("Loaded products:", products);
 
       if (!Array.isArray(products) || products.length === 0) {
-        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">No products found</td></tr>'
-        return
+        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">No products found</td></tr>';
+        return;
       }
 
+      // Clear existing event handlers by replacing the entire table body
+      const newTableBody = document.createElement('tbody');
+      newTableBody.id = "products-table-body";
+      
       // Render products
-      productsTableBody.innerHTML = ""
       products.forEach((product) => {
         // Determine status based on stock
-        let status = "In Stock"
-        let statusClass = "active"
+        let status = "In Stock";
+        let statusClass = "active";
 
         if (product.stock <= 0) {
-          status = "Out of Stock"
-          statusClass = "inactive"
+          status = "Out of Stock";
+          statusClass = "inactive";
         } else if (product.stock <= 5) {
-          status = "Low Stock"
-          statusClass = "pending"
+          status = "Low Stock";
+          statusClass = "pending";
         }
 
-        // Get image URL from filename
-        const imageUrl = this.getImageUrl(product.image)
+        // Get image URL
+        const imageUrl = product.imageUrl || this.getImageUrl(product.image);
 
         // Create row
-        const row = document.createElement("tr")
+        const row = document.createElement("tr");
         row.innerHTML = `
           <td><input type="checkbox" class="select-item"></td>
           <td>
             <img src="${imageUrl}" 
                  alt="${product.name}" 
-                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;"
-                
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                 title="Click to view larger image"
+            >
           </td>
-          <td>${product.name}</td>
-          <td>${product.description ? product.description.substring(0, 100): ""}</td>
-          <td>$${product.price ? product.price.toFixed(2) : "0.00"}</td>
-          <td>${product.stock}</td>
+          <td>${product.name || ""}</td>
+          <td>${product.description ? product.description.substring(0, 100) + "..." : ""}</td>
+          <td>$${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}</td>
+          <td>${product.stock || 0}</td>
           <td><span class="status ${statusClass}">${status}</span></td>
           <td class="actions">
             <button class="icon-btn edit-btn" data-id="${product.id}">
@@ -371,87 +368,102 @@ const ProductHandlers = {
               <i class="fas fa-trash-alt"></i>
             </button>
           </td>
-        `
+        `;
 
-        productsTableBody.appendChild(row)
-      })
+        newTableBody.appendChild(row);
+      });
 
-      // Add event listeners to edit and delete buttons
+      // Replace the old table body with the new one
+      productsTableBody.parentNode.replaceChild(newTableBody, productsTableBody);
+      
+      // Add event listeners to new elements
       document.querySelectorAll(".edit-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
-          const productId = e.currentTarget.getAttribute("data-id")
-          this.openProductModal("edit", productId)
-        })
-      })
+          const productId = e.currentTarget.getAttribute("data-id");
+          this.openProductModal("edit", productId);
+        });
+      });
 
       document.querySelectorAll(".delete-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
-          const productId = e.currentTarget.getAttribute("data-id")
-          this.openDeleteModal(productId)
-        })
-      })
+          const productId = e.currentTarget.getAttribute("data-id");
+          this.openDeleteModal(productId);
+        });
+      });
+      
+      // Re-add image preview click event
+      document.querySelector('#products-table-body').addEventListener('click', (e) => {
+        if (e.target.tagName === 'IMG') {
+          const modal = document.getElementById('image-preview-modal');
+          const modalImg = document.getElementById('preview-image');
+          if (modal && modalImg) {
+            modal.style.display = "block";
+            modalImg.src = e.target.src;
+          }
+        }
+      });
     } catch (error) {
-      console.error("Error loading products:", error)
-      const productsTableBody = document.getElementById("products-table-body")
+      console.error("Error loading products:", error);
+      const productsTableBody = document.getElementById("products-table-body");
       if (productsTableBody) {
-        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading products</td></tr>'
+        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading products</td></tr>';
       }
     }
   },
 
   // Open delete confirmation modal
   openDeleteModal(productId) {
-    const deleteModal = document.getElementById("delete-modal")
-    document.getElementById("delete-product-id").value = productId
-    deleteModal.style.display = "block"
+    const deleteModal = document.getElementById("delete-modal");
+    document.getElementById("delete-product-id").value = productId;
+    deleteModal.style.display = "block";
   },
 
   // Delete product
   async deleteProduct(productId) {
     try {
       if (window.ApiService) {
-        await ApiService.deleteProduct(productId)
+        await window.ApiService.deleteProduct(productId);
       } else {
-        const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
+        const response = await fetch(`/api/products/${productId}`, {
           method: "DELETE",
-        })
+        });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
       }
 
       // Close modal and show success message
-      document.getElementById("delete-modal").style.display = "none"
+      document.getElementById("delete-modal").style.display = "none";
       if (window.ToastService) {
-        ToastService.success("Product deleted successfully")
+        window.ToastService.success("Product deleted successfully");
       } else {
-        this.showToast("Product deleted successfully", "success")
+        this.showToast("Product deleted successfully", "success");
       }
 
       // Reload products
-      this.loadProducts()
+      this.loadProducts();
     } catch (error) {
-      console.error("Error deleting product:", error)
+      console.error("Error deleting product:", error);
       if (window.ToastService) {
-        ToastService.error("Failed to delete product")
+        window.ToastService.error("Failed to delete product");
       } else {
-        this.showToast("Failed to delete product", "error")
+        this.showToast("Failed to delete product", "error");
       }
     }
   },
 
   // Initialize image preview handler
   initializeImagePreview() {
-    const imageInput = document.getElementById("product-image")
-    const imagePreview = document.getElementById("image-preview")
+    const imageInput = document.getElementById("product-image");
+    const imagePreview = document.getElementById("image-preview");
 
     if (imageInput && imagePreview) {
       imageInput.addEventListener("change", function () {
-        imagePreview.innerHTML = ""
+        imagePreview.innerHTML = "";
 
         if (this.files && this.files[0]) {
-          const reader = new FileReader()
+          const reader = new FileReader();
 
           reader.onload = (e) => {
             imagePreview.innerHTML = `
@@ -459,71 +471,59 @@ const ProductHandlers = {
                 <img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px;">
                 <p class="mt-2 text-sm text-gray-500">Selected file: ${this.files[0].name}</p>
               </div>
-            `
-          }
+            `;
+          };
 
-          reader.readAsDataURL(this.files[0])
+          reader.readAsDataURL(this.files[0]);
         }
-      })
+      });
     }
   },
 
   // Show toast notification
   showToast(message, type = "success") {
     if (window.ToastService) {
-      window.ToastService.showToast(message, type)
+      window.ToastService.showToast(message, type);
     } else {
-      const toast = document.getElementById("toast")
+      const toast = document.getElementById("toast");
       if (!toast) {
-        console.error("Toast element not found")
-        return
+        console.error("Toast element not found");
+        return;
       }
 
-      const toastContent = toast.querySelector(".toast-content i")
-      const toastMessage = toast.querySelector(".toast-message")
-      const toastProgress = toast.querySelector(".toast-progress")
+      const toastContent = toast.querySelector(".toast-content i");
+      const toastMessage = toast.querySelector(".toast-message");
+      const toastProgress = toast.querySelector(".toast-progress");
 
       if (!toastContent || !toastMessage || !toastProgress) {
-        console.error("Toast child elements not found")
-        return
+        console.error("Toast child elements not found");
+        return;
       }
 
       // Set icon and color based on type
       if (type === "success") {
-        toastContent.className = "fas fa-check-circle"
-        toastContent.style.color = "var(--success-color, #10b981)"
-        toastProgress.style.backgroundColor = "var(--success-color, #10b981)"
+        toastContent.className = "fas fa-check-circle";
+        toastContent.style.color = "var(--success-color, #10b981)";
+        toastProgress.style.backgroundColor = "var(--success-color, #10b981)";
       } else if (type === "error") {
-        toastContent.className = "fas fa-times-circle"
-        toastContent.style.color = "var(--danger-color, #ef4444)"
-        toastProgress.style.backgroundColor = "var(--danger-color, #ef4444)"
+        toastContent.className = "fas fa-times-circle";
+        toastContent.style.color = "var(--danger-color, #ef4444)";
+        toastProgress.style.backgroundColor = "var(--danger-color, #ef4444)";
       }
 
       // Set message
-      toastMessage.textContent = message
+      toastMessage.textContent = message;
 
       // Show toast
-      toast.style.display = "block"
+      toast.style.display = "block";
 
       // Hide after 3 seconds
       setTimeout(() => {
-        toast.style.display = "none"
-      }, 3000)
+        toast.style.display = "none";
+      }, 3000);
     }
   },
-}
+};
 
-// Optionally declare ApiService and ToastService if they are not globally available
-// For example, if they are defined in separate modules:
-// const ApiService = window.ApiService || {};
-// const ToastService = window.ToastService || {};
-
-// Export to global scope
-window.ProductHandlers = ProductHandlers
-
-// Initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  if (ProductHandlers && typeof ProductHandlers.initializeProductEvents === "function") {
-    ProductHandlers.initializeProductEvents()
-  }
-})
+// Export to global scope only once
+window.ProductHandlers = ProductHandlers;

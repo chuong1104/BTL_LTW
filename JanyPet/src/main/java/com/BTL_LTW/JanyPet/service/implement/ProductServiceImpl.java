@@ -9,6 +9,7 @@ import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,15 +33,24 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
 
-        // Lưu ảnh và lấy tên file
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
+        // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
+        if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
+            // Trường hợp 1: Có file được upload
             String fileName = null;
             try {
-                fileName = fileStorageService.storeFile(request.getImage());
+                fileName = fileStorageService.storeFile(request.getImageFile());
                 product.setImage(fileName);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to store image file: " + e.getMessage());
             }
+        } else if (request.getImagePath() != null && !request.getImagePath().isEmpty()) {
+            // Trường hợp 2: Có đường dẫn ảnh
+            // Nếu đường dẫn bắt đầu bằng "/uploads/", chỉ lấy tên file
+            String imagePath = request.getImagePath();
+            if (imagePath.startsWith("/uploads/")) {
+                imagePath = imagePath.substring("/uploads/".length());
+            }
+            product.setImage(imagePath);
         }
 
         product = productRepository.save(product);
@@ -68,8 +78,9 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
 
-        // Cập nhật ảnh nếu có
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
+        // Xử lý trường hợp upload file mới
+        MultipartFile imageFile = request.getImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
             // Xóa ảnh cũ nếu tồn tại
             if (product.getImage() != null && !product.getImage().isEmpty()) {
                 try {
@@ -82,11 +93,19 @@ public class ProductServiceImpl implements ProductService {
 
             String fileName = null;
             try {
-                fileName = fileStorageService.storeFile(request.getImage());
+                fileName = fileStorageService.storeFile(imageFile);
                 product.setImage(fileName);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to store updated image file: " + e.getMessage());
             }
+        } 
+        // Xử lý trường hợp chỉ có đường dẫn ảnh
+        else if (request.getImagePath() != null && !request.getImagePath().isEmpty()) {
+            String imagePath = request.getImagePath();
+            if (imagePath.startsWith("/uploads/")) {
+                imagePath = imagePath.substring("/uploads/".length());
+            }
+            product.setImage(imagePath);
         }
 
         product = productRepository.save(product);
@@ -131,10 +150,17 @@ public class ProductServiceImpl implements ProductService {
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
         response.setStock(product.getStock());
+        
         // Chuyển tên file thành URL đầy đủ
         if (product.getImage() != null && !product.getImage().isEmpty()) {
-            response.setImageUrl(fileStorageService.getFileUrl(product.getImage()));
+            // Nếu image không bắt đầu bằng http hoặc https, thì thêm tiền tố /uploads/
+            String imageUrl = product.getImage();
+            if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && !imageUrl.startsWith("/uploads/")) {
+                imageUrl = "/uploads/" + imageUrl;
+            }
+            response.setImageUrl(imageUrl);
         }
+        
         return response;
     }
 
