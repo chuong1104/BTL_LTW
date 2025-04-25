@@ -86,7 +86,7 @@ const ProductService = {
   // Get image URL with proper context path
   getImageUrl: (imageUrl) => {
     if (!imageUrl) {
-      return 'https://via.placeholder.com/80?text=No+Image';
+      return '/images/logo.png'; // Default image if no URL is provided
     }
 
     // Return as is if it's already a full URL

@@ -12,14 +12,15 @@ const ProductHandlers = {
       addProductBtn.addEventListener("click", () => this.openProductModal())
     }
 
-    // Save product button - DIRECT EVENT BINDING
+    // Save product button - DIRECT EVENT BINDING - Add a check to prevent duplicate event binding
     const saveProductBtn = document.getElementById("save-product-btn")
-    if (saveProductBtn) {
+    if (saveProductBtn && !saveProductBtn.hasEventListener) {
       saveProductBtn.addEventListener("click", (e) => {
         e.preventDefault()
         console.log("Save button clicked")
         this.saveProduct()
       })
+      saveProductBtn.hasEventListener = true // Flag to prevent duplicate event binding
     }
 
     // Close modal buttons
@@ -62,9 +63,9 @@ const ProductHandlers = {
     // Initialize image preview handler
     this.initializeImagePreview()
 
-    // Xử lý click vào ảnh để xem lớn
+    // Xử lý click vào ảnh để xem lớn - Add a data attribute to track if event handler is attached
     const productsTableBody = document.querySelector('#products-table-body')
-    if (productsTableBody) {
+    if (productsTableBody && !productsTableBody.dataset.hasImageListener) {
       productsTableBody.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG') {
           const modal = document.getElementById('image-preview-modal');
@@ -75,6 +76,7 @@ const ProductHandlers = {
           }
         }
       });
+      productsTableBody.dataset.hasImageListener = 'true'; // Mark as having a listener
     }
   },
 
@@ -114,7 +116,7 @@ const ProductHandlers = {
   // Get image URL from filename
   getImageUrl(filename) {
     if (!filename) {
-        return '/images/no-image.png';  // Sử dụng ảnh local thay vì placeholder.com
+        return '/images/logo.png';  // Sử dụng ảnh local thay vì placeholder.com
     }
 
     // Nếu là URL đầy đủ
@@ -323,9 +325,8 @@ const ProductHandlers = {
         return;
       }
 
-      // Clear existing event handlers by replacing the entire table body
-      const newTableBody = document.createElement('tbody');
-      newTableBody.id = "products-table-body";
+      // Create content for the table body
+      let tableBodyHTML = '';
       
       // Render products
       products.forEach((product) => {
@@ -344,37 +345,36 @@ const ProductHandlers = {
         // Get image URL
         const imageUrl = product.imageUrl || this.getImageUrl(product.image);
 
-        // Create row
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><input type="checkbox" class="select-item"></td>
-          <td>
-            <img src="${imageUrl}" 
-                 alt="${product.name}" 
-                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
-                 title="Click to view larger image"
-            >
-          </td>
-          <td>${product.name || ""}</td>
-          <td>${product.description ? product.description.substring(0, 100) + "..." : ""}</td>
-          <td>$${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}</td>
-          <td>${product.stock || 0}</td>
-          <td><span class="status ${statusClass}">${status}</span></td>
-          <td class="actions">
-            <button class="icon-btn edit-btn" data-id="${product.id}">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="icon-btn delete-btn" data-id="${product.id}">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </td>
+        // Create row HTML
+        tableBodyHTML += `
+          <tr>
+            <td><input type="checkbox" class="select-item"></td>
+            <td>
+              <img src="${imageUrl}" 
+                   alt="${product.name}" 
+                   style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                   title="Click to view larger image"
+              >
+            </td>
+            <td>${product.name || ""}</td>
+            <td>${product.description ? product.description.substring(0, 100) + "..." : ""}</td>
+            <td>$${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}</td>
+            <td>${product.stock || 0}</td>
+            <td><span class="status ${statusClass}">${status}</span></td>
+            <td class="actions">
+              <button class="icon-btn edit-btn" data-id="${product.id}">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="icon-btn delete-btn" data-id="${product.id}">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
         `;
-
-        newTableBody.appendChild(row);
       });
 
-      // Replace the old table body with the new one
-      productsTableBody.parentNode.replaceChild(newTableBody, productsTableBody);
+      // Update the table body with new HTML
+      productsTableBody.innerHTML = tableBodyHTML;
       
       // Add event listeners to new elements
       document.querySelectorAll(".edit-btn").forEach((btn) => {
@@ -391,22 +391,15 @@ const ProductHandlers = {
         });
       });
       
-      // Re-add image preview click event
-      document.querySelector('#products-table-body').addEventListener('click', (e) => {
-        if (e.target.tagName === 'IMG') {
-          const modal = document.getElementById('image-preview-modal');
-          const modalImg = document.getElementById('preview-image');
-          if (modal && modalImg) {
-            modal.style.display = "block";
-            modalImg.src = e.target.src;
-          }
-        }
-      });
+      // Make sure we preserve the flag that we set in initializeProductEvents
+      if (productsTableBody && !productsTableBody.dataset.hasImageListener) {
+        productsTableBody.dataset.hasImageListener = 'true';
+      }
     } catch (error) {
       console.error("Error loading products:", error);
       const productsTableBody = document.getElementById("products-table-body");
       if (productsTableBody) {
-        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading products</td></tr>';
+        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading products: ' + error.message + '</td></tr>';
       }
     }
   },

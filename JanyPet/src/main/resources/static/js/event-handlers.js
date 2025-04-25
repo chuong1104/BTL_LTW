@@ -7,14 +7,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize menu navigation
   initializeMenuNavigation()
 
-  // Initialize product handlers
-  initializeProductHandlers()
+  // Initialize product handlers via ProductHandlers object
+  if (window.ProductHandlers) {
+    window.ProductHandlers.initializeProductEvents()
+  } else {
+    console.error("ProductHandlers not available, falling back to legacy initialization")
+    initializeProductHandlers() // Fallback to legacy method
+  }
 
   // Initialize sidebar toggle
   initializeSidebar()
 
-  // Load products on page load
-  if (typeof window.loadProducts === "function") {
+  // Load products on page load (via ProductHandlers if available)
+  if (window.ProductHandlers) {
+    window.ProductHandlers.loadProducts()
+  } else if (typeof window.loadProducts === "function") {
     window.loadProducts()
   }
 })
@@ -40,11 +47,13 @@ function initializeMenuNavigation() {
 
           // Load section data if needed
           if (sectionId === "products-section") {
-            // Make sure loadProducts exists before calling
-            if (typeof window.loadProducts === "function") {
+            // Use ProductHandlers if available, otherwise fall back to legacy method
+            if (window.ProductHandlers) {
+              window.ProductHandlers.loadProducts()
+            } else if (typeof window.loadProducts === "function") {
               window.loadProducts()
             } else {
-              console.error("loadProducts function is not available")
+              console.error("No product loading function available")
             }
           }
         }
@@ -53,7 +62,7 @@ function initializeMenuNavigation() {
   })
 }
 
-// Initialize product handlers
+// Legacy product handlers initialization - will be used only if ProductHandlers is not available
 function initializeProductHandlers() {
   // Add product button
   const addProductBtn = document.getElementById("add-product-btn")
@@ -137,34 +146,43 @@ function initializeSidebar() {
   }
 }
 
+// Legacy product functions - these now delegate to ProductHandlers if available
 // Open product modal
 function openProductModal(mode = "add", productId = null) {
-  console.log("Opening product modal", mode, productId)
-  const modal = document.getElementById("product-modal")
-  const modalTitle = document.getElementById("modal-title")
-  const form = document.getElementById("product-form")
-
-  // Reset form
-  form.reset()
-  if (window.quill) {
-    window.quill.root.innerHTML = ""
-  }
-  document.getElementById("image-preview").innerHTML = ""
-
-  if (mode === "edit" && productId) {
-    modalTitle.textContent = "Edit Product"
-    document.getElementById("product-id").value = productId
-    loadProductData(productId)
+  if (window.ProductHandlers) {
+    window.ProductHandlers.openProductModal(mode, productId)
   } else {
-    modalTitle.textContent = "Add New Product"
-    document.getElementById("product-id").value = ""
-  }
+    console.log("Legacy openProductModal:", mode, productId)
+    const modal = document.getElementById("product-modal")
+    const modalTitle = document.getElementById("modal-title")
+    const form = document.getElementById("product-form")
 
-  modal.style.display = "block"
+    // Reset form
+    form.reset()
+    if (window.quill) {
+      window.quill.root.innerHTML = ""
+    }
+    document.getElementById("image-preview").innerHTML = ""
+
+    if (mode === "edit" && productId) {
+      modalTitle.textContent = "Edit Product"
+      document.getElementById("product-id").value = productId
+      loadProductData(productId)
+    } else {
+      modalTitle.textContent = "Add New Product"
+      document.getElementById("product-id").value = ""
+    }
+
+    modal.style.display = "block"
+  }
 }
 
-// Load product data for editing
+// Load product data for editing - delegates to ProductHandlers if available
 async function loadProductData(productId) {
+  if (window.ProductHandlers) {
+    return window.ProductHandlers.loadProductData(productId)
+  }
+  
   try {
     const response = await fetch(`http://localhost:8080/api/products/${productId}`)
     if (!response.ok) {
@@ -215,8 +233,12 @@ async function loadProductData(productId) {
   }
 }
 
-// Save product
+// Save product - delegates to ProductHandlers if available
 async function saveProduct() {
+  if (window.ProductHandlers) {
+    return window.ProductHandlers.saveProduct()
+  }
+  
   try {
     console.log("Saving product...")
     const productId = document.getElementById("product-id").value
@@ -298,8 +320,12 @@ async function saveProduct() {
   }
 }
 
-// Load all products
+// Load all products - delegates to ProductHandlers if available
 async function loadProducts() {
+  if (window.ProductHandlers) {
+    return window.ProductHandlers.loadProducts()
+  }
+  
   try {
     const productsTableBody = document.getElementById("products-table-body")
     if (!productsTableBody) {
@@ -338,7 +364,7 @@ async function loadProducts() {
       }
 
       // Handle image URL which might be a JSON string or object
-      let imageUrl = "https://via.placeholder.com/50?text=No+Image"
+      let imageUrl = "/images/logo.png" // Default image URL
       try {
         if (product.image) {
           // If it's a JSON string, parse it
@@ -405,15 +431,23 @@ async function loadProducts() {
   }
 }
 
-// Open delete confirmation modal
+// Open delete confirmation modal - delegates to ProductHandlers if available
 function openDeleteModal(productId) {
+  if (window.ProductHandlers) {
+    return window.ProductHandlers.openDeleteModal(productId)
+  }
+  
   const deleteModal = document.getElementById("delete-modal")
   document.getElementById("delete-product-id").value = productId
   deleteModal.style.display = "block"
 }
 
-// Delete product
+// Delete product - delegates to ProductHandlers if available
 async function deleteProduct(productId) {
+  if (window.ProductHandlers) {
+    return window.ProductHandlers.deleteProduct(productId)
+  }
+  
   try {
     const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
       method: "DELETE",
@@ -435,16 +469,33 @@ async function deleteProduct(productId) {
   }
 }
 
-// Close all modals
+// Close all modals - delegates to ProductHandlers.closeProductModal if available
 function closeAllModals() {
+  if (window.ProductHandlers) {
+    window.ProductHandlers.closeProductModal()
+    
+    // Also close delete modal since that's not handled by closeProductModal
+    const deleteModal = document.getElementById("delete-modal")
+    if (deleteModal) {
+      deleteModal.style.display = "none"
+    }
+    return
+  }
+  
   const modals = document.querySelectorAll(".modal")
   modals.forEach((modal) => {
     modal.style.display = "none"
   })
 }
 
-// Handle image preview
+// Handle image preview - delegates to ProductHandlers if available
 function handleImagePreview(e) {
+  if (window.ProductHandlers && window.ProductHandlers.initializeImagePreview) {
+    // Note: This isn't a direct delegation since the handlers are different
+    // but ProductHandlers already sets up its own event listener
+    return
+  }
+  
   const imagePreview = document.getElementById("image-preview")
   imagePreview.innerHTML = ""
 
@@ -463,8 +514,14 @@ function handleImagePreview(e) {
   }
 }
 
-// Show toast notification
+// Show toast notification - delegates to ToastService or ProductHandlers if available
 function showToast(message, type = "success") {
+  if (window.ToastService) {
+    return window.ToastService.showToast(message, type)
+  } else if (window.ProductHandlers) {
+    return window.ProductHandlers.showToast(message, type)
+  }
+  
   const toast = document.getElementById("toast")
   if (!toast) {
     console.error("Toast element not found")
@@ -503,7 +560,7 @@ function showToast(message, type = "success") {
   }, 3000)
 }
 
-// Export functions to global scope
+// Export functions to global scope - but now they delegate to ProductHandlers
 window.openProductModal = openProductModal
 window.saveProduct = saveProduct
 window.loadProducts = loadProducts
