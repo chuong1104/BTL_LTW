@@ -1,317 +1,1046 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+
 <head>
-  <meta charset="UTF-8">
+  <title>JanyPet - Dịch Vụ Thú Cưng</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Spa Services - Book Your Appointment</title>
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="author" content="JanyPet">
+  <meta name="keywords" content="thú cưng, pet shop, dịch vụ thú cưng, grooming, pet care">
+  <meta name="description" content="JanyPet - Dịch vụ chăm sóc thú cưng chuyên nghiệp, toàn diện với đội ngũ nhân viên giàu kinh nghiệm">
   
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico">
+  
+  <!-- CSS Libraries - Thứ tự: normalize -> frameworks -> thư viện bổ sung -> style chính -->
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
   
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
   
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
   
-  <!-- Iconify -->
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+    /* Thêm CSS cho trang dịch vụ */
+    .service-hero {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    }
+    
+    .service-slide {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 500px;
+    }
+    
+    .service-slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .service-slide-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      color: white;
+    }
+    
+    .service-card {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      height: 100%;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .service-img {
+      height: 220px;
+      object-fit: cover;
+    }
+    
+    .service-icon {
+      width: 60px;
+      height: 60px;
+      background-color: var(--light-primary-color);
+      color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .price-table {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .price-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+    }
+    
+    .table-responsive {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .service-detail-modal .modal-content {
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    
+    .service-detail-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    
+    .testimonial-card {
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      background-color: white;
+      margin: 20px 10px;
+      position: relative;
+    }
+    
+    .testimonial-card:before {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 60px;
+      color: rgba(74, 154, 209, 0.1);
+      font-family: serif;
+    }
+    
+    .testimonial-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+    }
+    
+    .cta-section {
+      background-color: var(--light-primary-color);
+      border-radius: 12px;
+      padding: 60px 40px;
+    }
+    
+    .swiper-pagination-bullet {
+      background: white;
+      opacity: 0.5;
+    }
+    
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+      background: var(--primary-color);
+    }
+    
+    .nav-pills .nav-link {
+      color: var(--dark-color);
+      border-radius: 30px;
+      padding: 8px 20px;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-pills .nav-link.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .badge-pet-type {
+      background-color: var(--light-primary-color);
+      color: var(--primary-color);
+      font-weight: 500;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+    
+    .service-features {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    
+    .service-features li {
+      padding: 8px 0;
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .service-features li:before {
+      content: '✓';
+      color: var(--primary-color);
+      position: absolute;
+      left: 0;
+      top: 8px;
+      font-weight: bold;
+    }
+    
+    .package-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+      border: none;
+    }
+    
+    .package-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .package-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .popular-package .package-header {
+      background-color: var(--accent-color);
+    }
+    
+    .package-price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 10px 0;
+      color: var(--primary-color);
+    }
+    
+    .popular-package .package-price {
+      color: var(--accent-color);
+    }
+    
+    .pet-size-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .pet-size-btn {
+      padding: 8px 15px;
+      border: 2px solid #ddd;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      background: white;
+    }
+    
+    .pet-size-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    .accordion-item {
+      border: none;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .accordion-button {
+      padding: 15px 20px;
+    }
+    
+    .accordion-body {
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-
-
   <!-- Header -->
-  <header>
-    <div class="container-fluid">
-      <div class="row py-3 border-bottom">
-        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-          <div class="main-logo">
-            <a href="index.html">
-              <img src="https://via.placeholder.com/165x50?text=PetSpa" alt="logo" class="img-fluid">
+<header class="auto-hide-header">
+  <div class="container py-2">
+    <div class="row py-3 align-items-center">
+      <!-- Logo -->
+      <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
+        <div class="main-logo">
+          <a href="index.html">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
+          </a>
+        </div>
+      </div>
+
+      <!-- Search bar - visible on large screens -->
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+          <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
+            <input type="text" class="form-control border-0 bg-transparent py-2"
+              placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
+            <button type="submit" class="btn btn-link p-0 text-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Auth and user actions -->
+      <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+        <!-- <div class="auth-container ms-auto">
+        
+          <div class="auth-buttons">
+            <a href="login.html" class="btn btn-outline-primary rounded-pill">
+              <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
             </a>
           </div>
-        </div>
-        <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-          <div class="search-bar border rounded-pill">
-            <form action="#" class="search-form d-flex align-items-center">
-              <input type="text" class="form-control border-0 bg-transparent" placeholder="Search for services, products...">
-              <button type="submit" class="btn bg-transparent">
-                <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
+
+        
+          <div class="user-info d-flex align-items-center">
+            <span class="me-2">Xin chào, <strong id="userName">User</strong></span>
+            <div class="d-flex">
+              <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
+                <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
               </button>
-            </form>
+              <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill">
+                <i class="fas fa-cog me-1"></i> Quản trị
+              </a>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Cart and wishlist icons -->
+        <div class="ms-3 d-flex">
+          <a href="wishlist.html" class="mx-2 position-relative text-dark">
+            <i class="fas fa-heart fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <a href="cart.html" class="mx-2 position-relative text-dark">
+            <i class="fas fa-shopping-cart fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Navigation menu -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+    <div class="container">
+      <!-- Mobile toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Search bar - visible on mobile only -->
+      <div class="d-block d-lg-none ms-2 me-auto">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#searchModal" class="btn btn-outline-primary rounded-circle">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+
+      <!-- Main navigation -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="index.html">Trang chủ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown" 
+               aria-expanded="false">Thú cưng</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Chó cảnh</a></li>
+              <li><a class="dropdown-item" href="#">Mèo cảnh</a></li>
+              <li><a class="dropdown-item" href="#">Thú cưng khác</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả thú cưng</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Thức ăn</a></li>
+              <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
+              <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
+              <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium active" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Modal for mobile -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="searchModalLabel">Tìm kiếm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Hero Section with Slider -->
+  <section class="service-hero mb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="swiper service-slider">
+            <div class="swiper-wrapper">
+              <!-- Slide 1 -->
+              <div class="swiper-slide">
+                <div class="service-slide">
+                  <img src="/api/placeholder/1200/500" class="service-slide-img" alt="Dịch vụ thú cưng">
+                  <div class="service-slide-content">
+                    <h1 class="display-4 fw-bold mb-3">Dịch Vụ Thú Cưng Chuyên Nghiệp</h1>
+                    <p class="lead mb-4">Chăm sóc toàn diện dành cho thú cưng của bạn với đội ngũ chuyên nghiệp</p>
+                    <a href="#pet-services" class="btn btn-primary btn-lg rounded-pill">Khám phá ngay</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Slide 2 -->
+              <div class="swiper-slide">
+                <div class="service-slide">
+                  <img src="/api/placeholder/1200/500" class="service-slide-img" alt="Spa thú cưng">
+                  <div class="service-slide-content">
+                    <h1 class="display-4 fw-bold mb-3">Spa & Làm Đẹp Cho Thú Cưng</h1>
+                    <p class="lead mb-4">Dịch vụ tắm, vệ sinh và tỉa lông chuyên nghiệp cho chó mèo cưng của bạn</p>
+                    <a href="#grooming-services" class="btn btn-primary btn-lg rounded-pill">Đặt lịch ngay</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="swiper-slide">
+                <div class="service-slide">
+                  <img src="/api/placeholder/1200/500" class="service-slide-img" alt="Khách sạn thú cưng">
+                  <div class="service-slide-content">
+                    <h1 class="display-4 fw-bold mb-3">Khách Sạn Thú Cưng</h1>
+                    <p class="lead mb-4">Dịch vụ lưu trú và chăm sóc đặc biệt cho thú cưng khi bạn vắng nhà</p>
+                    <a href="#boarding-services" class="btn btn-primary btn-lg rounded-pill">Tìm hiểu thêm</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
           </div>
         </div>
-        <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-          <div class="auth-container">
-            <button class="btn btn-outline-dark login-button">Login</button>
-            <button class="btn btn-primary register-button">Register</button>
-            <div class="user-info">
-              <span>Welcome, <strong id="username">User</strong></span>
-            </div>
-            <button class="btn btn-outline-dark logout-btn">Logout</button>
-            <a href="admin.html" class="btn btn-outline-primary admin-link">Admin Panel</a>
-          </div>
-          <ul class="d-flex justify-content-end list-unstyled m-0">
-            <li>
-              <a href="#" class="rounded-circle bg-light p-2 mx-1">
-                <iconify-icon icon="ph:heart-bold" class="fs-5"></iconify-icon>
-              </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Navigation Section -->
+  <section class="mb-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <ul class="nav nav-pills justify-content-center" id="servicesTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="all-services-tab" data-bs-toggle="pill" data-bs-target="#all-services" type="button" role="tab">Tất cả dịch vụ</button>
             </li>
-            <li>
-              <a href="#" class="rounded-circle bg-light p-2 mx-1">
-                <iconify-icon icon="ph:shopping-cart-simple-bold" class="fs-5"></iconify-icon>
-              </a>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="grooming-tab" data-bs-toggle="pill" data-bs-target="#grooming-services" type="button" role="tab">Làm đẹp</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="boarding-tab" data-bs-toggle="pill" data-bs-target="#boarding-services" type="button" role="tab">Lưu trú</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="healthcare-tab" data-bs-toggle="pill" data-bs-target="#healthcare-services" type="button" role="tab">Sức khỏe</button>
             </li>
           </ul>
         </div>
       </div>
     </div>
-
-    <div class="container-fluid">
-      <div class="row py-3">
-        <div class="col-12">
-          <nav class="navbar navbar-expand-lg py-0">
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-              aria-controls="offcanvasNavbar">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
-              <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-start flex-grow-1 gap-1 gap-md-5">
-                  <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" href="service.html">Book Services</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Shop</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownPages" data-bs-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">My Account</a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownPages">
-                      <li><a class="dropdown-item" href="#" id="my-bookings-link">My Bookings</a></li>
-                      <li><a class="dropdown-item" href="#">My Pets</a></li>
-                      <li><a class="dropdown-item" href="#">Profile</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Page Banner -->
-  <section class="py-5 bg-light-primary">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h2 class="display-4 fw-normal">Pet Spa Services</h2>
-          <p class="lead">Pamper your furry friend with our premium spa treatments</p>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Book Services</li>
-            </ol>
-          </nav>
-        </div>
-        <div class="col-md-6 d-flex align-items-center justify-content-end">
-          <img src="https://via.placeholder.com/400x200?text=Pet+Spa" alt="Pet Spa" class="img-fluid rounded">
-        </div>
-      </div>
-    </div>
   </section>
 
-  <!-- Booking Section -->
-  <section class="py-5">
+  <!-- Services Content -->
+  <section id="pet-services" class="mb-5">
     <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5">
-          <h2 class="display-5">Book Your Pet's Spa Day</h2>
-          <p class="lead">Choose from our range of premium services for your beloved pet</p>
+      <div class="tab-content" id="servicesTabContent">
+        <!-- All Services Tab -->
+        <div class="tab-pane fade show active" id="all-services" role="tabpanel">
+          <div class="row mb-4">
+            <div class="col-12 text-center mb-5">
+              <h2 class="fw-bold">Dịch Vụ Thú Cưng Tại JanyPet</h2>
+              <p class="text-muted">Chúng tôi cung cấp đầy đủ các dịch vụ chăm sóc thú cưng với đội ngũ nhân viên chuyên nghiệp</p>
+            </div>
+            
+            <!-- Service 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Tắm và vệ sinh">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-shower"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Tắm và Vệ Sinh</h4>
+                  <p class="card-text text-muted">Dịch vụ tắm, vệ sinh tai và làm sạch toàn diện cho thú cưng của bạn.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 150.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal1">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Service 2 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Cắt tỉa lông">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-cut"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Cắt Tỉa Lông</h4>
+                  <p class="card-text text-muted">Cắt tỉa lông theo phong cách yêu cầu, tạo kiểu chuyên nghiệp.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 200.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal2">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Service 3 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Khách sạn thú cưng">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-hotel"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Khách Sạn Thú Cưng</h4>
+                  <p class="card-text text-muted">Dịch vụ lưu trú, chăm sóc đặc biệt khi bạn đi xa.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 250.000đ/ngày</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal3">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Service 4 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Chăm sóc sức khỏe">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Chăm Sóc Sức Khỏe</h4>
+                  <p class="card-text text-muted">Kiểm tra sức khỏe định kỳ, tư vấn dinh dưỡng cho thú cưng.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 300.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal4">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Service 5 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Trông giữ thú cưng">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-baby-carriage"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Trông Giữ Thú Cưng</h4>
+                  <p class="card-text text-muted">Dịch vụ trông giữ trong ngày, bán trú cho thú cưng.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 150.000đ/ngày</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal5">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Service 6 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Nhuộm lông thời trang">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-palette"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Nhuộm Lông Thời Trang</h4>
+                  <p class="card-text text-muted">Nhuộm lông an toàn với màu sắc thời trang cho thú cưng.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 350.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#serviceModal6">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Booking Steps -->
-      <div class="row mb-5">
-        <div class="col-12">
-          <div class="booking-steps">
-            <ul class="nav nav-pills nav-justified mb-5" id="bookingSteps" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="step1-tab" data-bs-toggle="pill" data-bs-target="#step1" type="button" role="tab" aria-controls="step1" aria-selected="true">
-                  <span class="step-number">1</span>
-                  <span class="step-title">Select Services</span>
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="step2-tab" data-bs-toggle="pill" data-bs-target="#step2" type="button" role="tab" aria-controls="step2" aria-selected="false">
-                  <span class="step-number">2</span>
-                  <span class="step-title">Choose Pet</span>
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="step3-tab" data-bs-toggle="pill" data-bs-target="#step3" type="button" role="tab" aria-controls="step3" aria-selected="false">
-                  <span class="step-number">3</span>
-                  <span class="step-title">Select Date & Time</span>
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="step4-tab" data-bs-toggle="pill" data-bs-target="#step4" type="button" role="tab" aria-controls="step4" aria-selected="false">
-                  <span class="step-number">4</span>
-                  <span class="step-title">Confirm Booking</span>
-                </button>
-              </li>
-            </ul>
-
-            <div class="tab-content p-4 bg-light rounded" id="bookingStepsContent">
-              <!-- Step 1: Select Services -->
-              <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
-                <h3 class="mb-4">Select Services</h3>
-                <div class="row" id="services-container">
-                  <!-- Services will be loaded here dynamically -->
-                  <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Loading services...</p>
-                  </div>
+        
+        <!-- Grooming Services Tab -->
+        <div class="tab-pane fade" id="grooming-services" role="tabpanel">
+          <div class="row mb-4">
+            <div class="col-12 text-center mb-5">
+              <h2 class="fw-bold">Dịch Vụ Làm Đẹp</h2>
+              <p class="text-muted">Các gói dịch vụ làm đẹp toàn diện cho thú cưng của bạn</p>
+            </div>
+            
+            <!-- Grooming Package 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="package-card">
+                <div class="package-header">
+                  <h3 class="fw-bold mb-0">Gói Cơ Bản</h3>
                 </div>
-                <div class="d-flex justify-content-between mt-4">
-                  <button class="btn btn-outline-dark" disabled>Previous</button>
-                  <button class="btn btn-primary next-step" data-next="step2-tab">Next</button>
+                <div class="card-body p-4">
+                  <div class="package-price">150.000đ - 350.000đ</div>
+                  <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+                  
+                  <div class="pet-size-selector mb-4">
+                    <button class="pet-size-btn active" data-size="small">Dưới 5kg</button>
+                    <button class="pet-size-btn" data-size="medium">5-10kg</button>
+                    <button class="pet-size-btn" data-size="large">10-20kg</button>
+                    <button class="pet-size-btn" data-size="xlarge">Trên 20kg</button>
+                  </div>
+                  
+                  <ul class="service-features mb-4">
+                    <li>Tắm sữa tắm cao cấp</li>
+                    <li>Sấy khô, chải lông</li>
+                    <li>Vệ sinh tai, mắt</li>
+                    <li>Cắt móng</li>
+                    <li>Thơm tho trong 5-7 ngày</li>
+                  </ul>
+                  
+                  <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
                 </div>
               </div>
-
-              <!-- Step 2: Choose Pet -->
-              <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
-                <h3 class="mb-4">Choose Your Pet</h3>
-                <div class="row mb-4">
-                  <div class="col-md-6">
-                    <div class="card mb-3" id="pet-selection-card">
-                      <div class="card-body">
-                        <h5 class="card-title">Select Pet</h5>
-                        <div id="pet-list">
-                          <!-- Pets will be loaded here dynamically -->
-                          <div class="text-center py-3">
-                            <div class="spinner-border text-primary" role="status">
-                              <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2">Loading pets...</p>
-                          </div>
-                        </div>
-                        <button class="btn btn-outline-primary mt-3" id="add-new-pet-btn">
-                          <iconify-icon icon="akar-icons:plus"></iconify-icon> Add New Pet
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="card" id="pet-details-card">
-                      <div class="card-body">
-                        <h5 class="card-title">Pet Details</h5>
-                        <div id="selected-pet-details">
-                          <p class="text-muted">Please select a pet to see details</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            </div>
+            
+            <!-- Grooming Package 2 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="package-card popular-package">
+                <div class="package-header">
+                  <span class="badge bg-warning text-dark rounded-pill mb-2">Phổ biến nhất</span>
+                  <h3 class="fw-bold mb-0">Gói Toàn Diện</h3>
                 </div>
-                <div class="d-flex justify-content-between mt-4">
-                  <button class="btn btn-outline-dark prev-step" data-prev="step1-tab">Previous</button>
-                  <button class="btn btn-primary next-step" data-next="step3-tab">Next</button>
+                <div class="card-body p-4">
+                  <div class="package-price">250.000đ - 450.000đ</div>
+                  <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+                  
+                  <div class="pet-size-selector mb-4">
+                    <button class="pet-size-btn active" data-size="small">Dưới 5kg</button>
+                    <button class="pet-size-btn" data-size="medium">5-10kg</button>
+                    <button class="pet-size-btn" data-size="large">10-20kg</button>
+                    <button class="pet-size-btn" data-size="xlarge">Trên 20kg</button>
+                  </div>
+                  
+                  <ul class="service-features mb-4">
+                    <li>Tất cả dịch vụ của Gói Cơ Bản</li>
+                    <li>Cắt tỉa lông theo yêu cầu</li>
+                    <li>Massage thư giãn</li>
+                    <li>Thơm tho trong 7-10 ngày</li>
+                    <li>Tẩy lông chết chuyên sâu</li>
+                  </ul>
+                  
+                  <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
                 </div>
               </div>
-
-              <!-- Step 3: Select Date & Time -->
-              <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
-                <h3 class="mb-4">Select Date & Time</h3>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-4">
-                      <label for="booking-date" class="form-label">Appointment Date</label>
-                      <input type="date" class="form-control" id="booking-date" min="" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-4">
-                      <label for="booking-time" class="form-label">Appointment Time</label>
-                      <select class="form-control" id="booking-time" required>
-                        <option value="">Select a time slot</option>
-                        <option value="09:00:00">9:00 AM</option>
-                        <option value="09:30:00">9:30 AM</option>
-                        <option value="10:00:00">10:00 AM</option>
-                        <option value="10:30:00">10:30 AM</option>
-                        <option value="11:00:00">11:00 AM</option>
-                        <option value="11:30:00">11:30 AM</option>
-                        <option value="13:00:00">1:00 PM</option>
-                        <option value="13:30:00">1:30 PM</option>
-                        <option value="14:00:00">2:00 PM</option>
-                        <option value="14:30:00">2:30 PM</option>
-                        <option value="15:00:00">3:00 PM</option>
-                        <option value="15:30:00">3:30 PM</option>
-                        <option value="16:00:00">4:00 PM</option>
-                        <option value="16:30:00">4:30 PM</option>
-                      </select>
-                    </div>
-                  </div>
+            </div>
+            
+            <!-- Grooming Package 3 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="package-card">
+                <div class="package-header">
+                  <h3 class="fw-bold mb-0">Gói VIP</h3>
                 </div>
-                <div class="mb-4">
-                  <label for="booking-notes" class="form-label">Special Instructions or Notes</label>
-                  <textarea class="form-control" id="booking-notes" rows="3" placeholder="Any special requests or information we should know about your pet..."></textarea>
-                </div>
-                <div class="d-flex justify-content-between mt-4">
-                  <button class="btn btn-outline-dark prev-step" data-prev="step2-tab">Previous</button>
-                  <button class="btn btn-primary next-step" data-next="step4-tab">Next</button>
+                <div class="card-body p-4">
+                  <div class="package-price">450.000đ - 650.000đ</div>
+                  <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+                  
+                  <div class="pet-size-selector mb-4">
+                    <button class="pet-size-btn active" data-size="small">Dưới 5kg</button>
+                    <button class="pet-size-btn" data-size="medium">5-10kg</button>
+                    <button class="pet-size-btn" data-size="large">10-20kg</button>
+                    <button class="pet-size-btn" data-size="xlarge">Trên 20kg</button>
+                  </div>
+                  
+                  <ul class="service-features mb-4">
+                    <li>Tất cả dịch vụ của Gói Toàn Diện</li>
+                    <li>Sử dụng sản phẩm cao cấp</li>
+                    <li>Nhuộm màu thời trang (1 màu)</li>
+                    <li>Thơm tho trong 10-14 ngày</li>
+                    <li>Chế độ ưu tiên không chờ đợi</li>
+                  </ul>
+                  
+                  <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
                 </div>
               </div>
-
-              <!-- Step 4: Confirm Booking -->
-              <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
-                <h3 class="mb-4">Confirm Your Booking</h3>
-                <div class="card mb-4">
-                  <div class="card-body">
-                    <h5 class="card-title">Booking Summary</h5>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <h6>Selected Services</h6>
-                        <ul id="summary-services" class="list-group list-group-flush mb-3">
-                          <!-- Selected services will be displayed here -->
-                        </ul>
-                        <p class="fw-bold">Total: <span id="summary-total">$0.00</span></p>
-                      </div>
-                      <div class="col-md-6">
-                        <h6>Appointment Details</h6>
-                        <p><strong>Pet:</strong> <span id="summary-pet">Not selected</span></p>
-                        <p><strong>Date:</strong> <span id="summary-date">Not selected</span></p>
-                        <p><strong>Time:</strong> <span id="summary-time">Not selected</span></p>
-                        <p><strong>Notes:</strong> <span id="summary-notes">None</span></p>
-                      </div>
+            </div>
+            
+            <!-- Individual Grooming Services -->
+            <div class="col-12 mt-5 mb-4">
+              <h3 class="fw-bold mb-4">Dịch Vụ Làm Đẹp Riêng Lẻ</h3>
+              
+              <div class="price-table">
+                <div class="price-header">
+                  <h4 class="mb-0">Bảng Giá Dịch Vụ</h4>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th>Dịch vụ</th>
+                        <th>Dưới 5kg</th>
+                        <th>5-10kg</th>
+                        <th>10-20kg</th>
+                        <th>Trên 20kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Cắt móng, cạo bàn</td>
+                        <td>50.000đ</td>
+                        <td>70.000đ</td>
+                        <td>90.000đ</td>
+                        <td>120.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Vệ sinh tai</td>
+                        <td>50.000đ</td>
+                        <td>60.000đ</td>
+                        <td>80.000đ</td>
+                        <td>100.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Tắm sữa tắm trị ve rận</td>
+                        <td>180.000đ</td>
+                        <td>220.000đ</td>
+                        <td>270.000đ</td>
+                        <td>320.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Cạo body</td>
+                        <td>200.000đ</td>
+                        <td>250.000đ</td>
+                        <td>300.000đ</td>
+                        <td>400.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Nhuộm lông (1 màu)</td>
+                        <td>250.000đ</td>
+                        <td>350.000đ</td>
+                        <td>450.000đ</td>
+                        <td>550.000đ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Boarding Services Tab -->
+        <div class="tab-pane fade" id="boarding-services" role="tabpanel">
+          <div class="row mb-4">
+            <div class="col-12 text-center mb-5">
+              <h2 class="fw-bold">Dịch Vụ Lưu Trú & Trông Giữ</h2>
+              <p class="text-muted">Nơi ở lý tưởng và an toàn cho thú cưng khi bạn vắng nhà</p>
+            </div>
+            
+            <!-- Boarding Service 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Lưu trú tiêu chuẩn">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-home"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
                     </div>
                   </div>
+                  <h4 class="card-title">Lưu Trú Tiêu Chuẩn</h4>
+                  <p class="card-text text-muted">Dịch vụ lưu trú tiêu chuẩn với không gian riêng tư, an toàn.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 250.000đ/ngày</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#boardingModal1">Xem chi tiết</button>
+                  </div>
                 </div>
-                <div class="form-check mb-4">
-                  <input class="form-check-input" type="checkbox" id="terms-checkbox" required>
-                  <label class="form-check-label" for="terms-checkbox">
-                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
-                  </label>
+              </div>
+            </div>
+            
+            <!-- Boarding Service 2 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Lưu trú VIP">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Lưu Trú VIP</h4>
+                  <p class="card-text text-muted">Dịch vụ lưu trú cao cấp với không gian rộng rãi, giám sát 24/7.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 400.000đ/ngày</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#boardingModal2">Xem chi tiết</button>
+                  </div>
                 </div>
-                <div class="d-flex justify-content-between mt-4">
-                  <button class="btn btn-outline-dark prev-step" data-prev="step3-tab">Previous</button>
-                  <button class="btn btn-primary" id="confirm-booking-btn">Confirm Booking</button>
+              </div>
+            </div>
+            
+            <!-- Boarding Service 3 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Trông giữ theo giờ">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Trông Giữ Theo Giờ</h4>
+                  <p class="card-text text-muted">Dịch vụ trông giữ linh hoạt theo giờ cho các chủ pet bận rộn.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 30.000đ/giờ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#boardingModal3">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Boarding Pricing -->
+            <div class="col-12 mt-5 mb-4">
+              <h3 class="fw-bold mb-4">Bảng Giá Dịch Vụ Lưu Trú</h3>
+              
+              <div class="price-table">
+                <div class="price-header">
+                  <h4 class="mb-0">Chi Tiết Giá</h4>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th>Loại dịch vụ</th>
+                        <th>Dưới 5kg</th>
+                        <th>5-10kg</th>
+                        <th>10-20kg</th>
+                        <th>Trên 20kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Lưu trú tiêu chuẩn (ngày)</td>
+                        <td>250.000đ</td>
+                        <td>300.000đ</td>
+                        <td>350.000đ</td>
+                        <td>400.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Lưu trú VIP (ngày)</td>
+                        <td>400.000đ</td>
+                        <td>450.000đ</td>
+                        <td>500.000đ</td>
+                        <td>600.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Trông giữ theo giờ</td>
+                        <td>30.000đ</td>
+                        <td>40.000đ</td>
+                        <td>50.000đ</td>
+                        <td>60.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Gói trông giữ bán trú (8h)</td>
+                        <td>150.000đ</td>
+                        <td>180.000đ</td>
+                        <td>210.000đ</td>
+                        <td>250.000đ</td>
+                      </tr>
+                      <tr>
+                        <td>Gói tuần (7 ngày)</td>
+                        <td>1.500.000đ</td>
+                        <td>1.800.000đ</td>
+                        <td>2.100.000đ</td>
+                        <td>2.400.000đ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Healthcare Services Tab -->
+        <div class="tab-pane fade" id="healthcare-services" role="tabpanel">
+          <div class="row mb-4">
+            <div class="col-12 text-center mb-5">
+              <h2 class="fw-bold">Dịch Vụ Chăm Sóc Sức Khỏe</h2>
+              <p class="text-muted">Giữ cho thú cưng của bạn luôn khỏe mạnh với các dịch vụ chăm sóc sức khỏe</p>
+            </div>
+            
+            <!-- Healthcare Service 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Khám sức khỏe định kỳ">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Khám Sức Khỏe Định Kỳ</h4>
+                  <p class="card-text text-muted">Kiểm tra sức khỏe toàn diện để phát hiện sớm các vấn đề tiềm ẩn.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 300.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#healthcareModal1">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Healthcare Service 2 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Tiêm phòng">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-syringe"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Tiêm Phòng</h4>
+                  <p class="card-text text-muted">Tiêm phòng đầy đủ các loại vaccine cần thiết để bảo vệ thú cưng.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 250.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#healthcareModal2">Xem chi tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Healthcare Service 3 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="service-card">
+                <img src="/api/placeholder/600/400" class="service-img card-img-top" alt="Tư vấn dinh dưỡng">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="service-icon me-3">
+                      <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <div>
+                      <span class="badge badge-pet-type">Chó & Mèo</span>
+                    </div>
+                  </div>
+                  <h4 class="card-title">Tư Vấn Dinh Dưỡng</h4>
+                  <p class="card-text text-muted">Tư vấn chế độ ăn uống phù hợp cho thú cưng theo từng giai đoạn.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">Từ 200.000đ</span>
+                    <button class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#healthcareModal3">Xem chi tiết</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -320,310 +1049,1158 @@
       </div>
     </div>
   </section>
-
-  <!-- My Bookings Modal -->
-  <div class="modal fade" id="myBookingsModal" tabindex="-1" aria-labelledby="myBookingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+   <!-- Service Detail Modals -->
+  <!-- Service Modal 1 - Tắm và Vệ Sinh -->
+  <div class="modal fade service-detail-modal" id="serviceModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="myBookingsModalLabel">My Bookings</h5>
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Tắm và Vệ Sinh</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Tắm và vệ sinh">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ tắm và vệ sinh toàn diện tại JanyPet giúp thú cưng của bạn luôn sạch sẽ, thơm tho và khỏe mạnh. Chúng tôi sử dụng các sản phẩm chất lượng cao, an toàn cho da và lông của thú cưng.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Quy trình thực hiện</h4>
+          <ol>
+            <li>Kiểm tra sơ bộ tình trạng da lông</li>
+            <li>Gỡ rối (nếu cần)</li>
+            <li>Tắm với sữa tắm phù hợp loại lông</li>
+            <li>Xả sạch và tắm lần 2 nếu cần</li>
+            <li>Làm khô lông</li>
+            <li>Vệ sinh tai, mắt</li>
+            <li>Cắt móng, vệ sinh bàn chân (theo yêu cầu)</li>
+            <li>Xịt thơm, dưỡng lông</li>
+          </ol>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá</h4>
           <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
+            <table class="table table-bordered">
+              <thead class="table-light">
                 <tr>
-                  <th>Booking ID</th>
-                  <th>Pet</th>
-                  <th>Services</th>
-                  <th>Date & Time</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Kích thước</th>
+                  <th>Giá dịch vụ</th>
+                  <th>Thời gian</th>
                 </tr>
               </thead>
-              <tbody id="bookings-table-body">
-                <!-- Bookings will be loaded here dynamically -->
+              <tbody>
                 <tr>
-                  <td colspan="6" class="text-center">Loading your bookings...</td>
+                  <td>Dưới 5kg</td>
+                  <td>150.000đ</td>
+                  <td>60-90 phút</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>200.000đ</td>
+                  <td>90-120 phút</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>250.000đ</td>
+                  <td>90-120 phút</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>300.000đ</td>
+                  <td>120-150 phút</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add New Pet Modal -->
-  <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addPetModalLabel">Add New Pet</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="add-pet-form">
-            <div class="mb-3">
-              <label for="pet-name" class="form-label">Pet Name</label>
-              <input type="text" class="form-control" id="pet-name" required>
-            </div>
-            <div class="mb-3">
-              <label for="pet-species" class="form-label">Species</label>
-              <select class="form-control" id="pet-species" required>
-                <option value="">Select species</option>
-                <option value="Dog">Dog</option>
-                <option value="Cat">Cat</option>
-                <option value="Bird">Bird</option>
-                <option value="Rabbit">Rabbit</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="pet-breed" class="form-label">Breed</label>
-              <input type="text" class="form-control" id="pet-breed">
-            </div>
-            <div class="mb-3">
-              <label for="pet-birthdate" class="form-label">Birth Date</label>
-              <input type="date" class="form-control" id="pet-birthdate">
-            </div>
-            <div class="mb-3">
-              <label for="pet-gender" class="form-label">Gender</label>
-              <select class="form-control" id="pet-gender" required>
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="pet-weight" class="form-label">Weight (kg)</label>
-              <input type="number" step="0.1" class="form-control" id="pet-weight">
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="pet-vaccinated">
-              <label class="form-check-label" for="pet-vaccinated">Vaccinated</label>
-            </div>
-            <div class="mb-3">
-              <label for="pet-health-notes" class="form-label">Health Notes</label>
-              <textarea class="form-control" id="pet-health-notes" rows="3" placeholder="Allergies, medical conditions, etc."></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="save-pet-btn">Save Pet</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Terms and Conditions Modal -->
-  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h6>Pet Spa Booking Terms</h6>
-          <p>By booking a service with our Pet Spa, you agree to the following terms:</p>
-          <ol>
-            <li>Appointments must be canceled at least 24 hours in advance to avoid cancellation fees.</li>
-            <li>Pets must be up-to-date on vaccinations for services that require it.</li>
-            <li>We reserve the right to refuse service to pets that show signs of aggression or illness.</li>
-            <li>Payment is due at the time of service.</li>
-            <li>Please arrive 10 minutes before your scheduled appointment time.</li>
-          </ol>
-          <h6>Privacy Policy</h6>
-          <p>We collect personal information to provide and improve our services. Your data is protected and will not be shared with third parties except as required by law.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Success Modal -->
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="successModalLabel">Booking Successful!</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
-          <iconify-icon icon="mdi:check-circle" style="font-size: 64px; color: #28a745;"></iconify-icon>
-          <h4 class="mt-3">Thank You!</h4>
-          <p>Your booking has been confirmed. We've sent a confirmation email with all the details.</p>
-          <div class="alert alert-info mt-3">
-            <strong>Booking ID:</strong> <span id="success-booking-id"></span><br>
-            <strong>Date:</strong> <span id="success-date"></span><br>
-            <strong>Time:</strong> <span id="success-time"></span>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="view-bookings-btn">View My Bookings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Modal 2 - Cắt Tỉa Lông -->
+  <div class="modal fade service-detail-modal" id="serviceModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Cắt Tỉa Lông</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Cắt tỉa lông">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ cắt tỉa lông chuyên nghiệp tại JanyPet giúp thú cưng của bạn luôn đẹp và thoải mái. Chúng tôi cung cấp nhiều kiểu tỉa lông khác nhau từ cơ bản đến phức tạp theo yêu cầu.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Quy trình thực hiện</h4>
+          <ol>
+            <li>Tắm và làm sạch lông</li>
+            <li>Gỡ rối lông và chải lông kỹ</li>
+            <li>Tư vấn kiểu tỉa lông phù hợp</li>
+            <li>Cắt, tỉa lông theo yêu cầu</li>
+            <li>Cắt tỉa phần đặc biệt (tai, chân, đuôi)</li>
+            <li>Tạo kiểu và hoàn thiện</li>
+            <li>Xịt dưỡng và tạo mùi thơm</li>
+          </ol>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá cắt tỉa lông</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>Cắt cơ bản</th>
+                  <th>Cắt tạo kiểu</th>
+                  <th>Thời gian</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>200.000đ</td>
+                  <td>300.000đ</td>
+                  <td>90-120 phút</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>250.000đ</td>
+                  <td>350.000đ</td>
+                  <td>120-150 phút</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>300.000đ</td>
+                  <td>400.000đ</td>
+                  <td>150-180 phút</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>350.000đ</td>
+                  <td>450.000đ</td>
+                  <td>180-240 phút</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Login Modal -->
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <!-- Service Modal 3 - Khách Sạn Thú Cưng -->
+  <div class="modal fade service-detail-modal" id="serviceModal3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Khách Sạn Thú Cưng</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="login-form">
-            <div class="mb-3">
-              <label for="login-email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="login-email" required>
-            </div>
-            <div class="mb-3">
-              <label for="login-password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="login-password" required>
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="remember-me">
-              <label class="form-check-label" for="remember-me">Remember me</label>
-            </div>
-            <div class="alert alert-danger d-none" id="login-error"></div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" id="show-register-btn">Create an account</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="login-submit-btn">Login</button>
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Khách sạn thú cưng">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ khách sạn thú cưng tại JanyPet cung cấp không gian lưu trú an toàn, thoải mái khi bạn đi xa. Thú cưng của bạn sẽ được chăm sóc tận tình bởi đội ngũ nhân viên yêu động vật và có kinh nghiệm.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Tiện nghi và dịch vụ</h4>
+          <ul class="service-features">
+            <li>Phòng nghỉ riêng biệt, sạch sẽ, thoáng mát</li>
+            <li>Cho ăn theo lịch trình (2-3 lần/ngày)</li>
+            <li>Đi dạo và vận động mỗi ngày</li>
+            <li>Giám sát 24/7 bởi nhân viên có kinh nghiệm</li>
+            <li>Khu vực vui chơi riêng biệt cho chó và mèo</li>
+            <li>Báo cáo tình trạng thú cưng hàng ngày</li>
+            <li>Dịch vụ tắm và vệ sinh (tùy gói)</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá dịch vụ lưu trú</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>Giá dịch vụ (ngày)</th>
+                  <th>Gói 7 ngày</th>
+                  <th>Gói 15 ngày</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>250.000đ</td>
+                  <td>1.500.000đ</td>
+                  <td>3.000.000đ</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>300.000đ</td>
+                  <td>1.800.000đ</td>
+                  <td>3.600.000đ</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>350.000đ</td>
+                  <td>2.100.000đ</td>
+                  <td>4.200.000đ</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>400.000đ</td>
+                  <td>2.400.000đ</td>
+                  <td>4.800.000đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Register Modal -->
-  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <!-- Service Modal 4 - Chăm Sóc Sức Khỏe -->
+  <div class="modal fade service-detail-modal" id="serviceModal4" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="registerModalLabel">Create an Account</h5>
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Chăm Sóc Sức Khỏe</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="register-form">
-            <div class="mb-3">
-              <label for="register-email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="register-email" required>
-            </div>
-            <div class="mb-3">
-              <label for="register-password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="register-password" required>
-            </div>
-            <div class="mb-3">
-              <label for="register-confirm-password" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="register-confirm-password" required>
-            </div>
-            <div class="mb-3">
-              <label for="register-phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="register-phone" required>
-            </div>
-            <div class="mb-3">
-              <label for="register-address" class="form-label">Address</label>
-              <input type="text" class="form-control" id="register-address">
-            </div>
-            <div class="mb-3">
-              <label for="register-gender" class="form-label">Gender</label>
-              <select class="form-control" id="register-gender">
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-            <div class="alert alert-danger d-none" id="register-error"></div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-link" id="show-login-btn">Already have an account?</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="register-submit-btn">Register</button>
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Chăm sóc sức khỏe">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ chăm sóc sức khỏe tại JanyPet giúp phát hiện sớm các vấn đề sức khỏe tiềm ẩn và đảm bảo thú cưng của bạn luôn khỏe mạnh. Chúng tôi có đội ngũ bác sĩ thú y có trình độ chuyên môn cao và các trang thiết bị hiện đại.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Các dịch vụ sức khỏe</h4>
+          <ul class="service-features">
+            <li>Khám sức khỏe tổng quát</li>
+            <li>Tiêm phòng các loại vaccine</li>
+            <li>Tẩy giun định kỳ</li>
+            <li>Tư vấn dinh dưỡng</li>
+            <li>Điều trị các bệnh thông thường</li>
+            <li>Chăm sóc răng miệng</li>
+            <li>Xét nghiệm máu và nước tiểu</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá dịch vụ sức khỏe</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Dịch vụ</th>
+                  <th>Chó</th>
+                  <th>Mèo</th>
+                  <th>Thời gian</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Khám sức khỏe tổng quát</td>
+                  <td>300.000đ</td>
+                  <td>250.000đ</td>
+                  <td>30-45 phút</td>
+                </tr>
+                <tr>
+                  <td>Tiêm phòng (1 mũi)</td>
+                  <td>250.000đ-350.000đ</td>
+                  <td>250.000đ-300.000đ</td>
+                  <td>15-20 phút</td>
+                </tr>
+                <tr>
+                  <td>Tẩy giun</td>
+                  <td>150.000đ-300.000đ</td>
+                  <td>100.000đ-200.000đ</td>
+                  <td>10-15 phút</td>
+                </tr>
+                <tr>
+                  <td>Tư vấn dinh dưỡng</td>
+                  <td>200.000đ</td>
+                  <td>200.000đ</td>
+                  <td>30-45 phút</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Service Modal 5 - Trông Giữ Thú Cưng -->
+  <div class="modal fade service-detail-modal" id="serviceModal5" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Trông Giữ Thú Cưng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Trông giữ thú cưng">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ trông giữ thú cưng tại JanyPet là giải pháp lý tưởng cho các chủ pet bận rộn trong ngày. Chúng tôi cung cấp dịch vụ trông giữ linh hoạt theo giờ hoặc theo buổi, đảm bảo thú cưng của bạn được chăm sóc tốt nhất trong thời gian bạn vắng mặt.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Nội dung dịch vụ</h4>
+          <ul class="service-features">
+            <li>Không gian vui chơi rộng rãi, an toàn</li>
+            <li>Cho ăn theo lịch trình</li>
+            <li>Dắt đi dạo và vận động</li>
+            <li>Hoạt động tương tác và chơi đùa</li>
+            <li>Giám sát liên tục bởi nhân viên có kinh nghiệm</li>
+            <li>Cập nhật tình hình thú cưng</li>
+            <li>Khu vực nghỉ ngơi thoải mái</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá dịch vụ trông giữ</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>Theo giờ</th>
+                  <th>Bán trú (8h)</th>
+                  <th>Cả ngày (12h)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>30.000đ/giờ</td>
+                  <td>150.000đ</td>
+                  <td>200.000đ</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>40.000đ/giờ</td>
+                  <td>180.000đ</td>
+                  <td>250.000đ</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>50.000đ/giờ</td>
+                  <td>210.000đ</td>
+                  <td>300.000đ</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>60.000đ/giờ</td>
+                  <td>250.000đ</td>
+                  <td>350.000đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Modal 6 - Nhuộm Lông Thời Trang -->
+  <div class="modal fade service-detail-modal" id="serviceModal6" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Nhuộm Lông Thời Trang</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Nhuộm lông thời trang">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ nhuộm lông thời trang tại JanyPet giúp thú cưng của bạn trở nên độc đáo và cá tính hơn. Chúng tôi sử dụng các sản phẩm nhuộm lông chuyên dụng, an toàn cho thú cưng, không chứa hóa chất độc hại.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Quy trình thực hiện</h4>
+          <ol>
+            <li>Tắm và làm sạch lông kỹ lưỡng</li>
+            <li>Kiểm tra da và lông, thực hiện test tính ứng</li>
+            <li>Tư vấn màu sắc phù hợp</li>
+            <li>Tiến hành nhuộm lông theo yêu cầu</li>
+            <li>Chờ màu lên màu theo thời gian quy định</li>
+            <li>Xả sạch thuốc nhuộm</li>
+            <li>Sấy khô và tạo kiểu</li>
+          </ol>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá nhuộm lông</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>1 màu</th>
+                  <th>2-3 màu</th>
+                  <th>Họa tiết đặc biệt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>350.000đ</td>
+                  <td>450.000đ</td>
+                  <td>550.000đ</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>450.000đ</td>
+                  <td>550.000đ</td>
+                  <td>650.000đ</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>550.000đ</td>
+                  <td>650.000đ</td>
+                  <td>750.000đ</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>650.000đ</td>
+                  <td>750.000đ</td>
+                  <td>900.000đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="alert alert-info mt-4">
+            <p class="mb-0"><strong>Lưu ý:</strong> Thời gian lưu màu thường từ 2-4 tuần tùy thuộc vào loại lông và màu nhuộm. Chúng tôi khuyến nghị không nhuộm lông cho thú cưng có da nhạy cảm hoặc dưới 6 tháng tuổi.</p>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boarding Modals -->
+  <div class="modal fade service-detail-modal" id="boardingModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Lưu Trú Tiêu Chuẩn</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Lưu trú tiêu chuẩn">
+          
+          <h4 class="fw-bold mb-3">Chi tiết dịch vụ</h4>
+          <p>Gói lưu trú tiêu chuẩn cung cấp không gian nghỉ ngơi thoải mái, an toàn cho thú cưng của bạn. Thú cưng sẽ được chăm sóc cẩn thận và được cho ăn đầy đủ theo lịch trình.</p>
+          
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <h5 class="fw-bold mb-3">Dịch vụ bao gồm</h5>
+              <ul class="service-features">
+                <li>Phòng nghỉ riêng biệt, sạch sẽ</li>
+                <li>Cho ăn 2 lần/ngày</li>
+                <li>Đi dạo 2 lần/ngày</li>
+                <li>Nước uống sạch liên tục</li>
+                <li>Vệ sinh chuồng nuôi hàng ngày</li>
+                <li>Giám sát định kỳ</li>
+                <li>Cập nhật tình hình cho chủ</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h5 class="fw-bold mb-3">Không gian lưu trú</h5>
+              <ul class="service-features">
+                <li>Diện tích: 1-2m² (tùy kích thước thú)</li>
+                <li>Nệm/Thảm êm ái</li>
+                <li>Nhiệt độ phòng điều hòa</li>
+                <li>Ánh sáng tự nhiên</li>
+                <li>Thông gió tốt</li>
+                <li>Khu vực riêng biệt cho chó và mèo</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boarding Modal 2 - Lưu Trú VIP -->
+  <div class="modal fade service-detail-modal" id="boardingModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Lưu Trú VIP</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Lưu trú VIP">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ lưu trú VIP tại JanyPet cung cấp không gian rộng rãi, sang trọng cùng dịch vụ chăm sóc đặc biệt cho thú cưng. Đây là lựa chọn hoàn hảo cho những thú cưng cần sự chăm sóc tỉ mỉ và không gian thoải mái trong thời gian dài.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Dịch vụ bao gồm</h4>
+          <ul>
+            <li>Phòng riêng cao cấp, rộng rãi hơn</li>
+            <li>Cho ăn 3 lần/ngày với thức ăn cao cấp</li>
+            <li>Dắt đi dạo, vận động 3 lần/ngày</li>
+            <li>Massage và chải lông hàng ngày</li>
+            <li>Vệ sinh chuồng 2 lần/ngày</li>
+            <li>Giám sát qua camera 24/7</li>
+            <li>Tắm 1 lần/tuần (miễn phí)</li>
+            <li>Cập nhật hình ảnh, video hàng ngày</li>
+            <li>Khu vui chơi riêng</li>
+            <li>Dịch vụ đón/trả tận nơi (tùy khu vực)</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>Giá 1 ngày</th>
+                  <th>Gói 7 ngày</th>
+                  <th>Gói 15 ngày</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>400.000đ</td>
+                  <td>2.400.000đ</td>
+                  <td>4.500.000đ</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>450.000đ</td>
+                  <td>2.700.000đ</td>
+                  <td>5.000.000đ</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>500.000đ</td>
+                  <td>3.000.000đ</td>
+                  <td>5.500.000đ</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>600.000đ</td>
+                  <td>3.600.000đ</td>
+                  <td>6.500.000đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boarding Modal 3 - Trông Giữ Theo Giờ -->
+  <div class="modal fade service-detail-modal" id="boardingModal3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Dịch Vụ Trông Giữ Theo Giờ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Trông giữ theo giờ">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ trông giữ theo giờ tại JanyPet là giải pháp linh hoạt cho những chủ nuôi bận rộn. Chúng tôi cung cấp dịch vụ trông giữ thú cưng theo giờ với không gian vui chơi an toàn và thoải mái.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Nội dung dịch vụ</h4>
+          <ul class="service-features">
+            <li>Không gian vui chơi rộng rãi, an toàn</li>
+            <li>Cho ăn theo yêu cầu</li>
+            <li>Dắt đi dạo và vận động</li>
+            <li>Hoạt động tương tác và chơi đùa</li>
+            <li>Giám sát liên tục bởi nhân viên có kinh nghiệm</li>
+            <li>Cập nhật tình hình thú cưng</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá dịch vụ trông giữ theo giờ</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Kích thước</th>
+                  <th>Giá theo giờ</th>
+                  <th>Giá nửa ngày (4h)</th>
+                  <th>Giá cả ngày (8h)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dưới 5kg</td>
+                  <td>30.000đ</td>
+                  <td>100.000đ</td>
+                  <td>150.000đ</td>
+                </tr>
+                <tr>
+                  <td>5-10kg</td>
+                  <td>40.000đ</td>
+                  <td>120.000đ</td>
+                  <td>180.000đ</td>
+                </tr>
+                <tr>
+                  <td>10-20kg</td>
+                  <td>50.000đ</td>
+                  <td>150.000đ</td>
+                  <td>210.000đ</td>
+                </tr>
+                <tr>
+                  <td>Trên 20kg</td>
+                  <td>60.000đ</td>
+                  <td>180.000đ</td>
+                  <td>250.000đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Healthcare Modals -->
+  <div class="modal fade service-detail-modal" id="healthcareModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Khám Sức Khỏe Định Kỳ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Khám sức khỏe">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ khám sức khỏe định kỳ tại JanyPet giúp phát hiện sớm các vấn đề sức khỏe tiềm ẩn và đảm bảo thú cưng của bạn luôn khỏe mạnh. Đội ngũ bác sĩ thú y giàu kinh nghiệm sẽ thực hiện kiểm tra toàn diện và tư vấn chăm sóc sức khỏe phù hợp.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Nội dung khám</h4>
+          <ul class="service-features">
+            <li>Kiểm tra tổng quát: mắt, tai, miệng, da, lông</li>
+            <li>Kiểm tra nhịp tim, hô hấp</li>
+            <li>Đánh giá cân nặng và thể trạng</li>
+            <li>Kiểm tra các triệu chứng bất thường</li>
+            <li>Tư vấn chế độ ăn và chăm sóc</li>
+            <li>Đề xuất lịch tiêm phòng và tẩy giun</li>
+          </ul>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Healthcare Modal 2 - Tiêm Phòng -->
+  <div class="modal fade service-detail-modal" id="healthcareModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Tiêm Phòng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Tiêm phòng">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ tiêm phòng tại JanyPet đảm bảo thú cưng của bạn được tiêm phòng đầy đủ các loại vaccine cần thiết, giúp bảo vệ sức khỏe và phòng ngừa bệnh tật hiệu quả.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Các loại vaccine</h4>
+          <ul class="service-features">
+            <li>Vaccine bệnh dại</li>
+            <li>Vaccine viêm gan truyền nhiễm</li>
+            <li>Vaccine parvovirus</li>
+            <li>Vaccine leptospira</li>
+            <li>Vaccine cúm chó</li>
+            <li>Vaccine corona</li>
+            <li>Vaccine tiểu đường</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá tiêm phòng</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Tên vaccine</th>
+                  <th>Giá</th>
+                  <th>Đối tượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vaccine bệnh dại</td>
+                  <td>250.000đ</td>
+                  <td>Chó, Mèo</td>
+                </tr>
+                <tr>
+                  <td>Vaccine viêm gan truyền nhiễm</td>
+                  <td>300.000đ</td>
+                  <td>Chó</td>
+                </tr>
+                <tr>
+                  <td>Vaccine parvovirus</td>
+                  <td>350.000đ</td>
+                  <td>Chó</td>
+                </tr>
+                <tr>
+                  <td>Vaccine leptospira</td>
+                  <td>400.000đ</td>
+                  <td>Chó</td>
+                </tr>
+                <tr>
+                  <td>Vaccine cúm chó</td>
+                  <td>450.000đ</td>
+                  <td>Chó</td>
+                </tr>
+                <tr>
+                  <td>Vaccine corona</td>
+                  <td>500.000đ</td>
+                  <td>Chó</td>
+                </tr>
+                <tr>
+                  <td>Vaccine tiểu đường</td>
+                  <td>600.000đ</td>
+                  <td>Chó</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Healthcare Modal 3 - Tư Vấn Dinh Dưỡng -->
+  <div class="modal fade service-detail-modal" id="healthcareModal3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Tư Vấn Dinh Dưỡng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="/api/placeholder/800/400" class="service-detail-img mb-4" alt="Tư vấn dinh dưỡng">
+          
+          <h4 class="fw-bold mb-3">Mô tả dịch vụ</h4>
+          <p>Dịch vụ tư vấn dinh dưỡng tại JanyPet giúp bạn xây dựng chế độ ăn uống hợp lý, cân bằng dinh dưỡng cho thú cưng của bạn. Chúng tôi cung cấp các gói dịch vụ tư vấn dinh dưỡng theo tháng, theo quý hoặc theo yêu cầu.</p>
+          
+          <h4 class="fw-bold mb-3 mt-4">Nội dung tư vấn</h4>
+          <ul class="service-features">
+            <li>Đánh giá tình trạng sức khỏe và thể trạng thú cưng</li>
+            <li>Phân tích thành phần dinh dưỡng trong khẩu phần ăn hiện tại</li>
+            <li>Đề xuất khẩu phần ăn phù hợp với độ tuổi, giống, cân nặng</li>
+            <li>Hướng dẫn cách chọn thực phẩm và chế biến thức ăn</li>
+            <li>Giải đáp thắc mắc về dinh dưỡng và sức khỏe thú cưng</li>
+          </ul>
+          
+          <h4 class="fw-bold mb-3 mt-4">Bảng giá dịch vụ tư vấn dinh dưỡng</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Gói dịch vụ</th>
+                  <th>Giá</th>
+                  <th>Thời gian</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tư vấn lần đầu</td>
+                  <td>200.000đ</td>
+                  <td>30 phút</td>
+                </tr>
+                <tr>
+                  <td>Tư vấn theo tháng</td>
+                  <td>500.000đ</td>
+                  <td>1 giờ/tháng</td>
+                </tr>
+                <tr>
+                  <td>Tư vấn theo quý</td>
+                  <td>1.200.000đ</td>
+                  <td>1 giờ/tháng</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="booking.html" class="btn btn-primary rounded-pill px-4 py-2">Đặt lịch ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Packages Section -->
+  <section class="mb-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Gói Dịch Vụ Combo Tiết Kiệm</h2>
+          <p class="text-muted">Tiết kiệm hơn với các gói combo dịch vụ đầy đủ cho thú cưng của bạn</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="package-card">
+            <div class="package-header">
+              <h3 class="fw-bold mb-0">Combo Spa Cơ Bản</h3>
+            </div>
+            <div class="card-body p-4">
+              <div class="package-price">300.000đ - 500.000đ</div>
+              <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+              
+              <ul class="service-features mb-4">
+                <li>Tắm sữa tắm cao cấp</li>
+                <li>Vệ sinh tai</li>
+                <li>Cắt móng, cạo bàn</li>
+                <li>Cắt mặt</li>
+                <li>Thơm tho trong 7 ngày</li>
+              </ul>
+              
+              <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="package-card popular-package">
+            <div class="package-header">
+              <span class="badge bg-warning text-dark rounded-pill mb-2">Bán chạy nhất</span>
+              <h3 class="fw-bold mb-0">Combo Spa + Tỉa Lông</h3>
+            </div>
+            <div class="card-body p-4">
+              <div class="package-price">450.000đ - 650.000đ</div>
+              <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+              
+              <ul class="service-features mb-4">
+                <li>Tất cả dịch vụ Combo Spa Cơ Bản</li>
+                <li>Tỉa lông tạo kiểu</li>
+                <li>Nhuộm lông (1 màu)</li>
+                <li>Massage thư giãn</li>
+                <li>Thơm tho trong 10 ngày</li>
+              </ul>
+              
+              <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="package-card">
+            <div class="package-header">
+              <h3 class="fw-bold mb-0">Combo Full-Care</h3>
+            </div>
+            <div class="card-body p-4">
+              <div class="package-price">700.000đ - 950.000đ</div>
+              <p class="text-muted mb-4">Tùy theo kích thước và loại thú cưng</p>
+              
+              <ul class="service-features mb-4">
+                <li>Tất cả dịch vụ Combo Spa + Tỉa Lông</li>
+                <li>Khám sức khỏe cơ bản</li>
+                <li>Tẩy giun</li>
+                <li>Vệ sinh răng miệng</li>
+                <li>Tư vấn dinh dưỡng</li>
+              </ul>
+              
+              <a href="#" class="btn btn-primary w-100 rounded-pill">Đặt lịch ngay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="mb-5 py-5 bg-light">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Khách Hàng Nói Gì Về Chúng Tôi</h2>
+          <p class="text-muted">Những đánh giá từ khách hàng đã sử dụng dịch vụ của JanyPet</p>
+        </div>
+      </div>
+      
+      <div class="swiper testimonial-slider">
+        <div class="swiper-wrapper">
+          <!-- Testimonial 1 -->
+          <div class="swiper-slide">
+            <div class="testimonial-card">
+              <div class="mb-4">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+              </div>
+              <p class="mb-4">"Dịch vụ cắt tỉa lông cho bé cún nhà mình quá tuyệt vời. Nhân viên tận tâm, cẩn thận và rất yêu động vật. Bé cún nhà mình rất thích và không hề sợ hãi!"</p>
+              <div class="d-flex align-items-center">
+                <img src="/api/placeholder/70/70" class="testimonial-img me-3" alt="Khách hàng">
+                <div>
+                  <h5 class="fw-bold mb-1">Nguyễn Thị Minh</h5>
+                  <p class="text-muted mb-0">Khách hàng sử dụng dịch vụ Spa</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Testimonial 2 -->
+          <div class="swiper-slide">
+            <div class="testimonial-card">
+              <div class="mb-4">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+              </div>
+              <p class="mb-4">"Dịch vụ khách sạn thú cưng tại JanyPet thật sự đáng tin cậy. Mỗi khi đi công tác, tôi luôn gửi bé mèo ở đây và rất yên tâm. Nhân viên chăm sóc chu đáo và có cập nhật tình hình mỗi ngày."</p>
+              <div class="d-flex align-items-center">
+                <img src="/api/placeholder/70/70" class="testimonial-img me-3" alt="Khách hàng">
+                <div>
+                  <h5 class="fw-bold mb-1">Trần Văn Nam</h5>
+                  <p class="text-muted mb-0">Khách hàng sử dụng dịch vụ Lưu trú</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Testimonial 3 -->
+          <div class="swiper-slide">
+            <div class="testimonial-card">
+              <div class="mb-4">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star-half-alt text-warning"></i>
+              </div>
+              <p class="mb-4">"Dịch vụ khám sức khỏe định kỳ tại JanyPet rất chuyên nghiệp. Bác sĩ thú y tận tình tư vấn và giải thích chi tiết về tình trạng sức khỏe của thú cưng. Rất hài lòng với dịch vụ!"</p>
+              <div class="d-flex align-items-center">
+                <img src="/api/placeholder/70/70" class="testimonial-img me-3" alt="Khách hàng">
+                <div>
+                  <h5 class="fw-bold mb-1">Lê Thị Hương</h5>
+                  <p class="text-muted mb-0">Khách hàng sử dụng dịch vụ Sức khỏe</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="mb-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+          <h2 class="fw-bold mb-3">Câu Hỏi Thường Gặp</h2>
+          <p class="text-muted">Giải đáp những thắc mắc thường gặp về dịch vụ thú cưng tại JanyPet</p>
+        </div>
+      </div>
+      
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="accordion" id="faqAccordion">
+            <!-- FAQ Item 1 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true" aria-controls="faqOne">
+                  Dịch vụ tắm và vệ sinh mất bao lâu?
+                </button>
+              </h2>
+              <div id="faqOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Thời gian thực hiện dịch vụ tắm và vệ sinh thường dao động từ 1-2 giờ tùy thuộc vào kích thước, tình trạng lông và sự hợp tác của thú cưng. Chúng tôi luôn đảm bảo thực hiện đầy đủ các bước chăm sóc để mang lại kết quả tốt nhất cho thú cưng của bạn.
+                </div>
+              </div>
+            </div>
+            
+            <!-- FAQ Item 2 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+                  Tôi có thể đặt lịch dịch vụ như thế nào?
+                </button>
+              </h2>
+              <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Bạn có thể đặt lịch dịch vụ qua website, gọi điện trực tiếp đến số hotline hoặc đến trực tiếp cửa hàng. Chúng tôi khuyến khích đặt lịch trước ít nhất 1-2 ngày để đảm bảo thời gian phục vụ tốt nhất cho thú cưng của bạn, đặc biệt là vào các ngày cuối tuần hoặc ngày lễ.
+                </div>
+              </div>
+            </div>
+            
+            <!-- FAQ Item 3 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+                  Dịch vụ lưu trú bao gồm những gì?
+                </button>
+              </h2>
+              <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Dịch vụ lưu trú tại JanyPet bao gồm chỗ ở riêng biệt, an toàn cho thú cưng, được vệ sinh hàng ngày. Thú cưng được cho ăn 2-3 lần/ngày (theo chế độ thức ăn của chủ hoặc của cửa hàng), được dắt đi dạo, vui chơi và tương tác định kỳ. Đối với gói VIP, thú cưng còn được tắm gội, massage và được giám sát 24/7 qua camera.
+                </div>
+              </div>
+            </div>
+            
+            <!-- FAQ Item 4 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFour" aria-expanded="false" aria-controls="faqFour">
+                  Sản phẩm nhuộm lông có an toàn không?
+                </button>
+              </h2>
+              <div id="faqFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  JanyPet chỉ sử dụng các sản phẩm nhuộm lông chuyên dụng cho thú cưng, được chứng nhận an toàn và không gây kích ứng da. Sản phẩm không chứa hóa chất độc hại như amoniac và peroxide. Trước khi nhuộm, chúng tôi luôn thực hiện test thử trên một vùng nhỏ để đảm bảo thú cưng không bị dị ứng.
+                </div>
+              </div>
+            </div>
+            
+            <!-- FAQ Item 5 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFive" aria-expanded="false" aria-controls="faqFive">
+                  Tôi cần mang theo gì khi đưa thú cưng đến sử dụng dịch vụ?
+                </button>
+              </h2>
+              <div id="faqFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Đối với dịch vụ ngắn hạn như tắm, cắt tỉa lông, bạn chỉ cần đưa thú cưng đến. Đối với dịch vụ lưu trú, bạn nên mang theo thức ăn quen thuộc, đồ chơi yêu thích, sổ tiêm phòng, và thuốc đang sử dụng (nếu có). Chúng tôi sẽ cung cấp tất cả các vật dụng khác như chăn, đệm, bát ăn, nước uống.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="mb-5">
+    <div class="container">
+      <div class="cta-section text-center">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-3">Đặt Lịch Dịch Vụ Ngay Hôm Nay</h2>
+            <p class="mb-4">Hãy đặt lịch ngay để thú cưng của bạn được trải nghiệm dịch vụ chăm sóc chuyên nghiệp tại JanyPet</p>
+            <a href="booking.html" class="btn btn-primary btn-lg rounded-pill px-5 py-3 mb-3">Đặt lịch ngay</a>
+            <p class="text-muted">Hoặc gọi số hotline: <a href="tel:0987654321" class="text-primary fw-bold">0987.654.321</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="footer-section">
+  <footer class="bg-light pt-5">
     <div class="container">
-      <div class="row g-4 pb-4">
+      <div class="row g-4">
         <div class="col-lg-3 col-md-6">
-          <div class="footer-widget">
-            <h4 class="widget-title">About Us</h4>
-            <p>We provide premium pet spa services with love and care for your furry friends.</p>
-            <ul class="social-links list-unstyled d-flex flex-wrap gap-3">
-              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:facebook-fill"></iconify-icon></a></li>
-              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:twitter-fill"></iconify-icon></a></li>
-              <li class="social"><a href="#"><iconify-icon class="social-icon" icon="ri:instagram-fill"></iconify-icon></a></li>
-            </ul>
+          <h5 class="fw-bold mb-4">JanyPet</h5>
+          <p>Nơi chăm sóc thú cưng chuyên nghiệp và tận tâm như thành viên trong gia đình</p>
+          <div class="d-flex gap-3 mt-4">
+            <a href="#" class="text-dark"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-dark"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-dark"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
+        
         <div class="col-lg-3 col-md-6">
-          <div class="footer-widget">
-            <h4 class="widget-title">Quick Links</h4>
-            <ul class="list-unstyled">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="booking.html">Book Services</a></li>
-              <li><a href="#">Shop</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact</a></li>
-            </ul>
-          </div>
+          <h5 class="fw-bold mb-4">Dịch vụ</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#" class="text-dark text-decoration-none">Tắm và vệ sinh</a></li>
+            <li class="mb-2"><a href="#" class="text-dark text-decoration-none">Cắt tỉa lông</a></li>
+            <li class="mb-2"><a href="#" class="text-dark text-decoration-none">Khách sạn thú cưng</a></li>
+            <li class="mb-2"><a href="#" class="text-dark text-decoration-none">Chăm sóc sức khỏe</a></li>
+            <li class="mb-2"><a href="#" class="text-dark text-decoration-none">Trông giữ thú cưng</a></li>
+          </ul>
         </div>
+        
         <div class="col-lg-3 col-md-6">
-          <div class="footer-widget">
-            <h4 class="widget-title">Services</h4>
-            <ul class="list-unstyled">
-              <li><a href="#">Pet Grooming</a></li>
-              <li><a href="#">Health Checkups</a></li>
-              <li><a href="#">Spa Treatments</a></li>
-              <li><a href="#">Pet Training</a></li>
-              <li><a href="#">Pet Boarding</a></li>
-            </ul>
-          </div>
+          <h5 class="fw-bold mb-4">Liên kết</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="index.html" class="text-dark text-decoration-none">Trang chủ</a></li>
+            <li class="mb-2"><a href="services.html" class="text-dark text-decoration-none">Dịch vụ</a></li>
+            <li class="mb-2"><a href="shop.html" class="text-dark text-decoration-none">Cửa hàng</a></li>
+            <li class="mb-2"><a href="blog.html" class="text-dark text-decoration-none">Blog</a></li>
+            <li class="mb-2"><a href="about.html" class="text-dark text-decoration-none">Về chúng tôi</a></li>
+            <li class="mb-2"><a href="contact.html" class="text-dark text-decoration-none">Liên hệ</a></li>
+          </ul>
         </div>
+        
         <div class="col-lg-3 col-md-6">
-          <div class="footer-widget">
-            <h4 class="widget-title">Contact Info</h4>
-            <ul class="list-unstyled">
-              <li><iconify-icon icon="mdi:map-marker"></iconify-icon> 123 Pet Street, City</li>
-              <li><iconify-icon icon="mdi:phone"></iconify-icon> +1 234 567 8900</li>
-              <li><iconify-icon icon="mdi:email"></iconify-icon> info@petspa.com</li>
-              <li><iconify-icon icon="mdi:clock"></iconify-icon> Mon-Sat: 9AM - 6PM</li>
-            </ul>
-          </div>
+          <h5 class="fw-bold mb-4">Liên hệ</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Đường ABC, Quận Hà Đông, TP. Hà Nội</li>
+            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> 0987.654.321</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i> janypet@gmail.com</li>
+            <li class="mb-2"><i class="fas fa-clock me-2"></i> 08:00 - 20:00, T2 - CN</li>
+          </ul>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="py-4 border-top">
-            <p class="m-0 text-center">© 2025 Pet Spa. All rights reserved.</p>
+      
+      <div class="border-top py-4 mt-4">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">© 2025 JanyPet. Tất cả quyền được bảo lưu.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+            <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> by JanyPet</p>
           </div>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Back to Top Button -->
+  <a href="#" id="back-to-top" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+  <!-- JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" 
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   
-  <!-- Custom JS -->
+  <!-- Custom JavaScript -->
   <script src="js/service.js"></script>
+
 </body>
 </html>
+
+ 
