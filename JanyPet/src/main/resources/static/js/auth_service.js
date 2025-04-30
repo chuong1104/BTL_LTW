@@ -21,6 +21,9 @@ let lastAuthCheck = 0
 let redirectInProgress = false
 let authCheckInterval = null
 
+// Define a variable to cache the current user
+let currentUser = null
+
 // ===== Token Management =====
 
 /**
@@ -111,6 +114,8 @@ async function login(username, password, rememberMe = false) {
     const token = data.token;
     saveToken(token, rememberMe);
     const userData = parseJwt(token);
+    currentUser = userData; // Set the currentUser variable
+    storeUserData(userData); // Also store in localStorage
     console.log("Token:", token); // Log token
     console.log("User data:", userData); // Log dữ liệu người dùng
     console.log("Has ADMIN role:", hasRole("ADMIN", userData)); // Log vai trò
@@ -205,7 +210,9 @@ function logout(redirect = true) {
   debugLog("Starting logout process")
 
   // Clear token from storage
-  clearToken()
+  clearToken();
+  currentUser = null; // Clear the current user
+  localStorage.removeItem('currentUser'); // Clear from localStorage too
 
   // Set flag to prevent multiple redirects
   if (redirect) {
@@ -249,18 +256,28 @@ function isAuthenticated() {
  * Get current user data
  * @returns {Object|null} User data or null if not authenticated
  */
-function getCurrentUser() {
-  if (!isAuthenticated()) return null
-
-  const token = getToken()
-  try {
-    return parseJwt(token)
-  } catch (error) {
-    debugLog("Error getting current user:", error)
-    logout(false) // Invalid token, log out without redirect
-    return null
-  }
-}
+// function getCurrentUser() {
+//     // First check memory cache
+//     if (currentUser) {
+//         return currentUser;
+//     }
+    
+//     // Then check token-based user data
+//     if (isAuthenticated()) {
+//         const token = getToken();
+//         try {
+//             currentUser = parseJwt(token);
+//             return currentUser;
+//         } catch (error) {
+//             debugLog("Error getting current user:", error);
+//             logout(false); // Invalid token, log out without redirect
+//             return null;
+//         }
+//     }
+    
+//     // Then check storage as fallback
+//     return getUserFromStorage();
+// }
 
 /**
  * Check if user has a specific role
@@ -332,6 +349,9 @@ async function fetchWithAuth(url, options = {}) {
 /**
  * Update UI elements based on authentication state
  */
+/**
+ * Update UI elements based on authentication state
+ */
 function updateAuthUI() {
   const isLoggedIn = isAuthenticated();
   const user = getCurrentUser();
@@ -341,22 +361,23 @@ function updateAuthUI() {
   const userInfo = document.querySelector('.user-info');
   const userName = document.querySelector('.user-name');
   
-  if (!authButtons || !userInfo) {
-    console.warn('Auth UI elements not found');
+  // Skip if elements aren't found (normal on pages without auth UI)
+  if (!authButtons && !userInfo) {
+    debugLog('Auth UI elements not found on this page - skipping UI update');
     return;
   }
 
   if (isLoggedIn && user) {
     // User is logged in
-    authButtons.style.display = 'none';
-    userInfo.style.display = 'flex'; // Show user info
+    if (authButtons) authButtons.style.display = 'none';
+    if (userInfo) userInfo.style.display = 'flex'; // Show user info
     if (userName) {
       userName.textContent = user.name || user.username || 'User';
     }
   } else {
     // User is not logged in
-    authButtons.style.display = 'flex';
-    userInfo.style.display = 'none';
+    if (authButtons) authButtons.style.display = 'flex';
+    if (userInfo) userInfo.style.display = 'none';
   }
 }
 
@@ -447,6 +468,50 @@ document.addEventListener("DOMContentLoaded", initAuth)
 function handleDirectLogout(event) {
   event.preventDefault()
   logout()
+}
+
+// Store the user object in localStorage
+function storeUserData(user) {
+    if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+}
+
+// Get user from localStorage
+function getUserFromStorage() {
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+        try {
+            return JSON.parse(userData);
+        } catch (e) {
+            console.error('Failed to parse user data from storage', e);
+        }
+    }
+    return null;
+}
+
+// Make sure your getCurrentUser function checks localStorage:
+function getCurrentUser() {
+    // First check memory cache
+    if (currentUser) {
+        return currentUser;
+    }
+    
+    // Then check token-based user data
+    if (isAuthenticated()) {
+        const token = getToken();
+        try {
+            currentUser = parseJwt(token);
+            return currentUser;
+        } catch (error) {
+            debugLog("Error getting current user:", error);
+            logout(false); // Invalid token, log out without redirect
+            return null;
+        }
+    }
+    
+    // Then check storage as fallback
+    return getUserFromStorage();
 }
 
 // Export the auth service

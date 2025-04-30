@@ -1,970 +1,1238 @@
-// API Base URL - Change this to your actual API endpoint
-const API_BASE_URL = "http://localhost:8080/api"
+/**
+ * Service Booking System
+ * Handles the entire booking workflow for pet services
+ */
 
-// Global variables to store selected data
-let selectedServices = []
-let selectedPet = null
-let currentUser = null
-let allServices = []
-let userPets = []
-let userBookings = []
+// Global Variables
+let currentUser = null;
+let selectedServices = [];
+let userPets = [];
+let selectedPet = null;
+let allServices = [];
+let today = new Date();
+today.setHours(0, 0, 0, 0);
 
-// DOM Elements
-const servicesContainer = document.getElementById("services-container")
-const petList = document.getElementById("pet-list")
-const selectedPetDetails = document.getElementById("selected-pet-details")
-const summaryServices = document.getElementById("summary-services")
-const summaryTotal = document.getElementById("summary-total")
-const summaryPet = document.getElementById("summary-pet")
-const summaryDate = document.getElementById("summary-date")
-const summaryTime = document.getElementById("summary-time")
-const summaryNotes = document.getElementById("summary-notes")
-const bookingsTableBody = document.getElementById("bookings-table-body")
-const loginButton = document.querySelector(".login-button")
-const registerButton = document.querySelector(".register-button")
-const userInfoElement = document.querySelector(".user-info")
-const usernameElement = document.getElementById("username")
-const logoutButton = document.querySelector(".logout-btn")
-const adminLink = document.querySelector(".admin-link")
+// Format date as YYYY-MM-DD
+function formatDate(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
 
-// Initialize the application
-document.addEventListener("DOMContentLoaded", () => {
-  // Hide preloader when page is loaded
-  setTimeout(() => {
-    document.querySelector(".preloader-wrapper").style.display = "none"
-  }, 500)
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
-  // Set minimum date for booking to today
-  const today = new Date().toISOString().split("T")[0]
-  document.getElementById("booking-date").min = today
+    return [year, month, day].join('-');
+}
 
-  // Initialize authentication state
-  checkAuthState()
+// Format currency 
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+}
 
-  // Load services
-  loadServices()
+async function initializeAuth() {
+    try {
+        if (!window.authService) {
+            console.warn('Auth service not found. User will be treated as unauthenticated.');
+            currentUser = null;
+            return;
+        }
 
-  // Event listeners for navigation between steps
-  document.querySelectorAll(".next-step").forEach((button) => {
-    button.addEventListener("click", function () {
-      const nextTabId = this.getAttribute("data-next")
-      const nextTab = document.getElementById(nextTabId)
+        const user = window.authService.getCurrentUser();
+        if (user && user.id && user.username) {
+            currentUser = user;
+            console.log('Authenticated user from authService:', currentUser);
+            localStorage.setItem('currentUser', JSON.stringify(user)); // Sync localStorage
+        } else {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                try {
+                    const parsedUser = JSON.parse(storedUser);
+                    if (parsedUser.id && parsedUser.username) {
+                        currentUser = parsedUser;
+                        console.log('Authenticated user from localStorage:', currentUser);
+                    } else {
+                        console.warn('Stored user data is incomplete:', parsedUser);
+                        currentUser = null;
+                    }
+                } catch (e) {
+                    console.error('Failed to parse stored user:', e);
+                    currentUser = null;
+                }
+            } else {
+                console.log('No authenticated user found.');
+                currentUser = null;
+            }
+        }
 
-      // Validate current step before proceeding
-      const currentStepId = document.querySelector(".tab-pane.active").id
-      if (validateStep(currentStepId)) {
-        nextTab.click()
-        updateSummary()
-      }
-    })
-  })
-
-  document.querySelectorAll(".prev-step").forEach((button) => {
-    button.addEventListener("click", function () {
-      const prevTabId = this.getAttribute("data-prev")
-      document.getElementById(prevTabId).click()
-    })
-  })
-
-  // Event listener for confirm booking button
-  document.getElementById("confirm-booking-btn").addEventListener("click", confirmBooking)
-
-  // Event listener for add new pet button
-  document.getElementById("add-new-pet-btn").addEventListener("click", () => {
-    const addPetModal = new bootstrap.Modal(document.getElementById("addPetModal"))
-    addPetModal.show()
-  })
-
-  // Event listener for save pet button
-  document.getElementById("save-pet-btn").addEventListener("click", savePet)
-
-  // Event listener for my bookings link
-  document.getElementById("my-bookings-link").addEventListener("click", (e) => {
-    e.preventDefault()
-    if (currentUser) {
-      loadUserBookings()
-      const myBookingsModal = new bootstrap.Modal(document.getElementById("myBookingsModal"))
-      myBookingsModal.show()
-    } else {
-      showLoginModal()
+        updateAuthUI();
+    } catch (error) {
+        console.error('Authentication initialization failed:', error);
+        currentUser = null;
+        updateAuthUI();
+        showAlert('danger', 'Authentication error. Please log in again.');
     }
-  })
-
-  // Event listener for view bookings button in success modal
-  document.getElementById("view-bookings-btn").addEventListener("click", () => {
-    const successModalElement = document.getElementById("successModal")
-    const successModal = bootstrap.Modal.getInstance(successModalElement)
-    successModal.hide()
-
-    loadUserBookings()
-    const myBookingsModal = new bootstrap.Modal(document.getElementById("myBookingsModal"))
-    myBookingsModal.show()
-  })
-
-  // Authentication event listeners
-  loginButton.addEventListener("click", showLoginModal)
-  registerButton.addEventListener("click", showRegisterModal)
-  logoutButton.addEventListener("click", logout)
-
-  document.getElementById("login-submit-btn").addEventListener("click", login)
-  document.getElementById("register-submit-btn").addEventListener("click", register)
-
-  document.getElementById("show-register-btn").addEventListener("click", () => {
-    const loginModalElement = document.getElementById("loginModal")
-    const loginModal = bootstrap.Modal.getInstance(loginModalElement)
-    loginModal.hide()
-    showRegisterModal()
-  })
-
-  document.getElementById("show-login-btn").addEventListener("click", () => {
-    const registerModalElement = document.getElementById("registerModal")
-    const registerModal = bootstrap.Modal.getInstance(registerModalElement)
-    registerModal.hide()
-    showLoginModal()
-  })
-
-  // Date and time change listeners for summary update
-  document.getElementById("booking-date").addEventListener("change", updateSummary)
-  document.getElementById("booking-time").addEventListener("change", updateSummary)
-  document.getElementById("booking-notes").addEventListener("input", updateSummary)
-})
-
-// Check authentication state
-function checkAuthState() {
-  const token = localStorage.getItem("token")
-  const userData = localStorage.getItem("user")
-
-  if (token && userData) {
-    currentUser = JSON.parse(userData)
-    updateUIForLoggedInUser()
-    loadUserPets()
-  } else {
-    updateUIForLoggedOutUser()
-  }
 }
 
-// Update UI for logged in user
-function updateUIForLoggedInUser() {
-  loginButton.style.display = "none"
-  registerButton.style.display = "none"
-  userInfoElement.style.display = "block"
-  logoutButton.style.display = "block"
+// Initialize the booking system
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Initializing booking system');
+    
+    // Set minimum date for booking to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = document.getElementById('booking-date');
+    if (dateInput) {
+        dateInput.min = formatDate(tomorrow);
+    }
 
-  usernameElement.textContent = currentUser.username || currentUser.email
+    // Initialize authentication
+    await initializeAuth();
+    
+    // Check if API service is available and initialized
+    if (!window.apiService) {
+        console.error('API Service not found. Make sure api-service.js is loaded before service.js');
+        showAlert('danger', 'System configuration error. Please contact support.');
+        return;
+    }
+    
+    // Wait for API service to initialize
+    try {
+        await window.apiService.init();
+    } catch (error) {
+        console.warn('API Service initialization failed, continuing in offline mode', error);
+        // Continue with offline mode - we'll use mock data
+    }
+    
+    // Replace placeholder images with reliable ones
+    replacePlaceholderImages();
+    
+    // Load services for step 1
+    await loadServices();
+    
+    // Add event listeners for navigation buttons
+    setupNavigationButtons();
+    
+    // Set up form handlers
+    setupFormHandlers();
+    
+    // Set up event listeners for pet selection
+    setupPetSelectionHandlers();
+    
+    // Set up booking confirmation
+    setupBookingConfirmation();
+}); 
 
-  // Show admin link if user is admin
-  if (currentUser.role === "ADMIN") {
-    adminLink.style.display = "block"
-  } else {
-    adminLink.style.display = "none"
-  }
+// Show alert message
+function showAlert(type, message, duration = 5000) {
+    // Create alert container if it doesn't exist
+    let alertContainer = document.getElementById('alert-container');
+    if (!alertContainer) {
+        alertContainer = document.createElement('div');
+        alertContainer.id = 'alert-container';
+        alertContainer.className = 'position-fixed top-0 start-50 translate-middle-x p-3';
+        alertContainer.style.zIndex = '9999';
+        document.body.appendChild(alertContainer);
+    }
+    
+    // Create alert element
+    const alertId = 'alert-' + Date.now();
+    const alertHtml = `
+        <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    
+    // Add alert to container
+    alertContainer.insertAdjacentHTML('beforeend', alertHtml);
+    
+    // Auto-dismiss after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            const alertElement = document.getElementById(alertId);
+            if (alertElement) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                    const bsAlert = new bootstrap.Alert(alertElement);
+                    bsAlert.close();
+                } else {
+                    alertElement.remove();
+                }
+            }
+        }, duration);
+    }
 }
 
-// Update UI for logged out user
-function updateUIForLoggedOutUser() {
-  loginButton.style.display = "block"
-  registerButton.style.display = "block"
-  userInfoElement.style.display = "none"
-  logoutButton.style.display = "none"
-  adminLink.style.display = "none"
-  currentUser = null
+// Update Auth UI based on login status
+function updateAuthUI() {
+    // Add login/profile button to navbar if it doesn't exist
+    const navbar = document.querySelector('.navbar-nav');
+    if (!navbar) return;
+    
+    // Check if auth buttons already exist
+    if (!document.querySelector('.nav-auth')) {
+        const authLi = document.createElement('li');
+        authLi.className = 'nav-item nav-auth';
+        
+        if (currentUser) {
+            // User is logged in - show profile & logout
+            authLi.innerHTML = `
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i> ${currentUser.username}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#" id="myBookingsBtn">My Bookings</a></li>
+                        <li><a class="dropdown-item" href="#" id="myProfileBtn">My Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </div>
+            `;
+        } else {
+            // User is not logged in - show login/register
+            authLi.innerHTML = `
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+            `;
+        }
+        
+        navbar.appendChild(authLi);
+        
+        // Add event listeners for dropdown items
+        if (currentUser) {
+            document.getElementById('myBookingsBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                loadUserBookings();
+            });
+            
+            document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.authService.logout();
+                window.location.href = 'index.html'; // Redirect to home page after logout
+            });
+        }
+    }
 }
 
-// Show login modal
-function showLoginModal() {
-  const loginModal = new bootstrap.Modal(document.getElementById("loginModal"))
-  document.getElementById("login-error").classList.add("d-none")
-  document.getElementById("login-form").reset()
-  loginModal.show()
+// Set up navigation buttons between steps
+function setupNavigationButtons() {
+    // Next step buttons
+    document.querySelectorAll('.next-step').forEach(button => {
+        button.addEventListener('click', function() {
+            const nextTab = this.getAttribute('data-next');
+            
+            // Validate current step before proceeding
+            const currentStep = document.querySelector('.tab-pane.active').id;
+            if (!validateStep(currentStep)) {
+                return;
+            }
+            
+            // If going to step 2, load pets
+            if (nextTab === 'step2-tab' && currentUser) {
+                loadUserPets();
+            }
+            
+            // If going to step 4, update summary
+            if (nextTab === 'step4-tab') {
+                updateBookingSummary();
+            }
+            
+            // Switch to next tab
+            document.getElementById(nextTab).click();
+        });
+    });
+    
+    // Previous step buttons
+    document.querySelectorAll('.prev-step').forEach(button => {
+        button.addEventListener('click', function() {
+            const prevTab = this.getAttribute('data-prev');
+            document.getElementById(prevTab).click();
+        });
+    });
 }
 
-// Show register modal
-function showRegisterModal() {
-  const registerModal = new bootstrap.Modal(document.getElementById("registerModal"))
-  document.getElementById("register-error").classList.add("d-none")
-  document.getElementById("register-form").reset()
-  registerModal.show()
-}
-
-// Login function
-function login() {
-  const email = document.getElementById("login-email").value
-  const password = document.getElementById("login-password").value
-  const errorElement = document.getElementById("login-error")
-
-  // Simple validation
-  if (!email || !password) {
-    errorElement.textContent = "Please enter both email and password"
-    errorElement.classList.remove("d-none")
-    return
-  }
-
-  // Mock login for demonstration
-  // In a real application, you would make an API call to your backend
-  fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Login failed")
-      }
-      return response.json()
-    })
-    .then((data) => {
-      // Store token and user data
-      localStorage.setItem("token", data.token)
-      localStorage.setItem("user", JSON.stringify(data.user))
-      currentUser = data.user
-
-      // Update UI
-      updateUIForLoggedInUser()
-
-      // Close modal
-      const loginModalElement = document.getElementById("loginModal")
-      const loginModal = bootstrap.Modal.getInstance(loginModalElement)
-      loginModal.hide()
-
-      // Load user's pets
-      loadUserPets()
-
-      // Show success message
-      showToast("Login successful!", "success")
-    })
-    .catch((error) => {
-      console.error("Login error:", error)
-      errorElement.textContent = "Invalid email or password"
-      errorElement.classList.remove("d-none")
-    })
-}
-
-// Register function
-function register() {
-  const email = document.getElementById("register-email").value
-  const password = document.getElementById("register-password").value
-  const confirmPassword = document.getElementById("register-confirm-password").value
-  const phone = document.getElementById("register-phone").value
-  const address = document.getElementById("register-address").value
-  const gender = document.getElementById("register-gender").value
-  const errorElement = document.getElementById("register-error")
-
-  // Simple validation
-  if (!email || !password || !confirmPassword || !phone) {
-    errorElement.textContent = "Please fill in all required fields"
-    errorElement.classList.remove("d-none")
-    return
-  }
-
-  if (password !== confirmPassword) {
-    errorElement.textContent = "Passwords do not match"
-    errorElement.classList.remove("d-none")
-    return
-  }
-
-  // Mock registration for demonstration
-  // In a real application, you would make an API call to your backend
-  fetch(`${API_BASE_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-      phoneNumber: phone,
-      address,
-      gender,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Registration failed")
-      }
-      return response.json()
-    })
-    .then((data) => {
-      // Close modal
-      const registerModalElement = document.getElementById("registerModal")
-      const registerModal = bootstrap.Modal.getInstance(registerModalElement)
-      registerModal.hide()
-
-      // Show success message
-      showToast("Registration successful! Please log in.", "success")
-
-      // Show login modal
-      showLoginModal()
-    })
-    .catch((error) => {
-      console.error("Registration error:", error)
-      errorElement.textContent = "Registration failed. Please try again."
-      errorElement.classList.remove("d-none")
-    })
-}
-
-// Logout function
-function logout() {
-  localStorage.removeItem("token")
-  localStorage.removeItem("user")
-  updateUIForLoggedOutUser()
-  showToast("Logged out successfully", "info")
-
-  // Reset booking form
-  resetBookingForm()
+// Validate each step before proceeding
+function validateStep(stepId) {
+    switch(stepId) {
+        case 'step1':
+            if (selectedServices.length === 0) {
+                alert('Please select at least one service.');
+                return false;
+            }
+            return true;
+        
+        case 'step2':
+            if (!currentUser) {
+                // Show alert instead of redirecting
+                showAlert('warning', 'You need to be logged in to continue. Please log in from the homepage.');
+                return false;
+            }
+            
+            if (!selectedPet) {
+                alert('Please select a pet or add a new one.');
+                return false;
+            }
+            return true;
+            
+        case 'step3':
+            const dateInput = document.getElementById('booking-date');
+            const timeInput = document.getElementById('booking-time');
+            
+            if (!dateInput.value) {
+                alert('Please select a date for your appointment.');
+                dateInput.focus();
+                return false;
+            }
+            
+            if (!timeInput.value) {
+                alert('Please select a time for your appointment.');
+                timeInput.focus();
+                return false;
+            }
+            
+            // Validate that selected date is not in the past
+            const selectedDate = new Date(dateInput.value);
+            if (selectedDate < today) {
+                alert('Please select a future date for your appointment.');
+                dateInput.focus();
+                return false;
+            }
+            
+            return true;
+    }
+    
+    return true;
 }
 
 // Load services from API
-function loadServices() {
-  // In a real application, you would fetch this data from your API
-  fetch(`${API_BASE_URL}/services`)
-    .then((response) => response.json())
-    .then((data) => {
-      allServices = data
-      displayServices(data)
-    })
-    .catch((error) => {
-      console.error("Error loading services:", error)
-      servicesContainer.innerHTML = `
-                <div class="col-12 text-center">
-                    <p class="text-danger">Error loading services. Please try again later.</p>
+async function loadServices() {
+    try {
+        const servicesContainer = document.getElementById('services-container');
+        if (!servicesContainer) return;
+
+        servicesContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-            `
-    })
-}
-
-// Display services in the UI
-function displayServices(services) {
-  servicesContainer.innerHTML = ""
-
-  if (services.length === 0) {
-    servicesContainer.innerHTML = `
-            <div class="col-12 text-center">
-                <p>No services available at the moment.</p>
+                <p class="mt-2">Loading services...</p>
             </div>
-        `
-    return
-  }
+        `;
 
-  services.forEach((service) => {
-    const serviceCard = document.createElement("div")
-    serviceCard.className = "col-md-6 col-lg-4 mb-4"
-    serviceCard.innerHTML = `
-            <div class="card h-100">
-                <img src="${service.images || "https://via.placeholder.com/300x200?text=Pet+Service"}" class="card-img-top" alt="${service.name}">
-                <div class="card-body">
-                    <h5 class="card-title">${service.name}</h5>
-                    <p class="card-text">${service.description}</p>
-                    <p class="card-text">
-                        <small class="text-muted">
-                            <strong>Price:</strong> ${formatCurrency(service.price)}
-                        </small>
-                    </p>
-                    <div class="form-check">
-                        <input class="form-check-input service-checkbox" type="checkbox" value="${service.id}" id="service-${service.id}">
-                        <label class="form-check-label" for="service-${service.id}">
-                            Select this service
-                        </label>
+        const response = await fetch(`${window.apiService.API_BASE_URL}/services`);
+        if (!response.ok) {
+            throw new Error(`Failed to load services: ${response.status} ${response.statusText}`);
+        }
+
+        const services = await response.json();
+        allServices = Array.isArray(services) ? services : [services];
+        const activeServices = allServices.filter(service => service.active);
+
+        updateServicesUI(activeServices);
+
+        const storedServices = localStorage.getItem('selectedServices');
+        if (storedServices) {
+            try {
+                const parsedServices = JSON.parse(storedServices);
+                selectedServices = parsedServices.filter(s => allServices.some(as => as.id === s.id));
+                selectedServices.forEach(service => {
+                    const serviceCard = document.querySelector(`.service-card[data-service-id="${CSS.escape(service.id)}"]`);
+                    if (serviceCard) {
+                        serviceCard.classList.add('selected');
+                        const selectBtn = serviceCard.querySelector('.select-service-btn');
+                        if (selectBtn) {
+                            selectBtn.innerHTML = '<i class="fas fa-check-circle"></i> Selected';
+                            selectBtn.classList.replace('btn-outline-primary', 'btn-success');
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error parsing stored services:', error);
+            }
+        }
+
+    } catch (error) {
+        console.error('Error loading services:', error);
+        const servicesContainer = document.getElementById('services-container');
+        if (servicesContainer) {
+            servicesContainer.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Failed to load services. Please try again later.
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <small class="text-muted">
-                        <iconify-icon icon="mdi:information-outline"></iconify-icon> 
-                        ${service.requiresVaccination ? "Requires vaccination" : "No vaccination required"}
-                    </small>
+            `;
+        }
+    }
+}
+
+// Update services UI
+function updateServicesUI(services) {
+    const servicesContainer = document.getElementById('services-container');
+    if (!servicesContainer) return;
+    
+    if (!services || services.length === 0) {
+        servicesContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No services available at the moment.
                 </div>
             </div>
-        `
-    servicesContainer.appendChild(serviceCard)
-  })
-
-  // Add event listeners to service checkboxes
-  document.querySelectorAll(".service-checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-      const serviceId = this.value
-      if (this.checked) {
-        const service = allServices.find((s) => s.id === serviceId)
-        if (service) {
-          selectedServices.push(service)
+        `;
+        return;
+    }
+    
+    // Clear container
+    servicesContainer.innerHTML = '';
+    
+    // Add service cards
+    services.forEach(service => {
+        const col = document.createElement('div');
+        col.className = 'col-md-6 col-lg-4 mb-4';
+        
+        const card = document.createElement('div');
+        card.className = 'card h-100 service-card';
+        card.setAttribute('data-service-id', service.id);
+        
+        // Check if service is already selected
+        if (selectedServices.some(s => s.id === service.id)) {
+            card.classList.add('selected');
         }
-      } else {
-        selectedServices = selectedServices.filter((s) => s.id !== serviceId)
-      }
-    })
-  })
+        
+        // Default image if not provided
+        const imageUrl = service.images || 'https://via.placeholder.com/300x200?text=Pet+Service';
+        
+        card.innerHTML = `
+            <div class="position-relative">
+                <img src="${imageUrl}" class="card-img-top" alt="${service.name}">
+                <div class="badge bg-primary position-absolute top-0 end-0 m-2">
+                    ${formatCurrency(service.price)}
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">${service.name}</h5>
+                <p class="card-text">${service.description || 'No description available'}</p>
+            </div>
+            <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                <span class="text-muted">
+                    <i class="fas fa-clock"></i> ${service.duration || 60} min
+                </span>
+                <button class="btn ${selectedServices.some(s => s.id === service.id) ? 'btn-success' : 'btn-outline-primary'} select-service-btn">
+                    ${selectedServices.some(s => s.id === service.id) ? '<i class="fas fa-check-circle"></i> Selected' : '<i class="fas fa-plus-circle"></i> Select'}
+                </button>
+            </div>
+        `;
+        
+        // Add event listener for service selection
+        card.addEventListener('click', function() {
+            selectService(service.id);
+        });
+        
+        col.appendChild(card);
+        servicesContainer.appendChild(col);
+    });
+}
+
+// Select or deselect a service
+function selectService(serviceId) {
+    const service = allServices.find(s => s.id === serviceId);
+    if (!service) return;
+    
+    const serviceCard = document.querySelector(`.service-card[data-service-id="${CSS.escape(serviceId)}"]`);
+    const selectBtn = serviceCard?.querySelector('.select-service-btn');
+    
+    // Check if service is already selected
+    const isSelected = selectedServices.some(s => s.id === serviceId);
+    
+    if (isSelected) {
+        // Remove service from selection
+        selectedServices = selectedServices.filter(s => s.id !== serviceId);
+        
+        // Update UI
+        serviceCard?.classList.remove('selected');
+        if (selectBtn) {
+            selectBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Select';
+            selectBtn.classList.replace('btn-success', 'btn-outline-primary');
+        }
+    } else {
+        // Add service to selection
+        selectedServices.push(service);
+        
+        // Update UI
+        serviceCard?.classList.add('selected');
+        if (selectBtn) {
+            selectBtn.innerHTML = '<i class="fas fa-check-circle"></i> Selected';
+            selectBtn.classList.replace('btn-outline-primary', 'btn-success');
+        }
+    }
+
+    localStorage.setItem('selectedServices', JSON.stringify(selectedServices));
+}
+
+// Set up form handlers
+function setupFormHandlers() {
+    // Add event listener to date input to update available times
+    const dateInput = document.getElementById('booking-date');
+    if (dateInput) {
+        dateInput.addEventListener('change', function() {
+            // Could implement logic to fetch available times for the selected date
+            // For now, all times are available
+        });
+    }
+    
+    // Add New Pet button
+    const addNewPetBtn = document.getElementById('add-new-pet-btn');
+    if (addNewPetBtn) {
+        addNewPetBtn.addEventListener('click', function() {
+            // Show add pet modal
+            const addPetModal = new bootstrap.Modal(document.getElementById('addPetModal'));
+            addPetModal.show();
+        });
+    }
+    
+    // Save Pet button
+    const savePetBtn = document.getElementById('save-pet-btn');
+    if (savePetBtn) {
+        savePetBtn.addEventListener('click', savePet);
+    }
+    
+    // Add refresh pets button handler
+    const refreshPetsBtn = document.getElementById('refresh-pets-btn');
+    if (refreshPetsBtn) {
+        refreshPetsBtn.addEventListener('click', function() {
+            // Try to get fresh auth data
+            if (window.authService) {
+                try {
+                    currentUser = window.authService.getCurrentUser();
+                } catch (e) {
+                    console.error('Failed to refresh user data:', e);
+                }
+            }
+            
+            // Reload pets
+            loadUserPets();
+        });
+    }
+}
+
+// Validate pet form
+function validatePetForm() {
+    const petName = document.getElementById('pet-name');
+    const petSpecies = document.getElementById('pet-species');
+
+    if (!petName) {
+        console.error('Pet name field not found');
+        showAlert('danger', 'Form error: Required fields not found');
+        return false;
+    }
+
+    if (!petName.value.trim()) {
+        showAlert('danger', 'Pet name is required');
+        petName.focus();
+        return false;
+    }
+
+    if (petSpecies && !petSpecies.value) {
+        showAlert('danger', 'Please select a species');
+        petSpecies.focus();
+        return false;
+    }
+
+    return true;
+}
+
+// Save pet
+async function savePet() {
+    if (!validatePetForm()) {
+        return;
+    }
+
+    try {
+        const saveBtn = document.getElementById('save-pet-btn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        const petData = {
+            name: document.getElementById('pet-name').value,
+            species: document.getElementById('pet-species')?.value || '',
+            breed: document.getElementById('pet-breed').value,
+            birthDate: document.getElementById('pet-birthdate')?.value || null,
+            gender: document.getElementById('pet-gender').value,
+            weight: parseFloat(document.getElementById('pet-weight').value) || 0,
+            vaccinated: document.getElementById('pet-vaccinated').checked,
+            healthNotes: document.getElementById('pet-notes').value,
+            ownerId: currentUser.id
+        };
+
+        const petId = document.getElementById('pet-id-hidden').value;
+        const url = petId
+            ? `${window.apiService.API_BASE_URL}/pets/${petId}`
+            : `${window.apiService.API_BASE_URL}/pets/owner/${currentUser.id}`;
+        const method = petId ? 'PUT' : 'POST';
+
+        console.log(`Sending ${method} request to: ${url}`);
+
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+            },
+            body: JSON.stringify(petData)
+        });
+
+        if (!response.ok) {
+            let errorMessage = 'Failed to save pet';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || `Error: ${response.status} ${response.statusText}`;
+            } catch {
+                errorMessage = `Error: ${response.status} ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
+        }
+
+        const savedPet = await response.json();
+        console.log('Pet saved successfully:', savedPet);
+
+        if (petId) {
+            const index = userPets.findIndex(p => p.id === petId);
+            if (index >= 0) {
+                userPets[index] = savedPet;
+            }
+        } else {
+            userPets.push(savedPet);
+        }
+
+        closeModal('addPetModal');
+
+        updatePetList();
+        showAlert('success', `Pet ${petId ? 'updated' : 'added'} successfully!`);
+
+        if (savedPet.id) {
+            selectPet(savedPet.id);
+        }
+    } catch (error) {
+        console.error('Error saving pet:', error);
+        showAlert('danger', error.message || 'Failed to save pet due to a network or server error.');
+    } finally {
+        const saveBtn = document.getElementById('save-pet-btn');
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = 'Save Pet';
+    }
 }
 
 // Load user's pets
-function loadUserPets() {
-  if (!currentUser) return
-
-  // In a real application, you would fetch this data from your API
-  fetch(`${API_BASE_URL}/pets/user/${currentUser.id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      userPets = data
-      displayPets(data)
-    })
-    .catch((error) => {
-      console.error("Error loading pets:", error)
-      petList.innerHTML = `
-            <p class="text-danger">Error loading your pets. Please try again later.</p>
-        `
-    })
+async function loadUserPets() {
+    // Check if user is logged in and has ID
+    if (!currentUser) {
+        console.warn('Cannot load pets: User not logged in');
+        document.getElementById('pet-list').innerHTML = `
+            <div class="col-12 text-center py-4">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> You need to be logged in to view your pets.
+                    <div class="mt-2">
+                        <a href="index.html" class="btn btn-primary btn-sm">
+                            <i class="fas fa-sign-in-alt"></i> Log in from Homepage
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    if (!currentUser.id) {
+        console.warn('Cannot load pets: User has no ID', currentUser);
+        document.getElementById('pet-list').innerHTML = `
+            <div class="col-12 text-center py-4">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Your login session appears to be incomplete.
+                    <div class="mt-2">
+                        <a href="index.html" class="btn btn-primary btn-sm">
+                            <i class="fas fa-sign-in-alt"></i> Please log in again
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    try {
+        // Show loading state
+        document.getElementById('pet-list').innerHTML = `
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading your pets...</p>
+            </div>
+        `;
+        
+        console.log(`Attempting to load pets for user ID: ${currentUser.id}`);
+        
+        // Fetch user's pets from API
+        const response = await fetch(`${window.apiService.API_BASE_URL}/pets/owner/${currentUser.id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+            }
+        });
+        
+        // Check for 404 (no pets) vs other errors
+        if (response.status === 404) {
+            // No pets found - this is normal for new users
+            console.log('No pets found for user');
+            userPets = [];
+            updatePetList();
+            return;
+        }
+        
+        if (!response.ok) {
+            throw new Error(`Failed to load pets: ${response.status} ${response.statusText}`);
+        }
+        
+        // Get pets data
+        const data = await response.json();
+        userPets = Array.isArray(data) ? data : [data];
+        
+        // Update UI
+        updatePetList();
+        
+    } catch (error) {
+        console.error('Error loading pets:', error);
+        
+        document.getElementById('pet-list').innerHTML = `
+            <div class="col-12 text-center py-4">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> ${error.message || 'Failed to load your pets.'}
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-outline-primary" id="retry-load-pets">
+                        <i class="fas fa-sync"></i> Try Again
+                    </button>
+                    <button class="btn btn-success ms-2" id="add-new-pet-btn">
+                        <i class="fas fa-plus"></i> Add New Pet
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add event listener for retry button
+        document.getElementById('retry-load-pets')?.addEventListener('click', () => {
+            loadUserPets();
+        });
+        
+        // Add event listener for add new pet button
+        document.getElementById('add-new-pet-btn')?.addEventListener('click', () => {
+            showAddPetForm();
+        });
+    }
 }
 
-// Display pets in the UI
-function displayPets(pets) {
-  petList.innerHTML = ""
-
-  if (pets.length === 0) {
-    petList.innerHTML = `
-            <p class="text-muted">You don't have any pets yet. Add a new pet to continue.</p>
-        `
-    return
-  }
-
-  pets.forEach((pet) => {
-    const petItem = document.createElement("div")
-    petItem.className = "form-check mb-2"
-    petItem.innerHTML = `
-            <input class="form-check-input pet-radio" type="radio" name="pet" value="${pet.id}" id="pet-${pet.id}">
-            <label class="form-check-label" for="pet-${pet.id}">
-                ${pet.name} (${pet.species})
-            </label>
-        `
-    petList.appendChild(petItem)
-  })
-
-  // Add event listeners to pet radio buttons
-  document.querySelectorAll(".pet-radio").forEach((radio) => {
-    radio.addEventListener("change", function () {
-      const petId = this.value
-      selectedPet = userPets.find((p) => p.id === petId)
-      displayPetDetails(selectedPet)
-    })
-  })
+// Update pet list in UI
+function updatePetList() {
+    const petList = document.getElementById('pet-list');
+    if (!petList) return;
+    
+    if (!userPets || userPets.length === 0) {
+        petList.innerHTML = `
+            <div class="col-12 text-center py-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> You don't have any pets registered yet.
+                </div>
+                <button class="btn btn-success mt-3" id="no-pets-add-btn">
+                    <i class="fas fa-plus-circle"></i> Add Your First Pet
+                </button>
+            </div>
+        `;
+        
+        // Add event listener for the add button
+        document.getElementById('no-pets-add-btn')?.addEventListener('click', function() {
+            showAddPetForm();
+        });
+        
+        return;
+    }
+    
+    // Clear container
+    petList.innerHTML = '';
+    
+    // Add pet cards
+    userPets.forEach(pet => {
+        const col = document.createElement('div');
+        col.className = 'col-md-6 col-lg-4 mb-4';
+        
+        const card = document.createElement('div');
+        card.className = 'card pet-card';
+        card.setAttribute('data-pet-id', pet.id);
+        
+        card.innerHTML = `
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="pet-icon me-3">
+                            <i class="fas fa-paw fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">${pet.name}</h5>
+                            <p class="card-text text-muted">${pet.breed || 'Unknown breed'}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary edit-pet-btn" data-pet-id="${pet.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <span class="badge ${pet.gender === 'Male' ? 'bg-info' : 'bg-danger'}">${pet.gender || 'Unknown'}</span>
+                    ${pet.vaccinated ? '<span class="badge bg-success ms-1">Vaccinated</span>' : ''}
+                    ${pet.species ? `<span class="badge bg-primary ms-1">${pet.species}</span>` : ''}
+                </div>
+            </div>
+        `;
+        
+        col.appendChild(card);
+        petList.appendChild(col);
+        
+        // Add event listener for pet selection (to the card but not the edit button)
+        card.addEventListener('click', function(e) {
+            // Don't select pet if edit button was clicked
+            if (!e.target.closest('.edit-pet-btn')) {
+                selectPet(pet.id);
+            }
+        });
+        
+        // Add event listener for edit button
+        const editBtn = card.querySelector('.edit-pet-btn');
+        if (editBtn) {
+            editBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent selection
+                showAddPetForm(pet.id);
+            });
+        }
+    });
 }
 
-// Display pet details
-function displayPetDetails(pet) {
-  if (!pet) {
-    selectedPetDetails.innerHTML = `
-            <p class="text-muted">Please select a pet to see details</p>
-        `
-    return
-  }
+// Set up event listeners for pet selection
+function setupPetSelectionHandlers() {
+    // Event delegation for pet selection
+    document.getElementById('pet-list')?.addEventListener('click', function(e) {
+        const petCard = e.target.closest('.pet-card');
+        if (!petCard) return;
+        
+        const petId = petCard.getAttribute('data-pet-id');
+        selectPet(petId);
+    });
+}
 
-  selectedPetDetails.innerHTML = `
-        <div class="row">
-            <div class="col-md-6">
-                <p><strong>Name:</strong> ${pet.name}</p>
-                <p><strong>Species:</strong> ${pet.species}</p>
-                <p><strong>Breed:</strong> ${pet.breed || "Not specified"}</p>
-                <p><strong>Gender:</strong> ${pet.gender}</p>
-            </div>
-            <div class="col-md-6">
-                <p><strong>Age:</strong> ${calculateAge(pet.birthDate)}</p>
-                <p><strong>Weight:</strong> ${pet.weight ? pet.weight + " kg" : "Not specified"}</p>
-                <p><strong>Vaccinated:</strong> ${pet.vaccinated ? "Yes" : "No"}</p>
-                <p><strong>Health Notes:</strong> ${pet.healthNotes || "None"}</p>
-            </div>
+// Select a pet
+function selectPet(petId) {
+    selectedPet = userPets.find(pet => pet.id === petId);
+    if (!selectedPet) {
+        console.warn(`Pet with ID ${petId} not found`);
+        showAlert('warning', 'Selected pet not found. Please try again.');
+        return;
+    }
+
+    document.querySelectorAll('.pet-card').forEach(card => {
+        card.classList.remove('border-primary', 'bg-light');
+    });
+
+    const selectedCard = document.querySelector(`.pet-card[data-pet-id="${CSS.escape(petId)}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('border-primary', 'bg-light');
+    } else {
+        console.warn(`Pet card for ID ${petId} not found in DOM`);
+    }
+
+    updatePetDetails();
+}
+
+// Update pet details in the UI
+function updatePetDetails() {
+    const detailsContainer = document.getElementById('selected-pet-details');
+    if (!detailsContainer) return;
+    
+    if (!selectedPet) {
+        detailsContainer.innerHTML = '<p class="text-muted">Please select a pet to see details</p>';
+        return;
+    }
+    
+    detailsContainer.innerHTML = `
+        <div class="mb-3">
+            <strong>Name:</strong> ${selectedPet.name}
         </div>
-    `
+        <div class="mb-3">
+            <strong>Breed:</strong> ${selectedPet.breed || 'Not specified'}
+        </div>
+        <div class="mb-3">
+            <strong>Gender:</strong> ${selectedPet.gender || 'Not specified'}
+        </div>
+        <div class="mb-3">
+            <strong>Weight:</strong> ${selectedPet.weight ? selectedPet.weight + ' kg' : 'Not specified'}
+        </div>
+        <div class="mb-3">
+            <strong>Health Notes:</strong> 
+            <p class="text-muted">${selectedPet.healthNotes || 'No health notes provided'}</p>
+        </div>
+    `;
 }
 
-// Save new pet
-function savePet() {
-  if (!currentUser) {
-    showLoginModal()
-    return
-  }
+// Set up booking confirmation
+function setupBookingConfirmation() {
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (!confirmBtn) return;
 
-  const name = document.getElementById("pet-name").value
-  const species = document.getElementById("pet-species").value
-  const breed = document.getElementById("pet-breed").value
-  const birthDate = document.getElementById("pet-birthdate").value
-  const gender = document.getElementById("pet-gender").value
-  const weight = document.getElementById("pet-weight").value
-  const vaccinated = document.getElementById("pet-vaccinated").checked
-  const healthNotes = document.getElementById("pet-health-notes").value
+    confirmBtn.addEventListener('click', async function() {
+        const termsCheckbox = document.getElementById('terms-checkbox');
+        const dateInput = document.getElementById('booking-date');
+        const timeInput = document.getElementById('booking-time');
 
-  // Simple validation
-  if (!name || !species || !gender) {
-    showToast("Please fill in all required fields", "error")
-    return
-  }
+        if (!termsCheckbox.checked) {
+            showAlert('warning', 'Please accept the terms and conditions to proceed.');
+            return;
+        }
 
-  // Create pet object
-  const petData = {
-    name,
-    species,
-    breed,
-    birthDate,
-    gender,
-    weight: weight ? Number.parseFloat(weight) : null,
-    vaccinated,
-    healthNotes,
-    owner: {
-      id: currentUser.id,
-    },
-  }
+        if (!currentUser) {
+            showAlert('warning', 'You need to be logged in to complete your booking. Please log in from the homepage.');
+            return;
+        }
 
-  // In a real application, you would send this data to your API
-  fetch(`${API_BASE_URL}/pets`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify(petData),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to save pet")
-      }
-      return response.json()
-    })
-    .then((data) => {
-      // Add new pet to the list
-      userPets.push(data)
+        if (!selectedPet) {
+            showAlert('warning', 'Please select a pet for the booking.');
+            return;
+        }
 
-      // Update UI
-      displayPets(userPets)
+        if (!dateInput.value || !timeInput.value) {
+            showAlert('warning', 'Please select both a date and time for your appointment.');
+            return;
+        }
 
-      // Close modal
-      const addPetModalElement = document.getElementById("addPetModal")
-      const addPetModal = bootstrap.Modal.getInstance(addPetModalElement)
-      addPetModal.hide()
+        const selectedDate = new Date(dateInput.value);
+        if (selectedDate < today) {
+            showAlert('warning', 'Please select a future date for your appointment.');
+            return;
+        }
 
-      // Show success message
-      showToast("Pet added successfully!", "success")
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
 
-      // Reset form
-      document.getElementById("add-pet-form").reset()
-    })
-    .catch((error) => {
-      console.error("Error saving pet:", error)
-      showToast("Error saving pet. Please try again.", "error")
-    })
+        try {
+            const bookingData = {
+                user: { id: currentUser.id },
+                pet: { id: selectedPet.id },
+                services: selectedServices.map(service => ({ id: service.id })),
+                bookingDate: dateInput.value,
+                startTime: timeInput.value,
+                notes: document.getElementById('booking-notes').value || '',
+                status: 'PENDING'
+            };
+
+            const response = await fetch(`${window.apiService.API_BASE_URL}/bookings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to create booking';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || `Error: ${response.status} ${response.statusText}`;
+                } catch {
+                    errorMessage = `Error: ${response.status} ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
+
+            const booking = await response.json();
+            showBookingDetailModal(booking);
+
+            selectedServices = [];
+            localStorage.removeItem('selectedServices'); // Clear stored services
+            selectedPet = null;
+            dateInput.value = '';
+            timeInput.value = '';
+            document.getElementById('booking-notes').value = '';
+            termsCheckbox.checked = false;
+
+        } catch (error) {
+            console.error('Error creating booking:', error);
+            showAlert('danger', error.message || 'An error occurred while processing your booking.');
+        } finally {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Confirm Booking';
+        }
+    });
+
+    // Go to bookings button in success modal
+    const goToBookingsBtn = document.getElementById('go-to-bookings');
+    if (goToBookingsBtn) {
+        goToBookingsBtn.addEventListener('click', function() {
+            // Close current modal
+            const currentModal = bootstrap.Modal.getInstance(document.getElementById('bookingDetailModal'));
+            currentModal?.hide();
+
+            // Show bookings modal
+            loadUserBookings();
+        });
+    }
+}
+
+// Update booking summary in step 4
+function updateBookingSummary() {
+    // Update services list
+    const servicesList = document.getElementById('summary-services');
+    if (servicesList) {
+        servicesList.innerHTML = '';
+        
+        let total = 0;
+        
+        selectedServices.forEach(service => {
+            const serviceItem = document.createElement('div');
+            serviceItem.className = 'mb-2';
+            serviceItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${service.name}</span>
+                    <span>${formatCurrency(service.price)}</span>
+                </div>
+            `;
+            servicesList.appendChild(serviceItem);
+            
+            // Add to total
+            total += service.price;
+        });
+        
+        // Add separator line
+        if (selectedServices.length > 0) {
+            const separator = document.createElement('hr');
+            separator.className = 'my-2';
+            servicesList.appendChild(separator);
+        }
+        
+        // Update total
+        document.getElementById('summary-total').textContent = formatCurrency(total);
+    }
+    
+    // Update pet info
+    document.getElementById('summary-pet').textContent = selectedPet ? 
+        `${selectedPet.name} (${selectedPet.breed || 'Unknown breed'})` : 'Not selected';
+    
+    // Update date and time
+    const dateInput = document.getElementById('booking-date');
+    const timeInput = document.getElementById('booking-time');
+    
+    document.getElementById('summary-date').textContent = dateInput.value ? 
+        new Date(dateInput.value).toLocaleDateString() : 'Not selected';
+    
+    document.getElementById('summary-time').textContent = timeInput.value ? 
+        timeInput.value : 'Not selected';
+    
+    // Update notes
+    const notesInput = document.getElementById('booking-notes');
+    document.getElementById('summary-notes').textContent = notesInput.value || 'None';
+}
+
+// Function to show the add pet form for a new pet or editing existing pet
+function showAddPetForm(petId = null) {
+    // Reset form
+    clearPetForm();
+    
+    // If pet ID is provided, populate form with pet data
+    if (petId) {
+        const pet = userPets.find(p => p.id === petId);
+        if (pet) {
+            document.getElementById('pet-id-hidden').value = pet.id;
+            document.getElementById('pet-name').value = pet.name || '';
+            
+            if (document.getElementById('pet-species')) {
+                document.getElementById('pet-species').value = pet.species || '';
+            }
+            
+            document.getElementById('pet-breed').value = pet.breed || '';
+            
+            if (document.getElementById('pet-birthdate') && pet.birthDate) {
+                document.getElementById('pet-birthdate').value = pet.birthDate;
+            }
+            
+            document.getElementById('pet-gender').value = pet.gender || '';
+            document.getElementById('pet-weight').value = pet.weight || '';
+            document.getElementById('pet-vaccinated').checked = pet.vaccinated || false;
+            document.getElementById('pet-notes').value = pet.healthNotes || '';
+            
+            // Update modal title
+            const modalTitle = document.getElementById('addPetModalLabel');
+            if (modalTitle) {
+                modalTitle.textContent = 'Edit Pet';
+            }
+        }
+    } else {
+        // Update modal title for new pet
+        const modalTitle = document.getElementById('addPetModalLabel');
+        if (modalTitle) {
+            modalTitle.textContent = 'Add New Pet';
+        }
+    }
+    
+    // Show the modal
+    const modal = new bootstrap.Modal(document.getElementById('addPetModal'));
+    modal.show();
+}
+
+// Clear pet form fields
+function clearPetForm() {
+    document.getElementById('pet-id-hidden').value = '';
+    document.getElementById('pet-name').value = '';
+    if (document.getElementById('pet-species')) {
+        document.getElementById('pet-species').value = '';
+    }
+    document.getElementById('pet-breed').value = '';
+    if (document.getElementById('pet-birthdate')) {
+        document.getElementById('pet-birthdate').value = '';
+    }
+    document.getElementById('pet-gender').value = '';
+    document.getElementById('pet-weight').value = '';
+    document.getElementById('pet-vaccinated').checked = false;
+    document.getElementById('pet-notes').value = '';
 }
 
 // Load user's bookings
-function loadUserBookings() {
-  if (!currentUser) return
-
-  // Show loading state
-  bookingsTableBody.innerHTML = `
-        <tr>
-            <td colspan="6" class="text-center">
-                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                Loading your bookings...
-            </td>
-        </tr>
-    `
-
-  // In a real application, you would fetch this data from your API
-  fetch(`${API_BASE_URL}/bookings/user/${currentUser.id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      userBookings = data
-      displayBookings(data)
-    })
-    .catch((error) => {
-      console.error("Error loading bookings:", error)
-      bookingsTableBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center text-danger">
-                    Error loading your bookings. Please try again later.
-                </td>
-            </tr>
-        `
-    })
-}
-
-// Display bookings in the UI
-function displayBookings(bookings) {
-  bookingsTableBody.innerHTML = ""
-
-  if (bookings.length === 0) {
-    bookingsTableBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center">
-                    You don't have any bookings yet.
-                </td>
-            </tr>
-        `
-    return
-  }
-
-  bookings.forEach((booking) => {
-    const row = document.createElement("tr")
-
-    // Format services list
-    const servicesList = booking.services.map((service) => service.name).join(", ")
-
-    // Format date and time
-    const bookingDate = new Date(booking.bookingDate + "T" + booking.startTime)
-    const formattedDate = bookingDate.toLocaleDateString()
-    const formattedTime = bookingDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-
-    // Determine status class
-    let statusClass = ""
-    switch (booking.status) {
-      case "CONFIRMED":
-        statusClass = "bg-success"
-        break
-      case "PENDING":
-        statusClass = "bg-warning"
-        break
-      case "CANCELLED":
-        statusClass = "bg-danger"
-        break
-      case "COMPLETED":
-        statusClass = "bg-info"
-        break
-      default:
-        statusClass = "bg-secondary"
+async function loadUserBookings() {
+    if (!currentUser) {
+        showAlert('warning', 'Please log in to view your bookings.');
+        return;
     }
 
-    row.innerHTML = `
-            <td>${booking.id.substring(0, 8)}...</td>
-            <td>${booking.pet ? booking.pet.name : "N/A"}</td>
-            <td>${servicesList}</td>
-            <td>${formattedDate} ${formattedTime}</td>
-            <td><span class="badge ${statusClass}">${booking.status}</span></td>
-            <td>
-                ${
-                  booking.status === "PENDING" || booking.status === "CONFIRMED"
-                    ? `<button class="btn btn-sm btn-outline-danger cancel-booking-btn" data-id="${booking.id}">Cancel</button>`
-                    : `<button class="btn btn-sm btn-outline-secondary" disabled>Cancel</button>`
-                }
-            </td>
-        `
+    try {
+        const response = await fetch(`${window.apiService.API_BASE_URL}/bookings/user/${currentUser.id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+            }
+        });
 
-    bookingsTableBody.appendChild(row)
-  })
+        if (!response.ok) {
+            throw new Error(`Failed to load bookings: ${response.status} ${response.statusText}`);
+        }
 
-  // Add event listeners to cancel buttons
-  document.querySelectorAll(".cancel-booking-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      const bookingId = this.getAttribute("data-id")
-      cancelBooking(bookingId)
-    })
-  })
+        const bookings = await response.json();
+        const modalBody = document.getElementById('bookingsModalBody');
+        if (!modalBody) {
+            console.error('Bookings modal body not found');
+            return;
+        }
+
+        if (!bookings || bookings.length === 0) {
+            modalBody.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> You have no bookings yet.
+                </div>
+            `;
+        } else {
+            modalBody.innerHTML = `
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>_Time</th>
+                            <th>Pet</th>
+                            <th>Services</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${bookings.map(booking => `
+                            <tr>
+                                <td>${new Date(booking.bookingDate).toLocaleDateString()}</td>
+                                <td>${booking.startTime}</td>
+                                <td>${booking.pet.name}</td>
+                                <td>${booking.services.map(s => s.name).join(', ')}</td>
+                                <td><span class="badge bg-${booking.status === 'PENDING' ? 'warning' : booking.status === 'CONFIRMED' ? 'success' : 'danger'}">${booking.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('bookingsModal'));
+        modal.show();
+    } catch (error) {
+        console.error('Error loading bookings:', error);
+        showAlert('danger', error.message || 'Failed to load your bookings.');
+    }
 }
 
-// Cancel booking
-function cancelBooking(bookingId) {
-  if (!confirm("Are you sure you want to cancel this booking?")) {
-    return
-  }
+function replacePlaceholderImages() {
+    const placeholderImages = document.querySelectorAll('img[src*="via.placeholder.com"]');
+    const fallbackImage = '/assets/images/fallback-pet.jpg'; // Replace with your fallback image path
 
-  // In a real application, you would send this request to your API
-  fetch(`${API_BASE_URL}/bookings/${bookingId}/cancel`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to cancel booking")
-      }
-      return response.json()
-    })
-    .then((data) => {
-      // Update booking in the list
-      const index = userBookings.findIndex((b) => b.id === bookingId)
-      if (index !== -1) {
-        userBookings[index] = data
-      }
+    placeholderImages.forEach(img => {
+        const altText = img.getAttribute('alt') || 'Pet Image';
+        let newSrc;
 
-      // Update UI
-      displayBookings(userBookings)
+        if (img.src.includes('150x50')) {
+            newSrc = '/assets/images/logo.png'; // Replace with your logo path
+        } else if (img.src.includes('400x200')) {
+            newSrc = '/assets/images/banner.jpg'; // Replace with your banner path
+        } else {
+            newSrc = `/assets/images/${altText.toLowerCase().replace(/\s+/g, '-')}.jpg`; // Dynamic fallback
+        }
 
-      // Show success message
-      showToast("Booking cancelled successfully!", "success")
-    })
-    .catch((error) => {
-      console.error("Error cancelling booking:", error)
-      showToast("Error cancelling booking. Please try again.", "error")
-    })
+        img.src = newSrc;
+        img.onerror = () => {
+            img.src = fallbackImage;
+            console.warn(`Failed to load image: ${newSrc}, using fallback`);
+        };
+    });
 }
 
-// Validate step before proceeding
-function validateStep(stepId) {
-  switch (stepId) {
-    case "step1":
-      if (selectedServices.length === 0) {
-        showToast("Please select at least one service", "error")
-        return false
-      }
-      return true
+function closeModal(modalId) {
+    if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
+        console.warn('Bootstrap Modal not available');
+        return;
+    }
 
-    case "step2":
-      if (!currentUser) {
-        showLoginModal()
-        return false
-      }
+    const modalElement = document.getElementById(modalId);
+    if (!modalElement) {
+        console.warn(`Modal with ID ${modalId} not found`);
+        return;
+    }
 
-      if (!selectedPet) {
-        showToast("Please select a pet or add a new one", "error")
-        return false
-      }
-      return true
-
-    case "step3":
-      const bookingDate = document.getElementById("booking-date").value
-      const bookingTime = document.getElementById("booking-time").value
-
-      if (!bookingDate) {
-        showToast("Please select a date", "error")
-        return false
-      }
-
-      if (!bookingTime) {
-        showToast("Please select a time", "error")
-        return false
-      }
-      return true
-
-    case "step4":
-      const termsCheckbox = document.getElementById("terms-checkbox")
-
-      if (!termsCheckbox.checked) {
-        showToast("Please agree to the terms and conditions", "error")
-        return false
-      }
-      return true
-
-    default:
-      return true
-  }
+    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+    modal.hide();
 }
 
-// Update booking summary
-function updateSummary() {
-  // Update services
-  summaryServices.innerHTML = ""
-  let total = 0
+function showBookingDetailModal(booking) {
+    if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
+        console.warn('Bootstrap Modal not available');
+        showAlert('success', 'Booking created successfully!');
+        return;
+    }
 
-  selectedServices.forEach((service) => {
-    const listItem = document.createElement("li")
-    listItem.className = "list-group-item d-flex justify-content-between align-items-center"
-    listItem.innerHTML = `
-            ${service.name}
-            <span class="badge bg-primary rounded-pill">${formatCurrency(service.price)}</span>
-        `
-    summaryServices.appendChild(listItem)
+    const modalElement = document.getElementById('bookingDetailModal');
+    if (!modalElement) {
+        console.warn('Booking detail modal not found');
+        showAlert('success', 'Booking created successfully!');
+        return;
+    }
 
-    total += service.price
-  })
+    const modalBody = modalElement.querySelector('.modal-body');
+    if (modalBody) {
+        modalBody.innerHTML = `
+            <p><strong>Booking ID:</strong> ${booking.id}</p>
+            <p><strong>Pet:</strong> ${booking.pet.name}</p>
+            <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
+            <p><strong>Time:</strong> ${booking.startTime}</p>
+            <p><strong>Services:</strong> ${booking.services.map(s => s.name).join(', ')}</p>
+            <p><strong>Status:</strong> ${booking.status}</p>
+        `;
+    }
 
-  summaryTotal.textContent = formatCurrency(total)
-
-  // Update pet
-  if (selectedPet) {
-    summaryPet.textContent = `${selectedPet.name} (${selectedPet.species})`
-  } else {
-    summaryPet.textContent = "Not selected"
-  }
-
-  // Update date and time
-  const bookingDate = document.getElementById("booking-date").value
-  const bookingTime = document.getElementById("booking-time").value
-
-  if (bookingDate) {
-    const formattedDate = new Date(bookingDate).toLocaleDateString()
-    summaryDate.textContent = formattedDate
-  } else {
-    summaryDate.textContent = "Not selected"
-  }
-
-  if (bookingTime) {
-    const timeOption = document.querySelector(`#booking-time option[value="${bookingTime}"]`)
-    summaryTime.textContent = timeOption.textContent
-  } else {
-    summaryTime.textContent = "Not selected"
-  }
-
-  // Update notes
-  const notes = document.getElementById("booking-notes").value
-  summaryNotes.textContent = notes || "None"
-}
-
-// Confirm booking
-function confirmBooking() {
-  if (!validateStep("step4")) {
-    return
-  }
-
-  const bookingDate = document.getElementById("booking-date").value
-  const bookingTime = document.getElementById("booking-time").value
-  const notes = document.getElementById("booking-notes").value
-
-  // Create booking object
-  const bookingData = {
-    pet: {
-      id: selectedPet.id,
-    },
-    customer: {
-      id: currentUser.id,
-    },
-    services: selectedServices.map((service) => ({ id: service.id })),
-    bookingDate: bookingDate,
-    startTime: bookingTime,
-    notes: notes,
-    status: "PENDING",
-  }
-
-  // In a real application, you would send this data to your API
-  fetch(`${API_BASE_URL}/bookings`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify(bookingData),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to create booking")
-      }
-      return response.json()
-    })
-    .then((data) => {
-      // Show success modal
-      const successModal = new bootstrap.Modal(document.getElementById("successModal"))
-      document.getElementById("success-booking-id").textContent = data.id.substring(0, 8) + "..."
-
-      const formattedDate = new Date(data.bookingDate).toLocaleDateString()
-      document.getElementById("success-date").textContent = formattedDate
-
-      const timeOption = document.querySelector(`#booking-time option[value="${data.startTime}"]`)
-      document.getElementById("success-time").textContent = timeOption.textContent
-
-      successModal.show()
-
-      // Reset booking form
-      resetBookingForm()
-    })
-    .catch((error) => {
-      console.error("Error creating booking:", error)
-      showToast("Error creating booking. Please try again.", "error")
-    })
-}
-
-// Reset booking form
-function resetBookingForm() {
-  // Reset selected services
-  selectedServices = []
-  document.querySelectorAll(".service-checkbox").forEach((checkbox) => {
-    checkbox.checked = false
-  })
-
-  // Reset selected pet
-  selectedPet = null
-  if (document.querySelector(".pet-radio")) {
-    document.querySelector(".pet-radio").checked = false
-  }
-  displayPetDetails(null)
-
-  // Reset date and time
-  document.getElementById("booking-date").value = ""
-  document.getElementById("booking-time").value = ""
-  document.getElementById("booking-notes").value = ""
-
-  // Reset terms checkbox
-  document.getElementById("terms-checkbox").checked = false
-
-  // Reset summary
-  updateSummary()
-
-  // Go back to first step
-  document.getElementById("step1-tab").click()
-}
-
-// Helper function to format currency
-function formatCurrency(amount) {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(amount)
-}
-
-// Helper function to calculate age from birth date
-function calculateAge(birthDate) {
-  if (!birthDate) return "Unknown"
-
-  const birth = new Date(birthDate)
-  const now = new Date()
-
-  let years = now.getFullYear() - birth.getFullYear()
-  const monthDiff = now.getMonth() - birth.getMonth()
-
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
-    years--
-  }
-
-  if (years < 1) {
-    const months = years * 12 + monthDiff
-    return `${months} months`
-  }
-
-  return `${years} years`
-}
-
-// Show toast notification
-function showToast(message, type = "info") {
-  // Create toast container if it doesn't exist
-  let toastContainer = document.querySelector(".toast-container")
-  if (!toastContainer) {
-    toastContainer = document.createElement("div")
-    toastContainer.className = "toast-container position-fixed bottom-0 end-0 p-3"
-    document.body.appendChild(toastContainer)
-  }
-
-  // Create toast element
-  const toastId = "toast-" + Date.now()
-  const toast = document.createElement("div")
-  toast.className = `toast align-items-center text-white bg-${type === "error" ? "danger" : type}`
-  toast.setAttribute("role", "alert")
-  toast.setAttribute("aria-live", "assertive")
-  toast.setAttribute("aria-atomic", "true")
-  toast.setAttribute("id", toastId)
-
-  toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    `
-
-  toastContainer.appendChild(toast)
-
-  // Initialize and show toast
-  const toastInstance = new bootstrap.Toast(toast, {
-    autohide: true,
-    delay: 5000,
-  })
-  toastInstance.show()
-
-  // Remove toast after it's hidden
-  toast.addEventListener("hidden.bs.toast", () => {
-    toast.remove()
-  })
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
 }

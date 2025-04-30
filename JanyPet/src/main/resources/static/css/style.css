@@ -1,4 +1,3 @@
-
 /*--------------------------------------------------------------
 This is main CSS file that contains custom style rules used in this template
 --------------------------------------------------------------*/
@@ -95,49 +94,52 @@ CSS STRUCTURE:
   }
 }
 
-/* Theme Colors */
+/* Theme Colors - Thêm vào hoặc thay đổi phần này */
 :root {
-  --accent-color: #DEAD6F;
-  --dark-color: #222222;
-  --light-dark-color: #727272;
+  --accent-color: #A8DADC;
+  --dark-color: #1D3557;
+  --light-dark-color: #457B9D;
   --light-color: #fff;
-  --grey-color: #dbdbdb;
-  --light-grey-color: #fafafa;
-  --primary-color: #6995B1;
-  --light-primary-color: #eef1f3;
+  --grey-color: #e5e5e5;
+  --light-grey-color: #f8f9fa;
+  --primary-color: #457B9D;
+  --primary-hover: #325277;
+  --light-primary-color: #F1FAEE;
+  --danger-color: #E63946;
+  --danger-hover: #c9323e;
+  --success-color: #2A9D8F; 
+  --warning-color: #E9C46A;
+  --secondary-color: #6c757d;
 }
 
 /* Fonts */
 :root {
-  --body-font: 'Chilanka', cursive;
-  --heading-font: 'Chilanka', cursive;
+  --body-font: 'Open Sans', sans-serif;
+  --heading-font: 'Nunito', sans-serif;
   --secondary-font: 'Montserrat', sans-serif;
 }
 
 
 body {
-  --bs-link-color: #333;
-  --bs-link-hover-color: #333;
+  --bs-link-color: #457B9D;
+  --bs-link-hover-color: #1D3557;
 
-  --bs-link-color-rgb: 40, 40, 40;
-  --bs-link-hover-color-rgb: 0, 0, 0;
+  --bs-link-color-rgb: 69, 123, 157;
+  --bs-link-hover-color-rgb: 29, 53, 87;
 
-  /* --bs-link-color: #DEAD6F;
-  --bs-link-hover-color: #DEAD6F; */
+  --bs-light-rgb: 248, 249, 250;
 
-  --bs-light-rgb: 248, 248, 248;
-
-  --bs-font-sans-serif: 'Chilanka', cursive;
+  --bs-font-sans-serif: 'Open Sans', sans-serif;
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
-  --bs-body-line-height: 2;
-  --bs-body-color: #41403E;
+  --bs-body-line-height: 1.8;
+  --bs-body-color: #333;
 
-  --bs-primary: #DEAD6F;
-  --bs-primary-rgb: 222, 173, 111;
+  --bs-primary: #457B9D;
+  --bs-primary-rgb: 69, 123, 157;
 
-  --bs-primary-bg-subtle: #FFF9EB;
+  --bs-primary-bg-subtle: #F1FAEE;
   --bs-border-color: #F7F7F7;
 
   --bs-secondary-rgb: 230, 243, 251;
@@ -149,16 +151,16 @@ body {
 }
 
 .btn-primary {
-  padding: 1.2rem 3rem;
+  padding: 1.2rem 1rem;
   --bs-btn-color: #fff;
-  --bs-btn-bg: #DEAD6F;
+  --bs-btn-bg: #457B9D;
   --bs-btn-border-color: transparent;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #e9b775;
+  --bs-btn-hover-bg: #1D3557;
   --bs-btn-hover-border-color: transparent;
   --bs-btn-focus-shadow-rgb: 49, 132, 253;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #DEAD6F;
+  --bs-btn-active-bg: #457B9D;
   --bs-btn-active-border-color: transparent;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
@@ -168,21 +170,21 @@ body {
 
 .btn-outline-primary {
   transition: all 0.3s ease-in;
-  padding: 1.2rem 3rem;
-  letter-spacing: 0.02375rem;
-  --bs-btn-color: #DEAD6F;
-  --bs-btn-border-color: #DEAD6F;
+  padding: 1.2rem 1rem;
+  letter-spacing: 0.01375rem;
+  --bs-btn-color: #457B9D;
+  --bs-btn-border-color: #457B9D;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #DEAD6F;
-  --bs-btn-hover-border-color: #DEAD6F;
+  --bs-btn-hover-bg: #457B9D;
+  --bs-btn-hover-border-color: #457B9D;
   --bs-btn-focus-shadow-rgb: 13, 110, 253;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #DEAD6F;
-  --bs-btn-active-border-color: #DEAD6F;
+  --bs-btn-active-bg: #457B9D;
+  --bs-btn-active-border-color: #457B9D;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #DEAD6F;
+  --bs-btn-disabled-color: #457B9D;
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #DEAD6F;
+  --bs-btn-disabled-border-color: #457B9D;
   --bs-gradient: none;
 }
 
@@ -191,19 +193,19 @@ body {
   padding: 1.2rem 3rem;
   letter-spacing: 0.02375rem;
   text-transform: uppercase;
-  --bs-btn-color: #41403E;
-  --bs-btn-border-color: #41403E;
+  --bs-btn-color: #1D3557;
+  --bs-btn-border-color: #1D3557;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #41403E;
-  --bs-btn-hover-border-color: #41403E;
+  --bs-btn-hover-bg: #1D3557;
+  --bs-btn-hover-border-color: #1D3557;
   --bs-btn-focus-shadow-rgb: 33, 37, 41;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #41403E;
-  --bs-btn-active-border-color: #41403E;
+  --bs-btn-active-bg: #1D3557;
+  --bs-btn-active-border-color: #1D3557;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #41403E;
+  --bs-btn-disabled-color: #1D3557;
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #41403E;
+  --bs-btn-disabled-border-color: #1D3557;
   --bs-gradient: none;
 }
 
@@ -212,19 +214,19 @@ body {
   font-size: 1.1875rem;
   text-transform: uppercase;
   --bs-btn-color: #fff;
-  --bs-btn-bg: #41403E;
-  --bs-btn-border-color: #41403E;
+  --bs-btn-bg: #1D3557;
+  --bs-btn-border-color: #1D3557;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #363533;
-  --bs-btn-hover-border-color: #363533;
+  --bs-btn-hover-bg: #325277;
+  --bs-btn-hover-border-color: #325277;
   --bs-btn-focus-shadow-rgb: 66, 70, 73;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #41403E;
-  --bs-btn-active-border-color: #41403E;
+  --bs-btn-active-bg: #1D3557;
+  --bs-btn-active-border-color: #1D3557;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #41403E;
-  --bs-btn-disabled-border-color: #41403E;
+  --bs-btn-disabled-bg: #1D3557;
+  --bs-btn-disabled-border-color: #1D3557;
 }
 
 @media screen and (max-width:991px) {
@@ -233,8 +235,28 @@ body {
   .btn-outline-primary,
   .btn-outline-dark,
   .btn-dark {
-    padding: 0.6rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 2rem !important;
+    transition: all 0.3s ease;
+  }
+
+  /* Nút Add to cart và wishlist nhỏ gọn hơn */
+  .btn-cart,
+  .btn-wishlist,
+  .btn-add-cart {
+    padding: 0.5rem 1.2rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 1.5rem !important;
+  }
+
+  .btn-wishlist {
+    width: 42px;
+    height: 42px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -249,8 +271,8 @@ h4,
 h5,
 h6 {
   font-family: var(--heading-font);
-  color: var(--bs-body-color);
-  font-weight: 400;
+  color: var(--dark-color);
+  font-weight: 600;
   text-transform: capitalize;
 }
 
@@ -269,8 +291,21 @@ a {
 
 .secondary-font {
   font-family: var(--secondary-font);
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 1.1rem;
 }
+/* Fix rating stars to display in yellow */
+.rating.secondary-font {
+  font-size: 1.2rem;
+  color: yellow;
+}
+
+/* Additional selector to ensure stars are yellow regardless of other classes */
+.rating iconify-icon,
+.rating .fas.fa-star {
+  color: #FFD700 !important; /* Using gold color for better appearance */
+}
+
 
 /*----------------------------------------------*/
 /* 6. SITE STRUCTURE */
@@ -349,7 +384,7 @@ a {
 .form-control:focus {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
-  border-color: #86b7fe;
+  border-color: #A8DADC;
   outline: 0;
   box-shadow: none;
 }
@@ -365,14 +400,14 @@ a {
 
 /* category style */
 iconify-icon.category-icon {
-  color: #DEAD6F99;
+  color: rgba(69, 123, 157, 0.6);
   font-size: 100px;
   transition: all 0.3s ease-in;
 
 }
 
 a.categories-item:hover iconify-icon.category-icon {
-  color: #DEAD6F;
+  color: #457B9D;
 }
 
 
@@ -395,7 +430,55 @@ a.categories-item:hover iconify-icon.category-icon {
   margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 8px);
 }
 
+/* Thêm vào cuối file */
 
+/* Điều chỉnh kích thước nút trong header */
+header .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+header .btn-outline-primary {
+  padding: 0.5rem 1rem;
+}
+
+header .btn-primary {
+  padding: 0.5rem 1rem;
+}
+
+header .auth-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Điều chỉnh kích thước icon giỏ hàng và yêu thích */
+header .fa-heart, 
+header .fa-shopping-cart {
+  font-size: 1.2rem;
+}
+
+header .badge {
+  font-size: 0.7rem;
+  padding: 0.25em 0.5em;
+}
+
+/* Điều chỉnh kích thước user info */
+header .user-info {
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+header .admin-link {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* Điều chỉnh nút đăng xuất */
+header .logout-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
 
 /* pet clothing */
 .card {
@@ -430,23 +513,23 @@ button.filter-button {
 
 button.filter-button.active,
 button.filter-button:hover {
-  border-bottom: 2px solid #DEAD6F;
+  border-bottom: 2px solid #457B9D;
 }
 
 /* testimonial style  */
 .testimonial-content {
-  color: #908F8D;
+  color: #666;
 }
 
 iconify-icon.quote-icon {
-  color: #F7EEE4;
+  color: #F1FAEE;
   font-size: 14rem;
 }
 
 
 /* register form  */
 .form-control {
-  color: #908F8D;
+  color: #666;
   line-height: normal;
   letter-spacing: 0.02125rem;
   text-transform: capitalize;
@@ -461,21 +544,21 @@ iconify-icon.quote-icon {
 }
 
 .form-control:focus {
-  border-color: #41403E;
+  border-color: #A8DADC;
 }
 
 
 /* blog style */
 .blog-paragraph {
-  color: #908F8D;
+  color: #666;
   font-size: 1rem;
   font-weight: 400;
-  line-height: normal;
-  font-family: var(--secondary-font);
+  line-height: 1.6;
+  font-family: var(--body-font);
 }
 
 .blog-read {
-  color: #908F8D;
+  color: #666;
   font-size: 1rem;
   letter-spacing: 0.02rem;
   text-transform: uppercase;
@@ -487,7 +570,7 @@ a.blog-read {
 }
 
 a.blog-read:hover {
-  border-bottom: 3px solid #8a8a8a;
+  border-bottom: 3px solid #457B9D;
 }
 
 
@@ -526,7 +609,7 @@ a.blog-read:hover {
 
 /* footer style */
 iconify-icon.social-icon {
-  color: #CACACA;
+  color: #888;
   font-size: 1.125rem;
   padding: 0.75rem;
   border-radius: 4.375rem;
@@ -537,8 +620,8 @@ iconify-icon.social-icon {
 
 li.social:hover iconify-icon.social-icon {
   color: #FFF;
-  border: 1px solid #DEAD6F;
-  background: #DEAD6F;
+  border: 1px solid #457B9D;
+  background: #457B9D;
 }
 
 iconify-icon.send-icon {
@@ -547,8 +630,8 @@ iconify-icon.send-icon {
   padding: 0.75rem;
   border-radius: 4.375rem;
   color: #FFF;
-  border: 1px solid #DEAD6F;
-  background: #DEAD6F;
+  border: 1px solid #457B9D;
+  background: #457B9D;
 }
 
 
@@ -556,7 +639,7 @@ iconify-icon.send-icon {
 
   /* offcanvas menu */
   .offcanvas-body .nav-item {
-    font-weight: 700;
+    font-weight: 600;
     border-bottom: 1px solid #d1d1d1;
   }
 
@@ -592,24 +675,24 @@ iconify-icon.send-icon {
 faqs section style start
 --------------------------------------------------------------*/
 .accordion-button:not(.collapsed) {
-  color: var(--body-text-color);
+  color: var(--dark-color);
   background-color: transparent;
   box-shadow: none;
 }
 
 .accordion {
-  --bs-accordion-color: var(--light-text-color);
+  --bs-accordion-color: var(--light-dark-color);
   --bs-accordion-bg: none;
-  --bs-accordion-btn-color: var(--body-text-color);
+  --bs-accordion-btn-color: var(--dark-color);
 }
 
 .accordion-button:not(.collapsed)::after {
-  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%2341403e');
+  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%23457B9D');
 
 }
 
 .accordion-button::after {
-  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%2341403e');
+  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%23457B9D');
 }
 
 .accordion-button:focus {
@@ -693,3 +776,39 @@ Single Product section style start
   }
 }
 
+/* Thêm các kích thước nút nhỏ hơn cho header */
+.btn-sm {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+/* Thêm hiệu ứng cho badge */
+
+.badge {
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi có sự thay đổi số lượng */
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.badge-pulse {
+  animation: badgePulse 0.5s ease-in-out;
+}
+
+/* Màu sắc cho các loại badge */
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.bg-danger {
+  background-color: var(--danger-color) !important;
+}
+
+.bg-primary-subtle {
+  background-color: var(--light-primary-color) !important;
+  color: var(--primary-color) !important;
+}
