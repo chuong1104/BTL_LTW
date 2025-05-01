@@ -6,6 +6,7 @@ import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
 import com.BTL_LTW.JanyPet.entity.Product;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
 import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
+import com.BTL_LTW.JanyPet.service.Interface.InventoryService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private FileStorageService fileStorageService;
+    
+    @Autowired
+    private InventoryService inventoryService; 
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
@@ -31,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setStock(request.getStock());
 
         // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
@@ -54,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         product = productRepository.save(product);
+        product.setStock(inventoryService.calculateTotalStock(product.getId()));
         return mapToResponse(product);
     }
 
@@ -76,7 +80,6 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setStock(request.getStock());
 
         // Xử lý trường hợp upload file mới
         MultipartFile imageFile = request.getImageFile();
@@ -109,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         product = productRepository.save(product);
+        product.setStock(inventoryService.calculateTotalStock(id));
         return mapToResponse(product);
     }
 
@@ -116,15 +120,20 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với id: " + id));
+        product.setStock(inventoryService.calculateTotalStock(id));
         return mapToResponse(product);
     }
 
     @Override
     public List<ProductResponse> getAllProducts() {
         List<Product> productList = productRepository.findAll();
+        productList.forEach(product -> 
+            product.setStock(inventoryService.calculateTotalStock(product.getId()))
+        );
+    
         return productList.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+            .map(this::mapToResponse)
+            .collect(Collectors.toList());
     }
 
     @Override

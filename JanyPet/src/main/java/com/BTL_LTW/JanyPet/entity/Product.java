@@ -17,7 +17,7 @@ public class Product extends BaseEntity<String> {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Transient  // Mark as transient so it's not stored in the database
     private Integer stock = 0;
 
     @Column(length = 255) // Lưu tên file ảnh hoặc đường dẫn tương đối

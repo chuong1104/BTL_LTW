@@ -12,6 +12,7 @@ import com.BTL_LTW.JanyPet.repository.CartDetailRepository;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
 import com.BTL_LTW.JanyPet.repository.ShoppingCartRepository;
 import com.BTL_LTW.JanyPet.repository.UserRepository;
+import com.BTL_LTW.JanyPet.service.Interface.InventoryService;
 import com.BTL_LTW.JanyPet.service.Interface.ShoppingCartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private InventoryService inventoryService;
 
     @Override
     @Transactional
@@ -66,6 +70,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product không tồn tại"));
+        
+        int currentStock = inventoryService.calculateTotalStock(product.getId());
+        product.setStock(currentStock);
 
         if (product.getStock() < request.getQuantity()) {
             throw new RuntimeException("Sản phẩm không đủ số lượng");
@@ -99,6 +106,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             // Nếu cần kiểm tra số lượng tồn kho khi update, thực hiện tại đây
             Product product = cartDetail.getProduct();
+            int currentStock = inventoryService.calculateTotalStock(product.getId());
+            product.setStock(currentStock);
+
             if (product.getStock() < request.getQuantity()) {
                 throw new RuntimeException("Sản phẩm không đủ số lượng cập nhật");
             }

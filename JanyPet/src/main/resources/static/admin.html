@@ -47,7 +47,7 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="logo">
-      <h2>PetCare Admin</h2>
+      <h2>PetShop Sales Admin</h2>
       <button id="toggle-sidebar" class="toggle-btn">
         <i class="fas fa-bars"></i>
       </button>
@@ -60,36 +60,36 @@
           >
         </li>
         <li class="menu-item" data-section="products-section">
-          <a href="#"><i class="fas fa-box"></i><span>Products</span></a>
+          <a href="#"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
         </li>
         <li class="menu-item" data-section="categories-section">
-          <a href="#"><i class="fas fa-tags"></i><span>Categories</span></a>
+          <a href="#"><i class="fas fa-tags"></i><span>Danh mục hàng</span></a>
         </li>
-        <li class="menu-item" data-section="appointments-section">
+        <li class="menu-item" data-section="inventory-section">
           <a href="#"
-          ><i class="fas fa-calendar-alt"></i><span>Appointments</span></a
+          ><i class="fas fa-warehouse"></i><span>Kho hàng</span></a
           >
         </li>
-        <li class="menu-item" data-section="services-section">
+        <li class="menu-item" data-section="staff-section">
           <a href="#"
-          ><i class="fas fa-concierge-bell"></i><span>Services</span></a
+          ><i class="fas fa-user-tie"></i><span>Nhân viên</span></a
           >
         </li>
         <li class="menu-item" data-section="orders-section">
           <a href="#"
-          ><i class="fas fa-shopping-cart"></i><span>Orders</span></a
+          ><i class="fas fa-shopping-cart"></i><span>Hoá đơn</span></a
           >
         </li>
         <li class="menu-item" data-section="customers-section">
-          <a href="#"><i class="fas fa-users"></i><span>Customers</span></a>
+          <a href="#"><i class="fas fa-users"></i><span>Khách hàng</span></a>
         </li>
         <li class="menu-item" data-section="reports-section">
           <a href="#"
-          ><i class="fas fa-chart-bar"></i><span>Reports</span></a
+          ><i class="fas fa-chart-bar"></i><span>Báo cáo</span></a
           >
         </li>
         <li class="menu-item" data-section="settings-section">
-          <a href="#"><i class="fas fa-cog"></i><span>Settings</span></a>
+          <a href="#"><i class="fas fa-cog"></i><span>Cài đặt</span></a>
         </li>
       </ul>
     </nav>
@@ -139,157 +139,182 @@
 
     <!-- Dashboard Section -->
     <div class="content-section active" id="dashboard-section">
-      <h1>Dashboard</h1>
+      <h1>Dữ liệu hệ thống</h1>
 
       <div class="stats-cards">
         <div class="stat-card">
           <div class="stat-card-content">
-            <h3>Total Products</h3>
-            <p class="stat-number">248</p>
-            <p class="stat-info">
-              <i class="fas fa-arrow-up"></i> 15% from last month
-            </p>
+      <h3>Số lượng sản phẩm</h3>
+      <p class="stat-number">248</p>
+      <p class="stat-info">
+        <i class="fas fa-arrow-up"></i> Tăng 15% so với tháng trước
+      </p>
           </div>
           <div class="stat-card-icon products-icon">
-            <i class="fas fa-box"></i>
+      <i class="fas fa-box"></i>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-card-content">
-            <h3>Appointments</h3>
-            <p class="stat-number">32</p>
-            <p class="stat-info">
-              <i class="fas fa-arrow-up"></i> 8% from last month
-            </p>
+      <h3>Số lượng đơn hàng online</h3>
+      <p class="stat-number">32</p>
+      <p class="stat-info">
+        <i class="fas fa-arrow-up"></i> Tăng 8% so với tháng trước
+      </p>
           </div>
           <div class="stat-card-icon appointments-icon">
-            <i class="fas fa-calendar-check"></i>
+      <i class="fas fa-calendar-check"></i>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-card-content">
-            <h3>Total Orders</h3>
-            <p class="stat-number">156</p>
-            <p class="stat-info">
-              <i class="fas fa-arrow-down"></i> 3% from last month
-            </p>
+      <h3>Số lượng đơn hàng offline</h3>
+      <p class="stat-number">156</p>
+      <p class="stat-info">
+        <i class="fas fa-arrow-down"></i> Tăng 3% so với tháng trước
+      </p>
           </div>
           <div class="stat-card-icon orders-icon">
-            <i class="fas fa-shopping-cart"></i>
+      <i class="fas fa-shopping-cart"></i>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-card-content">
-            <h3>Revenue</h3>
-            <p class="stat-number">$12,846</p>
-            <p class="stat-info">
-              <i class="fas fa-arrow-up"></i> 12% from last month
-            </p>
+      <h3>Số lượng khách hàng mới</h3>
+      <p class="stat-number">537</p>
+      <p class="stat-info">
+        <i class="fas fa-arrow-up"></i> Tăng 3% so với tháng trước
+      </p>
+          </div>
+          <div class="stat-card-icon users-icon">
+      <i class="fas fa-user"></i>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-content">
+      <h3>Doanh thu tháng</h3>
+      <p class="stat-number">56.000.000đ</p>
+      <p class="stat-info">
+        <i class="fas fa-arrow-up"></i> Tăng 20% so với tháng trước
+      </p>
           </div>
           <div class="stat-card-icon revenue-icon">
-            <i class="fas fa-dollar-sign"></i>
+      <i class="fas fa-dollar-sign"></i>
           </div>
         </div>
       </div>
 
-      <div class="dashboard-widgets">
-        <div class="widget recent-appointments">
-          <div class="widget-header">
-            <h3>Recent Appointments</h3>
-            <a href="#" class="view-all">View All</a>
-          </div>
-          <div class="widget-content">
-            <table class="data-table">
-              <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Pet</th>
-                <th>Service</th>
-                <th>Date & Time</th>
-                <th>Status</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>John Smith</td>
-                <td>Max (Dog)</td>
-                <td>Grooming</td>
-                <td>Today, 10:00 AM</td>
-                <td><span class="status scheduled">Scheduled</span></td>
-              </tr>
-              <tr>
-                <td>Sarah Johnson</td>
-                <td>Luna (Cat)</td>
-                <td>Vaccination</td>
-                <td>Today, 2:30 PM</td>
-                <td><span class="status confirmed">Confirmed</span></td>
-              </tr>
-              <tr>
-                <td>Michael Davis</td>
-                <td>Rocky (Dog)</td>
-                <td>Checkup</td>
-                <td>Tomorrow, 9:15 AM</td>
-                <td><span class="status pending">Pending</span></td>
-              </tr>
-              <tr>
-                <td>Emily Wilson</td>
-                <td>Coco (Rabbit)</td>
-                <td>Nail Trimming</td>
-                <td>Tomorrow, 11:00 AM</td>
-                <td><span class="status scheduled">Scheduled</span></td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div class="dashboard-widgets">
 
-        <div class="widget recent-orders">
+        <div class="widget recent-offline-orders">
           <div class="widget-header">
-            <h3>Recent Orders</h3>
-            <a href="#" class="view-all">View All</a>
+      <h3>Đơn hàng offline gần đây</h3>
+      <a href="#" class="view-all">Xem tất cả</a>
           </div>
           <div class="widget-content">
-            <table class="data-table">
-              <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>#ORD-7829</td>
-                <td>Robert Brown</td>
-                <td>3 items</td>
-                <td>$58.25</td>
-                <td><span class="status completed">Delivered</span></td>
-              </tr>
-              <tr>
-                <td>#ORD-7830</td>
-                <td>Lisa Anderson</td>
-                <td>2 items</td>
-                <td>$124.99</td>
-                <td><span class="status processing">Processing</span></td>
-              </tr>
-              <tr>
-                <td>#ORD-7831</td>
-                <td>Thomas Clark</td>
-                <td>5 items</td>
-                <td>$93.85</td>
-                <td><span class="status shipping">Shipping</span></td>
-              </tr>
-              <tr>
-                <td>#ORD-7832</td>
-                <td>Jennifer Martinez</td>
-                <td>1 item</td>
-                <td>$32.50</td>
-                <td><span class="status processing">Processing</span></td>
-              </tr>
-              </tbody>
-            </table>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mã đơn hàng</th>
+            <th>Tên khách hàng</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Doanh thu</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#ORD-7830</td>
+            <td>Nguyễn Thị Mai</td>
+            <td>Cat Play Tower</td>
+            <td>2</td>
+            <td>1.200.000đ</td>
+            <td><span class="status processing">Đang xử lý</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7825</td>
+            <td>Trần Văn Hoàng</td>
+            <td>Premium Dog Food</td>
+            <td>3</td>
+            <td>780.000đ</td>
+            <td><span class="status shipping">Đang giao hàng</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7822</td>
+            <td>Lê Minh Anh</td>
+            <td>Bird Cage - Large</td>
+            <td>1</td>
+            <td>950.000đ</td>
+            <td><span class="status completed">Đã giao hàng</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7818</td>
+            <td>Phạm Văn Tuấn</td>
+            <td>Pet Vitamins</td>
+            <td>4</td>
+            <td>520.000đ</td>
+            <td><span class="status completed">Đã giao hàng</span></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      </div>
+    </div>
+
+        <div class="widget recent-online-orders">
+          <div class="widget-header">
+      <h3>Đơn hàng online gần đây</h3>
+      <a href="#" class="view-all">Xem tất cả</a>
+          </div>
+          <div class="widget-content">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mã đơn hàng</th>
+            <th>Tên khách hàng</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Doanh thu</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#ORD-7830</td>
+            <td>Nguyễn Thị Mai</td>
+            <td>Cat Play Tower</td>
+            <td>2</td>
+            <td>1.200.000đ</td>
+            <td><span class="status processing">Đang xử lý</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7825</td>
+            <td>Trần Văn Hoàng</td>
+            <td>Premium Dog Food</td>
+            <td>3</td>
+            <td>780.000đ</td>
+            <td><span class="status shipping">Đang giao hàng</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7822</td>
+            <td>Lê Minh Anh</td>
+            <td>Bird Cage - Large</td>
+            <td>1</td>
+            <td>950.000đ</td>
+            <td><span class="status completed">Đã giao hàng</span></td>
+          </tr>
+          <tr>
+            <td>#ORD-7818</td>
+            <td>Phạm Văn Tuấn</td>
+            <td>Pet Vitamins</td>
+            <td>4</td>
+            <td>520.000đ</td>
+            <td><span class="status completed">Đã giao hàng</span></td>
+          </tr>
+        </tbody>
+      </table>
+      
           </div>
         </div>
       </div>
@@ -298,17 +323,17 @@
     <!-- Products Section -->
     <div class="content-section" id="products-section">
       <div class="section-header">
-        <h1>Product Management</h1>
+        <h1>Quản lý sản phẩm</h1>
         <button class="primary-btn" id="add-product-btn">
-          <i class="fas fa-plus"></i> Add New Product
+          <i class="fas fa-plus"></i> Thêm sản phẩm mới
         </button>
       </div>
 
       <div class="filters">
         <div class="filter-group">
-          <label>Category</label>
+          <label>Danh mục hàng</label>
           <select id="filter-category">
-            <option value="">All Categories</option>
+            <option value="">Tất cả danh mục</option>
             <option value="Pet Food">Pet Food</option>
             <option value="Toys">Toys</option>
             <option value="Accessories">Accessories</option>
@@ -316,21 +341,21 @@
           </select>
         </div>
         <div class="filter-group">
-          <label>Status</label>
+          <label>Trạng thái</label>
           <select id="filter-status">
-            <option value="">All Status</option>
-            <option value="In Stock">In Stock</option>
-            <option value="Low Stock">Low Stock</option>
-            <option value="Out of Stock">Out of Stock</option>
+            <option value="">Tất cả trạng thái</option>
+            <option value="In Stock">Tồn kho</option>
+            <option value="Low Stock">Còn ít trong kho</option>
+            <option value="Out of Stock">Hết hàng</option>
           </select>
         </div>
         <div class="filter-group">
-          <label>Sort By</label>
+          <label>Sắp xếp theo</label>
           <select id="sort-by">
-            <option value="name-asc">Name (A-Z)</option>
-            <option value="name-desc">Name (Z-A)</option>
-            <option value="price-asc">Price (Low to High)</option>
-            <option value="price-desc">Price (High to Low)</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="price-asc">Giá (Thấp đến cao)</option>
+            <option value="price-desc">Giá (Cao xuống thấp)</option>
           </select>
         </div>
       </div>
@@ -339,16 +364,17 @@
         <!-- Cập nhật bảng sản phẩm để phù hợp với cấu trúc dữ liệu -->
         <table class="data-table" id="products-table">
           <thead>
-          <tr>
-            <th><input type="checkbox" id="select-all"></th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
+            <tr>
+              <th><input type="checkbox" class="select-all" /></th>
+              <th>ID sản phẩm</th>
+              <th>Tên sản phẩm</th>
+              <th>Danh mục</th>
+              <th>Giá nhập</th>
+              <th>Giá bán ra</th>
+              <th>Tồn kho</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
           </thead>
           <tbody id="products-table-body">
           <!-- Products will be loaded here -->
@@ -374,10 +400,7 @@
     <!-- Categories Section -->
     <div class="content-section" id="categories-section">
       <div class="section-header">
-        <h1>Category Management</h1>
-        <button class="primary-btn" id="add-category-btn">
-          <i class="fas fa-plus"></i> Add New Category
-        </button>
+        <h1>Quản lý danh mục</h1>
       </div>
 
       <div class="row">
@@ -386,18 +409,16 @@
             <table class="data-table">
               <thead>
               <tr>
-                <th>Category Name</th>
-                <th>Description</th>
-                <th>Products</th>
-                <th>Status</th>
-                <th>Actions</th>
+                  <th>Tên danh mục</th>
+                  <th>Mô tả</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
               </tr>
               </thead>
-              <tbody>
+              <tbody id="category-table-body">
               <tr>
                 <td>Pet Food</td>
                 <td>All types of pet food and treats</td>
-                <td>45</td>
                 <td><span class="status active">Active</span></td>
                 <td class="actions">
                   <button class="icon-btn edit-btn">
@@ -411,7 +432,6 @@
               <tr>
                 <td>Toys</td>
                 <td>Toys for all types of pets</td>
-                <td>38</td>
                 <td><span class="status active">Active</span></td>
                 <td class="actions">
                   <button class="icon-btn edit-btn">
@@ -425,7 +445,6 @@
               <tr>
                 <td>Accessories</td>
                 <td>Collars, leashes, cages, etc.</td>
-                <td>62</td>
                 <td><span class="status active">Active</span></td>
                 <td class="actions">
                   <button class="icon-btn edit-btn">
@@ -439,7 +458,6 @@
               <tr>
                 <td>Medicine</td>
                 <td>Medicines and health supplies</td>
-                <td>27</td>
                 <td><span class="status active">Active</span></td>
                 <td class="actions">
                   <button class="icon-btn edit-btn">
@@ -453,7 +471,6 @@
               <tr>
                 <td>Grooming</td>
                 <td>Grooming products and supplies</td>
-                <td>19</td>
                 <td><span class="status inactive">Inactive</span></td>
                 <td class="actions">
                   <button class="icon-btn edit-btn">
@@ -470,36 +487,32 @@
         </div>
         <div class="col-md-4">
           <div class="category-form-card">
-            <h3>Add New Category</h3>
+            <h3>Thêm danh mục mới</h3>
             <form id="category-form">
               <div class="form-group">
-                <label for="category-name">Category Name</label>
+                <label for="category-name">Tên danh mục</label>
                 <input
                         type="text"
                         id="category-name"
-                        placeholder="Enter category name"
+                        placeholder="Nhập tên danh mục mới"
                 />
               </div>
               <div class="form-group">
-                <label for="category-description">Description</label>
+                <label for="category-description">Mô tả danh mục</label>
                 <textarea
                         id="category-description"
-                        placeholder="Enter category description"
+                        placeholder="Nhập mô tả danh mục"
                 ></textarea>
               </div>
               <div class="form-group">
-                <label for="category-image">Image</label>
-                <input type="file" id="category-image" accept="image/*" />
-              </div>
-              <div class="form-group">
-                <label for="category-status">Status</label>
+                <label for="category-status">Trạng thái</label>
                 <select id="category-status">
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
               <button type="submit" class="primary-btn">
-                Save Category
+                Lưu danh mục
               </button>
             </form>
           </div>
@@ -507,154 +520,118 @@
       </div>
     </div>
 
-    <!-- Other sections (appointments, services, etc.) would go here -->
-    <!-- Appointments Section -->
-    <div class="content-section" id="appointments-section">
+    <!-- Other sections would go here -->
+    <!--Inventory Section-->
+    <div class="content-section" id="inventory-section">
       <div class="section-header">
-        <h1>Appointment Management</h1>
-        <button class="primary-btn" id="add-appointment-btn">
-          <i class="fas fa-plus"></i> Schedule New Appointment
-        </button>
+        <h1>Quản lý kho hàng</h1>
+        <div>
+          <button class="secondary-btn" id="export-inventory-btn">
+            <i class="fas fa-file-export"></i> Xuất báo cáo
+          </button>
+          <button class="primary-btn" id="inventory-history-btn">
+            <i class="fas fa-history"></i> Lịch sử nhập xuất
+          </button>
+        </div>
       </div>
 
       <div class="filters">
         <div class="filter-group">
-          <label>Service Type</label>
-          <select id="filter-service">
-            <option value="">All Services</option>
-            <option value="Grooming">Grooming</option>
-            <option value="Vaccination">Vaccination</option>
-            <option value="Checkup">Checkup</option>
-            <option value="Training">Training</option>
-            <option value="Boarding">Boarding</option>
+          <label>Chi nhánh</label>
+          <select id="filter-branch">
+            <option value="">Tất cả chi nhánh</option>
+            <option value="1">PetShop Hà Đông</option>
+            <option value="2">PetShop Thanh Xuân</option>
+            <option value="3">PetShop Cầu Giấy</option>
           </select>
         </div>
         <div class="filter-group">
-          <label>Status</label>
-          <select id="filter-appointment-status">
-            <option value="">All Status</option>
-            <option value="Scheduled">Scheduled</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Pending">Pending</option>
+          <label>Danh mục</label>
+          <select id="filter-inventory-category">
+            <option value="">Tất cả danh mục</option>
+            <option value="Pet Food">Pet Food</option>
+            <option value="Toys">Toys</option>
+            <option value="Accessories">Accessories</option>
           </select>
         </div>
         <div class="filter-group">
-          <label>Date Range</label>
-          <div style="display: flex; gap: 10px">
-            <input type="date" id="date-from" placeholder="From" />
-            <input type="date" id="date-to" placeholder="To" />
-          </div>
+          <label>Trạng thái kho</label>
+          <select id="filter-stock-status">
+            <option value="">Tất cả trạng thái</option>
+            <option value="in-stock">Còn hàng</option>
+            <option value="low-stock">Sắp hết</option>
+            <option value="out-of-stock">Hết hàng</option>
+          </select>
         </div>
       </div>
 
       <div class="data-container">
-        <table class="data-table">
+        <table class="data-table" id="inventory-table">
           <thead>
-          <tr>
-            <th><input type="checkbox" class="select-all" /></th>
-            <th>Appointment ID</th>
-            <th>Customer</th>
-            <th>Pet</th>
-            <th>Service</th>
-            <th>Date & Time</th>
-            <th>Staff</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
+            <tr>
+              <th>Chi nhánh</th>
+              <th>ID sản phẩm</th>
+              <th>Tên sản phẩm</th>
+              <th>Số lượng hiện có</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
           </thead>
           <tbody>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#APT-1001</td>
-            <td>John Smith</td>
-            <td>Max (Dog)</td>
-            <td>Grooming</td>
-            <td>Apr 15, 2025 - 10:00 AM</td>
-            <td>Sarah Johnson</td>
-            <td><span class="status scheduled">Scheduled</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#APT-1002</td>
-            <td>Emily Wilson</td>
-            <td>Luna (Cat)</td>
-            <td>Vaccination</td>
-            <td>Apr 15, 2025 - 11:30 AM</td>
-            <td>Dr. Michael Brown</td>
-            <td><span class="status confirmed">Confirmed</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#APT-1003</td>
-            <td>Robert Davis</td>
-            <td>Rocky (Dog)</td>
-            <td>Checkup</td>
-            <td>Apr 15, 2025 - 2:00 PM</td>
-            <td>Dr. Lisa Anderson</td>
-            <td><span class="status pending">Pending</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#APT-1004</td>
-            <td>Jennifer Martinez</td>
-            <td>Coco (Rabbit)</td>
-            <td>Nail Trimming</td>
-            <td>Apr 16, 2025 - 9:15 AM</td>
-            <td>Mark Wilson</td>
-            <td><span class="status scheduled">Scheduled</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#APT-1005</td>
-            <td>Thomas Clark</td>
-            <td>Buddy (Dog)</td>
-            <td>Training</td>
-            <td>Apr 16, 2025 - 3:30 PM</td>
-            <td>Jessica Thompson</td>
-            <td><span class="status completed">Completed</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
+            <tr>
+              <td>Chi nhánh PetShop Hà Đông</td>
+              <td>P001</td>
+              <td>Premium Dog Food</td>
+              <td>45</td>
+              <td><span class="status active">Còn hàng</span></td>
+              <td class="actions">
+                <button class="icon-btn import-btn" data-product-id="P001" data-product-name="Premium Dog Food">
+                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
+                </button>
+                <button class="icon-btn export-btn" data-product-id="P001" data-product-name="Premium Dog Food">
+                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
+                </button>
+                <button class="icon-btn adjust-btn" data-product-id="P001">
+                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Chi nhánh PetShop Thanh Xuân</td>
+              <td>P002</td>
+              <td>Cat Play Tower</td>
+              <td>12</td>
+              <td><span class="status pending">Sắp hết</span></td>
+              <td class="actions">
+                <button class="icon-btn import-btn" data-product-id="P002" data-product-name="Cat Play Tower">
+                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
+                </button>
+                <button class="icon-btn export-btn" data-product-id="P002" data-product-name="Cat Play Tower">
+                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
+                </button>
+                <button class="icon-btn adjust-btn" data-product-id="P002">
+                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>Chi nhánh Cầu Giấy</td>
+              <td>P003</td>
+              <td>Dog Collar - Medium</td>
+              <td>0</td>
+              <td><span class="status inactive">Hết hàng</span></td>
+              <td class="actions">
+                <button class="icon-btn import-btn" data-product-id="P003" data-product-name="Dog Collar - Medium">
+                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
+                </button>
+                <button class="icon-btn export-btn" data-product-id="P003" data-product-name="Dog Collar - Medium" disabled>
+                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
+                </button>
+                <button class="icon-btn adjust-btn" data-product-id="P003">
+                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -674,236 +651,332 @@
       </div>
     </div>
 
-    <!--Service-->
-    <!-- Services Section -->
-    <div class="content-section" id="services-section">
+    <!-- Inventory Movement Modal -->
+    <div class="modal" id="inventory-movement-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="inventory-movement-title">Nhập kho</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="inventory-movement-form">
+            <input type="hidden" id="movement-type" value="import">
+            <div class="form-group">
+              <label for="product-id-search">Mã sản phẩm</label>
+              <div class="input-with-button">
+                <input type="text" id="product-id-search" placeholder="Nhập mã sản phẩm...">
+                <button type="button" id="search-product-btn" class="primary-btn">
+                  <i class="fas fa-search"></i> Tìm
+                </button>
+              </div>
+            </div>
+            <div id="product-details" style="display: none;">
+              <div class="product-info-card">
+                <h3 id="movement-product-name">Tên sản phẩm</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="current-quantity">Số lượng hiện tại</label>
+                    <input type="text" id="current-quantity" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="movement-quantity">Số lượng <span id="movement-label">nhập</span></label>
+                    <input type="number" id="movement-quantity" min="1" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="movement-branch">Chi nhánh</label>
+                    <select id="movement-branch" required>
+                      <option value="">Chọn chi nhánh</option>
+                      <option value="1">Chi nhánh Quận 1</option>
+                      <option value="2">Chi nhánh Quận 2</option>
+                      <option value="3">Chi nhánh Quận 3</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="movement-date">Ngày thực hiện</label>
+                    <input type="date" id="movement-date" required>
+                  </div>
+                </div>
+                <div class="form-group" id="supplier-group">
+                  <label for="movement-supplier">Nhà cung cấp</label>
+                  <select id="movement-supplier">
+                    <option value="">Chọn nhà cung cấp</option>
+                    <option value="1">Supplier A</option>
+                    <option value="2">Supplier B</option>
+                    <option value="3">Supplier C</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="movement-notes">Ghi chú</label>
+                  <textarea id="movement-notes" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="secondary-btn" id="cancel-movement-btn">Hủy</button>
+          <button type="button" class="primary-btn" id="save-movement-btn">
+            <i class="fas fa-save"></i> Lưu
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Staff Section-->
+    <div class="content-section" id="staff-section">
       <div class="section-header">
-        <h1>Service Management</h1>
-        <button class="primary-btn" id="add-service-btn">
-          <i class="fas fa-plus"></i> Add New Service
+        <h1>Quản lý nhân viên</h1>
+        <button class="primary-btn" id="add-staff-btn">
+          <i class="fas fa-plus"></i> Thêm nhân viên mới
         </button>
       </div>
 
-      <div class="row">
-        <div class="col-md-8">
-          <div class="data-container">
-            <table class="data-table">
-              <thead>
-              <tr>
-                <th>Service Name</th>
-                <th>Category</th>
-                <th>Duration</th>
-                <th>Price</th>
-                <th>Availability</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>Basic Grooming</td>
-                <td>Grooming</td>
-                <td>45 min</td>
-                <td>$35.00</td>
-                <td>Mon-Sat</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Premium Grooming</td>
-                <td>Grooming</td>
-                <td>90 min</td>
-                <td>$65.00</td>
-                <td>Mon-Sat</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Routine Checkup</td>
-                <td>Veterinary</td>
-                <td>30 min</td>
-                <td>$45.00</td>
-                <td>Mon-Fri</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Vaccination</td>
-                <td>Veterinary</td>
-                <td>15 min</td>
-                <td>$25.00</td>
-                <td>Mon-Fri</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Basic Training</td>
-                <td>Training</td>
-                <td>60 min</td>
-                <td>$40.00</td>
-                <td>Tue, Thu, Sat</td>
-                <td><span class="status active">Active</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>Advanced Training</td>
-                <td>Training</td>
-                <td>90 min</td>
-                <td>$75.00</td>
-                <td>Tue, Thu</td>
-                <td><span class="status inactive">Inactive</span></td>
-                <td class="actions">
-                  <button class="icon-btn edit-btn">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="icon-btn delete-btn">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+      <div class="filters">
+        <div class="filter-group">
+          <label>Bộ phận</label>
+          <select id="filter-department">
+            <option value="">Tất cả bộ phận</option>
+            <option value="Sales">Bán hàng</option>
+            <option value="Services">Dịch vụ</option>
+            <option value="Logistics">Kho vận</option>
+            <option value="Administration">Hành chính</option>
+          </select>
         </div>
-        <div class="col-md-4">
-          <div class="category-form-card">
-            <h3>Add New Service</h3>
-            <form id="service-form">
+        <div class="filter-group">
+          <label>Vị trí</label>
+          <select id="filter-position">
+            <option value="">Tất cả vị trí</option>
+            <option value="Quản lý bán hàng">Quản lý bán hàng</option>
+            <option value="Nhân viên bán hàng">Nhân viên bán hàng</option>
+            <option value="Quản lý dịch vụ">Quản lý dịch vụ</option>
+            <option value="Bác sĩ">Bác sĩ</option>
+            <option value="Y tá">Y tá</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Cửa hàng</label>
+          <select id="filter-branch">
+            <option value="">Tất cả cửa hàng</option>
+            <option value="1">Chi nhánh Hà Đông</option>
+            <option value="2">Chi nhánh Thanh Xuân</option>
+            <option value="3">Chi nhánh Cầu Giấy</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Tìm kiếm</label>
+          <input type="text" id="staff-search" placeholder="Tìm kiếm theo tên hoặc email..." />
+        </div>
+      </div>
+
+      <div class="data-container">
+        <table class="data-table" id="staff-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="select-all" /></th>
+              <th>ID</th>
+              <th>Họ và tên</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th>Bộ phận</th>
+              <th>Vị trí công việc</th>
+              <th>Cửa hàng</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="select-item" /></td>
+              <td>1</td>
+              <td>Nguyễn Văn An</td>
+              <td>an.nguyen@petshop.com</td>
+              <td>(024) 123-4567</td>
+              <td>Sales</td>
+              <td>Quản lý bán hàng</td>
+              <td>Chi nhánh Hà Đông</td>
+              <td><span class="status active">Hoạt động</span></td>
+              <td class="actions">
+                <button class="icon-btn edit-btn" data-id="1">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete-btn" data-id="1">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="select-item" /></td>
+              <td>2</td>
+              <td>Trần Thị Bình</td>
+              <td>binh.tran@petshop.com</td>
+              <td>(024) 234-5678</td>
+              <td>Sales</td>
+              <td>Nhân viên bán hàng</td>
+              <td>Chi nhánh Cầu Giấy</td>
+              <td><span class="status active">Hoạt động</span></td>
+              <td class="actions">
+                <button class="icon-btn edit-btn" data-id="2">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete-btn" data-id="2">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="select-item" /></td>
+              <td>3</td>
+              <td>Lê Văn Cường</td>
+              <td>cuong.le@petshop.com</td>
+              <td>(024) 345-6789</td>
+              <td>Services</td>
+              <td>Bác sĩ</td>
+              <td>Chi nhánh Thanh Xuân</td>
+              <td><span class="status active">Hoạt động</span></td>
+              <td class="actions">
+                <button class="icon-btn edit-btn" data-id="3">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete-btn" data-id="3">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="select-item" /></td>
+              <td>4</td>
+              <td>Phạm Thị Dung</td>
+              <td>dung.pham@petshop.com</td>
+              <td>(024) 456-7890</td>
+              <td>Services</td>
+              <td>Y tá</td>
+              <td>Chi nhánh Hà Đông</td>
+              <td><span class="status inactive">Nghỉ việc</span></td>
+              <td class="actions">
+                <button class="icon-btn edit-btn" data-id="4">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete-btn" data-id="4">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="select-item" /></td>
+              <td>5</td>
+              <td>Vũ Văn Em</td>
+              <td>em.vu@petshop.com</td>
+              <td>(024) 567-8901</td>
+              <td>Sales</td>
+              <td>Nhân viên bán hàng</td>
+              <td>Chi nhánh Thanh Xuân</td>
+              <td><span class="status active">Hoạt động</span></td>
+              <td class="actions">
+                <button class="icon-btn edit-btn" data-id="5">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete-btn" data-id="5">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn" disabled>
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <span class="pagination-ellipsis">...</span>
+        <button class="pagination-btn">10</button>
+        <button class="pagination-btn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Staff Modal -->
+    <div class="modal" id="staff-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="staff-modal-title">Thêm nhân viên mới</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="staff-form">
+            <input type="hidden" id="staff-id" />
+            <div class="form-row">
               <div class="form-group">
-                <label for="service-name">Service Name</label>
-                <input
-                        type="text"
-                        id="service-name"
-                        placeholder="Enter service name"
-                />
+                <label for="staff-name">Họ và tên *</label>
+                <input type="text" id="staff-name" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staff-email">Email *</label>
+                <input type="email" id="staff-email" required />
               </div>
               <div class="form-group">
-                <label for="service-category">Category</label>
-                <select id="service-category">
-                  <option value="">Select Category</option>
-                  <option value="Grooming">Grooming</option>
-                  <option value="Veterinary">Veterinary</option>
-                  <option value="Training">Training</option>
-                  <option value="Boarding">Boarding</option>
-                  <option value="Daycare">Daycare</option>
+                <label for="staff-phone">Số điện thoại</label>
+                <input type="tel" id="staff-phone" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staff-department">Bộ phận *</label>
+                <select id="staff-department" required>
+                  <option value="">Chọn bộ phận</option>
+                  <option value="Sales">Bán hàng</option>
+                  <option value="Services">Dịch vụ</option>
+                  <option value="Logistics">Kho vận</option>
+                  <option value="Administration">Hành chính</option>
                 </select>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="service-duration">Duration</label>
-                  <input
-                          type="number"
-                          id="service-duration"
-                          placeholder="Minutes"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="service-price">Price</label>
-                  <input
-                          type="number"
-                          id="service-price"
-                          placeholder="0.00"
-                          step="0.01"
-                  />
-                </div>
-              </div>
               <div class="form-group">
-                <label for="service-description">Description</label>
-                <textarea
-                        id="service-description"
-                        placeholder="Enter service description"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label>Availability</label>
-                <div
-                        style="
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 10px;
-                      "
-                >
-                  <div>
-                    <input type="checkbox" id="monday" value="monday" />
-                    <label for="monday">Monday</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="tuesday" value="tuesday" />
-                    <label for="tuesday">Tuesday</label>
-                  </div>
-                  <div>
-                    <input
-                            type="checkbox"
-                            id="wednesday"
-                            value="wednesday"
-                    />
-                    <label for="wednesday">Wednesday</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="thursday" value="thursday" />
-                    <label for="thursday">Thursday</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="friday" value="friday" />
-                    <label for="friday">Friday</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="saturday" value="saturday" />
-                    <label for="saturday">Saturday</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="sunday" value="sunday" />
-                    <label for="sunday">Sunday</label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="service-status">Status</label>
-                <select id="service-status">
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
+                <label for="staff-job-title">Vị trí công việc *</label>
+                <select id="staff-job-title" required>
+                  <option value="">Chọn vị trí</option>
+                  <option value="Quản lý bán hàng">Quản lý bán hàng</option>
+                  <option value="Nhân viên bán hàng">Nhân viên bán hàng</option>
+                  <option value="Quản lý dịch vụ">Quản lý dịch vụ</option>
+                  <option value="Bác sĩ">Bác sĩ</option>
+                  <option value="Y tá">Y tá</option>
+                  <option value="Kế toán">Kế toán</option>
                 </select>
               </div>
-              <button type="submit" class="primary-btn">
-                Save Service
-              </button>
-            </form>
-          </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="staff-branch">Cửa hàng làm việc *</label>
+                <select id="staff-branch" required>
+                  <option value="">Chọn cửa hàng</option>
+                  <option value="1">Chi nhánh Hà Đông</option>
+                  <option value="2">Chi nhánh Thanh Xuân</option>
+                  <option value="3">Chi nhánh Cầu Giấy</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="staff-status">Trạng thái</label>
+                <select id="staff-status">
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Nghỉ việc</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="secondary-btn" id="cancel-staff-btn">Hủy</button>
+          <button class="primary-btn" id="save-staff-btn">
+            <i class="fas fa-save"></i> Lưu nhân viên
+          </button>
         </div>
       </div>
     </div>
@@ -1966,6 +2039,8 @@ United States</textarea
 <script src="js/order-handlers.js"></script>
 <script src="js/report-handlers.js"></script>
 <script src="js/settings-handlers.js"></script>
+<script src="js/category-handlers.js"></script>
+<script src="js/staff-handlers.js"></script>
 
 <!-- Main script -->
 <script src="js/admin-script.js"></script>
@@ -2000,6 +2075,9 @@ United States</textarea
     // Initialize handlers
     if (window.ProductHandlers) {
       ProductHandlers.initializeProductEvents();
+    }
+    if (window.CategoryHandlers) {
+      CategoryHandlers.initializeCategoryEvents();
     }
     if (window.OrderHandlers) {
       OrderHandlers.initializeOrderEvents();
