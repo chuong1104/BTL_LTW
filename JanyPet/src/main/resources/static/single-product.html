@@ -1,159 +1,297 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
-  <title>Waggy - Free eCommerce Pet Shop HTML Website Template</title>
+  <title>JanyPet - Chi tiết sản phẩm</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="author" content="TemplatesJungle">
-  <meta name="keywords" content="ecommerce, pet, shop">
-  <meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
-</head>
+  <meta name="author" content="JanyPet">
+  <meta name="keywords" content="thú cưng, pet shop, cửa hàng thú cưng, chó, mèo">
+  <meta name="description" content="JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico">
+  
+  <!-- CSS Libraries - Thứ tự: normalize -> frameworks -> thư viện bổ sung -> style chính -->
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
+  <!-- CSS cho hiệu ứng hover trên sản phẩm -->
+  <style>
+    .product-card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .product-card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+    
+    .overlay-buttons {
+      transition: all 0.3s ease;
+    }
+    
+    .product-card-hover:hover .overlay-buttons {
+      opacity: 1 !important;
+    }
+    
+    .category-card {
+      transition: all 0.3s ease;
+    }
+    
+    .category-card:hover {
+      transform: scale(1.03);
+    }
+    
+    .divider-custom {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0;
+    }
+    
+    .divider-custom .line {
+      flex-grow: 1;
+      height: 1px;
+      background-color: #e9ecef;
+    }
+    
+    .divider-custom .icon {
+      padding: 0 1rem;
+      font-size: 1.5rem;
+    }
+  </style>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-
-<link rel="stylesheet" type="text/css" href="css/vendor.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-  rel="stylesheet">
-
+  <!-- CSS mở rộng cho trang chi tiết sản phẩm -->
+  <style>
+    /* Giảm kích thước fonts */
+    body {
+      font-size: 0.95rem;
+    }
+    
+    h1, .h1, .display-1 {
+      font-size: 2.5rem;
+    }
+    
+    h2, .h2, .display-2 {
+      font-size: 2rem;
+    }
+    
+    .display-6 {
+      font-size: 1.6rem;
+    }
+    
+    /* Thu nhỏ hình ảnh và spacing */
+    .img-thumbnail {
+      max-width: 70px;
+      max-height: 70px;
+    }
+    
+    .py-5 {
+      padding-top: 2.5rem !important;
+      padding-bottom: 2.5rem !important;
+    }
+    
+    .mb-5 {
+      margin-bottom: 2.5rem !important;
+    }
+    
+    /* Hiệu ứng hover cải tiến */
+    .product-card-hover {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      top: 0;
+    }
+    
+    .product-card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12) !important;
+    }
+    
+    /* Hiệu ứng zoom ảnh sản phẩm */
+    .product-zoom-img {
+      transition: transform 0.5s ease;
+      overflow: hidden;
+    }
+    
+    .product-zoom-img:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* Nút mua hàng hover */
+    .btn-hover-effect {
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .btn-hover-effect:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: -1;
+    }
+    
+    .btn-hover-effect:hover:after {
+      height: 100%;
+    }
+    
+    /* Thanh đánh giá cải tiến */
+    .rating-bar .progress {
+      height: 6px;
+      transition: all 0.3s ease;
+    }
+    
+    .rating-bar:hover .progress-bar {
+      opacity: 0.85;
+    }
+    
+    /* Animation cho nút thao tác với sản phẩm */
+    .action-button {
+      transition: all 0.3s ease;
+      transform: translateY(5px);
+      opacity: 0;
+    }
+    
+    .product-card-hover:hover .action-button {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* Tab nội dung sản phẩm */
+    .product-tab {
+      transition: all 0.3s ease;
+      border: 1px solid #eee;
+    }
+    
+    .product-tab.active {
+      border-color: var(--bs-primary);
+      background-color: rgba(var(--bs-primary-rgb), 0.05);
+    }
+    
+    /* Sản phẩm tương tự hiển thị dạng lưới */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    @media (min-width: 992px) {
+      .related-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    /* Tối ưu hiển thị trên các thiết bị khác nhau */
+    @media (max-width: 768px) {
+      .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+      }
+      
+      .display-1 {
+        font-size: 2rem;
+      }
+      
+      .display-6 {
+        font-size: 1.4rem;
+      }
+    }
+    
+    /* Hiệu ứng highlight cho phần được chọn */
+    .select-item a.active {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .select-item a.active:before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--bs-primary);
+    }
+    
+    /* Image gallery overlay */
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .review-image:hover .gallery-overlay {
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body>
-
-  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <defs>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="link" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M12 19a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm5 0a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm0-4a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm-5 0a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm7-12h-1V2a1 1 0 0 0-2 0v1H8V2a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3Zm1 17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9h16Zm0-11H4V6a1 1 0 0 1 1-1h1v1a1 1 0 0 0 2 0V5h8v1a1 1 0 0 0 2 0V5h1a1 1 0 0 1 1 1ZM7 15a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm0 4a1 1 0 1 0-1-1a1 1 0 0 0 1 1Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="arrow-right" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M17.92 11.62a1 1 0 0 0-.21-.33l-5-5a1 1 0 0 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l5-5a1 1 0 0 0 .21-.33a1 1 0 0 0 0-.76Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="category" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M19 5.5h-6.28l-.32-1a3 3 0 0 0-2.84-2H5a3 3 0 0 0-3 3v13a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-10a3 3 0 0 0-3-3Zm1 13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h4.56a1 1 0 0 1 .95.68l.54 1.64a1 1 0 0 0 .95.68h7a1 1 0 0 1 1 1Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="calendar" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16Zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="heart" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M20.16 4.61A6.27 6.27 0 0 0 12 4a6.27 6.27 0 0 0-8.16 9.48l7.45 7.45a1 1 0 0 0 1.42 0l7.45-7.45a6.27 6.27 0 0 0 0-8.87Zm-1.41 7.46L12 18.81l-6.75-6.74a4.28 4.28 0 0 1 3-7.3a4.25 4.25 0 0 1 3 1.25a1 1 0 0 0 1.42 0a4.27 4.27 0 0 1 6 6.05Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="plus" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="minus" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M19 11H5a1 1 0 0 0 0 2h14a1 1 0 0 0 0-2Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="cart" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M8.5 19a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 8.5 19ZM19 16H7a1 1 0 0 1 0-2h8.491a3.013 3.013 0 0 0 2.885-2.176l1.585-5.55A1 1 0 0 0 19 5H6.74a3.007 3.007 0 0 0-2.82-2H3a1 1 0 0 0 0 2h.921a1.005 1.005 0 0 1 .962.725l.155.545v.005l1.641 5.742A3 3 0 0 0 7 18h12a1 1 0 0 0 0-2Zm-1.326-9l-1.22 4.274a1.005 1.005 0 0 1-.963.726H8.754l-.255-.892L7.326 7ZM16.5 19a1.5 1.5 0 1 0 1.5 1.5a1.5 1.5 0 0 0-1.5-1.5Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="check" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M18.71 7.21a1 1 0 0 0-1.42 0l-7.45 7.46l-3.13-3.14A1 1 0 1 0 5.29 13l3.84 3.84a1 1 0 0 0 1.42 0l8.16-8.16a1 1 0 0 0 0-1.47Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="trash" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M10 18a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1ZM20 6h-4V5a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8h1a1 1 0 0 0 0-2ZM10 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1h-4Zm7 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8h10Zm-3-1a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-outline" viewBox="0 0 15 15">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-          d="M7.5 9.804L5.337 11l.413-2.533L4 6.674l2.418-.37L7.5 4l1.082 2.304l2.418.37l-1.75 1.793L9.663 11L7.5 9.804Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-solid" viewBox="0 0 15 15">
-        <path fill="currentColor"
-          d="M7.953 3.788a.5.5 0 0 0-.906 0L6.08 5.85l-2.154.33a.5.5 0 0 0-.283.843l1.574 1.613l-.373 2.284a.5.5 0 0 0 .736.518l1.92-1.063l1.921 1.063a.5.5 0 0 0 .736-.519l-.373-2.283l1.574-1.613a.5.5 0 0 0-.283-.844L8.921 5.85l-.968-2.062Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="search" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="user" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M15.71 12.71a6 6 0 1 0-7.42 0a10 10 0 0 0-6.22 8.18a1 1 0 0 0 2 .22a8 8 0 0 1 15.9 0a1 1 0 0 0 1 .89h.11a1 1 0 0 0 .88-1.1a10 10 0 0 0-6.25-8.19ZM12 12a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 15 15">
-        <path fill="currentColor"
-          d="M7.953 3.788a.5.5 0 0 0-.906 0L6.08 5.85l-2.154.33a.5.5 0 0 0-.283.843l1.574 1.613l-.373 2.284a.5.5 0 0 0 .736.518l1.92-1.063l1.921 1.063a.5.5 0 0 0 .736-.519l-.373-2.283l1.574-1.613a.5.5 0 0 0-.283-.844L8.921 5.85l-.968-2.062Z" />
-      </symbol>
-
-    </defs>
-  </svg>
-
   
-
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="My Cart">
+  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ hàng của tôi">
     <div class="offcanvas-header justify-content-center">
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
     </div>
     <div class="offcanvas-body">
       <div class="order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-primary">Your cart</span>
-          <span class="badge bg-primary rounded-circle pt-2">3</span>
+          <span class="text-primary">Giỏ hàng của bạn</span>
+          <span class="badge bg-primary rounded-circle pt-2">0</span>
         </h4>
-        <ul class="list-group mb-3">
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Grey Hoodie</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$12</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Dog Food</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$8</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Soft Toy</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$5</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span class="fw-bold">Total (USD)</span>
-            <strong>$20</strong>
-          </li>
+        <ul id="offcanvas-cart-list" class="list-group mb-3">
+          <!-- Cart items will be loaded here by JavaScript -->
         </ul>
+        <li class="list-group-item d-flex justify-content-between">
+          <span class="fw-bold">Tổng cộng (VNĐ)</span>
+          <strong id="offcanvas-cart-total">0đ</strong>
+        </li>
 
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+        <a href="cart.html" class="btn btn-primary btn-lg w-100 mb-2">Xem giỏ hàng</a>
+        <a href="checkout.html" class="w-100 btn btn-dark btn-lg" type="submit">Thanh toán</a>
       </div>
     </div>
   </div>
 
   <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
-    aria-labelledby="Search">
+    aria-labelledby="Tìm kiếm">
     <div class="offcanvas-header justify-content-center">
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
     </div>
     <div class="offcanvas-body">
-
       <div class="order-md-last">
-        <h4 class="text-primary text-uppercase mb-3">
-          Search
-        </h4>
+        <h4 class="text-primary text-uppercase mb-3">Tìm kiếm</h4>
         <div class="search-bar border rounded-2 border-dark-subtle">
           <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-            <input type="text" class="form-control border-0 bg-transparent" placeholder="Search Here" />
+            <input type="text" class="form-control border-0 bg-transparent" placeholder="Tìm kiếm sản phẩm..." />
             <iconify-icon icon="tabler:search" class="fs-4 me-3"></iconify-icon>
           </form>
         </div>
@@ -161,573 +299,690 @@
     </div>
   </div>
 
-  <header>
+  <!-- Header -->
+  <header class="auto-hide-header">
     <div class="container py-2">
-      <div class="row py-4 pb-0 pb-sm-4 align-items-center ">
-
-        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+      <div class="row py-3 align-items-center">
+        <!-- Logo -->
+        <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
           <div class="main-logo">
             <a href="index.html">
-              <img src="images/logo.png" alt="logo" class="img-fluid">
+              <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px">
             </a>
           </div>
         </div>
 
-        <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-          <div class="search-bar border rounded-2 px-3 border-dark-subtle">
+        <!-- Search bar - visible on large screens -->
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
             <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-              <input type="text" class="form-control border-0 bg-transparent"
-                placeholder="Search for more than 10,000 products" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor"
-                  d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-              </svg>
+              <input type="text" class="form-control border-0 bg-transparent py-2" placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
+              <button type="submit" class="btn btn-link p-0 text-primary">
+                <i class="fas fa-search"></i>
+              </button>
             </form>
           </div>
         </div>
 
-        <div
-          class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-          <div class="support-box text-end d-none d-xl-block">
-            <span class="fs-6 secondary-font text-muted">Phone</span>
-            <h5 class="mb-0">+980-34984089</h5>
+        <!-- Auth and user actions -->
+        <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+          <div class="auth-container ms-auto">
+            <!-- Login/Register buttons -->
+            <div class="auth-buttons">
+              <a href="login.html" class="btn btn-outline-primary rounded-pill">
+                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+              </a>
+            </div>
+
+            <!-- User info when logged in -->
+            <div class="user-info d-flex align-items-center">
+              <span class="me-2">Xin chào, <strong id="userName">User</strong></span>
+              <div class="d-flex">
+                <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
+                  <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                </button>
+                <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill">
+                  <i class="fas fa-cog me-1"></i> Quản trị
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="support-box text-end d-none d-xl-block">
-            <span class="fs-6 secondary-font text-muted">Email</span>
-            <h5 class="mb-0">waggy@gmail.com</h5>
+
+          <!-- Cart and wishlist icons -->
+          <div class="ms-3 d-flex">
+            <a href="wishlist.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-heart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </a>
+            <a href="cart.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-shopping-cart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+            </a>
           </div>
-
-
-
         </div>
       </div>
     </div>
-
-    <div class="container-fluid">
-      <hr class="m-0">
-    </div>
-
-    <div class="container">
-      <nav class="main-menu d-flex navbar navbar-expand-lg ">
-
-        <div class="d-flex d-lg-none align-items-end mt-3">
-          <ul class="d-flex justify-content-end list-unstyled m-0">
-            <li>
-              <a href="account.html" class="mx-3">
-                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
-              </a>
-            </li>
-            <li>
-              <a href="wishlist.html" class="mx-3">
-                <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                aria-controls="offcanvasCart">
-                <iconify-icon icon="mdi:cart" class="fs-4 position-relative"></iconify-icon>
-                <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                  03
-                </span>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
-                aria-controls="offcanvasSearch">
-                <iconify-icon icon="tabler:search" class="fs-4"></iconify-icon>
-                </span>
-              </a>
-            </li>
-          </ul>
-
-        </div>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-
-          <div class="offcanvas-header justify-content-center">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-
-          <div class="offcanvas-body justify-content-between">
-            <select class="filter-categories border-0 mb-0 me-5">
-              <option>Shop by Category</option>
-              <option>Clothes</option>
-              <option>Food</option>
-              <option>Food</option>
-              <option>Toy</option>
-            </select>
-
-            <ul class="navbar-nav menu-list list-unstyled d-flex gap-md-3 mb-0">
-              <li class="nav-item">
-                <a href="index.html" class="nav-link">Home</a>
-              </li>
-              <!-- <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
-                  aria-expanded="false">Pages</a>
-                <ul class="dropdown-menu" aria-labelledby="pages">
-                  <li><a href="about.html" class="dropdown-item">About Us<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="shop.html" class="dropdown-item">Shop<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="single-product.html" class="dropdown-item">Single Product<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="cart.html" class="dropdown-item">Cart<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="wishlist.html" class="dropdown-item">Wishlist<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="checkout.html" class="dropdown-item">Checkout<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="blog.html" class="dropdown-item">Blog<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="single-post.html" class="dropdown-item">Single Post<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="contact.html" class="dropdown-item">Contact<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="faqs.html" class="dropdown-item">FAQs<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="account.html" class="dropdown-item">Account<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="thank-you.html" class="dropdown-item">Thankyou<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="error.html" class="dropdown-item">Error 404<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                  <li><a href="styles.html" class="dropdown-item">Styles<span
-                        class="badge bg-success text-dark ms-2">PRO</span></a></li>
-                </ul>
-              </li> -->
-              <li class="nav-item">
-                <a href="shop.html" class="nav-link">Shop</a>
-              </li>
-              <li class="nav-item">
-                <a href="blog.html" class="nav-link">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="contact.html" class="nav-link">Contact</a>
-              </li>
-              <li class="nav-item">
-                <a href="service.html" class="nav-link">Service</a>
-              </li>
-              
-            </ul>
-
-            <div class="d-none d-lg-flex align-items-end">
-              <ul class="d-flex justify-content-end list-unstyled m-0">
-                <li>
-                  <a href="account.html" class="mx-3">
-                    <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
-                  </a>
-                </li>
-                <li>
-                  <a href="wishlist.html" class="mx-3">
-                    <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
-                  </a>
-                </li>
-
-                <li class="">
-                  <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                    aria-controls="offcanvasCart">
-                    <iconify-icon icon="mdi:cart" class="fs-4 position-relative"></iconify-icon>
-                    <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                      03
-                    </span>
-                  </a>
-                </li>
-              </ul>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </nav>
-
-
-
-    </div>
   </header>
 
+  <!-- Navigation menu -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+    <div class="container">
+      <!-- Mobile toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Search bar - visible on mobile only -->
+      <div class="d-block d-lg-none ms-2 me-auto">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#searchModal" class="btn btn-outline-primary rounded-circle">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+        
+      <!-- Main navigation -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="index.html">Trang chủ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown" 
+               aria-expanded="false">Thú cưng</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Chó cảnh</a></li>
+              <li><a class="dropdown-item" href="#">Mèo cảnh</a></li>
+              <li><a class="dropdown-item" href="#">Thú cưng khác</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả thú cưng</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Thức ăn</a></li>
+              <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
+              <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
+              <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item active" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
   <section id="banner" class="py-3" style="background: #F9F3EC;">
     <div class="container">
       <div class="hero-content py-5 my-3">
-        <h2 class="display-1 mt-3 mb-0">Single <span class="text-primary">Product</span></h2>
+        <h2 class="display-1 mt-3 mb-0">Chi tiết <span class="text-primary">Sản phẩm</span></h2>
         <nav class="breadcrumb">
-          <a class="breadcrumb-item nav-link" href="#">Home</a>
-          <a class="breadcrumb-item nav-link" href="#">Pages</a>
-          <span class="breadcrumb-item active" aria-current="page">Single-Product</span>
+          <a class="breadcrumb-item nav-link" href="index.html">Trang chủ</a>
+          <a class="breadcrumb-item nav-link" href="shop.html">Sản phẩm</a>
+          <span class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm</span>
         </nav>
       </div>
     </div>
   </section>
 
-  <section id="selling-product">
-    <div class="container my-md-5 py-5">
-      <div class="row g-md-5">
-        <div class="col-lg-6">
-          <div class="row">
-            <div class="col-md-12">
-              <!-- product-large-slider -->
-              <div class="swiper product-large-slider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <img src="images/blog-lg4.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/blog-lg2.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/blog-lg3.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/blog-lg1.jpg" class="img-fluid" />
-                  </div>
-
+  <section id="selling-product" class="bg-light py-4">
+  <div class="container">
+    <div class="row g-md-4 bg-white p-3 rounded-4 shadow-sm">
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- product-large-slider -->
+            <div class="swiper product-large-slider rounded-4 overflow-hidden product-zoom-img">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <img src="images/blog-lg4.jpg" class="img-fluid" alt="Áo hoodie xám cho chó" style="height: 400px; object-fit: cover;"/>
+                </div>
+                <div class="swiper-slide">
+                  <img src="images/item7.jpg" class="img-fluid" alt="Áo hoodie đen cho chó" style="height: 400px; object-fit: cover;"/>
+                </div>
+                <div class="swiper-slide">
+                  <img src="images/item8.jpg" class="img-fluid" alt="Áo hoodie xanh cho chó" style="height: 400px; object-fit: cover;"/>
+                </div>
+                <div class="swiper-slide">
+                  <img src="images/item9.jpg" class="img-fluid" alt="Chi tiết áo hoodie cho chó" style="height: 400px; object-fit: cover;"/>
                 </div>
               </div>
+              <div class="swiper-button-next text-white bg-primary bg-opacity-50 rounded-circle" style="width: 35px; height: 35px; --swiper-navigation-size: 18px;"></div>
+              <div class="swiper-button-prev text-white bg-primary bg-opacity-50 rounded-circle" style="width: 35px; height: 35px; --swiper-navigation-size: 18px;"></div>
             </div>
-            <div class="col-md-12 mt-2">
-              <!-- product-thumbnail-slider -->
-              <div thumbsSlider="" class="swiper product-thumbnail-slider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <img src="images/item8.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/item4.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/item7.jpg" class="img-fluid" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="images/item1.jpg" class="img-fluid" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
-
-        </div>
-        <div class="col-lg-6 mt-5 ">
-          <div class="product-info">
-            <div class="element-header">
-              <h2 itemprop="name" class="display-6">Jump Suit</h2>
-              <div class="rating-container d-flex gap-0 align-items-center">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  5.0</span>
-              </div>
-            </div>
-            <div class="product-price pt-3 pb-3">
-              <strong class="text-primary display-6 fw-bold">$170.00</strong><del class="ms-2">$240.00</del>
-            </div>
-            <p>Justo, cum feugiat imperdiet nulla molestie ac vulputate scelerisque amet. Bibendum adipiscing platea
-              blandit sit sed quam semper rhoncus. Diam ultrices maecenas consequat eu tortor orci, cras lectus mauris,
-              cras egestas quam venenatis neque.</p>
-            <div class="cart-wrap">
-              <div class="color-options product-select">
-                <div class="color-toggle pt-2" data-option-index="0">
-                  <h6 class="item-title fw-bold">Color:</h6>
-                  <ul class="select-list list-unstyled d-flex">
-                    <li class="select-item pe-3" data-val="Gray" title="Gray">
-                      <a href="#" class="btn btn-light active">Gray</a>
-                    </li>
-                    <li class="select-item pe-3" data-val="Black" title="Black">
-                      <a href="#" class="btn btn-light">Black</a>
-                    </li>
-                    <li class="select-item pe-3" data-val="Blue" title="Blue">
-                      <a href="#" class="btn btn-light">Blue</a>
-                    </li>
-                    <li class="select-item" data-val="Red" title="Red">
-                      <a href="#" class="btn btn-light disabled">Red</a>
-                    </li>
-                  </ul>
+          <div class="col-md-12 mt-2">
+            <!-- product-thumbnail-slider -->
+            <div thumbsSlider="" class="swiper product-thumbnail-slider">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide border border-primary rounded-3 overflow-hidden">
+                  <img src="images/blog-lg4.jpg" class="img-fluid" alt="Thumbnail 1" style="height: 70px; object-fit: cover;"/>
                 </div>
-              </div>
-              <div class="swatch product-select pt-3" data-option-index="1">
-                <h6 class="item-title fw-bold">Size:</h6>
-                <ul class="select-list list-unstyled d-flex">
-                  <li data-value="S" class="select-item pe-3">
-                    <a href="#" class="btn btn-light">XL</a>
-                  </li>
-                  <li data-value="M" class="select-item pe-3">
-                    <a href="#" class="btn btn-light active">L</a>
-                  </li>
-                  <li data-value="L" class="select-item pe-3">
-                    <a href="#" class="btn btn-light">M</a>
-                  </li>
-                  <li data-value="L" class="select-item">
-                    <a href="#" class="btn btn-light">S</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="product-quantity pt-2">
-                <div class="stock-number text-dark"><em>2 in stock</em></div>
-                <div class="stock-button-wrap">
-
-                  <div class="input-group product-qty align-items-center w-25">
-                    <span class="input-group-btn">
-                      <button type="button" class="quantity-left-minus btn btn-light btn-number" data-type="minus">
-                        <svg width="16" height="16">
-                          <use xlink:href="#minus"></use>
-                        </svg>
-                      </button>
-                    </span>
-                    <input type="text" id="quantity" name="quantity"
-                      class="form-control input-number text-center p-2 mx-1" value="1">
-                    <span class="input-group-btn">
-                      <button type="button" class="quantity-right-plus btn btn-light btn-number" data-type="plus"
-                        data-field="">
-                        <svg width="16" height="16">
-                          <use xlink:href="#plus"></use>
-                        </svg>
-                      </button>
-                    </span>
-                  </div>
-
-                  <div class="d-flex flex-wrap pt-4">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
+                <div class="swiper-slide border rounded-3 overflow-hidden">
+                  <img src="images/item7.jpg" class="img-fluid" alt="Thumbnail 2" style="height: 70px; object-fit: cover;"/>
                 </div>
-              </div>
-            </div>
-            <div class="meta-product pt-4">
-              <div class="meta-item d-flex align-items-baseline">
-                <h6 class="item-title fw-bold no-margin pe-2">SKU:</h6>
-                <ul class="select-list list-unstyled d-flex">
-                  <li data-value="S" class="select-item">1223</li>
-                </ul>
-              </div>
-              <div class="meta-item d-flex align-items-baseline">
-                <h6 class="item-title fw-bold no-margin pe-2">Category:</h6>
-                <ul class="select-list list-unstyled d-flex">
-                  <li data-value="S" class="select-item">
-                    <a href="#">Pet</a>,
-                  </li>
-                  <li data-value="S" class="select-item">
-                    <a href="#">Dog</a>,
-                  </li>
-                </ul>
-              </div>
-              <div class="meta-item d-flex align-items-baseline">
-                <h6 class="item-title fw-bold no-margin pe-2">Tags:</h6>
-                <ul class="select-list list-unstyled d-flex">
-                  <li data-value="S" class="select-item">
-                    <a href="#">Clothes</a>,
-                  </li>
-                  <li data-value="S" class="select-item">
-                    <a href="#">Hoodies</a>
-                  </li>
-                </ul>
+                <div class="swiper-slide border rounded-3 overflow-hidden">
+                  <img src="images/item8.jpg" class="img-fluid" alt="Thumbnail 3" style="height: 70px; object-fit: cover;"/>
+                </div>
+                <div class="swiper-slide border rounded-3 overflow-hidden">
+                  <img src="images/item9.jpg" class="img-fluid" alt="Thumbnail 4" style="height: 70px; object-fit: cover;"/>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+      
+      <div class="col-lg-6 mt-lg-0 mt-3">
+        <!-- Thu nhỏ kích thước chữ và padding -->
+        <div class="product-info">
+          <div class="element-header border-bottom pb-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 itemprop="name" class="display-6 mb-0 fw-bold">Áo hoodie cho chó</h2>
+              <span class="badge bg-primary-subtle text-primary px-2 py-1">Còn hàng</span>
+            </div>
+            
+            <div class="rating-container d-flex gap-0 align-items-center mt-1">
+              <span class="rating secondary-font">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star-half-alt text-warning"></i>
+                <small class="ms-1 text-muted">(4.5 - 24 đánh giá)</small>
+              </span>
+            </div>
+          </div>
+          
+          <!-- Thu nhỏ padding -->
+          <div class="product-price pt-2 pb-2">
+            <strong class="text-primary display-6 fw-bold">170.000₫</strong>
+            <del class="ms-2 text-muted">240.000₫</del>
+            <span class="badge bg-danger ms-2">-30%</span>
+          </div>
+          
+          <!-- Thu gọn mô tả -->
+          <div class="product-description mb-3">
+            <p class="mb-0">Áo hoodie ấm áp dành cho thú cưng của bạn, được làm từ chất liệu mềm mại, thoáng khí. Thiết kế hiện đại, dễ mặc và dễ vệ sinh.</p>
+          </div>
+          
+          <!-- Thu gọn các options -->
+          <div class="cart-wrap">
+            <div class="color-options product-select mb-3">
+              <div class="color-toggle" data-option-index="0">
+                <h6 class="item-title fw-bold mb-1">Màu sắc:</h6>
+                <ul class="select-list list-unstyled d-flex flex-wrap">
+                  <li class="select-item me-2 mb-2" data-val="Xám" title="Xám">
+                    <a href="#" class="btn btn-sm btn-light border active rounded-pill">Xám</a>
+                  </li>
+                  <li class="select-item me-2 mb-2" data-val="Đen" title="Đen">
+                    <a href="#" class="btn btn-sm btn-light border rounded-pill">Đen</a>
+                  </li>
+                  <li class="select-item me-2 mb-2" data-val="Xanh" title="Xanh">
+                    <a href="#" class="btn btn-sm btn-light border rounded-pill">Xanh</a>
+                  </li>
+                  <li class="select-item me-2 mb-2" data-val="Đỏ" title="Đỏ">
+                    <a href="#" class="btn btn-sm btn-light border rounded-pill">Đỏ</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="swatch product-select mb-3">
+              <h6 class="item-title fw-bold mb-1">Kích cỡ:</h6>
+              <ul class="select-list list-unstyled d-flex flex-wrap">
+                <li data-value="XL" class="select-item me-2 mb-2">
+                  <a href="#" class="btn btn-sm btn-light border rounded-pill">XL</a>
+                </li>
+                <li data-value="L" class="select-item me-2 mb-2">
+                  <a href="#" class="btn btn-sm btn-light border rounded-pill">L</a>
+                </li>
+                <li data-value="M" class="select-item me-2 mb-2">
+                  <a href="#" class="btn btn-sm btn-light border active rounded-pill">M</a>
+                </li>
+                <li data-value="S" class="select-item me-2 mb-2">
+                  <a href="#" class="btn btn-sm btn-light border rounded-pill">S</a>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="product-quantity pt-2 mb-3">
+              <div class="stock-number text-dark mb-2 small"><em>Còn 2 sản phẩm trong kho</em></div>
+              <div class="stock-button-wrap d-flex flex-column gap-2">
+                <div class="input-group product-qty align-items-center" style="max-width: 120px;">
+                  <span class="input-group-btn">
+                    <button type="button" class="quantity-left-minus btn btn-sm btn-light btn-number border rounded-start" data-type="minus">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </span>
+                  <input type="text" id="quantity" name="quantity" class="form-control input-number text-center border-start-0 border-end-0" value="1">
+                  <span class="input-group-btn">
+                    <button type="button" class="quantity-right-plus btn btn-sm btn-light btn-number border rounded-end" data-type="plus" data-field="">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </span>
+                </div>
 
-  <section class="product-info-tabs py-md-5">
+                <div class="d-flex flex-wrap">
+                  <a href="#" class="btn btn-primary rounded-pill me-2 btn-hover-effect btn-sm px-3" onclick="addToCart('p001', 'Áo hoodie cho chó', 170000, 'images/blog-lg4.jpg', parseInt(document.getElementById('quantity').value)); return false;">
+                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ hàng
+                  </a>
+                  <a href="#" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center btn-hover-effect" style="width: 35px; height: 35px;">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                  <a href="#" class="btn btn-dark rounded-pill ms-auto btn-hover-effect btn-sm">Mua ngay</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Thu gọn metadata -->
+          <div class="meta-product pt-3 border-top">
+            <div class="meta-item d-flex align-items-baseline mb-1">
+              <h6 class="item-title fw-bold no-margin pe-2 mb-0 small">Mã sản phẩm:</h6>
+              <span class="small">JP-AH-1223</span>
+            </div>
+            <div class="meta-item d-flex align-items-baseline mb-1">
+              <h6 class="item-title fw-bold no-margin pe-2 mb-0 small">Danh mục:</h6>
+              <span class="small">
+                <a href="#" class="text-decoration-none">Quần áo thú cưng</a>, 
+                <a href="#" class="text-decoration-none">Áo cho chó</a>
+              </span>
+            </div>
+            <div class="meta-item d-flex align-items-baseline mb-1">
+              <h6 class="item-title fw-bold no-margin pe-2 mb-0 small">Thương hiệu:</h6>
+              <span class="small">PetStyle</span>
+            </div>
+            <div class="meta-item d-flex align-items-baseline mb-1">
+              <h6 class="item-title fw-bold no-margin pe-2 mb-0 small">Tình trạng:</h6>
+              <span class="badge bg-primary-subtle text-primary small">Còn hàng</span>
+            </div>
+            
+            <!-- Thu gọn phần chia sẻ -->
+            <div class="social-sharing mt-3 d-flex align-items-center">
+              <span class="fw-bold me-2 small">Chia sẻ:</span>
+              <a href="#" class="btn btn-sm btn-outline-primary rounded-circle me-1 btn-hover-effect" style="width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fab fa-facebook-f fa-sm"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-info rounded-circle me-1 btn-hover-effect" style="width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fab fa-twitter fa-sm"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-danger rounded-circle me-1 btn-hover-effect" style="width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fab fa-pinterest-p fa-sm"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-outline-success rounded-circle btn-hover-effect" style="width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="fab fa-whatsapp fa-sm"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="product-info-tabs py-4">
     <div class="container">
       <div class="row">
-        <div class="d-flex flex-column flex-md-row align-items-start gap-5">
-          <div class="nav flex-row flex-wrap flex-md-column nav-pills me-3 col-lg-3" id="v-pills-tab" role="tablist"
+        <div class="d-flex flex-column flex-md-row align-items-start gap-3">
+          <div class="nav flex-row flex-wrap flex-md-column nav-pills me-2 col-lg-3" id="v-pills-tab" role="tablist"
             aria-orientation="vertical">
-            <button class="nav-link fs-5 mb-2 text-start active" id="v-pills-description-tab" data-bs-toggle="pill"
+            <button class="nav-link fs-6 mb-2 text-start active rounded-pill px-3" id="v-pills-description-tab" data-bs-toggle="pill"
               data-bs-target="#v-pills-description" type="button" role="tab" aria-controls="v-pills-description"
-              aria-selected="false" tabindex="-1">Description</button>
-            <button class="nav-link fs-5 mb-2 text-start" id="v-pills-additional-tab" data-bs-toggle="pill"
-              data-bs-target="#v-pills-additional" type="button" role="tab" aria-controls="v-pills-additional"
-              aria-selected="false" tabindex="-1">Additional Information</button>
-            <button class="nav-link fs-5 mb-2 text-start" id="v-pills-reviews-tab" data-bs-toggle="pill"
+              aria-selected="true">Mô tả sản phẩm</button>
+            <button class="nav-link fs-6 mb-2 text-start rounded-pill px-3" id="v-pills-information-tab" data-bs-toggle="pill"
+              data-bs-target="#v-pills-information" type="button" role="tab" aria-controls="v-pills-information"
+              aria-selected="false">Thông tin thêm</button>
+            <button class="nav-link fs-6 mb-2 text-start rounded-pill px-3" id="v-pills-reviews-tab" data-bs-toggle="pill"
               data-bs-target="#v-pills-reviews" type="button" role="tab" aria-controls="v-pills-reviews"
-              aria-selected="true">Customer Reviews</button>
+              aria-selected="false">Đánh giá (24)</button>
           </div>
-          <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade active show" id="v-pills-description" role="tabpanel"
-              aria-labelledby="v-pills-description-tab" tabindex="0">
-              <h2>Product Description</h2>
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec
-                nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim
-                pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula
-                vulputate sem tristique cursus.</p>
-              <ul style="list-style-type:disc;" class="list-unstyled ps-4">
-                <li>Donec nec justo eget felis facilisis fermentum.</li>
-                <li>Suspendisse urna viverra non, semper suscipit pede.</li>
-                <li>Aliquam porttitor mauris sit amet orci.</li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec
-                nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim
-                pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula
-                vulputate sem tristique cursus. </p>
+          <div class="tab-content bg-white p-3 rounded-4 shadow-sm flex-fill" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-description" role="tabpanel" aria-labelledby="v-pills-description-tab">
+              <h5 class="fw-bold mb-3">Mô tả sản phẩm</h5>
+              <p>Áo hoodie cho chó được thiết kế với chất liệu vải mềm mại, thân thiện với làn da nhạy cảm của thú cưng. Sản phẩm có độ co giãn tốt, thoáng khí và dễ vệ sinh.</p>
+              
+              <div class="row mt-4">
+                <div class="col-md-6">
+                  <h6 class="fw-bold">Đặc điểm nổi bật</h6>
+                  <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Vải mềm mại, không gây kích ứng</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Thiết kế thời trang, nhiều màu sắc</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Dễ mặc, dễ tháo</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Có thể giặt máy ở nhiệt độ thấp</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Giữ ấm tốt cho thú cưng vào mùa lạnh</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw-bold">Thông số kỹ thuật</h6>
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td class="bg-light">Chất liệu</td>
+                        <td>Cotton 95%, Spandex 5%</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-light">Xuất xứ</td>
+                        <td>Việt Nam</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-light">Kích thước</td>
+                        <td>S, M, L, XL</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-light">Màu sắc</td>
+                        <td>Xám, Đen, Xanh, Đỏ</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-light">Bảo quản</td>
+                        <td>Giặt tay hoặc máy ở chế độ nhẹ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="mt-4">
+                <h6 class="fw-bold">Hướng dẫn chọn kích cỡ</h6>
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead class="bg-light">
+                      <tr>
+                        <th>Size</th>
+                        <th>Chiều dài lưng (cm)</th>
+                        <th>Vòng ngực (cm)</th>
+                        <th>Cân nặng (kg)</th>
+                        <th>Giống chó phù hợp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>S</td>
+                        <td>20-25</td>
+                        <td>25-30</td>
+                        <td>1.5-3</td>
+                        <td>Chihuahua, Poodle toy</td>
+                      </tr>
+                      <tr>
+                        <td>M</td>
+                        <td>25-30</td>
+                        <td>30-35</td>
+                        <td>3-6</td>
+                        <td>Poodle nhỏ, Dachshund</td>
+                      </tr>
+                      <tr>
+                        <td>L</td>
+                        <td>30-35</td>
+                        <td>35-45</td>
+                        <td>6-9</td>
+                        <td>Beagle, Poodle vừa</td>
+                      </tr>
+                      <tr>
+                        <td>XL</td>
+                        <td>35-40</td>
+                        <td>45-55</td>
+                        <td>9-15</td>
+                        <td>Golden nhỏ, Labrador</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="v-pills-additional" role="tabpanel" aria-labelledby="v-pills-additional-tab"
-              tabindex="0">
-              <h2>How to Use the Product</h2>
-              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-                laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-                id est laborum.</p>
-            </div>
-            <div class="tab-pane fade" id="v-pills-reviews" role="tabpanel" aria-labelledby="v-pills-reviews-tab"
-              tabindex="0">
-              <div class="review-box d-flex flex-wrap">
-                <div class="col-lg-6 d-flex flex-wrap gap-3">
-                  <div class="col-md-2">
-                    <div class="image-holder">
-                      <img src="images/reviewer-1.jpg" alt="review" class="img-fluid rounded-circle">
-                    </div>
+            
+            <div class="tab-pane fade" id="v-pills-information" role="tabpanel" aria-labelledby="v-pills-information-tab">
+              <h5 class="fw-bold mb-3">Thông tin thêm</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-4">
+                    <h6 class="fw-bold">Hướng dẫn sử dụng</h6>
+                    <ol>
+                      <li>Đo kích thước chó của bạn trước khi mua để chọn size phù hợp.</li>
+                      <li>Xỏ chân trước của chó vào hai lỗ tay áo.</li>
+                      <li>Kéo áo qua lưng và cài nút/khóa kéo phía dưới bụng.</li>
+                      <li>Điều chỉnh để đảm bảo áo không quá chật hoặc quá rộng.</li>
+                    </ol>
                   </div>
-                  <div class="col-md-8">
-                    <div class="review-content">
-                      <div class="rating-container d-flex align-items-center">
-                        <div class="rating" data-rating="1">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="2">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="3">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="4">
-                          <svg width="24" height="24" class="text-secondary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="5">
-                          <svg width="24" height="24" class="text-secondary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <span class="rating-count">(3.5)</span>
-                      </div>
-                      <div class="review-header">
-                        <span class="author-name">Tina Johnson</span>
-                        <span class="review-date">– 03/07/2023</span>
-                      </div>
-                      <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                        convallis</p>
-                    </div>
+                  
+                  <div class="mb-4">
+                    <h6 class="fw-bold">Hướng dẫn bảo quản</h6>
+                    <ul>
+                      <li>Giặt riêng với nước lạnh hoặc nước ấm dưới 30°C.</li>
+                      <li>Không dùng chất tẩy mạnh, chỉ dùng xà phòng trung tính.</li>
+                      <li>Phơi khô tự nhiên, tránh ánh nắng trực tiếp.</li>
+                      <li>Không sấy bằng máy, không ủi.</li>
+                    </ul>
                   </div>
                 </div>
-                <div class="col-lg-6 d-flex flex-wrap gap-3">
-                  <div class="col-md-2">
-                    <div class="image-holder">
-                      <img src="images/reviewer-2.jpg" alt="review" class="img-fluid rounded-circle">
+                
+                <div class="col-md-6">
+                  <h6 class="fw-bold mb-3">Lợi ích khi sử dụng</h6>
+                  <div class="d-flex mb-3">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-shield-alt fs-3 text-primary me-3"></i>
+                    </div>
+                    <div>
+                      <h6 class="fw-bold">Bảo vệ thú cưng</h6>
+                      <p class="small">Giữ ấm vào mùa lạnh, bảo vệ da và lông khỏi các tác nhân môi trường.</p>
                     </div>
                   </div>
-                  <div class="col-md-8">
-                    <div class="review-content">
-                      <div class="rating-container d-flex align-items-center">
-                        <div class="rating" data-rating="1">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="2">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="3">
-                          <svg width="24" height="24" class="text-primary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="4">
-                          <svg width="24" height="24" class="text-secondary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <div class="rating" data-rating="5">
-                          <svg width="24" height="24" class="text-secondary">
-                            <use xlink:href="#star-solid"></use>
-                          </svg>
-                        </div>
-                        <span class="rating-count">(3.5)</span>
-                      </div>
-                      <div class="review-header">
-                        <span class="author-name">Jenny Willis</span>
-                        <span class="review-date">– 03/06/2022</span>
-                      </div>
-                      <p>Vitae tortor condimentum lacinia quis vel eros donec ac. Nam at lectus urna duis convallis
-                        convallis</p>
+                  
+                  <div class="d-flex mb-3">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-heart fs-3 text-danger me-3"></i>
+                    </div>
+                    <div>
+                      <h6 class="fw-bold">Thoải mái và an toàn</h6>
+                      <p class="small">Thiết kế vừa vặn, thoải mái cho thú cưng vận động và sinh hoạt.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="d-flex mb-3">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-tshirt fs-3 text-info me-3"></i>
+                    </div>
+                    <div>
+                      <h6 class="fw-bold">Thời trang và phong cách</h6>
+                      <p class="small">Thiết kế thời trang, làm nổi bật vẻ đáng yêu của thú cưng.</p>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="add-review mt-5">
-                <h3>Add a review</h3>
-                <p>Your email address will not be published. Required fields are marked *</p>
-                <form id="form" class="form-group">
-
-                  <div class="pb-3">
-                    <div class="review-rating">
-                      <span>Your rating *</span>
-                      <div class="rating-container d-flex align-items-center">
-                        <span class="rating secondary-font">
-                          <iconify-icon icon="clarity:star-solid" class="text-primary me-2"></iconify-icon>
-                          <iconify-icon icon="clarity:star-solid" class="text-primary me-2"></iconify-icon>
-                          <iconify-icon icon="clarity:star-solid" class="text-primary me-2"></iconify-icon>
-                          <iconify-icon icon="clarity:star-solid" class="text-primary me-2"></iconify-icon>
-                          <iconify-icon icon="clarity:star-solid" class="text-primary me-2"></iconify-icon>
-                          (5.0)</span>
+            </div>
+            
+            <div class="tab-pane fade" id="v-pills-reviews" role="tabpanel" aria-labelledby="v-pills-reviews-tab">
+              <h5 class="fw-bold mb-3">Đánh giá từ khách hàng</h5>
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="rating-summary text-center p-4 bg-light rounded-4">
+                    <h1 class="display-3 fw-bold mb-0 text-primary">4.5</h1>
+                    <div class="rating mb-2">
+                      <i class="fas fa-star text-warning"></i>
+                      <i class="fas fa-star text-warning"></i>
+                      <i class="fas fa-star text-warning"></i>
+                      <i class="fas fa-star text-warning"></i>
+                      <i class="fas fa-star-half-alt text-warning"></i>
+                    </div>
+                    <p class="text-muted">Dựa trên 24 đánh giá</p>
+                    
+                    <div class="rating-bars mt-4">
+                      <div class="rating-bar d-flex align-items-center mb-2">
+                        <span class="me-2">5 <i class="fas fa-star text-warning small"></i></span>
+                        <div class="progress flex-grow-1" style="height: 6px;">
+                          <div class="progress-bar bg-success" style="width: 60%"></div>
+                        </div>
+                        <span class="ms-2 text-muted small">15</span>
+                      </div>
+                      <div class="rating-bar d-flex align-items-center mb-2">
+                        <span class="me-2">4 <i class="fas fa-star text-warning small"></i></span>
+                        <div class="progress flex-grow-1" style="height: 6px;">
+                          <div class="progress-bar bg-info" style="width: 30%"></div>
+                        </div>
+                        <span class="ms-2 text-muted small">7</span>
+                      </div>
+                      <div class="rating-bar d-flex align-items-center mb-2">
+                        <span class="me-2">3 <i class="fas fa-star text-warning small"></i></span>
+                        <div class="progress flex-grow-1" style="height: 6px;">
+                          <div class="progress-bar bg-primary" style="width: 5%"></div>
+                        </div>
+                        <span class="ms-2 text-muted small">1</span>
+                      </div>
+                      <div class="rating-bar d-flex align-items-center mb-2">
+                        <span class="me-2">2 <i class="fas fa-star text-warning small"></i></span>
+                        <div class="progress flex-grow-1" style="height: 6px;">
+                          <div class="progress-bar bg-warning" style="width: 4%"></div>
+                        </div>
+                        <span class="ms-2 text-muted small">1</span>
+                      </div>
+                      <div class="rating-bar d-flex align-items-center">
+                        <span class="me-2">1 <i class="fas fa-star text-warning small"></i></span>
+                        <div class="progress flex-grow-1" style="height: 6px;">
+                          <div class="progress-bar bg-danger" style="width: 0%"></div>
+                        </div>
+                        <span class="ms-2 text-muted small">0</span>
                       </div>
                     </div>
                   </div>
-                  <div class="pb-3">
-                    <input type="file" class="form-control" data-text="Choose your file">
+                </div>
+                
+                <div class="col-lg-8">
+                  <!-- Review listing -->
+                  <div class="reviews-list">
+                    <!-- Review 1 -->
+                    <div class="review-item border-bottom pb-4 mb-4">
+                      <div class="d-flex mb-2">
+                        <div class="flex-shrink-0">
+                          <img src="images/avatar1.jpg" class="rounded-circle" width="50" height="50" alt="User Avatar">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold">Nguyễn Văn A</h6>
+                            <span class="badge bg-primary-subtle text-primary rounded-pill">Đã mua hàng</span>
+                          </div>
+                          <div class="small text-muted">15/04/2025</div>
+                          <div class="rating my-1">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <h6 class="fw-bold">Chất lượng rất tốt, bé nhà mình rất thích!</h6>
+                      <p>Mình mua size M cho bé Poodle nhà mình, vừa vặn, chất liệu mềm, giữ ấm tốt. Bé rất thích và thoải mái khi mặc. Sẽ tiếp tục mua thêm màu khác.</p>
+                      <div class="review-images d-flex flex-wrap gap-2 mt-2">
+                        <div class="review-image position-relative" style="width: 80px; height: 80px;">
+                          <img src="images/review1.jpg" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;" alt="Review image">
+                        </div>
+                        <div class="review-image position-relative" style="width: 80px; height: 80px;">
+                          <img src="images/review2.jpg" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;" alt="Review image">
+                        </div>
+                      </div>
+                      <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-thumbs-up me-1"></i> Hữu ích (5)</button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-comment me-1"></i> Bình luận</button>
+                      </div>
+                    </div>
+                    
+                    <!-- Review 2 -->
+                    <div class="review-item border-bottom pb-4 mb-4">
+                      <div class="d-flex mb-2">
+                        <div class="flex-shrink-0">
+                          <img src="images/avatar2.jpg" class="rounded-circle" width="50" height="50" alt="User Avatar">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold">Trần Thị B</h6>
+                            <span class="badge bg-primary-subtle text-primary rounded-pill">Đã mua hàng</span>
+                          </div>
+                          <div class="small text-muted">10/04/2025</div>
+                          <div class="rating my-1">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="far fa-star text-warning"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <h6 class="fw-bold">Đẹp nhưng hơi rộng</h6>
+                      <p>Áo đẹp, chất vải tốt nhưng mình mua size S cho bé Chihuahua vẫn hơi rộng. Shop nên có thêm size nhỏ hơn cho các bé siêu nhỏ.</p>
+                      <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-thumbs-up me-1"></i> Hữu ích (2)</button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-comment me-1"></i> Bình luận</button>
+                      </div>
+                    </div>
+                    
+                    <!-- More reviews button -->
+                    <div class="text-center">
+                      <button class="btn btn-outline-primary rounded-pill">
+                        <i class="fas fa-plus-circle me-1"></i> Xem thêm đánh giá
+                      </button>
+                    </div>
                   </div>
-                  <div class="pb-3">
-                    <label>Your Name</label>
-                    <input type="text" name="name" placeholder="Write your name here*" class="form-control">
+                  
+                  <!-- Write review form -->
+                  <div class="write-review mt-5">
+                    <h6 class="fw-bold mb-3">Viết đánh giá của bạn</h6>
+                    <form>
+                      <div class="mb-3">
+                        <label class="form-label">Đánh giá của bạn</label>
+                        <div class="stars d-flex align-items-center">
+                          <i class="far fa-star rating-star text-warning me-1 fs-4" data-value="1" role="button"></i>
+                          <i class="far fa-star rating-star text-warning me-1 fs-4" data-value="2" role="button"></i>
+                          <i class="far fa-star rating-star text-warning me-1 fs-4" data-value="3" role="button"></i>
+                          <i class="far fa-star rating-star text-warning me-1 fs-4" data-value="4" role="button"></i>
+                          <i class="far fa-star rating-star text-warning me-1 fs-4" data-value="5" role="button"></i>
+                          <input type="hidden" name="rating" id="selected-rating" value="0">
+                          <span class="rating-text ms-2 text-muted">(Chọn đánh giá)</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label for="reviewName" class="form-label">Tên của bạn</label>
+                          <input type="text" class="form-control" id="reviewName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label for="reviewEmail" class="form-label">Email</label>
+                          <input type="email" class="form-control" id="reviewEmail" required>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="reviewTitle" class="form-label">Tiêu đề đánh giá</label>
+                        <input type="text" class="form-control" id="reviewTitle" required>
+                      </div>
+                      <div class="mb-3">
+                        <label for="reviewContent" class="form-label">Nội dung đánh giá</label>
+                        <textarea class="form-control" id="reviewContent" rows="4" required></textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label d-block">Thêm hình ảnh (tùy chọn)</label>
+                        <input type="file" class="form-control" id="reviewImages" multiple accept="image/*">
+                      </div>
+                      <button type="submit" class="btn btn-primary rounded-pill">
+                        <i class="fas fa-paper-plane me-1"></i> Gửi đánh giá
+                      </button>
+                    </form>
                   </div>
-                  <div class="pb-3">
-                    <label>Your Email</label>
-                    <input type="text" name="email" placeholder="Write your email here*" class="form-control">
-                  </div>
-                  <div class="pb-3">
-                    <label>Your Review</label>
-                    <textarea class="form-control" placeholder="Write your review here*"></textarea>
-                  </div>
-                  <div class="pb-3">
-                    <label>
-                      <input type="checkbox" required="">
-                      <span class="label-body">Save my name, email, and website in this browser for the next
-                        time.</span>
-                    </label>
-                  </div>
-                  <button type="submit" name="submit"
-                    class="btn btn-dark btn-large text-uppercase w-100">Submit</button>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -736,265 +991,858 @@
     </div>
   </section>
 
-  <section id="register" style="background: url('images/background-img.png') no-repeat;" class="my-5">
-    <div class="container my-5 ">
-      <div class="row my-5 py-5">
-        <div class="offset-md-3 col-md-6 my-5 ">
-          <h2 class="display-3 fw-normal text-center">Get 20% Off on <span class="text-primary">first Purchase</span>
-          </h2>
-          <form>
-            <div class="mb-3">
-              <input type="email" class="form-control form-control-lg" name="email" id="email"
-                placeholder="Enter Your Email Address">
-            </div>
-            <div class="mb-3">
-              <input type="password" class="form-control form-control-lg" name="email" id="password1"
-                placeholder="Create Password">
-            </div>
-            <div class="mb-3">
-              <input type="password" class="form-control form-control-lg" name="email" id="password2"
-                placeholder="Repeat Password">
-            </div>
+  <!-- Sản phẩm tương tự - Đã cải thiện -->
+  <section id="related-products" class="py-4 bg-light">
+    <div class="container">
+      <div class="section-header text-center mb-4">
+        <h2 class="display-6 fw-bold">Sản phẩm tương tự</h2>
+        <p class="text-muted small">Khám phá thêm các sản phẩm dành cho thú cưng của bạn</p>
+        <div class="d-flex justify-content-center">
+          <div class="divider-custom">
+            <div class="line"></div>
+            <div class="icon"><i class="fas fa-paw text-primary"></i></div>
+            <div class="line"></div>
+          </div>
+        </div>
+      </div>
 
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-dark btn-lg rounded-1">Register it now</button>
+      <!-- Thay thế slider bằng grid cố định -->
+      <div class="row g-3">
+        <!-- Related product 1 -->
+        <div class="col-lg-3 col-md-4 col-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2">-15%</span>
+            <div class="card-img-top overflow-hidden rounded-top-4 product-zoom-img">
+              <a href="single-product.html">
+                <img src="images/item1.jpg" class="img-fluid w-100" alt="Áo khoác cho chó" style="height: 180px; object-fit: cover;">
+              </a>
+              <div class="position-absolute bottom-0 start-0 w-100 py-2 px-2">
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle action-button" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle action-button" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle action-button" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
             </div>
-          </form>
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Áo khoác cho chó</a>
+              </h6>
+              <div class="d-flex align-items-center">
+                <div class="rating small">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="far fa-star text-warning"></i>
+                  <span class="ms-1 text-muted">(4.0)</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-1">
+                <strong class="text-primary">145.000₫</strong>
+                <del class="ms-2 text-muted small">170.000₫</del>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Related product 2 -->
+        <div class="col-lg-3 col-md-4 col-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <span class="badge bg-success position-absolute top-0 start-0 m-2">Mới</span>
+            <div class="card-img-top overflow-hidden rounded-top-4 product-zoom-img">
+              <a href="single-product.html">
+                <img src="images/item2.jpg" class="img-fluid w-100" alt="Áo len cho chó" style="height: 180px; object-fit: cover;">
+              </a>
+              <div class="position-absolute bottom-0 start-0 w-100 py-2 px-2">
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle action-button" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle action-button" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle action-button" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Áo len cho chó</a>
+              </h6>
+              <div class="d-flex align-items-center">
+                <div class="rating small">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star-half-alt text-warning"></i>
+                  <span class="ms-1 text-muted">(4.5)</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-1">
+                <strong class="text-primary">185.000₫</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related product 3 -->
+        <div class="col-lg-3 col-md-4 col-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <div class="card-img-top overflow-hidden rounded-top-4 product-zoom-img">
+              <a href="single-product.html">
+                <img src="images/item3.jpg" class="img-fluid w-100" alt="Áo chống nắng cho chó" style="height: 180px; object-fit: cover;">
+              </a>
+              <div class="position-absolute bottom-0 start-0 w-100 py-2 px-2">
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle action-button" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle action-button" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle action-button" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Áo chống nắng cho chó</a>
+              </h6>
+              <div class="d-flex align-items-center">
+                <div class="rating small">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="far fa-star text-warning"></i>
+                  <span class="ms-1 text-muted">(4.0)</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-1">
+                <strong class="text-primary">160.000₫</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related product 4 -->
+        <div class="col-lg-3 col-md-4 col-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2">-20%</span>
+            <div class="card-img-top overflow-hidden rounded-top-4 product-zoom-img">
+              <a href="single-product.html">
+                <img src="images/item4.jpg" class="img-fluid w-100" alt="Áo gile cho chó" style="height: 180px; object-fit: cover;">
+              </a>
+              <div class="position-absolute bottom-0 start-0 w-100 py-2 px-2">
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle action-button" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle action-button" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle action-button" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Áo gile cho chó</a>
+              </h6>
+              <div class="d-flex align-items-center">
+                <div class="rating small">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="far fa-star text-warning"></i>
+                  <i class="far fa-star text-warning"></i>
+                  <span class="ms-1 text-muted">(3.0)</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-1">
+                <strong class="text-primary">128.000₫</strong>
+                <del class="ms-2 text-muted small">160.000₫</del>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Thêm nút xem tất cả -->
+      <div class="text-center mt-3">
+        <a href="shop.html" class="btn btn-outline-primary rounded-pill btn-sm">
+          <i class="fas fa-eye me-1"></i> Xem tất cả sản phẩm tương tự
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Thêm phần mới: Có thể bạn cũng thích -->
+  <section id="you-may-also-like" class="py-5 bg-white">
+    <div class="container">
+      <div class="section-header mb-5">
+        <h2 class="display-6 fw-bold">Có thể bạn cũng thích</h2>
+        <div class="divider-custom mb-3">
+          <div class="line"></div>
+          <div class="icon"><i class="fas fa-heart text-danger"></i></div>
+          <div class="line"></div>
+        </div>
+        <p class="text-muted">Những sản phẩm được yêu thích nhất tại JanyPet</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Product Card 1 -->
+        <div class="col-lg-3 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <div class="position-relative">
+              <img src="images/item1.jpg" class="card-img-top rounded-top-4" alt="Dây dắt thú cưng" style="height: 220px; object-fit: cover;">
+              <span class="badge bg-primary position-absolute top-0 start-0 m-3">Phổ biến</span>
+              <div class="overlay-buttons position-absolute w-100 bottom-0 start-0 mb-3 d-flex justify-content-center opacity-0">
+                <div class="d-flex gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Dây dắt thú cưng cao cấp</a>
+              </h5>
+              <div class="d-flex align-items-center mb-2">
+                <div class="rating">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star-half-alt text-warning"></i>
+                  <span class="ms-1 text-muted">(4.5)</span>
+                </div>
+              </div>
+              <p class="card-text small text-muted mb-2">Dây dắt chắc chắn, an toàn, điều chỉnh độ dài linh hoạt</p>
+              <div class="d-flex align-items-center">
+                <strong class="text-primary">250.000₫</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Card 2 -->
+        <div class="col-lg-3 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <div class="position-relative">
+              <img src="images/item4.jpg" class="card-img-top rounded-top-4" alt="Thức ăn cho mèo" style="height: 220px; object-fit: cover;">
+              <span class="badge bg-danger position-absolute top-0 start-0 m-3">-10%</span>
+              <div class="overlay-buttons position-absolute w-100 bottom-0 start-0 mb-3 d-flex justify-content-center opacity-0">
+                <div class="d-flex gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Thức ăn hạt cao cấp cho mèo</a>
+              </h5>
+              <div class="d-flex align-items-center mb-2">
+                <div class="rating">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <span class="ms-1 text-muted">(5.0)</span>
+                </div>
+              </div>
+              <p class="card-text small text-muted mb-2">Giàu dinh dưỡng, hỗ trợ hệ tiêu hóa và lông mượt</p>
+              <div class="d-flex align-items-center">
+                <strong class="text-primary">315.000₫</strong>
+                <del class="ms-2 text-muted">350.000₫</del>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Card 3 -->
+        <div class="col-lg-3 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <div class="position-relative">
+              <img src="images/item7.jpg" class="card-img-top rounded-top-4" alt="Bát ăn tự động" style="height: 220px; object-fit: cover;">
+              <span class="badge bg-success position-absolute top-0 start-0 m-3">Mới</span>
+              <div class="overlay-buttons position-absolute w-100 bottom-0 start-0 mb-3 d-flex justify-content-center opacity-0">
+                <div class="d-flex gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Bát ăn tự động thông minh</a>
+              </h5>
+              <div class="d-flex align-items-center mb-2">
+                <div class="rating">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star-half-alt text-warning"></i>
+                  <span class="ms-1 text-muted">(4.7)</span>
+                </div>
+              </div>
+              <p class="card-text small text-muted mb-2">Hẹn giờ thông minh, dễ dàng vệ sinh, phù hợp cho mọi thú cưng</p>
+              <div class="d-flex align-items-center">
+                <strong class="text-primary">480.000₫</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Card 4 -->
+        <div class="col-lg-3 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 position-relative product-card-hover">
+            <div class="position-relative">
+              <img src="images/item8.jpg" class="card-img-top rounded-top-4" alt="Đồ chơi cho chó" style="height: 220px; object-fit: cover;">
+              <div class="overlay-buttons position-absolute w-100 bottom-0 start-0 mb-3 d-flex justify-content-center opacity-0">
+                <div class="d-flex gap-2">
+                  <a href="#" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="tooltip" title="Xem nhanh">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-primary rounded-circle" data-bs-toggle="tooltip" title="Thêm vào giỏ">
+                    <i class="fas fa-cart-plus"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-danger rounded-circle" data-bs-toggle="tooltip" title="Yêu thích">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title mb-1">
+                <a href="single-product.html" class="text-decoration-none text-dark">Bộ đồ chơi gặm cho chó</a>
+              </h5>
+              <div class="d-flex align-items-center mb-2">
+                <div class="rating">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="far fa-star text-warning"></i>
+                  <span class="ms-1 text-muted">(4.0)</span>
+                </div>
+              </div>
+              <p class="card-text small text-muted mb-2">Chất liệu an toàn, giúp vệ sinh răng miệng, giảm căng thẳng cho thú cưng</p>
+              <div class="d-flex align-items-center">
+                <strong class="text-primary">120.000₫</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-5">
+        <a href="shop.html" class="btn btn-outline-primary rounded-pill px-5 py-3">
+          <i class="fas fa-shopping-bag me-2"></i>Khám phá thêm sản phẩm
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Thêm phần: Danh mục phổ biến -->
+  <section id="popular-categories" class="py-5 bg-light">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="display-6 fw-bold">Danh mục phổ biến</h2>
+        <p class="text-muted">Khám phá các danh mục sản phẩm hàng đầu của chúng tôi</p>
+      </div>
+      
+      <div class="row g-4">
+        <!-- Category 1 -->
+        <div class="col-md-4 col-6">
+          <a href="shop.html?cat=dogs" class="text-decoration-none">
+            <div class="card rounded-4 border-0 shadow-sm overflow-hidden category-card h-100">
+              <div class="position-relative">
+                <img src="images/item13.jpg" class="card-img" alt="Thức ăn cho chó" style="height: 200px; object-fit: cover;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.3);">
+                  <div class="text-center text-white">
+                    <h4 class="mb-0 fw-bold">Thức ăn cho chó</h4>
+                    <span class="small">25 sản phẩm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <!-- Category 2 -->
+        <div class="col-md-4 col-6">
+          <a href="shop.html?cat=cats" class="text-decoration-none">
+            <div class="card rounded-4 border-0 shadow-sm overflow-hidden category-card h-100">
+              <div class="position-relative">
+                <img src="images/item12.jpg" class="card-img" alt="Thức ăn cho mèo" style="height: 200px; object-fit: cover;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.3);">
+                  <div class="text-center text-white">
+                    <h4 class="mb-0 fw-bold">Thức ăn cho mèo</h4>
+                    <span class="small">18 sản phẩm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <!-- Category 3 -->
+        <div class="col-md-4 col-6">
+          <a href="shop.html?cat=accessories" class="text-decoration-none">
+            <div class="card rounded-4 border-0 shadow-sm overflow-hidden category-card h-100">
+              <div class="position-relative">
+                <img src="images/item14.jpg" class="card-img" alt="Phụ kiện thú cưng" style="height: 200px; object-fit: cover;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.3);">
+                  <div class="text-center text-white">
+                    <h4 class="mb-0 fw-bold">Phụ kiện thú cưng</h4>
+                    <span class="small">32 sản phẩm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="service" class="mt-5 pt-2">
-    <div class="container py-5 my-5">
-      <div class="row g-md-5 pt-4">
-        <div class="col-md-3 my-3">
-          <div class="card">
-            <div>
-              <iconify-icon class="service-icon text-primary" icon="la:shopping-cart"></iconify-icon>
-            </div>
-            <h3 class="card-title py-2 m-0">Free Delivery</h3>
-            <div class="card-text">
-              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 my-3">
-          <div class="card">
-            <div>
-              <iconify-icon class="service-icon text-primary" icon="la:user-check"></iconify-icon>
-            </div>
-            <h3 class="card-title py-2 m-0">100% secure payment</h3>
-            <div class="card-text">
-              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 my-3">
-          <div class="card">
-            <div>
-              <iconify-icon class="service-icon text-primary" icon="la:tag"></iconify-icon>
-            </div>
-            <h3 class="card-title py-2 m-0">Daily Offer</h3>
-            <div class="card-text">
-              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 my-3">
-          <div class="card">
-            <div>
-              <iconify-icon class="service-icon text-primary" icon="la:award"></iconify-icon>
-            </div>
-            <h3 class="card-title py-2 m-0">Quality guarantee</h3>
-            <div class="card-text">
-              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <section id="insta" class="my-3">
-    <div class="row g-0 py-5">
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta1.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta2.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta3.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta4.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta5.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-      <div class="col instagram-item  text-center position-relative">
-        <div class="icon-overlay d-flex justify-content-center position-absolute">
-          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-        </div>
-        <a href="#">
-          <img src="images/insta6.jpg" alt="insta-img" class="img-fluid rounded-3">
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer id="footer" class="my-5">
-    <div class="container py-5 my-5">
-      <div class="row">
-
-        <div class="col-md-3">
-          <div class="footer-menu">
-            <img src="images/logo.png" alt="logo">
-            <p class="blog-paragraph fs-6 mt-3">Subscribe to our newsletter to get updates about our grand offers.</p>
+  <!-- Footer -->
+  <footer id="footer" class="bg-light pt-5 mt-5">
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- About Company -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-about">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
+            <p class="mb-4">JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam.</p>
             <div class="social-links">
-              <ul class="d-flex list-unstyled gap-2">
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:facebook-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:twitter-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:pinterest-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:instagram-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:youtube-fill"></iconify-icon>
-                  </a>
-                </li>
-
-              </ul>
+              <div class="d-flex gap-3">
+                <a href="#" class="social-link" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Youtube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+  
+        <!-- Quick Links -->
+        <div class="col-lg-3 col-md-6">
           <div class="footer-menu">
-            <h3>Quick Links</h3>
-            <ul class="menu-list list-unstyled">
-              <li class="menu-item">
-                <a href="#" class="nav-link">Home</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">About us</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Offer </a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Services</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Conatct Us</a>
-              </li>
+            <h4 class="mb-4">Liên kết nhanh</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="index.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Trang chủ</a></li>
+              <li class="mb-2"><a href="about.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Giới thiệu</a></li>
+              <li class="mb-2"><a href="shop.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Sản phẩm</a></li>
+              <li class="mb-2"><a href="service.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Dịch vụ</a></li>
+              <li class="mb-2"><a href="blog.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Tin tức</a></li>
+              <li class="mb-2"><a href="contact.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Liên hệ</a></li>
             </ul>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="footer-menu">
-            <h3>Help Center</h5>
-              <ul class="menu-list list-unstyled">
-                <li class="menu-item">
-                  <a href="#" class="nav-link">FAQs</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Payment</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Returns & Refunds</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Checkout</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Delivery Information</a>
-                </li>
-              </ul>
+  
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-contact">
+            <h4 class="mb-4">Thông tin liên hệ</h4>
+            <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>
+            <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
+            <p class="mb-3"><i class="fas fa-envelope me-3"></i>info@janypet.com</p>
+            <p class="mb-3"><i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
           </div>
         </div>
-        <div class="col-md-3">
+  
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6">
           <div>
-            <h3>Our Newsletter</h3>
-            <p class="blog-paragraph fs-6">Subscribe to our newsletter to get updates about our grand offers.</p>
-            <div class="search-bar border rounded-pill border-dark-subtle px-2">
-              <form class="text-center d-flex align-items-center" action="" method="">
-                <input type="text" class="form-control border-0 bg-transparent" placeholder="Enter your email here" />
-                <iconify-icon class="send-icon" icon="tabler:location-filled"></iconify-icon>
-              </form>
+            <h4 class="mb-4">Nhận thông tin</h4>
+            <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyPet.</p>
+            <div class="input-group mb-3">
+              <input type="email" class="form-control rounded-start-pill" placeholder="Email của bạn">
+              <button class="btn btn-primary rounded-end-pill" type="button">Đăng ký</button>
+            </div>
+            <div class="mt-4">
+              <img src="images/payment-methods.png" alt="Payment Methods" class="img-fluid">
             </div>
           </div>
         </div>
-
+      </div>
+    </div>
+  
+    <div class="py-3 border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 JanyPet. Tất cả quyền được bảo lưu.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#" class="text-decoration-none me-3">Điều khoản sử dụng</a>
+            <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+          </div>
+        </div>
       </div>
     </div>
   </footer>
-
-  <!-- <div id="footer-bottom">
-    <div class="container">
-      <hr class="m-0">
-      <div class="row mt-3">
-        <div class="col-md-6 copyright">
-          <p class="secondary-font">© 2023 Waggy. All rights reserved.</p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <p class="secondary-font">Free HTML Template by <a href="https://templatesjungle.com/" target="_blank"
-              class="text-decoration-underline fw-bold text-black-50"> TemplatesJungle</a> </p>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
-
-  <script src="js/jquery-1.11.0.min.js"></script>
+  
+  <!-- JavaScript Libraries -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-    crossorigin="anonymous"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/script.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.7/dist/iconify-icon.min.js"></script>
+
+  <!-- Authentication and Toast Manager -->
+  <script src="js/toast-manager.js"></script>
+  <script src="js/auth_service.js"></script>
+
+  <!-- Custom JavaScript Files -->
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+
+  <!-- Script để khởi tạo các slider và tooltip -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Khởi tạo slider sản phẩm tương tự
+    const relatedSlider = new Swiper(".related-products-slider", {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      breakpoints: {
+        576: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 4,
+        },
+      },
+      autoplay: {
+        delay: 5000,
+      },
+    });
+    
+    // Kích hoạt tooltip Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover'
+      });
+    });
+    
+    // Hiệu ứng hiển thị nút thêm vào giỏ hàng khi hover
+    const productCards = document.querySelectorAll('.product-card-hover');
+    productCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        const buttons = card.querySelector('.overlay-buttons');
+        if (buttons) {
+          buttons.style.opacity = '1';
+        }
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        const buttons = card.querySelector('.overlay-buttons');
+        if (buttons) {
+          buttons.style.opacity = '0';
+        }
+      });
+    });
+  });
+  </script>
+
+  <!-- Script cho trang chi tiết sản phẩm -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Khởi tạo Product Image Gallery với zoom
+    const productLargeSlider = new Swiper(".product-large-slider", {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: true,
+      loopedSlides: 4,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      effect: "fade",
+      fadeEffect: {
+        crossFade: true
+      },
+    });
+    
+    const productThumbnailSlider = new Swiper(".product-thumbnail-slider", {
+      slidesPerView: 4,
+      spaceBetween: 10,
+      loop: true,
+      loopedSlides: 4,
+      slideToClickedSlide: true,
+      watchSlidesProgress: true,
+      breakpoints: {
+        768: {
+          slidesPerView: 4,
+        },
+      },
+    });
+    
+    // Link hai slider với nhau
+    productLargeSlider.controller.control = productThumbnailSlider;
+    productThumbnailSlider.controller.control = productLargeSlider;
+    
+    // Hiệu ứng cho nút tăng giảm số lượng
+    const quantityInput = document.getElementById('quantity');
+    const minusBtn = document.querySelector('.quantity-left-minus');
+    const plusBtn = document.querySelector('.quantity-right-plus');
+    
+    if(minusBtn && plusBtn && quantityInput) {
+      minusBtn.addEventListener('click', function() {
+        let val = parseInt(quantityInput.value);
+        if(val > 1) {
+          quantityInput.value = val - 1;
+          // Thêm hiệu ứng nhấp nháy khi giảm số lượng
+          quantityInput.classList.add('text-danger');
+          setTimeout(() => {
+            quantityInput.classList.remove('text-danger');
+          }, 300);
+        }
+      });
+      
+      plusBtn.addEventListener('click', function() {
+        let val = parseInt(quantityInput.value);
+        // Giả sử số lượng tối đa là 10 (hoặc số lượng tồn kho)
+        if(val < 10) {
+          quantityInput.value = val + 1;
+          // Thêm hiệu ứng nhấp nháy khi tăng số lượng
+          quantityInput.classList.add('text-success');
+          setTimeout(() => {
+            quantityInput.classList.remove('text-success');
+          }, 300);
+        } else {
+          // Hiển thị thông báo khi vượt quá số lượng cho phép
+          alert('Bạn chỉ có thể mua tối đa 10 sản phẩm');
+        }
+      });
+    }
+    
+    // Hiệu ứng cho các nút màu sắc và kích thước
+    const colorItems = document.querySelectorAll('.color-options .select-item');
+    const sizeItems = document.querySelectorAll('.swatch .select-item a');
+    
+    // Xử lý chọn màu
+    colorItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        colorItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Xử lý chọn kích thước
+    sizeItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        sizeItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Khởi tạo AOS (Animation On Scroll)
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+  });
+  </script>
+
+  <!-- Script cho giỏ hàng -->
+  <script>
+    // Khởi tạo giỏ hàng từ localStorage hoặc tạo mới nếu chưa có
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Cập nhật số lượng sản phẩm trong giỏ hàng
+    function updateCartCount() {
+      const cartCountElements = document.querySelectorAll('.badge.bg-primary');
+      cartCountElements.forEach(element => {
+        element.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+      });
+    }
+    
+    // Hàm thêm sản phẩm vào giỏ hàng
+    function addToCart(id, name, price, image, quantity) {
+      // Kiểm tra nếu sản phẩm đã có trong giỏ hàng
+      const existingItemIndex = cart.findIndex(item => item.id === id);
+      
+      if (existingItemIndex > -1) {
+        // Sản phẩm đã có trong giỏ, cập nhật số lượng
+        cart[existingItemIndex].quantity += quantity;
+      } else {
+        // Sản phẩm chưa có trong giỏ, thêm mới
+        cart.push({
+          id: id,
+          name: name,
+          price: price,
+          image: image,
+          quantity: quantity
+        });
+      }
+      
+      // Lưu giỏ hàng vào localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Cập nhật hiển thị
+      updateCartCount();
+      
+      // Thông báo thành công
+      alert('Đã thêm sản phẩm vào giỏ hàng!');
+      
+      // Cập nhật giỏ hàng offcanvas nếu đang hiển thị
+      updateOffcanvasCart();
+      
+      return false;
+    }
+    
+    // Cập nhật giỏ hàng offcanvas
+    function updateOffcanvasCart() {
+      const cartListElement = document.getElementById('offcanvas-cart-list');
+      const cartTotalElement = document.getElementById('offcanvas-cart-total');
+      
+      if (cartListElement && cartTotalElement) {
+        // Xóa tất cả sản phẩm hiện tại
+        cartListElement.innerHTML = '';
+        
+        // Thêm các sản phẩm từ giỏ hàng
+        if (cart.length === 0) {
+          cartListElement.innerHTML = '<li class="list-group-item">Giỏ hàng trống</li>';
+          cartTotalElement.textContent = '0đ';
+        } else {
+          let total = 0;
+          
+          cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            
+            cartListElement.innerHTML += `
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div class="d-flex">
+                  <img src="${item.image}" alt="${item.name}" class="img-fluid me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                  <div>
+                    <h6 class="my-0">${item.name}</h6>
+                    <small class="text-muted">${item.price.toLocaleString()}đ x ${item.quantity}</small>
+                  </div>
+                </div>
+                <span class="text-muted">${itemTotal.toLocaleString()}đ</span>
+              </li>
+            `;
+          });
+          
+          cartTotalElement.textContent = `${total.toLocaleString()}đ`;
+        }
+      }
+    }
+    
+    // Hàm xóa sản phẩm khỏi giỏ hàng
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      updateOffcanvasCart();
+    }
+    
+    // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
+    function updateCartItemQuantity(id, newQuantity) {
+      const itemIndex = cart.findIndex(item => item.id === id);
+      
+      if (itemIndex > -1) {
+        if (newQuantity > 0) {
+          cart[itemIndex].quantity = newQuantity;
+        } else {
+          // Nếu số lượng <= 0, xóa sản phẩm khỏi giỏ hàng
+          cart.splice(itemIndex, 1);
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        updateOffcanvasCart();
+      }
+    }
+    
+    // Cập nhật số lượng sản phẩm khi tải trang
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+      updateOffcanvasCart();
+      
+      // Thêm sự kiện cho nút thêm vào giỏ hàng trong trang chi tiết sản phẩm
+      const addToCartBtn = document.querySelector('.btn-primary.btn-lg.w-100');
+      const quantityInput = document.getElementById('quantity');
+      
+      if (addToCartBtn && quantityInput) {
+        addToCartBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const quantity = parseInt(quantityInput.value);
+          
+          if (quantity > 0) {
+            // Thay đổi thông tin sản phẩm tại đây theo từng sản phẩm cụ thể
+            addToCart('p001', 'Áo hoodie cho chó', 170000, 'images/item7.jpg', quantity);
+          }
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>
+

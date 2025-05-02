@@ -71,13 +71,13 @@
           </div>
 
           <!-- User info when logged in -->
-          <div class="user-info d-flex align-items-center">
+          <div class="user-info d-flex align-items-center" style="display: none;">
             <span class="me-2">Xin chào, <strong id="userName">User</strong></span>
             <div class="d-flex">
               <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
                 <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
               </button>
-              <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill">
+              <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill" style="display: none;">
                 <i class="fas fa-cog me-1"></i> Quản trị
               </a>
             </div>
@@ -122,7 +122,7 @@
           <li class="nav-item">
             <a class="nav-link active fw-medium" href="index.html">Trang chủ</a>
           </li>
-          <li class="nav-item dropdown">
+          <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown" 
                aria-expanded="false">Thú cưng</a>
             <ul class="dropdown-menu">
@@ -132,7 +132,7 @@
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="shop.html">Tất cả thú cưng</a></li>
             </ul>
-          </li>
+          </li> -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">Sản phẩm</a>
@@ -349,7 +349,8 @@
                 <h3 class="secondary-font text-primary">$18.00</h3>
 
                 <div class="d-flex flex-wrap mt-3">
-                  <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
+                  <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
+                     onclick="addToCart('p001', 'Grey hoodie', 18.00, 'images/item5.jpg', 1); return false;">
                     <i class="fas fa-shopping-cart"></i>
                   </a>
                   <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
@@ -387,7 +388,8 @@
                   <h3 class="secondary-font text-primary">$18.00</h3>
   
                   <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
+                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
+                       onclick="addToCart('p002', 'Grey hoodie', 18.00, 'images/item6.jpg', 1); return false;">
                       <i class="fas fa-shopping-cart"></i>
                     </a>
                     <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
@@ -425,7 +427,8 @@
                   <h3 class="secondary-font text-primary">$18.00</h3>
   
                   <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
+                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
+                       onclick="addToCart('p003', 'Grey hoodie', 18.00, 'images/item7.jpg', 1); return false;">
                       <i class="fas fa-shopping-cart"></i>
                     </a>
                     <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
@@ -1362,13 +1365,6 @@
       <div class="row mt-5">
         <div class="section-header d-md-flex justify-content-betweenalign-items-center mb-3">
           <h2 class="display-3 fw-normal">Latest Blog Post</h2>
-          <div>
-            <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-              Read all
-              <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
-                <use xlink:href="#arrow-right"></use>
-              </svg></a>
-          </div>
         </div>
       </div>
       <div class="row">

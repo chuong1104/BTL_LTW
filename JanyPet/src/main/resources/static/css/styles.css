@@ -1405,3 +1405,44 @@ body.authenticated .non-auth-only {
 body:not(.is-admin) .admin-only {
   display: none !important;
 }
+
+/* Service Management styles */
+.service-item {
+  position: relative;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.delete-service-item {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff6b6b;
+  color: white;
+}
+
+#service-items-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#add-service-item {
+  margin-top: 10px;
+}
+
+.form-group.checkboxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
