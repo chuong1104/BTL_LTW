@@ -2,6 +2,8 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.BranchRequest;
 import com.BTL_LTW.JanyPet.dto.response.BranchResponse;
+import com.BTL_LTW.JanyPet.entity.Branch;
+import com.BTL_LTW.JanyPet.repository.BranchRepository;
 import com.BTL_LTW.JanyPet.service.Interface.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +19,12 @@ public class BranchController {
     @Autowired
     private BranchService branchService;
 
+    @Autowired
+    private BranchRepository branchRepository;
+
     @GetMapping
-    public ResponseEntity<List<BranchResponse>> getAllBranches() {
-        List<BranchResponse> branches = branchService.getAllBranches();
-        return ResponseEntity.ok(branches);
+    public List<Branch> getAllBranches() {
+        return branchRepository.findAll();
     }
 
     @GetMapping("/{id}")

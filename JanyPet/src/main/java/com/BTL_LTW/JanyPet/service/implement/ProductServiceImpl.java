@@ -35,6 +35,8 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setPurchasePrice(request.getPurchasePrice());
+        product.setCategory(request.getCategory()); 
 
         // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
@@ -80,6 +82,8 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setPurchasePrice(request.getPurchasePrice()); // Thêm dòng này
+        product.setCategory(request.getCategory());
 
         // Xử lý trường hợp upload file mới
         MultipartFile imageFile = request.getImageFile();
@@ -158,7 +162,9 @@ public class ProductServiceImpl implements ProductService {
         response.setName(product.getName());
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
+        response.setPurchasePrice(product.getPurchasePrice());
         response.setStock(product.getStock());
+        response.setCategory(product.getCategory());
         
         // Chuyển tên file thành URL đầy đủ
         if (product.getImage() != null && !product.getImage().isEmpty()) {

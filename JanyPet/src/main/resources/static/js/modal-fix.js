@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
           // Atualizar o título do modal
           const modalTitle = document.getElementById("modal-title")
-          if (modalTitle) modalTitle.textContent = "Add New Product"
+          if (modalTitle) modalTitle.textContent = "Thêm sản phẩm mới"
   
           // Exibir o modal
           productModal.style.display = "block"
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Atualizar o título do modal
     const modalTitle = document.getElementById("modal-title")
     if (modalTitle) {
-      modalTitle.textContent = productId ? "Edit Product" : "Add New Product"
+      modalTitle.textContent = productId ? "Edit Product" : "Thêm sản phẩm mới"
     }
   
     // Resetar o formulário

@@ -9,11 +9,11 @@ public class ProductCreationRequest {
     private String name;
     private String description;
     private BigDecimal price;
+    private BigDecimal purchasePrice; 
     private Integer stock;
-    @Transient
     private MultipartFile imageFile;
-    
     private String imagePath;
+    private String category; 
 
     public ProductCreationRequest() {
     }
@@ -49,6 +49,22 @@ public class ProductCreationRequest {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getStock() {

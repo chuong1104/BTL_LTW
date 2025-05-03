@@ -169,7 +169,7 @@ function openProductModal(mode = "add", productId = null) {
       document.getElementById("product-id").value = productId
       loadProductData(productId)
     } else {
-      modalTitle.textContent = "Add New Product"
+      modalTitle.textContent = "Thêm sản phẩm mới"
       document.getElementById("product-id").value = ""
     }
 

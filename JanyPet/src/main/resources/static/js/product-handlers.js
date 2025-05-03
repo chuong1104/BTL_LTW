@@ -7,9 +7,12 @@ const ProductHandlers = {
     console.log("Initializing product event handlers")
 
     // Add product button
-    const addProductBtn = document.getElementById("add-product-btn")
+    const addProductBtn = document.getElementById("add-product-btn");
     if (addProductBtn) {
-      addProductBtn.addEventListener("click", () => this.openProductModal())
+      addProductBtn.addEventListener("click", () => {
+        this.loadCategories(); // Gọi loadCategories trước
+        this.openProductModal("add");
+      });
     }
 
     // Save product button - DIRECT EVENT BINDING - Add a check to prevent duplicate event binding
@@ -60,24 +63,8 @@ const ProductHandlers = {
     // Load products on initialization
     this.loadProducts()
 
-    // Initialize image preview handler
-    this.initializeImagePreview()
-
-    // Xử lý click vào ảnh để xem lớn - Add a data attribute to track if event handler is attached
-    const productsTableBody = document.querySelector('#products-table-body')
-    if (productsTableBody && !productsTableBody.dataset.hasImageListener) {
-      productsTableBody.addEventListener('click', (e) => {
-        if (e.target.tagName === 'IMG') {
-          const modal = document.getElementById('image-preview-modal');
-          const modalImg = document.getElementById('preview-image');
-          if (modal && modalImg) {
-            modal.style.display = "block";
-            modalImg.src = e.target.src;
-          }
-        }
-      });
-      productsTableBody.dataset.hasImageListener = 'true'; // Mark as having a listener
-    }
+    // REMOVED: Initialize image preview handler
+    // REMOVED: Xử lý click vào ảnh để xem lớn
   },
 
   // Open product modal for add/edit
@@ -89,18 +76,22 @@ const ProductHandlers = {
     const productIdInput = document.getElementById("product-id")
 
     // Reset form
-    productForm.reset()
+    if (productForm) {
+      productForm.reset()
+    }
+    
     if (window.quill) {
       window.quill.root.innerHTML = ""
     }
-    document.getElementById("image-preview").innerHTML = ""
+    
+    // REMOVED: document.getElementById("image-preview").innerHTML = ""
 
     if (mode === "edit" && productId) {
       modalTitle.textContent = "Edit Product"
       productIdInput.value = productId
       this.loadProductData(productId)
     } else {
-      modalTitle.textContent = "Add New Product"
+      modalTitle.textContent = "Thêm sản phẩm mới"
       productIdInput.value = ""
     }
 
@@ -113,25 +104,7 @@ const ProductHandlers = {
     modal.style.display = "none"
   },
 
-  // Get image URL from filename
-  getImageUrl(filename) {
-    if (!filename) {
-        return '/images/logo.png';  // Sử dụng ảnh local thay vì placeholder.com
-    }
-
-    // Nếu là URL đầy đủ
-    if (filename.startsWith('http://') || filename.startsWith('https://')) {
-        return filename;
-    }
-    
-    // Nếu là đường dẫn /uploads/
-    if (filename.startsWith('/uploads/')) {
-        return filename;
-    }
-
-    // Tạo URL từ tên file
-    return `/uploads/${encodeURIComponent(filename)}`;
-  },
+  // REMOVED: getImageUrl function
 
   // Load product data for editing
   async loadProductData(productId) {
@@ -149,29 +122,37 @@ const ProductHandlers = {
       }
       
       console.log("Loaded product data:", product);
-
+  
       // Populate form fields
       document.getElementById("product-name").value = product.name || "";
-      document.getElementById("product-price").value = product.price || "";
-      document.getElementById("product-stock").value = product.stock || "";
-
+      
+      // Thiết lập danh mục
+      const categorySelect = document.getElementById("product-category");
+      if (categorySelect && product.category) {
+        // Tìm option phù hợp với danh mục sản phẩm
+        const options = Array.from(categorySelect.options);
+        const matchingOption = options.find(option => option.value === product.category);
+        
+        if (matchingOption) {
+          categorySelect.value = product.category;
+        } else if (product.category) {
+          // Nếu không tìm thấy, tạo option mới
+          const newOption = document.createElement("option");
+          newOption.value = product.category;
+          newOption.textContent = product.category;
+          categorySelect.appendChild(newOption);
+          categorySelect.value = product.category;
+        }
+      }
+      
+      document.getElementById("product-purchase-price").value = product.purchasePrice || "";
+      document.getElementById("product-selling-price").value = product.price || "";
+  
       // Set description in Quill editor
       if (window.quill && product.description) {
         window.quill.root.innerHTML = product.description;
       }
-
-      // Show image preview if available
-      const imageUrl = product.imageUrl || this.getImageUrl(product.image);
-      if (imageUrl) {
-        const imagePreview = document.getElementById("image-preview");
-        imagePreview.innerHTML = `
-          <div class="preview-container">
-            <img src="${imageUrl}" alt="${product.name}" style="max-width: 100%; max-height: 200px;">
-            <p class="mt-2 text-sm text-gray-500">Current image: ${product.image || product.imageUrl}</p>
-            <input type="hidden" name="imagePath" value="${imageUrl}">
-          </div>
-        `;
-      }
+  
     } catch (error) {
       console.error("Error loading product data:", error);
       if (window.ToastService) {
@@ -182,71 +163,125 @@ const ProductHandlers = {
     }
   },
 
+  // Load categories for the select element
+  async loadCategories() {
+    try {
+      const response = await fetch('/api/categories');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const categories = await response.json();
+      const categorySelect = document.getElementById("product-category");
+      
+      if (!categorySelect) {
+        console.error("Category select element not found");
+        return;
+      }
+      
+      // Clear existing options except the first one
+      while (categorySelect.options.length > 1) {
+        categorySelect.remove(1);
+      }
+      
+      // Add options from API
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.name;
+        option.textContent = category.name;
+        categorySelect.appendChild(option);
+      });
+      
+      // Thêm các danh mục mặc định nếu API không trả về đủ danh mục
+      const defaultCategories = ["Pet Food", "Toys", "Accessories", "Medicine"];
+      const existingCategories = Array.from(categorySelect.options).map(opt => opt.value);
+      
+      defaultCategories.forEach(cat => {
+        if (!existingCategories.includes(cat)) {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        }
+      });
+    } catch (error) {
+      console.error("Error loading categories:", error);
+      
+      // Fallback to default categories if API fails
+      const categorySelect = document.getElementById("product-category");
+      if (categorySelect) {
+        const defaultCategories = ["Pet Food", "Toys", "Accessories", "Medicine"];
+        
+        // Clear existing options except the first one
+        while (categorySelect.options.length > 1) {
+          categorySelect.remove(1);
+        }
+        
+        defaultCategories.forEach(cat => {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        });
+      }
+    }
+  },
+
   // Save product (create or update)
   async saveProduct() {
     try {
       console.log("Saving product...");
-      const productId = document.getElementById("product-id").value;
-      const productName = document.getElementById("product-name").value;
-      const productPrice = document.getElementById("product-price").value;
-      const productStock = document.getElementById("product-stock").value;
-
-      // Validate form
-      if (!productName || !productPrice || !productStock) {
+      
+      // Get form elements with null checks
+      const productIdElement = document.getElementById("product-id");
+      const productNameElement = document.getElementById("product-name");
+      const productCategoryElement = document.getElementById("product-category");
+      const productPurchasePriceElement = document.getElementById("product-purchase-price");
+      const productSellingPriceElement = document.getElementById("product-selling-price");
+      
+      // Check if all required elements exist
+      if (!productNameElement || !productCategoryElement || 
+          !productPurchasePriceElement || !productSellingPriceElement) {
+        console.error("Required form fields not found:", {
+          name: !!productNameElement,
+          category: !!productCategoryElement,
+          purchasePrice: !!productPurchasePriceElement,
+          sellingPrice: !!productSellingPriceElement
+        });
         if (window.ToastService) {
-          window.ToastService.error("Please fill all required fields");
+          window.ToastService.error("Form fields not found. Please check the form structure.");
         } else {
-          this.showToast("Please fill all required fields", "error");
+          this.showToast("Form fields not found. Please check the form structure.", "error");
         }
         return;
       }
-
+      
+      // Get values safely
+      const productId = productIdElement ? productIdElement.value : "";
+      const productName = productNameElement.value;
+      const productCategory = productCategoryElement.value;
+      const purchasePrice = productPurchasePriceElement.value;
+      const sellingPrice = productSellingPriceElement.value;
+  
       // Get description from Quill editor
       let description = "";
       if (window.quill) {
         description = window.quill.root.innerHTML;
       }
-
-      // Create product data object
+  
+      // Create product data object - sửa tên các trường theo yêu cầu của backend
       const productData = {
         name: productName,
-        price: productPrice,
-        stock: productStock,
-        description: description
+        category: productCategory,
+        purchasePrice: parseFloat(purchasePrice),
+        price: parseFloat(sellingPrice),
+        stock: 0, // Đảm bảo stock có giá trị
+        description: description,
+        isActive: true // Thêm trường isActive nếu backend cần
       };
-
-      // Handle file upload
-      const imageInput = document.getElementById("product-image");
-      if (imageInput.files && imageInput.files[0]) {
-        const file = imageInput.files[0];
-        
-        // First upload the file
-        const uploadFormData = new FormData();
-        uploadFormData.append("file", file);
-        
-        const uploadResponse = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadFormData
-        });
-        
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload image");
-        }
-        
-        const uploadResult = await uploadResponse.json();
-        // Add the image path to the product data
-        productData.imagePath = uploadResult.url;
-      } else {
-        // If no new file is uploaded, check if there's an existing image path
-        const imagePreview = document.getElementById("image-preview");
-        const existingImagePath = imagePreview.querySelector('input[name="imagePath"]')?.value;
-        if (existingImagePath) {
-          productData.imagePath = existingImagePath;
-        }
-      }
-
+  
       console.log("Sending product data:", productData);
-
+  
       // Make API request
       let url = "/api/products";
       let method = "POST";
@@ -272,14 +307,14 @@ const ProductHandlers = {
         console.error("API error response:", errorData);
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
-
+  
       // Show success message
       if (window.ToastService) {
         window.ToastService.success(productId ? "Product updated successfully" : "Product added successfully");
       } else {
         this.showToast(productId ? "Product updated successfully" : "Product added successfully", "success");
       }
-
+  
       // Close modal and reload products
       this.closeProductModal();
       this.loadProducts();
@@ -301,12 +336,12 @@ const ProductHandlers = {
         console.error("Products table body not found");
         return;
       }
-
+  
       // Show loading state
-      productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Loading products...</td></tr>';
-
+      productsTableBody.innerHTML = '<tr><td colspan="10" class="text-center">Loading products...</td></tr>';
+  
       let products = [];
-
+  
       // Use ApiService if available, otherwise use fetch directly
       if (window.ApiService) {
         products = await window.ApiService.getAllProducts();
@@ -317,14 +352,14 @@ const ProductHandlers = {
         }
         products = await response.json();
       }
-
+  
       console.log("Loaded products:", products);
-
+  
       if (!Array.isArray(products) || products.length === 0) {
-        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">No products found</td></tr>';
+        productsTableBody.innerHTML = '<tr><td colspan="10" class="text-center">No products found</td></tr>';
         return;
       }
-
+  
       // Create content for the table body
       let tableBodyHTML = '';
       
@@ -333,7 +368,7 @@ const ProductHandlers = {
         // Determine status based on stock
         let status = "In Stock";
         let statusClass = "active";
-
+  
         if (product.stock <= 0) {
           status = "Out of Stock";
           statusClass = "inactive";
@@ -341,24 +376,17 @@ const ProductHandlers = {
           status = "Low Stock";
           statusClass = "pending";
         }
-
-        // Get image URL
-        const imageUrl = product.imageUrl || this.getImageUrl(product.image);
-
-        // Create row HTML
+  
+        // Create row HTML với cột ID và giá nhập mới
         tableBodyHTML += `
           <tr>
             <td><input type="checkbox" class="select-item"></td>
-            <td>
-              <img src="${imageUrl}" 
-                   alt="${product.name}" 
-                   style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
-                   title="Click to view larger image"
-              >
-            </td>
+            <td title="${product.id}">${product.id || ""}</td>
             <td>${product.name || ""}</td>
+            <td>${product.category || "Chưa phân loại"}</td>
             <td>${product.description ? product.description.substring(0, 100) + "..." : ""}</td>
-            <td>$${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}</td>
+            <td>${product.purchasePrice ? parseFloat(product.purchasePrice).toFixed(2) : "0.00"}</td>
+            <td>${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}</td>
             <td>${product.stock || 0}</td>
             <td><span class="status ${statusClass}">${status}</span></td>
             <td class="actions">
@@ -372,7 +400,7 @@ const ProductHandlers = {
           </tr>
         `;
       });
-
+  
       // Update the table body with new HTML
       productsTableBody.innerHTML = tableBodyHTML;
       
@@ -380,26 +408,22 @@ const ProductHandlers = {
       document.querySelectorAll(".edit-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           const productId = e.currentTarget.getAttribute("data-id");
+          this.loadCategories(); // Thêm dòng này
           this.openProductModal("edit", productId);
         });
       });
-
+  
       document.querySelectorAll(".delete-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           const productId = e.currentTarget.getAttribute("data-id");
           this.openDeleteModal(productId);
         });
       });
-      
-      // Make sure we preserve the flag that we set in initializeProductEvents
-      if (productsTableBody && !productsTableBody.dataset.hasImageListener) {
-        productsTableBody.dataset.hasImageListener = 'true';
-      }
     } catch (error) {
       console.error("Error loading products:", error);
       const productsTableBody = document.getElementById("products-table-body");
       if (productsTableBody) {
-        productsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Error loading products: ' + error.message + '</td></tr>';
+        productsTableBody.innerHTML = '<tr><td colspan="10" class="text-center">Error loading products: ' + error.message + '</td></tr>';
       }
     }
   },
@@ -446,32 +470,7 @@ const ProductHandlers = {
     }
   },
 
-  // Initialize image preview handler
-  initializeImagePreview() {
-    const imageInput = document.getElementById("product-image");
-    const imagePreview = document.getElementById("image-preview");
-
-    if (imageInput && imagePreview) {
-      imageInput.addEventListener("change", function () {
-        imagePreview.innerHTML = "";
-
-        if (this.files && this.files[0]) {
-          const reader = new FileReader();
-
-          reader.onload = (e) => {
-            imagePreview.innerHTML = `
-              <div class="preview-container">
-                <img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px;">
-                <p class="mt-2 text-sm text-gray-500">Selected file: ${this.files[0].name}</p>
-              </div>
-            `;
-          };
-
-          reader.readAsDataURL(this.files[0]);
-        }
-      });
-    }
-  },
+  // REMOVED: initializeImagePreview method
 
   // Show toast notification
   showToast(message, type = "success") {

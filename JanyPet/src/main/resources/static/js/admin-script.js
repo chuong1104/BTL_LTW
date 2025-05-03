@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (missingServices.length > 0) {
       throw new Error(`Missing required services: ${missingServices.join(', ')}`);
     }
-
     // Initialize core functionality
     await initializeAdminDashboard();
 
@@ -34,6 +33,7 @@ async function initializeAdminDashboard() {
   // Initialize handlers
   await Promise.all([
     initializeProductSection(),
+    initializeInventorySection(),
     initializeEventListeners()
   ]);
 
@@ -148,6 +148,22 @@ async function initializeProductSection() {
     window.ToastService?.error("Failed to initialize product section");
   }
 }
+/**
+ * Initialize inventory section
+ */
+async function initializeInventorySection() {
+  try {
+    if (window.InventoryHandlers) {
+      await window.InventoryHandlers.initializeInventoryEvents();
+      console.log("Inventory handlers initialized successfully");
+    } else {
+      console.warn("InventoryHandlers not available");
+    }
+  } catch (error) {
+    console.error("Failed to initialize inventory handlers:", error);
+    window.ToastService?.error("Failed to initialize inventory section");
+  }
+}
 
 /**
  * Initialize event listeners
@@ -191,6 +207,9 @@ function loadSectionData(sectionId) {
         break;
       case "orders-section":
         window.OrderHandlers?.loadOrders();
+        break;
+      case "inventory-section":
+        window.InventoryHandlers?.loadInventoryData();
         break;
       // Add other sections as needed
       default:

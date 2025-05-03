@@ -451,108 +451,6 @@ async function renderProducts() {
   }
 }
 
-// Thay thế hàm saveProduct hiện tại
-// async function saveProduct() {
-//   // Kiểm tra các phần tử DOM trước khi truy cập
-//   const nameInput = document.getElementById("product-name")
-//   const priceInput = document.getElementById("product-price")
-//   const stockInput = document.getElementById("product-stock")
-
-//   if (!nameInput || !priceInput) {
-//     showToast("Không thể tìm thấy các trường dữ liệu cần thiết", "error")
-//     return
-//   }
-
-//   const name = nameInput.value.trim()
-//   const price = Number.parseFloat(priceInput.value)
-//   const stock = stockInput ? Number.parseInt(stockInput.value) || 0 : 0
-
-//   if (!name || isNaN(price)) {
-//     showToast("Vui lòng điền đầy đủ thông tin bắt buộc", "error")
-//     tabs[0].click()
-//     return
-//   }
-
-//   // Lấy mô tả sản phẩm từ phương thức đang được chọn
-//   let description = ""
-//   try {
-//     const activeOption = document.querySelector(".option-btn.active")
-//     if (activeOption) {
-//       const optionId = activeOption.getAttribute("data-option")
-
-//       if (optionId === "manual" && quill) {
-//         description = quill.root.innerHTML
-//       } else if (optionId === "ai") {
-//         const aiResultElement = document.querySelector("#ai-result .generated-text")
-//         if (aiResultElement) {
-//           description = aiResultElement.innerHTML
-//         }
-//       } else if (optionId === "template") {
-//         const templateTextElement = document.querySelector("#template-preview .template-text")
-//         if (templateTextElement) {
-//           description = templateTextElement.innerHTML
-//         }
-//       } else if (optionId === "import") {
-//         const importedDescriptionElement = document.getElementById("imported-description")
-//         if (importedDescriptionElement) {
-//           description = importedDescriptionElement.innerHTML
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error getting description:", error)
-//     // Fallback to empty description if there's an error
-//     description = ""
-//   }
-
-//   // Determine status based on stock
-//   let status = "In Stock"
-//   if (stock <= 0) {
-//     status = "Out of Stock"
-//   } else if (stock <= 5) {
-//     status = "Low Stock"
-//   }
-
-//   const productId = document.getElementById("product-id") ? document.getElementById("product-id").value : null
-
-//   // Lấy hình ảnh
-//   const images = []
-//   const imagePreviewContainer = document.getElementById("image-preview-container")
-//   if (imagePreviewContainer) {
-//     imagePreviewContainer.querySelectorAll("img").forEach((img) => {
-//       images.push(img.src)
-//     })
-//   }
-
-//   // Chuẩn bị dữ liệu sản phẩm
-//   const productData = {
-//     name,
-//     price,
-//     stock,
-//     status,
-//     description,
-//     image: images.length > 0 ? JSON.stringify({ url: images[0] }) : null,
-//   }
-
-//   try {
-//     if (productId) {
-//       // Cập nhật sản phẩm hiện có
-//       await productService.updateProduct(productId, productData)
-//       showToast("Cập nhật sản phẩm thành công")
-//     } else {
-//       // Tạo sản phẩm mới
-//       await productService.createProduct(productData)
-//       showToast("Thêm sản phẩm mới thành công")
-//     }
-
-//     // Tải lại danh sách sản phẩm
-//     await renderProducts()
-//     closeProductModal()
-//   } catch (error) {
-//     showToast("Lỗi khi lưu sản phẩm: " + error.message, "error")
-//   }
-// }
-
 // Thay thế hàm deleteProduct hiện tại
 async function deleteProduct(productId) {
   try {
@@ -588,59 +486,55 @@ function getStatusClass(status) {
 
 // Thay thế hàm openProductModal để hiển thị đúng dữ liệu sản phẩm
 async function openProductModal(mode, productId = null) {
+  const modal = document.getElementById("product-modal");
+  const title = document.getElementById("modal-title");
+  const productIdInput = document.getElementById("product-id");
+  
   // Reset form
-  productBasicForm.reset()
-  productIdInput.value = ""
-  if (quill) {
-    quill.root.innerHTML = ""
+  document.getElementById("product-form").reset();
+  if (window.quill) {
+    window.quill.root.innerHTML = "";
   }
-
-  // Reset tabs
-  tabs[0].click()
-
+  
   if (mode === "edit" && productId) {
-    try {
-      // Lấy thông tin sản phẩm từ API
-      const product = await productService.getProductById(productId)
-
-      modalTitle.textContent = "Edit Product"
-      productIdInput.value = product.id
-      productNameInput.value = product.name
-      productPriceInput.value = product.price
-      productStockInput.value = product.stock
-
-      // Hiển thị mô tả sản phẩm trong editor
-      if (quill && product.description) {
-        quill.root.innerHTML = product.description
-      }
-
-      // Hiển thị hình ảnh sản phẩm
-      if (product.image) {
-        try {
-          // Nếu image là chuỗi JSON, parse nó
-          const imageData = JSON.parse(product.image)
-          if (imageData && imageData.url) {
-            addImagePreview(imageData.url)
-          } else if (typeof imageData === "string") {
-            addImagePreview(imageData)
-          }
-        } catch (e) {
-          // Nếu không phải JSON, sử dụng trực tiếp
-          addImagePreview(product.image)
-        }
-      }
-    } catch (error) {
-      showToast("Error loading product: " + error.message, "error")
-    }
+    // Logic for editing existing product
+    title.textContent = "Chỉnh sửa sản phẩm";
+    productIdInput.value = productId;
+    
+    // Fetch and fill product details
+    fetchProductDetails(productId);
   } else {
-    modalTitle.textContent = "Add New Product"
+    // Logic for adding new product
+    title.textContent = "Thêm sản phẩm mới";
+    productIdInput.value = "";
   }
+  
+  modal.style.display = "block";
+}
 
-  // Show modal
-  productModal.style.display = "block"
-
-  // Update navigation buttons
-  updateNavigationButtons()
+// Helper method to fetch product details
+async function fetchProductDetails(productId) {
+  try {
+    const response = await fetch(`/api/products/${productId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const product = await response.json();
+    
+    document.getElementById("product-name").value = product.name || "";
+    document.getElementById("product-category").value = product.category || "";
+    document.getElementById("product-purchase-price").value = product.purchasePrice || "";
+    document.getElementById("product-selling-price").value = product.price || "";
+    
+    if (window.quill && product.description) {
+      window.quill.root.innerHTML = product.description;
+    }
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+    window.ToastService?.error("Lỗi khi tải thông tin sản phẩm") || 
+      this.showToast("Lỗi khi tải thông tin sản phẩm", "error");
+  }
 }
 
 function closeProductModal() {
@@ -1420,7 +1314,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Set modal title
-    document.getElementById("modal-title").textContent = productId ? "Edit Product" : "Add New Product"
+    document.getElementById("modal-title").textContent = productId ? "Edit Product" : "Thêm sản phẩm mới"
 
     // If editing, populate form with product data
     if (productId) {
@@ -1778,7 +1672,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //       products[index] = product
   //     }
   //   } else {
-  //     // Add new product
+  //     // Thêm sản phẩm mới
   //     products.push(product)
   //   }
 

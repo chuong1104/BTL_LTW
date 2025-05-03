@@ -17,11 +17,17 @@ public class Product extends BaseEntity<String> {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(precision = 10, scale = 2)
+    private BigDecimal purchasePrice;
+
     @Transient  // Mark as transient so it's not stored in the database
     private Integer stock = 0;
 
     @Column(length = 255) // Lưu tên file ảnh hoặc đường dẫn tương đối
     private String image;
+
+    @Column(length = 100)
+    private String category;
 
     public Product() {
     }
@@ -56,6 +62,22 @@ public class Product extends BaseEntity<String> {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getStock() {

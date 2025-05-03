@@ -1,5 +1,7 @@
 package com.BTL_LTW.JanyPet.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.BTL_LTW.JanyPet.dto.request.InventoryMovementRequest;
 import com.BTL_LTW.JanyPet.dto.response.InventoryMovementResponse;
 import com.BTL_LTW.JanyPet.dto.response.InventoryResponse;
@@ -16,6 +18,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
+
+    private static final Logger log = LoggerFactory.getLogger(InventoryController.class);
 
     @Autowired
     private InventoryService inventoryService;
@@ -68,8 +72,14 @@ public class InventoryController {
 
     @PostMapping("/movement/export")
     public ResponseEntity<InventoryMovementResponse> exportInventory(@RequestBody InventoryMovementRequest request) {
-        InventoryMovementResponse movement = inventoryService.exportInventory(request);
-        return new ResponseEntity<>(movement, HttpStatus.CREATED);
+        try {
+            log.info("Received export request: {}", request);
+            InventoryMovementResponse response = inventoryService.exportInventory(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error processing export request: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     @PostMapping("/movement/adjust")

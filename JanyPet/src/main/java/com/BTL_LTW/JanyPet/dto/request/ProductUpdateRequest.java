@@ -9,6 +9,8 @@ public class ProductUpdateRequest {
     private String name;
     private String description;
     private BigDecimal price;
+    private BigDecimal purchasePrice; // Thêm trường purchasePrice
+    private String category; // Thêm trường category
     private Integer stock;
     @Transient
     private MultipartFile imageFile;
@@ -41,6 +43,24 @@ public class ProductUpdateRequest {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+    
+    // Getter và Setter cho purchasePrice
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+    
+    // Getter và Setter cho category
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getStock() {
