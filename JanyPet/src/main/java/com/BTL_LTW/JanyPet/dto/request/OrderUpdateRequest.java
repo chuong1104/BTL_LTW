@@ -7,7 +7,8 @@ public class OrderUpdateRequest {
     private OrderStatus status;
     private String customerId;
     private String branchId;
-    private String employeeId;
+    private String employeeName; // Thay thế employeeId bằng employeeName
+    private String employeeCode;
     private SalesChannel salesChannel;
     
     // Getters and setters
@@ -35,12 +36,20 @@ public class OrderUpdateRequest {
         this.branchId = branchId;
     }
     
-    public String getEmployeeId() {
-        return employeeId;
+    public String getEmployeeName() {
+        return employeeName;
     }
     
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+    
+    public String getEmployeeCode() {
+        return employeeCode;
+    }
+    
+    public void setEmployeeCode(String employeeCode) {
+        this.employeeCode = employeeCode;
     }
     
     public SalesChannel getSalesChannel() {

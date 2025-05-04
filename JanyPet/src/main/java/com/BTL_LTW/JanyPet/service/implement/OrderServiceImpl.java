@@ -59,9 +59,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private BranchRepository branchRepository;
     
-    @Autowired
-    private UserRepository userRepository;
-
     @Override
     @Transactional
     public OrderDetailResponse createOrder(OrderCreationRequest request) {
@@ -84,17 +81,18 @@ public class OrderServiceImpl implements OrderService {
             order.setBranch(branch);
         }
         
-        // Set employee if provided
-        if (request.getEmployeeId() != null) {
-            User employee = userRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + request.getEmployeeId()));
-            order.setEmployee(employee);
+        // Set employee info directly instead of User reference
+        if (request.getEmployeeName() != null) {
+            order.setEmployeeName(request.getEmployeeName());
+        }
+        if (request.getEmployeeCode() != null) {
+            order.setEmployeeCode(request.getEmployeeCode());
         }
         
         // Set sales channel
         order.setSalesChannel(request.getSalesChannel());
         
-        // Set order date and status
+        // Rest of the method remains unchanged
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
         
@@ -170,11 +168,13 @@ public class OrderServiceImpl implements OrderService {
             order.setBranch(branch);
         }
         
-        // Update employee if provided
-        if (request.getEmployeeId() != null) {
-            User employee = userRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + request.getEmployeeId()));
-            order.setEmployee(employee);
+        // Update employee info directly
+        if (request.getEmployeeName() != null) {
+            order.setEmployeeName(request.getEmployeeName());
+        }
+        
+        if (request.getEmployeeCode() != null) {
+            order.setEmployeeCode(request.getEmployeeCode());
         }
         
         // Update sales channel if provided
@@ -327,7 +327,7 @@ public class OrderServiceImpl implements OrderService {
                 row.createCell(2).setCellValue(order.getBranch() != null ? order.getBranch().getName() : "N/A");
                 row.createCell(3).setCellValue(order.getSalesChannel() != null ? order.getSalesChannel().toString() : "N/A");
                 row.createCell(4).setCellValue(order.getCustomer() != null ? order.getCustomer().getFullName() : "Khách vãng lai");
-                row.createCell(5).setCellValue(order.getEmployee() != null ? order.getEmployee().getFullName() : "N/A");
+                row.createCell(5).setCellValue(order.getEmployeeName() != null ? order.getEmployeeName() : "N/A");
                 
                 // Create cell for total amount with currency format
                 Cell totalCell = row.createCell(6);
@@ -371,10 +371,8 @@ public class OrderServiceImpl implements OrderService {
             response.setBranchName(order.getBranch().getName());
         }
         
-        // Set employee name if employee exists
-        if (order.getEmployee() != null) {
-            response.setEmployeeName(order.getEmployee().getFullName());
-        }
+        // Set employee name directly from order
+        response.setEmployeeName(order.getEmployeeName());
         
         // Set customer name if customer exists
         if (order.getCustomer() != null) {
@@ -415,10 +413,8 @@ public class OrderServiceImpl implements OrderService {
             response.setBranchName(order.getBranch().getName());
         }
         
-        // Set employee info if employee exists
-        if (order.getEmployee() != null) {
-            response.setEmployeeName(order.getEmployee().getFullName());
-        }
+        // Set employee info directly from order
+        response.setEmployeeName(order.getEmployeeName());
         
         // Set customer info if customer exists
         if (order.getCustomer() != null) {

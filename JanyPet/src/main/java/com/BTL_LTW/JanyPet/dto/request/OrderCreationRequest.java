@@ -11,7 +11,8 @@ import java.util.List;
 public class OrderCreationRequest {
     private String customerId;  // Nullable for guest customers
     private String branchId;    // Branch where order is placed
-    private String employeeId;  // Employee who processed the order
+    private String employeeName;  // Employee name directly instead of ID
+    private String employeeCode;  // Employee code if needed
     
     @NotNull(message = "Sales channel cannot be null")
     private SalesChannel salesChannel;
