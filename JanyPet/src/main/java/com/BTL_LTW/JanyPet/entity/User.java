@@ -93,6 +93,20 @@ public class User extends BaseEntity<String> implements UserDetails {
 
     // Getter và Setter
 
+    // Thêm phương thức
+    public String getFullName() {
+        // Nếu có firstName và lastName, ghép lại
+        if (firstName != null && lastName != null) {
+            return firstName + " " + lastName;
+        }
+        // Nếu chỉ có displayName
+        if (displayName != null) {
+            return displayName;
+        }
+        // Nếu không có gì, trả về username
+        return username;
+    }
+
     public boolean isDeleted() {
         return isDeleted;
     }

@@ -20,6 +20,12 @@ public class Product extends BaseEntity<String> {
     @Column(precision = 10, scale = 2)
     private BigDecimal purchasePrice;
 
+    @Column(length = 255)
+    private String sku;
+    
+    @Column(precision = 10, scale = 2)
+    private BigDecimal sellPrice;
+
     @Transient  // Mark as transient so it's not stored in the database
     private Integer stock = 0;
 
@@ -94,5 +100,21 @@ public class Product extends BaseEntity<String> {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public BigDecimal getSellPrice() {
+        return price; // Hoặc có thể return một trường sellPrice riêng nếu có
+    }
+
+    public void setSellPrice(BigDecimal sellPrice) {
+        this.sellPrice = sellPrice; // Hoặc this.price = sellPrice;
     }
 }

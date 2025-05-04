@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 @Table(name = "order_details")
 public class OrderDetail extends BaseEntity<String> {
 
-
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -24,6 +22,15 @@ public class OrderDetail extends BaseEntity<String> {
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
+    @Column(name = "purchase_price") 
+    private BigDecimal purchasePrice;
+
+    @Transient // Không lưu vào database
+    public BigDecimal getProfit() {
+        BigDecimal profit = unitPrice.subtract(purchasePrice).multiply(BigDecimal.valueOf(quantity));
+        return profit.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : profit;
+    }
 
     public BigDecimal getSubtotal() {
         return unitPrice.multiply(BigDecimal.valueOf(quantity));
@@ -59,5 +66,13 @@ public class OrderDetail extends BaseEntity<String> {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+    
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 }

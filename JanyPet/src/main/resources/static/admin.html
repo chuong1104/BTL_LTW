@@ -1108,410 +1108,443 @@
     <!-- Orders Section -->
     <div class="content-section" id="orders-section">
       <div class="section-header">
-        <h1>Order Management</h1>
+        <h1>Quản lý Hóa đơn</h1>
         <div>
           <button class="secondary-btn" id="export-orders-btn">
-            <i class="fas fa-file-export"></i> Export
+            <i class="fas fa-file-export"></i> Xuất Excel
           </button>
           <button class="primary-btn" id="add-order-btn">
-            <i class="fas fa-plus"></i> Create Order
+            <i class="fas fa-plus"></i> Tạo hóa đơn mới
           </button>
         </div>
       </div>
-
+    
       <div class="filters">
         <div class="filter-group">
-          <label>Order Status</label>
-          <select id="filter-order-status">
-            <option value="">All Status</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipping">Shipping</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Refunded">Refunded</option>
+          <label>Chi nhánh</label>
+          <select id="filter-branch">
+            <option value="">Tất cả chi nhánh</option>
           </select>
         </div>
         <div class="filter-group">
-          <label>Payment Status</label>
-          <select id="filter-payment-status">
-            <option value="">All Payment Status</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Failed">Failed</option>
-            <option value="Refunded">Refunded</option>
+          <label>Kênh bán</label>
+          <select id="filter-channel">
+            <option value="">Tất cả kênh</option>
+            <option value="ONLINE">Online</option>
+            <option value="OFFLINE">Tại quầy</option>
           </select>
         </div>
         <div class="filter-group">
-          <label>Date Range</label>
-          <div style="display: flex; gap: 10px">
-            <input type="date" id="order-date-from" placeholder="From" />
-            <input type="date" id="order-date-to" placeholder="To" />
-          </div>
+          <label>Trạng thái</label>
+          <select id="filter-status">
+            <option value="">Tất cả trạng thái</option>
+            <option value="PENDING">Chờ xử lý</option>
+            <option value="PROCESSING">Đang xử lý</option>
+            <option value="COMPLETED">Hoàn thành</option>
+            <option value="CANCELLED">Đã hủy</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Từ ngày</label>
+          <input type="date" id="filter-start-date">
+        </div>
+        <div class="filter-group">
+          <label>Đến ngày</label>
+          <input type="date" id="filter-end-date">
+        </div>
+        <div class="filter-group">
+          <button class="btn" id="search-btn">
+            <i class="fas fa-search"></i> Tìm kiếm
+          </button>
         </div>
       </div>
-
+    
       <div class="data-container">
-        <table class="data-table">
+        <table class="data-table" id="orders-table">
           <thead>
-          <tr>
-            <th><input type="checkbox" class="select-all" /></th>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Payment</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
+            <tr>
+              <th>Mã đơn hàng</th>
+              <th>Chi nhánh</th>
+              <th>Kênh bán</th>
+              <th>Nhân viên</th>
+              <th>Khách hàng</th>
+              <th>Ngày đặt</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
           </thead>
-          <tbody>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7829</td>
-            <td>Robert Brown</td>
-            <td>Apr 14, 2025</td>
-            <td>3 items</td>
-            <td>$58.25</td>
-            <td><span class="status active">Paid</span></td>
-            <td><span class="status completed">Delivered</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7830</td>
-            <td>Lisa Anderson</td>
-            <td>Apr 14, 2025</td>
-            <td>2 items</td>
-            <td>$124.99</td>
-            <td><span class="status active">Paid</span></td>
-            <td><span class="status processing">Processing</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7831</td>
-            <td>Thomas Clark</td>
-            <td>Apr 13, 2025</td>
-            <td>5 items</td>
-            <td>$93.85</td>
-            <td><span class="status active">Paid</span></td>
-            <td><span class="status shipping">Shipping</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7832</td>
-            <td>Jennifer Martinez</td>
-            <td>Apr 13, 2025</td>
-            <td>1 item</td>
-            <td>$32.50</td>
-            <td><span class="status pending">Pending</span></td>
-            <td><span class="status processing">Processing</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7833</td>
-            <td>Michael Wilson</td>
-            <td>Apr 12, 2025</td>
-            <td>4 items</td>
-            <td>$78.45</td>
-            <td><span class="status active">Paid</span></td>
-            <td><span class="status completed">Delivered</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="select-item" /></td>
-            <td>#ORD-7834</td>
-            <td>Sarah Johnson</td>
-            <td>Apr 12, 2025</td>
-            <td>2 items</td>
-            <td>$45.99</td>
-            <td><span class="status cancelled">Failed</span></td>
-            <td><span class="status cancelled">Cancelled</span></td>
-            <td class="actions">
-              <button class="icon-btn edit-btn">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-btn delete-btn">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </td>
-          </tr>
+          <tbody id="orders-table-body">
+            <tr>
+              <td colspan="9" class="text-center">Đang tải dữ liệu...</td>
+            </tr>
           </tbody>
         </table>
       </div>
+    
+      <div class="pagination" id="order-pagination">
+        <!-- Pagination will be inserted here by JavaScript -->
+      </div>
+    </div>
 
-      <div class="pagination">
-        <button class="pagination-btn" disabled>
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="pagination-btn active">1</button>
-        <button class="pagination-btn">2</button>
-        <button class="pagination-btn">3</button>
-        <span class="pagination-ellipsis">...</span>
-        <button class="pagination-btn">10</button>
-        <button class="pagination-btn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
+    <!-- Order Detail Modal -->
+    <div class="modal" id="order-detail-modal">
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h2>Chi tiết hóa đơn #<span id="modal-order-id"></span></h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="info-cards">
+            <div class="info-card">
+              <h3>Thông tin cơ bản</h3>
+              <div class="order-info">
+                <span class="info-label">Trạng thái:</span>
+                <span id="modal-order-status"></span>
+                
+                <span class="info-label">Kênh bán:</span>
+                <span id="modal-order-channel"></span>
+                
+                <span class="info-label">Ngày đặt:</span>
+                <span id="modal-order-date"></span>
+                
+                <span class="info-label">Chi nhánh:</span>
+                <span id="modal-branch-name"></span>
+                
+                <span class="info-label">Nhân viên:</span>
+                <span id="modal-employee-name"></span>
+              </div>
+            </div>
+            
+            <div class="info-card">
+              <h3>Thông tin khách hàng</h3>
+              <div class="customer-info">
+                <span class="info-label">Họ tên:</span>
+                <span id="modal-customer-name"></span>
+                
+                <span class="info-label">Email:</span>
+                <span id="modal-customer-email"></span>
+                
+                <span class="info-label">SĐT:</span>
+                <span id="modal-customer-phone"></span>
+                
+                <span class="info-label">Địa chỉ:</span>
+                <span id="modal-customer-address"></span>
+              </div>
+            </div>
+          </div>
+          
+          <h3>Danh sách sản phẩm</h3>
+          <table class="order-items-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th class="text-right">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody id="order-items-body">
+              <!-- Order items will be inserted here by JavaScript -->
+            </tbody>
+          </table>
+          
+          <div class="order-summary">
+            <table class="summary-table">
+              <tr>
+                <td>Tổng giá sản phẩm:</td>
+                <td class="text-right" id="modal-subtotal"></td>
+              </tr>
+              <tr>
+                <td>Thu nhập đơn hàng:</td>
+                <td class="text-right profit-amount" id="modal-profit"></td>
+              </tr>
+              <tr class="total-row">
+                <td>Tổng cộng:</td>
+                <td class="text-right" id="modal-total"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="modal-close-btn">Đóng</button>
+          <button class="btn-primary" id="print-order-btn">
+            <i class="fas fa-print"></i> In hóa đơn
+          </button>
+          <button class="btn-primary" id="update-status-btn">
+            <i class="fas fa-edit"></i> Cập nhật trạng thái
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Customers Section -->
     <div class="content-section" id="customers-section">
       <div class="section-header">
-        <h1>Customer Management</h1>
+        <h1>Quản lý khách hàng</h1>
         <button class="primary-btn" id="add-customer-btn">
-          <i class="fas fa-plus"></i> Add New Customer
+          <i class="fas fa-plus"></i> Thêm khách hàng mới
         </button>
       </div>
-
+    
       <div class="filters">
         <div class="filter-group">
-          <label>Customer Type</label>
+          <label>Loại khách hàng</label>
           <select id="filter-customer-type">
-            <option value="">All Types</option>
-            <option value="Regular">Regular</option>
+            <option value="">Tất cả loại</option>
+            <option value="REGULAR">Thường xuyên</option>
             <option value="VIP">VIP</option>
-            <option value="New">New</option>
+            <option value="NEW">Mới</option>
           </select>
         </div>
+        
         <div class="filter-group">
-          <label>Status</label>
+          <label>Trạng thái</label>
           <select id="filter-customer-status">
-            <option value="">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="">Tất cả trạng thái</option>
+            <option value="true">Đang hoạt động</option>
+            <option value="false">Ngưng hoạt động</option>
           </select>
         </div>
+        
         <div class="filter-group">
-          <label>Search</label>
-          <input
-                  type="text"
-                  id="customer-search"
-                  placeholder="Search by name, email, or phone"
-          />
+          <label>Tìm kiếm</label>
+          <div class="search-input-group">
+            <input type="text" id="customer-search" placeholder="Tên, email hoặc số điện thoại...">
+            <button type="button" id="search-customer-btn" class="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </div>
       </div>
-
+    
       <div class="data-container">
         <table class="data-table">
           <thead>
-          <tr>
-            <th><input type="checkbox" class="select-all" /></th>
-            <th>Customer</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Pets</th>
-            <th>Total Orders</th>
-            <th>Total Spent</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
+            <tr>
+              <th><input type="checkbox" class="select-all" /></th>
+              <th>Khách hàng</th>
+              <th>Giới tính</th>
+              <th>Tuổi</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th>Địa chỉ</th>
+              <th>Đơn hàng</th>
+              <th>Tổng chi tiêu</th>
+              <th>Loại KH</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
           </thead>
-          <!-- <tbody>
-            <tr>
-              <td><input type="checkbox" class="select-item" /></td>
-              <td>
-                <div style="display: flex; align-items: center">
-                  <img
-                    src="/placeholder.svg"
-                    alt="John Smith"
-                    style="border-radius: 50%; margin-right: 10px"
-                  />
-                  <div>
-                    <div>John Smith</div>
-                    <div style="font-size: 12px; color: #666">Regular</div>
-                  </div>
-                </div>
-              </td>
-              <td>john.smith@example.com</td>
-              <td>(555) 123-4567</td>
-              <td>2 pets</td>
-              <td>5</td>
-              <td>$245.75</td>
-              <td><span class="status active">Active</span></td>
-              <td class="actions">
-                <button class="icon-btn edit-btn">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="icon-btn delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" class="select-item" /></td>
-              <td>
-                <div style="display: flex; align-items: center">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="Sarah Johnson"
-                    style="border-radius: 50%; margin-right: 10px"
-                  />
-                  <div>
-                    <div>Sarah Johnson</div>
-                    <div style="font-size: 12px; color: #666">VIP</div>
-                  </div>
-                </div>
-              </td>
-              <td>sarah.johnson@example.com</td>
-              <td>(555) 234-5678</td>
-              <td>1 pet</td>
-              <td>12</td>
-              <td>$678.50</td>
-              <td><span class="status active">Active</span></td>
-              <td class="actions">
-                <button class="icon-btn edit-btn">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="icon-btn delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" class="select-item" /></td>
-              <td>
-                <div style="display: flex; align-items: center">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="Michael Davis"
-                    style="border-radius: 50%; margin-right: 10px"
-                  />
-                  <div>
-                    <div>Michael Davis</div>
-                    <div style="font-size: 12px; color: #666">Regular</div>
-                  </div>
-                </div>
-              </td>
-              <td>michael.davis@example.com</td>
-              <td>(555) 345-6789</td>
-              <td>3 pets</td>
-              <td>8</td>
-              <td>$412.25</td>
-              <td><span class="status active">Active</span></td>
-              <td class="actions">
-                <button class="icon-btn edit-btn">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="icon-btn delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" class="select-item" /></td>
-              <td>
-                <div style="display: flex; align-items: center">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="Emily Wilson"
-                    style="border-radius: 50%; margin-right: 10px"
-                  />
-                  <div>
-                    <div>Emily Wilson</div>
-                    <div style="font-size: 12px; color: #666">New</div>
-                  </div>
-                </div>
-              </td>
-              <td>emily.wilson@example.com</td>
-              <td>(555) 456-7890</td>
-              <td>1 pet</td>
-              <td>1</td>
-              <td>$32.50</td>
-              <td><span class="status active">Active</span></td>
-              <td class="actions">
-                <button class="icon-btn edit-btn">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="icon-btn delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" class="select-item" /></td>
-              <td>
-                <div style="display: flex; align-items: center">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="Robert Brown"
-                    style="border-radius: 50%; margin-right: 10px"
-                  />
-                  <div>
-                    <div>Robert Brown</div>
-                    <div style="font-size: 12px; color: #666">Regular</div>
-                  </div>
-                </div>
-              </td>
-              <td>robert.brown@example.com</td>
-              <td>(555) 567-8901</td>
-              <td>2 pets</td>
-              <td>4</td>
-              <td>$187.99</td>
-              <td><span class="status inactive">Inactive</span></td>
-              <td class="actions">
-                <button class="icon-btn edit-btn">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="icon-btn delete-btn">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody> -->
+          <tbody id="customers-table-body">
+            <!-- Data will be loaded here by JavaScript -->
+          </tbody>
         </table>
+    
+        <div class="pagination" id="customer-pagination">
+          <!-- Pagination controls will be added by JavaScript -->
+        </div>
       </div>
+    </div>
 
-      <div class="pagination">
-        <button class="pagination-btn" disabled>
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="pagination-btn active">1</button>
-        <button class="pagination-btn">2</button>
-        <button class="pagination-btn">3</button>
-        <span class="pagination-ellipsis">...</span>
-        <button class="pagination-btn">10</button>
-        <button class="pagination-btn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
+    <!-- CUSTOMER MODAL -->
+    <div class="modal" id="customer-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="customer-modal-title">Thêm khách hàng mới</h2>
+          <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="customer-form">
+            <input type="hidden" id="customer-id">
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-fullname">Họ và tên*</label>
+                <input type="text" id="customer-fullname" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="customer-gender">Giới tính</label>
+                <select id="customer-gender">
+                  <option value="">Chọn giới tính</option>
+                  <option value="MALE">Nam</option>
+                  <option value="FEMALE">Nữ</option>
+                  <option value="OTHER">Khác</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-age">Tuổi</label>
+                <input type="number" id="customer-age" min="0" max="120">
+              </div>
+              
+              <div class="form-group">
+                <label for="customer-birthdate">Ngày sinh</label>
+                <input type="date" id="customer-birthdate">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-email">Email*</label>
+                <input type="email" id="customer-email" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="customer-phone">Số điện thoại*</label>
+                <input type="tel" id="customer-phone" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="customer-address">Địa chỉ</label>
+              <input type="text" id="customer-address">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-city">Thành phố</label>
+                <input type="text" id="customer-city">
+              </div>
+              
+              <div class="form-group">
+                <label for="customer-postal-code">Mã bưu điện</label>
+                <input type="text" id="customer-postal-code">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="customer-type">Loại khách hàng</label>
+              <select id="customer-type">
+                <option value="REGULAR">Thường xuyên</option>
+                <option value="VIP">VIP</option>
+                <option value="NEW" selected>Mới</option>
+              </select>
+            </div>
+            
+            <div id="edit-only-fields" style="display: none;">
+              <div class="form-group">
+                <label for="customer-status">Trạng thái</label>
+                <select id="customer-status">
+                  <option value="true">Đang hoạt động</option>
+                  <option value="false">Ngưng hoạt động</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary-btn" id="cancel-customer-btn">Hủy</button>
+          <button type="button" class="btn primary-btn" id="save-customer-btn">Lưu khách hàng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMER DETAIL MODAL -->
+    <div class="modal" id="customer-detail-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Chi tiết khách hàng</h2>
+          <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-section">
+            <h3>Thông tin cơ bản</h3>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">Họ và tên:</span>
+                <span id="detail-fullname"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Giới tính:</span>
+                <span id="detail-gender"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Tuổi:</span>
+                <span id="detail-age"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Ngày sinh:</span>
+                <span id="detail-birthdate"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Email:</span>
+                <span id="detail-email"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Số điện thoại:</span>
+                <span id="detail-phone"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Địa chỉ:</span>
+                <span id="detail-address"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Thành phố:</span>
+                <span id="detail-city"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Mã bưu điện:</span>
+                <span id="detail-postal-code"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Loại khách hàng:</span>
+                <span id="detail-customer-type"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Trạng thái:</span>
+                <span id="detail-status"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Ngày tạo:</span>
+                <span id="detail-created-at"></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-section">
+            <h3>Thống kê</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-value" id="detail-order-count">0</div>
+                <div class="stat-label">Đơn hàng</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="detail-booking-count">0</div>
+                <div class="stat-label">Đặt lịch</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="detail-total-spent">0đ</div>
+                <div class="stat-label">Tổng chi tiêu</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary-btn" id="close-detail-btn">Đóng</button>
+          <button type="button" class="btn primary-btn" id="edit-customer-btn">Chỉnh sửa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIRM DELETE MODAL -->
+    <div class="modal" id="confirm-delete-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Xác nhận xóa</h2>
+          <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa khách hàng <span id="delete-customer-name"></span>?</p>
+          <p>Hành động này không thể hoàn tác.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary-btn" id="cancel-delete-btn">Hủy</button>
+          <button type="button" class="btn danger-btn" id="confirm-delete-btn">Xóa</button>
+        </div>
       </div>
     </div>
 
@@ -2117,6 +2150,7 @@ United States</textarea
 <script src="js/category-handlers.js"></script>
 <script src="js/staff-handlers.js"></script>
 <script src="js/inventory-handlers.js"></script>
+<script src="js/customer-handlers.js"></script>
 
 <!-- Main script -->
 <script src="js/admin-script.js"></script>
@@ -2166,6 +2200,9 @@ United States</textarea
     }
     if (window.InventoryHandlers) {
       InventoryHandlers.initializeInventoryEvents();
+    }
+    if (window.CustomerHandlers) {
+      CustomerHandlers.initializeCustomerEvents();
     }
   });
 </script>

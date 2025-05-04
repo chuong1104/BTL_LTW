@@ -21,6 +21,7 @@ import com.BTL_LTW.JanyPet.repository.UserRepository;
 import com.BTL_LTW.JanyPet.service.Interface.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import java.math.RoundingMode;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
         BigDecimal previousMonthRevenue = calculatePreviousMonthRevenue();
         if (previousMonthRevenue.compareTo(BigDecimal.ZERO) > 0) {
             double growthRate = monthlyRevenue.subtract(previousMonthRevenue)
-                    .divide(previousMonthRevenue, 4, BigDecimal.ROUND_HALF_UP)
+                    .divide(previousMonthRevenue, 2, RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(100))
                     .doubleValue();
             stats.setGrowthRate(growthRate);
