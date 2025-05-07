@@ -6,11 +6,13 @@ import com.BTL_LTW.JanyPet.dto.request.OrderCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.OrderUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.OrderDetailResponse;
 import com.BTL_LTW.JanyPet.dto.response.OrderListResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 
+@Transactional
 public interface OrderService {
     
     OrderDetailResponse createOrder(OrderCreationRequest request);

@@ -2,11 +2,16 @@ package com.BTL_LTW.JanyPet.entity;
 
 import com.BTL_LTW.JanyPet.common.OrderStatus;
 import com.BTL_LTW.JanyPet.common.SalesChannel;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.BatchSize;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "orders")
@@ -41,6 +46,8 @@ public class Order extends BaseEntity<String>{
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 20)
+    @JsonManagedReference
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)

@@ -2,6 +2,8 @@ package com.BTL_LTW.JanyPet.entity;
 
 import com.BTL_LTW.JanyPet.entity.BaseEntity;
 import com.BTL_LTW.JanyPet.entity.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -11,6 +13,7 @@ public class OrderDetail extends BaseEntity<String> {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Order order;
 
     @ManyToOne

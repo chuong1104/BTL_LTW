@@ -8,6 +8,7 @@ import com.BTL_LTW.JanyPet.dto.response.OrderDetailResponse;
 import com.BTL_LTW.JanyPet.dto.response.OrderListResponse;
 import com.BTL_LTW.JanyPet.service.Interface.OrderService;
 import jakarta.validation.Valid;
+import jakarta.transaction.Transactional; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -40,15 +43,36 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public ResponseEntity<OrderListResponse> getOrderById(@PathVariable String id) {
         OrderListResponse order = orderService.getOrderById(id);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping("/{id}/detail")
-    public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable String id) {
-        OrderDetailResponse order = orderService.getOrderDetail(id);
-        return ResponseEntity.ok(order);
+    @Transactional
+    public ResponseEntity<?> getOrderDetail(@PathVariable String id) {
+        try {
+            // Thêm debug log
+            System.out.println("Fetching order details for ID: " + id);
+            
+            OrderDetailResponse order = orderService.getOrderDetail(id);
+            
+            // Log toàn bộ nội dung response
+            System.out.println("Full order details response: " + order);
+            
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            // In toàn bộ stack trace
+            System.err.println("ERROR in getOrderDetail: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Trả về lỗi chi tiết
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Không thể lấy chi tiết đơn hàng: " + e.getMessage());
+            error.put("exceptionType", e.getClass().getName());
+            return ResponseEntity.status(500).body(error);
+        }
     }
 
     @PutMapping("/{id}")
@@ -60,6 +84,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
+    @Transactional
     public ResponseEntity<OrderListResponse> updateOrderStatus(
             @PathVariable String id,
             @RequestParam OrderStatus status) {
@@ -89,6 +114,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @Transactional 
     public ResponseEntity<Page<OrderListResponse>> getAllOrders(
             @RequestParam(required = false) String branchId,
             @RequestParam(required = false) SalesChannel salesChannel,

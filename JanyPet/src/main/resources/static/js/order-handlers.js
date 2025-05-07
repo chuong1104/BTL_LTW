@@ -153,7 +153,7 @@ const OrderHandlers = {
             ordersTableBody.innerHTML = '<tr><td colspan="9" class="text-center">Đang tải dữ liệu...</td></tr>';
             
             // Build URL with query params
-            let url = `/api/orders?page=${page}&size=${this.state.pageSize}&sort=${this.state.sortBy},${this.state.sortDir}`;
+            let url = `/api/orders?page=${page}&size=${this.state.pageSize}&sort=${this.state.sortBy}&direction=${this.state.sortDir}`;
             
             // Add filters if defined
             if (this.state.filterBranch) {
@@ -185,7 +185,17 @@ const OrderHandlers = {
             if (!response.ok) {
                 if (response.status === 500) {
                     console.error("Server error when loading orders");
-                    ordersTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Lỗi server khi tải dữ liệu. Vui lòng thử lại sau.</td></tr>';
+                    // Thêm code để lấy thông tin chi tiết về lỗi
+                    try {
+                        const errorResponse = await response.json();
+                        console.error("Server error details:", errorResponse);
+                        ordersTableBody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Lỗi server: ${errorResponse.message || 'Không có chi tiết'}. Vui lòng thử lại sau.</td></tr>`;
+                    } catch (e) {
+                        // Nếu không thể parse response json
+                        const errorText = await response.text();
+                        console.error("Server error raw response:", errorText);
+                        ordersTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Lỗi server khi tải dữ liệu. Vui lòng thử lại sau.</td></tr>';
+                    }
                     return;
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);

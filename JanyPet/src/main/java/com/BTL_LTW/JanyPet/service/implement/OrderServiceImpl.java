@@ -124,21 +124,24 @@ public class OrderServiceImpl implements OrderService {
         // Update total amount
         savedOrder.setTotalAmount(totalAmount);
         orderRepository.save(savedOrder);
+
+        Order refreshedOrder = orderRepository.findById(savedOrder.getId())
+        .orElseThrow(() -> new EntityNotFoundException("Order not found after creation"));
         
         // Return response
-        return mapToOrderDetailResponse(savedOrder);
+        return mapToOrderDetailResponse(refreshedOrder);
     }
 
     @Override
     public OrderListResponse getOrderById(String id) {
-        Order order = orderRepository.findById(id)
+        Order order = orderRepository.findByIdWithDetails(id)  // Sử dụng findByIdWithDetails thay vì findById
             .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
         return mapToOrderListResponse(order);
     }
-
     @Override
     public OrderDetailResponse getOrderDetail(String id) {
-        Order order = orderRepository.findById(id)
+        // Sử dụng phương thức mới với join fetch thay vì findById thông thường
+        Order order = orderRepository.findByIdWithDetails(id)
             .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
         return mapToOrderDetailResponse(order);
     }
@@ -189,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderListResponse updateOrderStatus(String id, OrderStatus status) {
-        Order order = orderRepository.findById(id)
+        Order order = orderRepository.findByIdWithDetails(id)  // Sử dụng findByIdWithDetails thay vì findById
             .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
         
         order.setStatus(status);
@@ -244,6 +247,8 @@ public class OrderServiceImpl implements OrderService {
         
         // Get page of orders
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
+
+        List<Order> ordersWithDetails = orderRepository.findAllWithDetails(orderPage.getContent());
         
         // Map to response DTOs
         List<OrderListResponse> orderResponses = orderPage.getContent().stream()
@@ -386,6 +391,10 @@ public class OrderServiceImpl implements OrderService {
     }
     
     private OrderDetailResponse mapToOrderDetailResponse(Order order) {
+        if (order.getOrderDetails() == null) {
+            order.setOrderDetails(new ArrayList<>());
+        }
+        
         List<OrderItemResponse> itemResponses = order.getOrderDetails().stream()
             .map(detail -> {
                 OrderItemResponse itemResponse = new OrderItemResponse(
@@ -433,10 +442,23 @@ public class OrderServiceImpl implements OrderService {
     }
     
     private BigDecimal calculateOrderProfit(Order order) {
+        if (order.getOrderDetails() == null) {
+            return BigDecimal.ZERO;
+        }
+        
         return order.getOrderDetails().stream()
+            .filter(detail -> detail != null && detail.getUnitPrice() != null)
             .map(detail -> {
-                BigDecimal unitProfit = detail.getUnitPrice().subtract(detail.getPurchasePrice());
-                return unitProfit.multiply(BigDecimal.valueOf(detail.getQuantity()));
+                // Đảm bảo không có null values khi tính toán
+                BigDecimal purchasePrice = detail.getPurchasePrice() != null ? 
+                                         detail.getPurchasePrice() : BigDecimal.ZERO;
+                BigDecimal unitPrice = detail.getUnitPrice() != null ?
+                                     detail.getUnitPrice() : BigDecimal.ZERO;
+                                     
+                BigDecimal unitProfit = unitPrice.subtract(purchasePrice);
+                int quantity = detail.getQuantity() != null ? detail.getQuantity() : 0;
+                
+                return unitProfit.multiply(BigDecimal.valueOf(quantity));
             })
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

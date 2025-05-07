@@ -20,8 +20,8 @@ public class Product extends BaseEntity<String> {
     @Column(precision = 10, scale = 2)
     private BigDecimal purchasePrice;
 
-    @Column(length = 255)
-    private String sku;
+    @Column(unique = true)
+    private String sku; 
     
     @Column(precision = 10, scale = 2)
     private BigDecimal sellPrice;
@@ -34,6 +34,8 @@ public class Product extends BaseEntity<String> {
 
     @Column(length = 100)
     private String category;
+
+    
 
     public Product() {
     }
@@ -103,7 +105,7 @@ public class Product extends BaseEntity<String> {
     }
     
     public String getSku() {
-        return sku;
+        return sku != null ? sku : ""; // Trả về chuỗi rỗng thay vì null
     }
 
     public void setSku(String sku) {
