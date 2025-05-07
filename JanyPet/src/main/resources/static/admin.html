@@ -592,7 +592,7 @@
       <div class="filters">
         <div class="filter-group">
           <label>Chi nhánh</label>
-          <select id="filter-branch">
+          <select id="history-branch">
             <option value="">Tất cả chi nhánh</option>
             <option value="1">PetShop Hà Đông</option>
             <option value="2">PetShop Thanh Xuân</option>
@@ -606,6 +606,7 @@
             <option value="Pet Food">Pet Food</option>
             <option value="Toys">Toys</option>
             <option value="Accessories">Accessories</option>
+            <option value="Medicine">Medicine</option>
           </select>
         </div>
         <div class="filter-group">
@@ -615,6 +616,15 @@
             <option value="in-stock">Còn hàng</option>
             <option value="low-stock">Sắp hết</option>
             <option value="out-of-stock">Hết hàng</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Sắp xếp theo</label>
+          <select id="sort-by">
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="price-asc">Giá (Thấp đến cao)</option>
+            <option value="price-desc">Giá (Cao xuống thấp)</option>
           </select>
         </div>
       </div>
@@ -1124,6 +1134,9 @@
           <label>Chi nhánh</label>
           <select id="filter-branch">
             <option value="">Tất cả chi nhánh</option>
+            <option value="1">PetShop Hà Đông</option>
+            <option value="2">PetShop Thanh Xuân</option>
+            <option value="3">PetShop Cầu Giấy</option>
           </select>
         </div>
         <div class="filter-group">
