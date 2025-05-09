@@ -23,10 +23,10 @@ public class DashboardService {
 
         // Lấy dữ liệu tăng trưởng
         dto.setProductGrowth(dashboardRepository.getProductGrowth());
-        //dto.setOnlineOrderGrowth(dashboardRepository.getOnlineOrderGrowth());
-       // dto.setOfflineOrderGrowth(dashboardRepository.getOfflineOrderGrowth());
-       // dto.setCustomerGrowth(dashboardRepository.getCustomerGrowth());
-        //dto.setRevenueGrowth(dashboardRepository.getRevenueGrowth());
+        dto.setOnlineOrderGrowth(dashboardRepository.getOnlineOrderGrowth());
+        dto.setOfflineOrderGrowth(dashboardRepository.getOfflineOrderGrowth());
+        dto.setCustomerGrowth(dashboardRepository.getCustomerGrowth());
+        dto.setRevenueGrowth(dashboardRepository.getRevenueGrowth());
 
         return dto;
     }
