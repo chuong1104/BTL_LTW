@@ -46,7 +46,8 @@ app:
 
 vnpay:
   payUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  returnUrl: https://your-domain.com/api/payment/return
-  tmnCode: YOUR_VNP_TMN_CODE
-  hashSecret: YOUR_VNP_HASH_SECRET
+  returnUrl: http://localhost:8080/vnpay/payment-callback # Matches VnPayConfig.java
+  ipnUrl: http://localhost:8080/vnpay/ipn-callback       # Matches VnPayConfig.java
+  tmnCode: CBV4016A
+  hashSecret: 3RJVZXLUE88KVIC143SMRKGCSXYNASBJ
 

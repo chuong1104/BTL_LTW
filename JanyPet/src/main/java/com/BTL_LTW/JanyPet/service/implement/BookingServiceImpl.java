@@ -7,6 +7,7 @@ import com.BTL_LTW.JanyPet.entity.Booking;
 import com.BTL_LTW.JanyPet.entity.Pet;
 import com.BTL_LTW.JanyPet.entity.Service;
 import com.BTL_LTW.JanyPet.entity.User;
+import com.BTL_LTW.JanyPet.exception.ResourceNotFoundException;
 import com.BTL_LTW.JanyPet.mapper.Interface.BookingMapper;
 import com.BTL_LTW.JanyPet.repository.BookingRepository;
 import com.BTL_LTW.JanyPet.repository.PetRepository;
@@ -129,4 +130,12 @@ public class BookingServiceImpl implements BookingService {
         }
         bookingRepo.deleteById(id);
     }
+    public BookingResponse findById(String id) {
+    // Use the custom repository method instead of the standard findById
+    Booking booking = bookingRepo.findBookingWithServices(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
+
+    // Now you can safely access the services collection
+    return mapper.toDTO(booking);
+}
 }

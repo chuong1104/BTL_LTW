@@ -655,6 +655,14 @@ textarea {
   box-shadow: var(--shadow);
 }
 
+.filters input[type="text"] {
+  flex-grow: 1;
+}
+
+.filters select {
+  width: auto;
+}
+
 .filter-group {
   flex: 1;
   min-width: 200px;
@@ -782,7 +790,7 @@ textarea {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
@@ -799,6 +807,11 @@ textarea {
   width: 90%;
   max-width: 800px;
   animation: modalFadeIn 0.3s;
+}
+
+.modal-content.large {
+  width: 90%;
+  max-width: 900px;
 }
 
 @keyframes modalFadeIn {
@@ -839,13 +852,16 @@ textarea {
 
 .modal-body {
   padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .modal-footer {
   padding: 15px 20px;
   border-top: 1px solid var(--border-color);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
 }
 
@@ -875,6 +891,7 @@ textarea {
 
 .tab-pane {
   display: none;
+  padding: 15px 0;
 }
 
 .tab-pane.active {
@@ -1410,17 +1427,23 @@ body:not(.is-admin) .admin-only {
 .service-item {
   position: relative;
   padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
   margin-bottom: 15px;
+  border-left: 3px solid var(--primary-color);
 }
 
-.delete-service-item {
+.service-item .delete-service-item {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #ff6b6b;
-  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.service-item .delete-service-item:hover {
+  color: var(--danger-color);
+  transform: scale(1.1);
 }
 
 #service-items-container {
@@ -1430,6 +1453,23 @@ body:not(.is-admin) .admin-only {
 
 #add-service-item {
   margin-top: 10px;
+}
+
+#service-description-editor-container {
+  height: 200px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.ql-toolbar.ql-snow {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.ql-container.ql-snow {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
 }
 
 .form-group.checkboxes {
@@ -1445,4 +1485,311 @@ body:not(.is-admin) .admin-only {
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
+}
+
+/* Table status indicators */
+.status-active {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: #dc3545;
+}
+
+/* Service Management Styles */
+
+/* Fix for Add New Service button */
+#add-service-btn {
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+}
+
+/* Improved filters section for services */
+#services-section .filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#services-section .filters input[type="text"] {
+  flex: 1;
+  min-width: 250px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#services-section .filters select {
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+}
+
+/* Make sure buttons are clickable */
+.btn {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+/* Service Form Tabs */
+.form-tabs {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-tabs .tab-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.form-tabs .tab-item a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.form-tabs .tab-item.active a {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.form-tabs .tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-color);
+}
+
+.tab-pane {
+  display: none;
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Input styling */
+.input-with-helper {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-helper input {
+  flex: 1;
+}
+
+.icon-preview {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  margin-left: 10px;
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group-text {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-right: none;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.input-group input {
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.helper-text {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Form error message */
+.form-error-message {
+  color: var(--danger-color);
+  font-size: 14px;
+  margin-right: auto;
+}
+
+/* Modal footer layout */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Service form helpers */
+#auto-calculate-prices, 
+#copy-service-prices-btn {
+  white-space: nowrap;
+}
+
+/* Required field indicator */
+label[for*="service-name"]::after,
+label[for*="service-category"]::after,
+label[for*="service-base-price"]::after,
+label[for*="service-small-pet-price"]::after,
+label[for*="service-medium-pet-price"]::after,
+label[for*="service-large-pet-price"]::after,
+label[for*="service-xlarge-pet-price"]::after {
+  content: " *";
+  color: var(--danger-color);
+}
+
+/* Service details modal styles */
+.service-details {
+    padding: 10px;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-section h3 {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.details-table td, .details-table th {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.items-table th {
+    background-color: #f5f5f5;
+    text-align: left;
+}
+
+.service-description {
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.status.active {
+    color: green;
+    font-weight: bold;
+}
+
+.status.inactive {
+    color: gray;
+}
+/* Service details modal styles */
+#service-details-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.service-details-modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 5px;
+}
+
+.service-details {
+    padding: 15px 0;
+}
+
+.detail-section {
+    margin-bottom: 25px;
+}
+
+.detail-section h3 {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+    color: #444;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.details-table td, .details-table th {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.items-table th {
+    background-color: #f5f5f5;
+    text-align: left;
+    font-weight: bold;
+}
+
+.service-description-content {
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    line-height: 1.6;
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.status-badge.active {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.status-badge.inactive {
+    background-color: #f2dede;
+    color: #a94442;
 }

@@ -14,6 +14,7 @@ public class ProductUpdateRequest {
     private MultipartFile imageFile;
     private String imagePath;
 
+    private String categoryId;
     // Constructor
     public ProductUpdateRequest() {
     }
@@ -74,5 +75,13 @@ public class ProductUpdateRequest {
 
     public void setImage(MultipartFile image) {
         this.imageFile = image;
+    }
+
+    public String getCategoryId() { // Added
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) { // Added
+        this.categoryId = categoryId;
     }
 }

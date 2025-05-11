@@ -14,6 +14,7 @@ public class ProductCreationRequest {
     private MultipartFile imageFile;
     
     private String imagePath;
+    private String categoryId; 
 
     public ProductCreationRequest() {
     }
@@ -33,6 +34,13 @@ public class ProductCreationRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getCategoryId() { // Added
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) { // Added
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {

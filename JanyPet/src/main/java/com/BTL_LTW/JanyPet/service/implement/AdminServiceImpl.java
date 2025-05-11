@@ -322,8 +322,8 @@ public class AdminServiceImpl implements AdminService {
         for (Booking booking : bookings) {
             for (Service service : booking.getServices()) {
                 String serviceName = service.getName();
-                BigDecimal price = service.getPrice();
-
+                // Calculate the appropriate price based on the pet size
+                BigDecimal price = getPriceForService(booking, service);
                 result.put(serviceName, result.getOrDefault(serviceName, BigDecimal.ZERO).add(price));
             }
         }
@@ -453,7 +453,41 @@ public class AdminServiceImpl implements AdminService {
 
     private BigDecimal calculateBookingRevenue(Booking booking) {
         return booking.getServices().stream()
-                .map(Service::getPrice)
+                .map(service -> getPriceForService(booking, service))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * Determines the appropriate price for a service based on the pet size in the booking.
+     *
+     * @param booking The booking containing the pet
+     * @param service The service to get the price for
+     * @return The appropriate price based on pet size
+     */
+    private BigDecimal getPriceForService(Booking booking, Service service) {
+        // If there's no pet in the booking or multiple pets, use the base price
+        // Get the pet from the booking. In this case, we need to implement a different approach
+        // since Pet class doesn't have a size field directly
+
+        Pet pet = booking.getPet(); // Assuming Booking has a getPet() method
+
+        // Determine price based on pet weight if available
+        if (pet != null && pet.getWeight() != null) {
+            double weight = pet.getWeight();
+
+            // Define weight ranges for pet sizes
+            if (weight < 5.0) { // Small pet: < 5kg
+                return service.getSmallPetPrice();
+            } else if (weight < 15.0) { // Medium pet: 5-15kg
+                return service.getMediumPetPrice();
+            } else if (weight < 30.0) { // Large pet: 15-30kg
+                return service.getLargePetPrice();
+            } else { // XLarge pet: > 30kg
+                return service.getXlargePetPrice();
+            }
+        }
+
+        // Default to base price if pet weight is unavailable
+        return service.getBasePrice();
     }
 }

@@ -3,7 +3,9 @@ package com.BTL_LTW.JanyPet.service.implement;
 import com.BTL_LTW.JanyPet.dto.request.ProductCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
+import com.BTL_LTW.JanyPet.entity.Category;
 import com.BTL_LTW.JanyPet.entity.Product;
+import com.BTL_LTW.JanyPet.repository.CategoryRepository;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
 import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
@@ -25,6 +27,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired 
+    private CategoryRepository categoryRepository;
+
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
         Product product = new Product();
@@ -32,6 +37,13 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
+        // Handle Category
+        if (request.getCategoryId() != null && !request.getCategoryId().isEmpty()) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
+            product.setCategory(category);
+        }
+
 
         // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
@@ -77,6 +89,16 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
+
+         // Handle Category Update
+         if (request.getCategoryId() != null && !request.getCategoryId().isEmpty()) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
+            product.setCategory(category);
+        } else {
+            product.setCategory(null); // Allow unsetting category
+        }
+
 
         // Xử lý trường hợp upload file mới
         MultipartFile imageFile = request.getImageFile();
@@ -160,7 +182,11 @@ public class ProductServiceImpl implements ProductService {
             }
             response.setImageUrl(imageUrl);
         }
-        
+        // Map Category Info
+        if (product.getCategory() != null) {
+            response.setCategoryId(product.getCategory().getId());
+            response.setCategoryName(product.getCategory().getName());
+        }
         return response;
     }
 

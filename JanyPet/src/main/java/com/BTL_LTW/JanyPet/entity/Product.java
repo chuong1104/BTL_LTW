@@ -1,37 +1,40 @@
 package com.BTL_LTW.JanyPet.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
 public class Product extends BaseEntity<String> {
-    @Column(nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(nullable = false)
-    private Integer stock = 0;
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
 
-    @Column(length = 255) // Lưu tên file ảnh hoặc đường dẫn tương đối
-    private String image;
+    @Column(name = "image")
+    private String image; // URL or path to image
+
+    @ManyToOne(fetch = FetchType.EAGER) // EAGER to load category info with product
+    @JoinColumn(name = "category_id") // Foreign key column in the Product table
+    private Category category;
 
     public Product() {
     }
 
-    public Product(String name, String description, BigDecimal price, Integer stock, String image) {
+    public Product(String name, String description, BigDecimal price, Integer stock, String image, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.image = image;
+        this.category = category;
     }
 
     public String getName() {
@@ -72,5 +75,13 @@ public class Product extends BaseEntity<String> {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

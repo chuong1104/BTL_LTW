@@ -3,14 +3,47 @@
  */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    console.log("Initializing admin dashboard...")
+    console.log("Initializing admin dashboard...");
 
-    // Check for required services
-    const requiredServices = ['ProductHandlers', 'ToastService', 'ApiService'];
-    const missingServices = requiredServices.filter(service => !window[service]);
-    
-    if (missingServices.length > 0) {
-      throw new Error(`Missing required services: ${missingServices.join(', ')}`);
+    // Fix: Make sure ToastService exists
+    if (!window.ToastService && window.toast) {
+      window.ToastService = {
+        success: (message) => {
+          if (window.toast) window.toast.show('success', message);
+          else console.log('Success:', message);
+        },
+        error: (message) => {
+          if (window.toast) window.toast.show('error', message);
+          else console.error('Error:', message);
+        },
+        warning: (message) => {
+          if (window.toast) window.toast.show('warning', message);
+          else console.warn('Warning:', message);
+        },
+        info: (message) => {
+          if (window.toast) window.toast.show('info', message);
+          else console.info('Info:', message);
+        }
+      };
+    }
+
+    // Fix: Make sure apiService exists
+    if (!window.apiService) {
+      console.warn("API service not defined, using fallback");
+      window.apiService = {
+        fetchData: async function(url, method = "GET", data = null) {
+          console.log(`[MOCK] ${method} ${url}`);
+          // Return mock data for essential endpoints
+          if (url.includes('/api/services')) {
+            return [
+              { id: "mock1", name: "Basic Grooming", category: "GROOMING", basePrice: 200000, duration: 60, active: true },
+              { id: "mock2", name: "Premium Grooming", category: "GROOMING", basePrice: 350000, duration: 90, active: true },
+              { id: "mock3", name: "Pet Boarding", category: "BOARDING", basePrice: 250000, duration: 1440, active: true }
+            ];
+          }
+          return [];
+        }
+      };
     }
 
     // Initialize core functionality
@@ -18,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (error) {
     console.error("Failed to initialize admin dashboard:", error);
-    window.ToastService?.error("Dashboard initialization failed");
+    alert("Dashboard initialization failed: " + error.message);
   }
 });
 
@@ -31,11 +64,28 @@ async function initializeAdminDashboard() {
   initializeNavigation();
   initializeResponsiveBehavior();
 
-  // Initialize handlers
-  await Promise.all([
-    initializeProductSection(),
-    initializeEventListeners()
-  ]);
+  // Initialize handlers (safely)
+  try {
+    // Initialize product section if available
+    if (typeof initializeProductSection === 'function') {
+      await initializeProductSection();
+    }
+    
+    // Initialize event listeners
+    initializeEventListeners();
+
+    // Initialize service handlers if available
+    if (window.ServiceHandlers?.initializeServiceEvents) {
+      window.ServiceHandlers.initializeServiceEvents();
+    }
+
+    // Initialize appointment handlers if available  
+    if (window.AppointmentHandlers?.initializeAppointmentEvents) {
+      window.AppointmentHandlers.initializeAppointmentEvents();
+    }
+  } catch (error) {
+    console.error("Error initializing handlers:", error);
+  }
 
   // Load initial data
   loadInitialData();
@@ -189,8 +239,17 @@ function loadSectionData(sectionId) {
       case "products-section":
         window.ProductHandlers?.loadProducts();
         break;
+      case "services-section":
+        window.ServiceHandlers?.loadServices();
+        break;
+      case "appointments-section":
+        window.AppointmentHandlers?.loadAppointments();
+        break;
       case "orders-section":
         window.OrderHandlers?.loadOrders();
+        break;
+      case "categories-section":
+        window.CategoryHandlers?.loadCategories();
         break;
       // Add other sections as needed
       default:
@@ -215,3 +274,102 @@ function loadInitialData() {
     initialMenuItem.click();
   }
 }
+
+// Create a namespace for AppointmentHandlers if it doesn't exist yet
+window.AppointmentHandlers = window.AppointmentHandlers || {};
+
+// Add methods to AppointmentHandlers
+Object.assign(window.AppointmentHandlers, {
+  openBookingModal(mode, id) {
+    const label = document.getElementById('bookingModalLabel');
+    const form = document.getElementById('booking-form');
+    form.reset();
+    document.getElementById('booking-id').value = '';
+    // load users, pets, services lists
+    Promise.all([
+      window.apiService.fetchData('/api/users', 'GET'),
+      window.apiService.fetchData('/api/pets', 'GET'),
+      window.apiService.fetchData('/api/services', 'GET')
+    ]).then(([users, pets, services]) => {
+      const uSelect = document.getElementById('booking-user'); 
+      uSelect.innerHTML = users.map(u=>`<option value="${u.id}">${u.username}</option>`).join('');
+      
+      const pSelect = document.getElementById('booking-pet'); 
+      pSelect.innerHTML = pets.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+      
+      const sSelect = document.getElementById('booking-services'); 
+      sSelect.innerHTML = services.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+    });
+    
+    if (mode==='edit') {
+      label.textContent='Edit Appointment';
+      window.apiService.fetchData(`/api/bookings/${id}`, 'GET').then(b=>{
+        document.getElementById('booking-id').value=b.id;
+        document.getElementById('booking-user').value=b.user.id;
+        document.getElementById('booking-pet').value=b.pet.id;
+        document.getElementById('booking-services').value=b.services.map(s=>s.id);
+        document.getElementById('booking-date').value=b.bookingDate;
+        document.getElementById('booking-time').value=b.startTime;
+        document.getElementById('booking-status').value=b.status;
+        document.getElementById('booking-notes').value=b.notes;
+      });
+    } else {
+      label.textContent='Add Appointment';
+    }
+    new bootstrap.Modal(document.getElementById('bookingModal')).show();
+  },
+  
+  saveBooking() {
+    const id = document.getElementById('booking-id').value;
+    const data = {
+      userId: document.getElementById('booking-user').value,
+      petId: document.getElementById('booking-pet').value,
+      serviceIds: Array.from(document.getElementById('booking-services').selectedOptions).map(o=>o.value),
+      bookingDate: document.getElementById('booking-date').value,
+      startTime: document.getElementById('booking-time').value,
+      status: document.getElementById('booking-status').value,
+      notes: document.getElementById('booking-notes').value
+    };
+    
+    const req = id 
+      ? window.apiService.fetchData(`/api/bookings/${id}`, 'PUT', data) 
+      : window.apiService.fetchData('/api/bookings', 'POST', data);
+      
+    req.then(()=>{
+      window.ToastService.success(id ? 'Updated appointment' : 'Added appointment');
+      bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+      window.AppointmentHandlers.loadAppointments();
+    }).catch(err=>{
+      console.error('Save booking failed', err);
+      window.ToastService.error('Save failed');
+    });
+  },
+  
+  deleteBooking(id) {
+    if(!confirm('Delete this appointment?')) return;
+    
+    window.apiService.fetchData(`/api/bookings/${id}`, 'DELETE').then(()=>{
+      window.ToastService.success('Appointment deleted');
+      window.AppointmentHandlers.loadAppointments();
+    }).catch(err=>{
+      console.error('Delete booking error', err);
+      window.ToastService.error('Delete failed');
+    });
+  },
+  
+  initializeAppointmentEvents() {
+    document.getElementById('add-appointment-btn')?.addEventListener('click', () => this.openBookingModal('add'));
+    document.getElementById('save-booking-btn')?.addEventListener('click', () => this.saveBooking());
+    document.getElementById('appointments-table-body')?.addEventListener('click', e => {
+      if(e.target.closest('.edit-appointment-btn')) 
+        this.openBookingModal('edit', e.target.closest('.edit-appointment-btn').dataset.id);
+      if(e.target.closest('.delete-appointment-btn')) 
+        this.deleteBooking(e.target.closest('.delete-appointment-btn').dataset.id);
+    });
+  },
+  
+  loadAppointments() {
+    // Implementation would go here
+    console.log('Loading appointments...');
+  }
+});

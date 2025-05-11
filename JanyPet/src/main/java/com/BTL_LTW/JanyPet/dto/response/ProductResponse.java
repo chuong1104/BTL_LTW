@@ -9,6 +9,8 @@ public class ProductResponse {
     private BigDecimal price;
     private Integer stock;
     private String imageUrl; // Trả về URL đầy đủ để hiển thị trên giao diện
+    private String categoryId;   // Added
+    private String categoryName;
 
     public String getId() {
         return id;
@@ -56,5 +58,21 @@ public class ProductResponse {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCategoryId() { // Added
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) { // Added
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() { // Added
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) { // Added
+        this.categoryName = categoryName;
     }
 }

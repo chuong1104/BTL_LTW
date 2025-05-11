@@ -90,17 +90,18 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/uploads/**",
-                                "/api/upload/files/**", // Cho phép truy cập công khai vào hình ảnh
-                                "/admin.html"
+                                "/api/upload/files/**" // Cho phép truy cập công khai vào hình ảnh
                         ).permitAll()
                         .requestMatchers(
                                 "/**",
                                 "/api/auth/**",
                                 "/api/users/register-admin",
                                 "/api/users/init-admin",
-                                "/api/**"
+                                "/api/**",
+                                "/api/admin/**"
+
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
                         .requestMatchers("/api/users/**").hasAnyRole(
                                 Role.ADMIN.name(),

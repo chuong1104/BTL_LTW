@@ -152,6 +152,78 @@ window.apiService = {
         }, mockData);
     },
     
+    // Generic RESTful API method that works with any endpoint
+    fetchData: async function(url, method = "GET", data = null) {
+        console.log(`fetchData called: ${method} ${url}`);
+        
+        // Handle both full URLs and relative paths
+        let endpoint = url;
+        
+        // If this is a full URL (not just an endpoint)
+        if (url.startsWith('http') || url.startsWith('/api')) {
+            // Remove API_BASE_URL if it's at the beginning of the URL
+            if (url.startsWith(this.API_BASE_URL)) {
+                endpoint = url.substring(this.API_BASE_URL.length);
+            } 
+            // If it's just starting with /api but not the exact API_BASE_URL
+            else if (url.startsWith('/api')) {
+                endpoint = url.substring(4); // Remove /api
+            } 
+            // Otherwise, use the full URL (might be external API)
+            else {
+                // For external APIs, use fetch directly
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (data && (method === "POST" || method === "PUT")) {
+                    options.body = JSON.stringify(data);
+                }
+                
+                try {
+                    console.log(`External API Request: ${method} ${url}`);
+                    const response = await fetch(url, options);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    // For DELETE requests with 204 No Content
+                    if (response.status === 204) {
+                        return null;
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error(`External API Error (${url}):`, error);
+                    throw error;
+                }
+            }
+        }
+        
+        // Make sure endpoint starts with /
+        if (!endpoint.startsWith('/')) {
+            endpoint = '/' + endpoint;
+        }
+        
+        // Use the appropriate method based on the HTTP verb
+        switch (method.toUpperCase()) {
+            case 'GET':
+                return this.get(endpoint);
+            case 'POST':
+                return this.post(endpoint, data);
+            case 'PUT':
+                return this.put(endpoint, data);
+            case 'DELETE':
+                return this.delete(endpoint);
+            default:
+                throw new Error(`Unsupported HTTP method: ${method}`);
+        }
+    },
+    
     // Domain-specific methods
     getServices: function() {
         return this.get('/services', [
@@ -214,8 +286,26 @@ window.apiService = {
         ]);
     },
     
-    // Additional methods for the rest of the API
-    // ...
+    // Add these convenience methods for category operations
+    getCategories: function() {
+        return this.fetchData('/api/categories', 'GET');
+    },
+    
+    getCategoryById: function(id) {
+        return this.fetchData(`/api/categories/${id}`, 'GET');
+    },
+    
+    createCategory: function(categoryData) {
+        return this.fetchData('/api/categories', 'POST', categoryData);
+    },
+    
+    updateCategory: function(id, categoryData) {
+        return this.fetchData(`/api/categories/${id}`, 'PUT', categoryData);
+    },
+    
+    deleteCategory: function(id) {
+        return this.fetchData(`/api/categories/${id}`, 'DELETE');
+    }
 };
 
 // Initialize the API service
