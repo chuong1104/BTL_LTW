@@ -1,63 +1,33 @@
-package com.BTL_LTW.JanyPet.entity;
+package com.BTL_LTW.JanyPet.dto.response;
 
-import com.BTL_LTW.JanyPet.entity.BaseEntity;
-import com.BTL_LTW.JanyPet.entity.Product;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "order_details")
-public class OrderDetail extends BaseEntity<String> {
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    // Lưu trữ thông tin sản phẩm tại thời điểm đặt hàng
-    @Column(name = "product_name")
+public class OrderDetailResponse {
+    private String id;
+    private String productId;
     private String productName;
-
-    @Column(name = "product_image")
     private String productImage;
-
-    @Column(name = "product_color")
     private String productColor;
-
-    @Column(name = "product_size")
     private String productSize;
-
-    @Column(name = "quantity")
     private Integer quantity;
-
-    @Column(name = "unit_price")
     private BigDecimal unitPrice;
+    private BigDecimal subtotal;
 
-    public BigDecimal getSubtotal() {
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    // Getters and setters
+    public String getId() {
+        return id;
     }
 
-    public Order getOrder() {
-        return order;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public String getProductId() {
+        return productId;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-        if (product != null) {
-            this.productName = product.getName();
-            this.productImage = product.getImage();
-        }
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -106,5 +76,13 @@ public class OrderDetail extends BaseEntity<String> {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
     }
 }

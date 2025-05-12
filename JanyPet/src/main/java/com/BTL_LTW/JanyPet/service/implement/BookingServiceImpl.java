@@ -32,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
     @Autowired private BookingMapper mapper;
 
     @Override
+    @Transactional 
     public BookingResponse create(BookingCreationRequest req) {
         Booking booking = mapper.toEntity(req);
 
@@ -71,6 +72,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingResponse update(String id, BookingUpdateRequest req) {
         Booking booking = bookingRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));

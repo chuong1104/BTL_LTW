@@ -1,4 +1,4 @@
-// src/main/java/com/BTL_LTW/JanyPet/config/VnPayConfig.java
+
 
 package com.BTL_LTW.JanyPet.configuration;
 import org.springframework.beans.factory.annotation.Value;

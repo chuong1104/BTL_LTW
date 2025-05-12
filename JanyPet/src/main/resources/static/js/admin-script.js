@@ -3,28 +3,38 @@
  */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    console.log("Initializing admin dashboard...");
+     console.log("Initializing admin dashboard...");
 
-    // Fix: Make sure ToastService exists
-    if (!window.ToastService && window.toast) {
-      window.ToastService = {
-        success: (message) => {
-          if (window.toast) window.toast.show('success', message);
-          else console.log('Success:', message);
-        },
-        error: (message) => {
-          if (window.toast) window.toast.show('error', message);
-          else console.error('Error:', message);
-        },
-        warning: (message) => {
-          if (window.toast) window.toast.show('warning', message);
-          else console.warn('Warning:', message);
-        },
-        info: (message) => {
-          if (window.toast) window.toast.show('info', message);
-          else console.info('Info:', message);
-        }
-      };
+    // Fix: Make sure ToastService exists and is functional, using available toast implementations
+    if (!window.ToastService || typeof window.ToastService.success !== 'function') {
+      if (window.toastService && typeof window.toastService.showSuccessToast === 'function') {
+        // Use window.toastService from toast-service.js (preferred)
+        console.log("Initializing window.ToastService using window.toastService (from toast-service.js)");
+        window.ToastService = {
+          success: (message) => window.toastService.showSuccessToast(message),
+          error: (message) => window.toastService.showErrorToast(message),
+          warning: (message) => window.toastService.showWarningToast(message),
+          info: (message) => window.toastService.showInfoToast(message)
+        };
+      } else if (window.toastManager && typeof window.toastManager.showToast === 'function') {
+        // Fallback to window.toastManager from toast-manager.js
+        console.log("Initializing window.ToastService using window.toastManager (from toast-manager.js)");
+        window.ToastService = {
+          success: (message) => window.toastManager.showToast(message, 'success'),
+          error: (message) => window.toastManager.showToast(message, 'error'),
+          warning: (message) => window.toastManager.showToast(message, 'warning'),
+          info: (message) => window.toastManager.showToast(message, 'info')
+        };
+      } else {
+        // Ultimate fallback if no recognized toast service is found
+        console.warn("No compatible toast service (toastService or toastManager) found. Using console for ToastService.");
+        window.ToastService = {
+          success: (message) => console.log('Success:', message),
+          error: (message) => console.error('Error:', message),
+          warning: (message) => console.warn('Warning:', message),
+          info: (message) => console.info('Info:', message)
+        };
+      }
     }
 
     // Fix: Make sure apiService exists

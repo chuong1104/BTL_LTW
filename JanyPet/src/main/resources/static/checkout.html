@@ -520,12 +520,12 @@
                   </div>
 
                   <div class="form-check payment-method-card mb-3">
-                    <input id="vnpay" name="paymentMethod" type="radio" class="form-check-input" required>
-                    <label class="form-check-label d-flex align-items-center" for="vnpay">
-                      <i class="fas fa-qrcode fa-2x me-3 text-primary"></i>
+                    <input id="vnpay_checkout" name="paymentMethod" type="radio" class="form-check-input" value="VNPAY" required>
+                    <label class="form-check-label d-flex align-items-center" for="vnpay_checkout">
+                      <img src="images/vnpay_logo.png" alt="VNPAY" style="height: 32px; margin-right: 12px;">
                       <div>
                         <span class="fw-bold">VNPAY</span>
-                        <p class="text-muted mb-0 small">Thanh toán bằng QR VNPAY</p>
+                        <p class="text-muted mb-0 small">Thanh toán bằng VNPAY QR hoặc thẻ ATM nội địa</p>
                       </div>
                     </label>
                   </div>
@@ -840,7 +840,10 @@
   <script src="js/cart.js"></script>
   <script src="js/toast-manager.js"></script>
   <script src="js/toast-service.js"></script>
+  <script src="js/api-service.js"></script>
   <script src="js/checkout.js"></script>
+  <script src="js/order-service.js"></script>
+  <script src="js/checkout-handler.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1010,43 +1013,43 @@
       const checkoutForm = document.getElementById('checkout-form');
       const orderBtn = document.getElementById('place-order-btn');
       
-      if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function(event) {
-          if (!checkoutForm.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          } else {
-            event.preventDefault();
+      // if (checkoutForm) {
+      //   checkoutForm.addEventListener('submit', function(event) {
+      //     if (!checkoutForm.checkValidity()) {
+      //       event.preventDefault();
+      //       event.stopPropagation();
+      //     } else {
+      //       event.preventDefault();
             
-            // Hiệu ứng loading cho nút đặt hàng
-            orderBtn.disabled = true;
-            orderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
+      //       // Hiệu ứng loading cho nút đặt hàng
+      //       orderBtn.disabled = true;
+      //       orderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
             
-            // Mô phỏng xử lý đơn hàng
-            setTimeout(function() {
-              // Tạo mã đơn hàng ngẫu nhiên
-              const orderId = 'JP-' + Date.now().toString().slice(-6);
-              document.getElementById('order-id').textContent = orderId;
+      //       // Mô phỏng xử lý đơn hàng
+      //       setTimeout(function() {
+      //         // Tạo mã đơn hàng ngẫu nhiên
+      //         const orderId = 'JP-' + Date.now().toString().slice(-6);
+      //         document.getElementById('order-id').textContent = orderId;
               
-              // Hiển thị modal thành công
-              const successModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
-              successModal.show();
+      //         // Hiển thị modal thành công
+      //         const successModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
+      //         successModal.show();
               
-              // Đặt lại trạng thái nút
-              orderBtn.disabled = false;
-              orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
+      //         // Đặt lại trạng thái nút
+      //         orderBtn.disabled = false;
+      //         orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
               
-              // Xóa giỏ hàng
-              localStorage.removeItem('janypet_cart');
+      //         // Xóa giỏ hàng
+      //         localStorage.removeItem('janypet_cart');
               
-              // Cập nhật số lượng trong biểu tượng giỏ hàng
-              updateCartBadgeCount();
-            }, 1500);
-          }
+      //         // Cập nhật số lượng trong biểu tượng giỏ hàng
+      //         updateCartBadgeCount();
+      //       }, 1500);
+      //     }
           
-          checkoutForm.classList.add('was-validated');
-        });
-      }
+      //     checkoutForm.classList.add('was-validated');
+      //   });
+      // }
       
       // Cập nhật số lượng hiển thị trên biểu tượng giỏ hàng
       function updateCartBadgeCount() {
@@ -1067,4 +1070,3 @@
 </body>
 
 </html>
-``` 

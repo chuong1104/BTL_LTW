@@ -1,181 +1,231 @@
-// Import necessary modules or declare variables
-const API_BASE_URL = "your_api_base_url_here" // Replace with your actual API base URL
-const apiService = {
-  getById: async (endpoint, id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
-    } catch (error) {
-      console.error(`Error fetching ${endpoint} by ID:`, error)
-      throw error
+/**
+ * JanyPet - Order Service
+ * This service handles communication with the order API
+ */
+
+const OrderService = (() => {
+  // API_BASE_URL is handled by api-service.js
+
+  /**
+   * Create a new order
+   * @param {Object} orderData - Order data to be submitted
+   * @returns {Promise} - Promise with the created order
+   */
+  const createOrder = async (orderData) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
     }
-  },
-  create: async (endpoint, data) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      // Using apiService.post which prepends /api automatically
+      return await window.apiService.post("/orders", orderData);
     } catch (error) {
-      console.error(`Error creating ${endpoint}:`, error)
-      throw error
+      console.error("Failed to create order via apiService:", error);
+      throw error; // Re-throw to be handled by the caller
     }
-  },
-  update: async (endpoint, id, data) => {
+  };
+
+  /**
+   * Get order by ID
+   * @param {string} orderId - Order ID
+   * @returns {Promise} - Promise with the order details
+   */
+  const getOrderById = async (orderId) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      return await window.apiService.get(`/orders/${orderId}`);
     } catch (error) {
-      console.error(`Error updating ${endpoint}:`, error)
-      throw error
+      console.error(`Failed to fetch order ${orderId} via apiService:`, error);
+      throw error;
     }
-  },
-  delete: async (endpoint, id) => {
+  };
+
+  /**
+   * Get all orders
+   * @returns {Promise} - Promise with list of orders
+   */
+  const getAllOrders = async () => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`, {
-        method: "DELETE",
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      return await window.apiService.get("/orders");
     } catch (error) {
-      console.error(`Error deleting ${endpoint}:`, error)
-      throw error
+      console.error("Failed to fetch all orders via apiService:", error);
+      throw error;
     }
-  },
-  search: async (endpoint, params) => {
+  };
+
+  /**
+   * Get orders by user ID
+   * @param {string} userId - User ID
+   * @returns {Promise} - Promise with user's orders
+   */
+  const getOrdersByUserId = async (userId) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const queryParams = new URLSearchParams(params)
-      const response = await fetch(`${API_BASE_URL}/${endpoint}?${queryParams}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      return await window.apiService.get(`/orders/user/${userId}`);
     } catch (error) {
-      console.error(`Error searching ${endpoint}:`, error)
-      throw error
+      console.error(`Failed to fetch orders for user ${userId} via apiService:`, error);
+      throw error;
     }
-  },
-}
+  };
 
-// Order Service - Specific implementation for Order entity
-const orderService = {
-  // Get all orders with optional pagination and filtering
-  getAllOrders: async (page = 0, size = 10, sort = "date,desc", filters = {}) => {
+  /**
+   * Update order status
+   * @param {string} orderId - Order ID
+   * @param {string} status - New status (should be one of OrderStatus enum values)
+   * @returns {Promise} - Promise with updated order
+   */
+  const updateOrderStatus = async (orderId, status) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const queryParams = new URLSearchParams({
-        page: page.toString(),
-        size: size.toString(),
-        sort: sort,
-      })
-
-      // Add any filters to the query params
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
-          queryParams.append(key, value.toString())
-        }
-      })
-
-      const response = await fetch(`${API_BASE_URL}/orders?${queryParams}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      // The body for this request should be an OrderStatusUpdateRequest object
+      // e.g., { "status": "PROCESSING" }
+      return await window.apiService.put(`/orders/${orderId}/status`, { status: status.toUpperCase() });
     } catch (error) {
-      console.error("Error fetching orders:", error)
-      throw error
+      console.error(`Failed to update status for order ${orderId} via apiService:`, error);
+      throw error;
     }
-  },
+  };
 
-  // Get an order by ID
-  getOrderById: async (id) => {
-    return await apiService.getById("orders", id)
-  },
-
-  // Create a new order
-  createOrder: async (orderData) => {
-    return await apiService.create("orders", orderData)
-  },
-
-  // Update an existing order
-  updateOrder: async (id, orderData) => {
-    return await apiService.update("orders", id, orderData)
-  },
-
-  // Delete an order
-  deleteOrder: async (id) => {
-    return await apiService.delete("orders", id)
-  },
-
-  // Get order details
-  getOrderDetails: async (orderId) => {
+  /**
+   * Cancel an order
+   * @param {string} orderId - Order ID
+   * @returns {Promise} - Promise with cancelled order
+   */
+  const cancelOrder = async (orderId) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/${orderId}/details`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      return await window.apiService.put(`/orders/${orderId}/cancel`, {}); // Empty body
     } catch (error) {
-      console.error(`Error fetching details for order ${orderId}:`, error)
-      throw error
+      console.error(`Failed to cancel order ${orderId} via apiService:`, error);
+      throw error;
     }
-  },
+  };
 
-  // Update order status
-  updateOrderStatus: async (orderId, status) => {
+  /**
+   * Get recent orders
+   * @param {number} limit - Number of orders to fetch
+   * @returns {Promise} - Promise with recent orders
+   */
+  const getRecentOrders = async (limit = 5) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      return await response.json()
+      return await window.apiService.get(`/orders/recent?limit=${limit}`);
     } catch (error) {
-      console.error(`Error updating status for order ${orderId}:`, error)
-      throw error
+      console.error("Failed to fetch recent orders via apiService:", error);
+      throw error;
     }
-  },
+  };
 
-  // Get orders by customer
-  getOrdersByCustomer: async (customerId) => {
-    return await apiService.search("orders", { customerId })
-  },
+  /**
+   * Get orders by status
+   * @param {string} status - Order status
+   * @returns {Promise} - Promise with filtered orders
+   */
+  const getOrdersByStatus = async (status) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
+    try {
+      return await window.apiService.get(`/orders/status/${status.toUpperCase()}`);
+    } catch (error) {
+      console.error(`Failed to fetch orders by status ${status} via apiService:`, error);
+      throw error;
+    }
+  };
 
-  // Get orders by status
-  getOrdersByStatus: async (status) => {
-    return await apiService.search("orders", { status })
-  },
+  /**
+   * Get orders by date range
+   * @param {string} startDate - Start date (ISO string, e.g., "2025-05-01T00:00:00")
+   * @param {string} endDate - End date (ISO string, e.g., "2025-05-10T23:59:59")
+   * @returns {Promise} - Promise with filtered orders
+   */
+  const getOrdersByDateRange = async (startDate, endDate) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
+    try {
+      const params = new URLSearchParams({ start: startDate, end: endDate });
+      return await window.apiService.get(`/orders/date-range?${params.toString()}`);
+    } catch (error) {
+      console.error(`Failed to fetch orders by date range via apiService:`, error);
+      throw error;
+    }
+  };
 
-  // Get orders by date range
-  getOrdersByDateRange: async (startDate, endDate) => {
-    return await apiService.search("orders", { startDate, endDate })
-  },
-}
+  /**
+   * Get revenue by date range
+   * @param {string} startDate - Start date (ISO string)
+   * @param {string} endDate - End date (ISO string)
+   * @returns {Promise} - Promise with revenue data
+   */
+  const getRevenueByDateRange = async (startDate, endDate) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
+    try {
+      const params = new URLSearchParams({ start: startDate, end: endDate });
+      return await window.apiService.get(`/orders/revenue?${params.toString()}`);
+    } catch (error) {
+      console.error("Failed to fetch revenue via apiService:", error);
+      throw error;
+    }
+  };
 
-// Export the order service
-window.orderService = orderService
+  /**
+   * Count orders by status
+   * @param {string} status - Order status
+   * @returns {Promise} - Promise with count
+   */
+  const countOrdersByStatus = async (status) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
+    try {
+      return await window.apiService.get(`/orders/count/status/${status.toUpperCase()}`);
+    } catch (error) {
+      console.error(`Failed to count orders with status ${status} via apiService:`, error);
+      throw error;
+    }
+  };
+
+  // Public API
+  return {
+    createOrder,
+    getOrderById,
+    getAllOrders,
+    getOrdersByUserId,
+    updateOrderStatus,
+    cancelOrder,
+    getRecentOrders,
+    getOrdersByStatus,
+    getOrdersByDateRange,
+    getRevenueByDateRange,
+    countOrdersByStatus,
+  };
+})();
+
+// Make the service available globally
+window.OrderService = OrderService;

@@ -503,84 +503,155 @@ function initCheckoutForm() {
   
   if (checkoutForm) {
     checkoutForm.addEventListener('submit', function(event) {
+      event.preventDefault(); // Always prevent default to handle payment redirection
       if (!checkoutForm.checkValidity()) {
-        event.preventDefault();
         event.stopPropagation();
         checkoutForm.classList.add('was-validated');
+        return; // Stop if form is invalid
+      }
+      
+      checkoutForm.classList.add('was-validated'); // Show validation feedback if any missed
+
+      // Loading effect for the order button
+      orderBtn.disabled = true;
+      orderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
+      
+      const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+      const orderData = collectOrderData(); // Ensure this function collects necessary order details
+
+      if (selectedPaymentMethod && selectedPaymentMethod.value === 'VNPAY') {
+        // Handle VNPAY payment
+        const paymentPayload = {
+          amount: parseFloat(sessionStorage.getItem('checkoutTotal')) || 0, // Get total amount
+          orderInfo: `Thanh toan don hang JanyPet ${orderData.orderId || new Date().getTime()}`, // Customize order info
+          bankCode: '', // Optional: for specific bank, otherwise VNPAY shows selection
+          language: 'vn'
+        };
+
+        fetch('/api/vnpay/create_payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(paymentPayload),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.URL) {
+            window.location.href = data.URL;
+          } else {
+            showToast('danger', 'Lỗi', data.message || 'Không thể tạo yêu cầu thanh toán VNPAY.');
+            orderBtn.disabled = false;
+            orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
+          }
+        })
+        .catch(error => {
+          showToast('danger', 'Lỗi', 'Lỗi kết nối khi tạo thanh toán VNPAY.');
+          orderBtn.disabled = false;
+          orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
+        });
+
+      } else if (selectedPaymentMethod && selectedPaymentMethod.id === 'bank') {
+        // Handle Bank Transfer (existing logic)
+        orderData.transferMessage = document.getElementById('transferMessage')?.value;
+        // Simulate order processing for bank transfer
+        processOrderSimulation(orderData, true); // Pass true for bank transfer
+      } else if (selectedPaymentMethod && selectedPaymentMethod.id === 'cod') {
+        // Handle COD (existing logic)
+        processOrderSimulation(orderData, false); // Pass false for non-bank transfer
       } else {
-        event.preventDefault();
+        // Handle other payment methods or show error
+        showToast('warning', 'Thông báo', 'Vui lòng chọn phương thức thanh toán hợp lệ.');
+        orderBtn.disabled = false;
+        orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
+      }
+
+      // Additional VNPAY logic for order creation response
+      if (selectedPaymentMethod === 'VNPAY' && orderCreationResponse && orderCreationResponse.orderCode) {
+        const vnpayPayload = {
+          orderCode: orderCreationResponse.orderCode, // From your backend order creation
+          amount: orderCreationResponse.totalAmount,  // From your backend order creation (ensure this is the final amount in VND)
+          orderInfo: "Thanh toan don hang " + orderCreationResponse.orderCode,
+          bankCode: "", // Optional: let user choose on VNPAY page, or provide specific bank code
+          language: "vn"
+        };
+
+        fetch('/api/vnpay/create_payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vnpayPayload)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'OK' && data.paymentUrl) {
+            window.location.href = data.paymentUrl; // Redirect to VNPAY
+          } else {
+            showToast('error', 'Lỗi VNPAY', data.message || 'Không thể tạo yêu cầu thanh toán VNPAY.');
+            console.error("VNPAY creation error:", data.message);
+          }
+        })
+        .catch(error => {
+          showToast('error', 'Lỗi kết nối', 'Không thể kết nối đến VNPAY.');
+          console.error('Error calling VNPAY create_payment:', error);
+        });
+      }
+    });
+  }
+}
+
+// It's good to have a common function to simulate/process order after payment or for COD/Bank
+function processOrderSimulation(orderData, isBankTransfer) {
+    // This is part of your existing logic, ensure it's called appropriately
+    setTimeout(function() {
+        const orderId = 'JP-' + Date.now().toString().slice(-6); // Or get from orderData if pre-generated
+        document.getElementById('order-id').textContent = orderId;
         
-        // Loading effect for the order button
-        orderBtn.disabled = true;
-        orderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
-        
-        // Check if bank transfer method is selected
-        const isBankTransfer = document.getElementById('bank')?.checked;
-        
-        // Collect order data
-        const orderData = collectOrderData();
-        
-        // Save transfer message if bank transfer was selected
+        const successModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
+        const successModalBody = document.querySelector('#orderSuccessModal .modal-body');
+        const modalFooter = document.querySelector('#orderSuccessModal .modal-footer');
+
+        // Clear previous bank transfer notes if any
+        const existingBankNote = successModalBody.querySelector('.alert.alert-info');
+        if (existingBankNote) existingBankNote.remove();
+        const existingFbLink = modalFooter.querySelector('a[href*="facebook.com"]');
+        if (existingFbLink && modalFooter.firstChild.isSameNode(existingFbLink)) existingFbLink.remove();
+
+
         if (isBankTransfer) {
-          orderData.transferMessage = document.getElementById('transferMessage')?.value;
-        }
-        
-        // Simulate order processing
-        setTimeout(function() {
-          // Generate random order ID
-          const orderId = 'JP-' + Date.now().toString().slice(-6);
-          document.getElementById('order-id').textContent = orderId;
-          
-          // Show success modal with appropriate message
-          const successModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
-          
-          // If bank transfer, update modal content to include payment instructions
-          if (isBankTransfer) {
-            const successModalBody = document.querySelector('#orderSuccessModal .modal-body');
             if (successModalBody) {
               const bankTransferNote = document.createElement('div');
               bankTransferNote.className = 'alert alert-info mt-3';
               bankTransferNote.innerHTML = `
                 <h5 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Hướng dẫn thanh toán</h5>
-                <p>Vui lòng chuyển khoản với nội dung: <strong>${orderData.transferMessage}</strong></p>
+                <p>Vui lòng chuyển khoản với nội dung: <strong>${orderData.transferMessage || 'Thanh toan don hang ' + orderId}</strong></p>
                 <p class="mb-0">Sau khi chuyển khoản, hãy gửi biên lai cho chúng tôi qua Facebook để đơn hàng được xử lý nhanh chóng.</p>
               `;
               successModalBody.appendChild(bankTransferNote);
               
-              // Add Facebook link to modal footer
-              const modalFooter = document.querySelector('#orderSuccessModal .modal-footer');
               if (modalFooter) {
                 const fbLink = document.createElement('a');
-                fbLink.href = 'https://www.facebook.com/JanyPet';
+                fbLink.href = 'https://www.facebook.com/JanyPet'; // Your Facebook page
                 fbLink.target = '_blank';
-                fbLink.className = 'btn btn-primary';
-                fbLink.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i> Gửi biên lai';
+                fbLink.className = 'btn btn-info'; // Changed to btn-info for distinction
+                fbLink.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i> Gửi biên lai NH';
                 modalFooter.insertBefore(fbLink, modalFooter.firstChild);
               }
             }
-          }
-          
-          successModal.show();
-          
-          // Reset button state
-          orderBtn.disabled = false;
-          orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
-          
-          // Clear cart and related data
-          localStorage.removeItem('cart');
-          localStorage.removeItem('couponDiscount');
-          localStorage.removeItem('couponCode');
-          // Keep shipping method for future use
-          
-          // Save order to order history
-          saveOrderToHistory(orderId, orderData);
-          
-          // Update cart badge count
-          updateCartBadgeCount();
-        }, 1500);
-      }
-    });
-  }
+        }
+        
+        successModal.show();
+        
+        document.getElementById('place-order-btn').disabled = false;
+        document.getElementById('place-order-btn').innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
+        
+        // Clear cart and related data
+        localStorage.removeItem('cart');
+        localStorage.removeItem('couponDiscount');
+        localStorage.removeItem('couponCode');
+        
+        saveOrderToHistory(orderId, orderData); // Ensure this function exists and works
+        updateCartBadgeCount(); // Ensure this function exists and works
+    }, 1500);
 }
 
 // Collect order data from form

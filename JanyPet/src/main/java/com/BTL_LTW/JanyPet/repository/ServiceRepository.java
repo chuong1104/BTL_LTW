@@ -23,4 +23,5 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
     
     @Query("SELECT s FROM Service s JOIN FETCH s.bookings WHERE s.id = :id")
     Service findByIdWithBookings(String id);
+    
 }
