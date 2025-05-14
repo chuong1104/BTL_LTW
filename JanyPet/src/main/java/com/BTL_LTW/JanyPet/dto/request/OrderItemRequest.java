@@ -3,50 +3,59 @@ package com.BTL_LTW.JanyPet.dto.request;
 import java.math.BigDecimal;
 
 public class OrderItemRequest {
-    private String productId;
-    private Integer quantity;
-    private String color;
-    private String size;
-    private BigDecimal unitPrice;
+    private String id; // Khớp với "id" từ frontend (đây là productId)
+    private String name; // Khớp với "name"
+    private BigDecimal price; // Khớp với "price"
+    private String image; // Khớp với "image"
+    private int quantity; // Khớp với "quantity"
+    private String variant; // Khớp với "variant" (có thể là size, color, etc.)
 
-    // Getters and setters
-    public String getProductId() {
-        return productId;
+    // Getters and Setters
+    public String getId() {
+        return id;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Integer getQuantity() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public String getColor() {
-        return color;
+    public String getVariant() {
+        return variant;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setVariant(String variant) {
+        this.variant = variant;
     }
 }

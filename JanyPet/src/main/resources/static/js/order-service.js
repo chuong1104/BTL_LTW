@@ -211,6 +211,24 @@ const OrderService = (() => {
     }
   };
 
+  /**
+   * Delete an order
+   * @param {string} orderId - Order ID to delete
+   * @returns {Promise} - Promise with the result of the deletion
+   */
+  const deleteOrder = async (orderId) => {
+    if (!window.apiService) {
+      console.error("OrderService: apiService is not available.");
+      return Promise.reject(new Error("API service is not available."));
+    }
+    try {
+      return await window.apiService.delete(`/orders/${orderId}`);
+    } catch (error) {
+      console.error(`Failed to delete order ${orderId} via apiService:`, error);
+      throw error;
+    }
+  };
+
   // Public API
   return {
     createOrder,
@@ -224,6 +242,7 @@ const OrderService = (() => {
     getOrdersByDateRange,
     getRevenueByDateRange,
     countOrdersByStatus,
+    deleteOrder,
   };
 })();
 

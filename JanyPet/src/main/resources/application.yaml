@@ -45,9 +45,10 @@ app:
   jwtRefreshExpirationMs: 604800000
 
 vnpay:
-  payUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  returnUrl: http://localhost:8080/vnpay/payment_return 
-  ipnUrl: http://localhost:8080/vnpay/ipn     
+  paymentUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  returnUrl: ${app.base-url}/api/vnpay/payment_return
+  ipnUrl: ${app.base-url}/api/vnpay/ipn
   tmnCode: CBV4016A
   hashSecret: 3RJVZXLUE88KVIC143SMRKGCSXYNASBJ
+
 

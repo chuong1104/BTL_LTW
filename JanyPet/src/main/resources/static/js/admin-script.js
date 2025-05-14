@@ -201,7 +201,18 @@ function initializeResponsiveBehavior() {
  */
 async function initializeProductSection() {
   try {
-    await window.ProductHandlers.initializeProductEvents();
+    if (window.ProductHandlers && typeof window.ProductHandler, s.initializeProductEvents === 'function') {
+      console.log('Initializing product events using window.ProductHandlers...');
+      window.ProductHandlers.initializeProductEvents();
+    } else {
+      console.error(
+        'Failed to initialize product handlers in initializeProductSection: ' +
+        'window.ProductHandlers is not defined or initializeProductEvents is not a function. ' +
+        'Check if product-handlers.js is loaded correctly and defines ProductHandlers globally.',
+        'window.ProductHandlers:', window.ProductHandlers,
+        'typeof window.ProductHandlers.initializeProductEvents:', (window.ProductHandlers ? typeof window.ProductHandlers.initializeProductEvents : 'N/A')
+      );
+    }
     console.log("Product handlers initialized successfully");
   } catch (error) {
     console.error("Failed to initialize product handlers:", error);

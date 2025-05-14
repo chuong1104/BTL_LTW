@@ -436,30 +436,40 @@ const AdminOrdersManager = (() => {
    * Delete order
    * @param {string} orderId - Order ID
    */
-  const deleteOrder = async (orderId) => {
+  async function deleteOrder(orderId) {
     try {
-      // Ensure OrderService.deleteOrderById(orderId) exists and works
-      const response = await window.OrderService.deleteOrderById(orderId);
-
-      // Adjust success condition based on your API response (e.g., status 204 No Content is common for DELETE)
-      if (response && (response.success || response.status === 200 || response.status === 204 || (response.data && response.data.success))) {
-        window.ToastService?.success(`Đã xóa thành công đơn hàng ${orderId}.`);
-        loadOrders(); // Crucial: Reload orders to reflect the deletion in the UI
-      } else {
-        const errorMessage = response?.message || response?.data?.message || "Không thể xóa đơn hàng. Vui lòng thử lại.";
-        window.ToastService?.error(errorMessage);
-      }
+        // Call the API to delete the order
+        await apiService.deleteOrder(orderId);
+        
+        // Immediately remove the order from the UI
+        const orderElement = document.getElementById(`order-${orderId}`);
+        if (orderElement) {
+            // Add a fade-out animation
+            orderElement.classList.add('fade-out');
+            
+            // Remove the element after animation completes
+            setTimeout(() => {
+                orderElement.remove();
+                
+                // If you have a counter showing total orders, update it
+                const orderCountElement = document.getElementById('order-count');
+                if (orderCountElement) {
+                    const currentCount = parseInt(orderCountElement.textContent);
+                    orderCountElement.textContent = currentCount - 1;
+                }
+                
+                // Show a success message
+                showNotification('Order deleted successfully', 'success');
+            }, 300); // Match this with your CSS animation time
+        } else {
+            // If we can't find the specific element, refresh the orders list
+            loadOrders(); // Assuming you have a function to reload the orders list
+        }
     } catch (error) {
-      console.error(`Failed to delete order ${orderId}:`, error);
-      let errorMsg = "Lỗi khi xóa đơn hàng.";
-      if (error.response && error.response.data && error.response.data.message) {
-        errorMsg = error.response.data.message;
-      } else if (error.message) {
-        errorMsg = error.message;
-      }
-      window.ToastService?.error(errorMsg);
+        console.error(`Failed to delete order ${orderId}:`, error);
+        showNotification('Failed to delete order: ' + error.message, 'error');
     }
-  };
+  }
 
   /**
    * Export orders

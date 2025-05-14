@@ -173,7 +173,12 @@ window.CategoryHandlers = (() => {
             }
             resetForm();
             loadCategories(); 
-            populateCategoryDropdowns(); 
+            populateCategoryDropdowns();
+            
+            // Notify the shop to update category display
+            if (window.ShopProductService) {
+                window.ShopProductService.notifyCategoryChange();
+            }
         } catch (error) {
             console.error("Error saving category:", error);
             const errorMessage = error.responseJSON?.message || (id ? "Failed to update category." : "Failed to add category.");
@@ -221,7 +226,14 @@ window.CategoryHandlers = (() => {
             window.toastService.showSuccessToast("Category deleted successfully!");
             loadCategories();
             populateCategoryDropdowns();
-            resetForm(); 
+            resetForm();
+            
+            // Notify the shop to update category display
+            if (window.ShopProductService) {
+                window.ShopProductService.notifyCategoryChange();
+                // Also refresh products as they might be affected by category deletion
+                window.ShopProductService.notifyProductChange();
+            }
         } catch (error) {
             console.error("Error deleting category:", error);
             const errorMessage = error.responseJSON?.message || "Failed to delete category. It might be in use by products.";

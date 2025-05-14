@@ -1,409 +1,345 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  // Check if auth service exists
-  if (!window.authService) {
-    console.error('Auth service not loaded');
+// Constants
+
+// let currentUser = null; // Comment out or remove this line if another script declares it
+// If this script IS the owner, ensure no other script loaded on BookingService.html declares 'currentUser' globally.
+// For now, let's assume it's declared elsewhere or we are fixing a re-declaration within this file's scope if it was accidentally duplicated.
+// If it's meant to be local to this script's module/closure, ensure it's not leaking to global.
+
+let selectedServices = [];
+let selectedPet = null;
+let allServices = [];
+let userPets = [];
+
+// DOM Ready
+document.addEventListener('DOMContentLoaded', function() {
+  // Ensure currentUser is declared at the top of the file: let currentUser = null;
+  checkUserLogin();
+  initEventListeners(); // Error at line 101 occurs here or within this function
+
+  const bookingDateElem = document.getElementById('booking-date');
+  if (bookingDateElem) {
+    bookingDateElem.min = new Date().toISOString().split('T')[0];
   } else {
-    // Initialize auth
-    window.authService.initAuth();
+    // This is not in initEventListeners, but good to check
+    console.warn("Element 'booking-date' for min date setting not found directly in DOMContentLoaded.");
   }
   
-  // Load services for booking
-  await loadServices();
+  loadServices();
   
-  // Set up event listeners
-  setupBookingListeners();
+  const termsCheckbox = document.getElementById('terms-checkbox');
+  if (termsCheckbox) {
+    termsCheckbox.addEventListener('change', function() {
+      const confirmBtn = document.getElementById('confirm-booking-btn');
+      if (confirmBtn) {
+        confirmBtn.disabled = !this.checked;
+      }
+    });
+  } else {
+     // This is not in initEventListeners, but good to check
+    console.warn("Element 'terms-checkbox' not found directly in DOMContentLoaded.");
+  }
+  
+  const step4Tab = document.getElementById('step4-tab');
+  if (step4Tab) {
+    step4Tab.addEventListener('shown.bs.tab', updateSummary);
+  } else {
+     // This is not in initEventListeners, but good to check
+    console.warn("Element 'step4-tab' not found directly in DOMContentLoaded.");
+  }
 });
 
-// Load services for booking form
-async function loadServices() {
-  try {
-    // Get services from API
-    const services = await window.apiService.getServices();
-    
-    // Update services dropdown
-    updateServicesDropdown(services);
-    
-  } catch (error) {
-    console.error("Error loading services:", error);
-    showErrorMessage("Unable to load services. Please try again later.");
-  }
-}
+// Check user login
+function checkUserLogin() {
+  // Try to get token from localStorage
+  const token = localStorage.getItem('authToken'); // Ensure this is the correct key you use for storing the token
 
-// Update services dropdown with fetched services
-function updateServicesDropdown(services) {
-  if (!services || services.length === 0) return;
-  
-  const serviceSelect = document.getElementById('service-select');
-  if (!serviceSelect) return;
-  
-  // Clear existing options except the default one
-  while (serviceSelect.options.length > 1) {
-    serviceSelect.remove(1);
-  }
-  
-  // Add service options
-  services.forEach(service => {
-    const option = document.createElement('option');
-    option.value = service.id;
-    option.textContent = `${service.name} ($${service.price.toFixed(2)})`;
-    option.dataset.price = service.price;
-    option.dataset.duration = service.duration || 60; // Default duration 60 minutes
-    serviceSelect.appendChild(option);
-  });
-  
-  // Add change event to update price display and available time slots
-  serviceSelect.addEventListener('change', updateServiceDetails);
-}
-
-// Update service details when service is selected
-function updateServiceDetails() {
-  const serviceSelect = document.getElementById('service-select');
-  const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-  
-  if (serviceSelect.value && selectedOption) {
-    // Update price display
-    const priceDisplay = document.getElementById('service-price');
-    if (priceDisplay) {
-      priceDisplay.textContent = `Price: $${parseFloat(selectedOption.dataset.price).toFixed(2)}`;
-      priceDisplay.style.display = 'block';
-    }
-    
-    // Update duration display
-    const durationDisplay = document.getElementById('service-duration');
-    if (durationDisplay) {
-      durationDisplay.textContent = `Duration: ${selectedOption.dataset.duration} minutes`;
-      durationDisplay.style.display = 'block';
-    }
-    
-    // Update available time slots
-    updateAvailableTimeSlots(selectedOption.dataset.duration);
-  } else {
-    // Hide price and duration display if no service selected
-    const priceDisplay = document.getElementById('service-price');
-    if (priceDisplay) {
-      priceDisplay.style.display = 'none';
-    }
-    
-    const durationDisplay = document.getElementById('service-duration');
-    if (durationDisplay) {
-      durationDisplay.style.display = 'none';
-    }
-  }
-}
-
-// Update available time slots based on service duration
-function updateAvailableTimeSlots(duration) {
-  const timeSelect = document.getElementById('time-select');
-  if (!timeSelect) return;
-  
-  // Clear existing options
-  timeSelect.innerHTML = '';
-  
-  // Get selected date
-  const dateInput = document.getElementById('date-input');
-  const selectedDate = dateInput ? new Date(dateInput.value) : new Date();
-  
-  // Check if date is valid and in the future
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  if (!selectedDate || selectedDate < today) {
-    // Add a default option indicating invalid date
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Please select a valid date';
-    timeSelect.appendChild(defaultOption);
+  if (!token) {
+    // Show login required message
+    showLoginRequired();
     return;
   }
-  
-  // Business hours (9 AM to 5 PM)
-  const startHour = 9;
-  const endHour = 17;
-  
-  // Duration in hours (convert from minutes)
-  const durationHours = parseInt(duration) / 60;
-  
-  // Generate time slots every 30 minutes
-  for (let hour = startHour; hour < endHour; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      // Ensure slot end time doesn't exceed business hours
-      if (hour + durationHours > endHour) {
-        continue;
-      }
-      
-      const slotTime = new Date(selectedDate);
-      slotTime.setHours(hour, minute, 0, 0);
-      
-      // Skip times in the past for today
-      if (
-        selectedDate.getDate() === today.getDate() && 
-        selectedDate.getMonth() === today.getMonth() && 
-        selectedDate.getFullYear() === today.getFullYear() && 
-        slotTime < new Date()
-      ) {
-        continue;
-      }
-      
-      // Format time for display (e.g., "9:00 AM")
-      const formattedTime = slotTime.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit', 
-        hour12: true 
-      });
-      
-      // Create option element
-      const option = document.createElement('option');
-      option.value = formattedTime;
-      option.textContent = formattedTime;
-      timeSelect.appendChild(option);
+
+  // Get current user
+  // Use the API_URL from BookingAPI
+  fetch(`${BookingAPI.API_URL}/users/me`, { 
+    headers: {
+      'Authorization': `Bearer ${token}`
     }
-  }
-  
-  // If no time slots are available
-  if (timeSelect.options.length === 0) {
-    const noSlotsOption = document.createElement('option');
-    noSlotsOption.value = '';
-    noSlotsOption.textContent = 'No available time slots';
-    timeSelect.appendChild(noSlotsOption);
-  }
-}
-
-// Set up booking form listeners
-function setupBookingListeners() {
-  // Date input change event
-  const dateInput = document.getElementById('date-input');
-  if (dateInput) {
-    // Set minimum date to today
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.min = today;
-    
-    dateInput.addEventListener('change', () => {
-      const serviceSelect = document.getElementById('service-select');
-      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-      
-      if (serviceSelect.value && selectedOption) {
-        updateAvailableTimeSlots(selectedOption.dataset.duration);
+  })
+  .then(response => {
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        console.warn('User token is invalid or expired.');
+        localStorage.removeItem('authToken'); // Clear invalid token
       }
-    });
-  }
-  
-  // Booking form submission
-  const bookingForm = document.getElementById('booking-form');
-  if (bookingForm) {
-    bookingForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      
-      // Check if user is logged in
-      if (!window.authService || !window.authService.isLoggedIn()) {
-        // Save form data to session storage
-        saveBookingFormData();
-        
-        // Redirect to login page
-        window.location.href = 'login.html?redirect=BookingService.html';
-        return;
-      }
-      
-      // Validate form
-      if (!validateBookingForm()) {
-        return;
-      }
-      
-      try {
-        // Show loading state
-        showLoadingState();
-        
-        // Get form data
-        const bookingData = {
-          serviceId: document.getElementById('service-select').value,
-          date: document.getElementById('date-input').value,
-          time: document.getElementById('time-select').value,
-          petType: document.getElementById('pet-type').value,
-          petName: document.getElementById('pet-name').value,
-          notes: document.getElementById('booking-notes').value
-        };
-        
-        // Send booking request
-        const response = await window.apiService.createBooking(bookingData);
-        
-        // Show success message
-        showSuccessMessage('Your appointment has been successfully booked! We will confirm shortly.');
-        
-        // Reset form
-        bookingForm.reset();
-        
-        // Hide loading state
-        hideLoadingState();
-        
-      } catch (error) {
-        console.error('Error submitting booking:', error);
-        
-        // Hide loading state
-        hideLoadingState();
-        
-        // Show error message
-        showErrorMessage(error.message || 'Failed to book appointment. Please try again later.');
-      }
-    });
-  }
-}
-
-// Validate booking form
-function validateBookingForm() {
-  const serviceSelect = document.getElementById('service-select');
-  const dateInput = document.getElementById('date-input');
-  const timeSelect = document.getElementById('time-select');
-  const petType = document.getElementById('pet-type');
-  const petName = document.getElementById('pet-name');
-  
-  // Check service selection
-  if (!serviceSelect.value) {
-    showErrorMessage('Please select a service');
-    return false;
-  }
-  
-  // Check date selection
-  if (!dateInput.value) {
-    showErrorMessage('Please select a date');
-    return false;
-  }
-  
-  // Check time selection
-  if (!timeSelect.value) {
-    showErrorMessage('Please select a time slot');
-    return false;
-  }
-  
-  // Check pet type selection
-  if (!petType.value) {
-    showErrorMessage('Please select your pet type');
-    return false;
-  }
-  
-  // Check pet name
-  if (!petName.value.trim()) {
-    showErrorMessage('Please enter your pet\'s name');
-    return false;
-  }
-  
-  return true;
-}
-
-// Save booking form data to session storage
-function saveBookingFormData() {
-  const formData = {
-    serviceId: document.getElementById('service-select').value,
-    date: document.getElementById('date-input').value,
-    time: document.getElementById('time-select').value,
-    petType: document.getElementById('pet-type').value,
-    petName: document.getElementById('pet-name').value,
-    notes: document.getElementById('booking-notes').value
-  };
-  
-  sessionStorage.setItem('bookingFormData', JSON.stringify(formData));
-}
-
-// Restore booking form data from session storage
-function restoreBookingFormData() {
-  const storedData = sessionStorage.getItem('bookingFormData');
-  if (!storedData) return;
-  
-  try {
-    const formData = JSON.parse(storedData);
+      throw new Error('Unauthorized or failed to fetch user data');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Make currentUser globally available if other functions in this file need it directly
+    // Or, pass it as an argument to functions that need it.
+    // For now, assuming it's intended to be a global within the scope of booking-service.js
+    window.currentUser = data; // Or just currentUser = data; if it's declared with let at the top
     
-    document.getElementById('service-select').value = formData.serviceId;
-    document.getElementById('date-input').value = formData.date;
-    
-    // Update service details and time slots before setting time
-    updateServiceDetails();
-    
-    // Set time after time slots are updated
-    setTimeout(() => {
-      document.getElementById('time-select').value = formData.time;
-    }, 100);
-    
-    document.getElementById('pet-type').value = formData.petType;
-    document.getElementById('pet-name').value = formData.petName;
-    document.getElementById('booking-notes').value = formData.notes;
-    
-    // Clear stored data
-    sessionStorage.removeItem('bookingFormData');
-    
-  } catch (error) {
-    console.error('Error restoring booking form data:', error);
-  }
-}
+    // Hide login required message and show booking content
+    const loginRequiredDiv = document.querySelector('.booking-steps .alert-warning');
+    if (loginRequiredDiv) {
+        loginRequiredDiv.parentElement.style.display = 'none'; // Hide the container of the message
+    }
+    // You might need to explicitly show the main booking content container here if it's initially hidden
+    // e.g., document.getElementById('main-booking-content').style.display = 'block';
 
-// Show loading state
-function showLoadingState() {
-  const submitButton = document.querySelector('#booking-form button[type="submit"]');
-  if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-  }
-}
-
-// Hide loading state
-function hideLoadingState() {
-  const submitButton = document.querySelector('#booking-form button[type="submit"]');
-  if (submitButton) {
-    submitButton.disabled = false;
-    submitButton.innerHTML = 'Book Appointment';
-  }
-}
-
-// Show success message
-function showSuccessMessage(message) {
-  const alertContainer = document.getElementById('alert-container');
-  if (!alertContainer) return;
-  
-  const alert = document.createElement('div');
-  alert.className = 'alert alert-success alert-dismissible fade show';
-  alert.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-  
-  alertContainer.innerHTML = '';
-  alertContainer.appendChild(alert);
-  
-  // Scroll to alert
-  alertContainer.scrollIntoView({ behavior: 'smooth' });
-  
-  // Auto hide after 5 seconds
-  setTimeout(() => {
-    alert.classList.remove('show');
-    setTimeout(() => alert.remove(), 300);
-  }, 5000);
-}
-
-// Show error message
-function showErrorMessage(message) {
-  const alertContainer = document.getElementById('alert-container');
-  if (!alertContainer) return;
-  
-  const alert = document.createElement('div');
-  alert.className = 'alert alert-danger alert-dismissible fade show';
-  alert.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-  
-  alertContainer.innerHTML = '';
-  alertContainer.appendChild(alert);
-  
-  // Scroll to alert
-  alertContainer.scrollIntoView({ behavior: 'smooth' });
-  
-  // Auto hide after 5 seconds
-  setTimeout(() => {
-    alert.classList.remove('show');
-    setTimeout(() => alert.remove(), 300);
-  }, 5000);
-}
-
-// Check if user returned from login page and restore form data
-if (window.location.href.includes('BookingService.html') && sessionStorage.getItem('bookingFormData')) {
-  window.addEventListener('load', () => {
-    setTimeout(restoreBookingFormData, 500);
+    loadPets(); // Load pets now that user is confirmed
+  })
+  .catch(error => {
+    console.error('Error fetching user:', error);
+    showLoginRequired();
   });
 }
+
+// Show login required message
+function showLoginRequired() {
+  const bookingSteps = document.querySelector('.booking-steps');
+  bookingSteps.innerHTML = `
+    <div class="alert alert-warning py-4 text-center">
+      <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
+      <h4 class="alert-heading">Bạn cần đăng nhập để sử dụng tính năng này</h4>
+      <p>Vui lòng <a href="login.html" class="alert-link">đăng nhập</a> hoặc <a href="register.html" class="alert-link">đăng ký</a> để tiếp tục.</p>
+    </div>
+  `;
+}
+
+// Initialize event listeners
+function initEventListeners() {
+  console.log("Initializing event listeners..."); // For debugging
+
+  const addNewPetBtn = document.getElementById('add-new-pet-btn');
+  if (addNewPetBtn) {
+    addNewPetBtn.addEventListener('click', showAddPetModal);
+  } else {
+    console.warn("Element with ID 'add-new-pet-btn' not found for event listener.");
+  }
+
+  const savePetBtn = document.getElementById('save-pet-btn');
+  if (savePetBtn) {
+    savePetBtn.addEventListener('click', savePet);
+  } else {
+    console.warn("Element with ID 'save-pet-btn' not found for event listener.");
+  }
+
+  const refreshPetsBtn = document.getElementById('refresh-pets-btn');
+  if (refreshPetsBtn) {
+    refreshPetsBtn.addEventListener('click', loadPets);
+  } else {
+    console.warn("Element with ID 'refresh-pets-btn' not found for event listener.");
+  }
+
+  const confirmBookingBtn = document.getElementById('confirm-booking-btn');
+  if (confirmBookingBtn) {
+    confirmBookingBtn.addEventListener('click', confirmBooking);
+  } else {
+    // If this is the element causing the error at line 101, this message will appear.
+    console.error("CRITICAL: Element with ID 'confirm-booking-btn' not found for event listener. This might be line 101's issue.");
+  }
+
+  const stepButtons = document.querySelectorAll('.next-step, .prev-step');
+  if (stepButtons.length > 0) {
+    stepButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const targetTabId = this.classList.contains('next-step') ? this.getAttribute('data-next') : this.getAttribute('data-prev');
+        if (targetTabId) {
+          const targetTab = document.getElementById(targetTabId);
+          if (targetTab) {
+            try {
+              const bsTab = new bootstrap.Tab(targetTab);
+              bsTab.show();
+            } catch (e) {
+              console.error(`Error initializing Bootstrap tab for ID '${targetTabId}':`, e);
+            }
+          } else {
+            console.warn(`Target tab element with ID '${targetTabId}' not found for step navigation.`);
+          }
+        } else {
+          console.warn("Step button is missing 'data-next' or 'data-prev' attribute:", this);
+        }
+      });
+    });
+  } else {
+    console.warn("No elements found with class '.next-step' or '.prev-step'.");
+  }
+  
+
+  const bookingDateInput = document.getElementById('booking-date');
+  if (bookingDateInput) {
+    bookingDateInput.addEventListener('change', validateDateTime);
+  } else {
+    console.error("CRITICAL: Element with ID 'booking-date' not found for event listener. This might be line 101's issue.");
+  }
+
+  const bookingTimeInput = document.getElementById('booking-time');
+  if (bookingTimeInput) {
+    bookingTimeInput.addEventListener('change', validateDateTime);
+  } else {
+    console.error("CRITICAL: Element with ID 'booking-time' not found for event listener. This might be line 101's issue.");
+  }
+  console.log("Event listeners initialization attempt finished."); // For debugging
+}
+
+// Load services from API
+function loadServices() {
+  const serviceContainer = document.getElementById('service-list-container');
+  // Show loading spinner
+  serviceContainer.innerHTML = `
+    <div class="col-12 text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Đang tải danh sách dịch vụ...</span>
+      </div>
+      <p class="mt-3">Đang tải danh sách dịch vụ...</p>
+    </div>
+  `;
+
+  fetch(`${BookingAPI.API_URL}/services`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.text().then(text => { 
+        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+      });
+    }
+    return response.json();
+  })
+  .then(services => {
+    allServices = services;
+    serviceContainer.innerHTML = '';
+
+    if (services && services.length > 0) {
+      services.forEach(service => {
+        serviceContainer.appendChild(createServiceElement(service));
+      });
+    } else {
+      serviceContainer.innerHTML = `
+        <div class="col-12">
+          <div class="alert alert-info text-center" role="alert">
+            Hiện tại không có dịch vụ nào.
+          </div>
+        </div>
+      `;
+    }
+    updateSelectedServicesCount();
+  })
+  .catch(error => {
+    console.error('Error loading services:', error);
+    serviceContainer.innerHTML = `
+      <div class="col-12">
+        <div class="alert alert-danger text-center" role="alert">
+          Không thể tải danh sách dịch vụ. Vui lòng thử lại sau. <br>
+          <small>${error.message}</small>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Create HTML element for a single service
+function createServiceElement(service) {
+  const colDiv = document.createElement('div');
+  colDiv.className = 'col-md-6 col-lg-4 mb-4';
+
+  const cardDiv = document.createElement('div');
+  cardDiv.className = 'card h-100 service-item shadow-sm';
+  cardDiv.dataset.serviceId = service.id;
+  cardDiv.style.cursor = 'pointer';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = 'card-body d-flex flex-column';
+
+  const formCheckDiv = document.createElement('div');
+  formCheckDiv.className = 'form-check mb-2';
+
+  const checkbox = document.createElement('input');
+  checkbox.className = 'form-check-input service-checkbox visually-hidden';
+  checkbox.type = 'checkbox';
+  checkbox.value = service.id;
+  checkbox.id = `service-checkbox-${service.id}`;
+  checkbox.addEventListener('change', (event) => {
+    handleServiceSelection(event, service);
+    cardDiv.classList.toggle('selected', checkbox.checked);
+  });
+  
+  const titleLabel = document.createElement('label');
+  titleLabel.className = 'form-check-label w-100';
+  titleLabel.htmlFor = `service-checkbox-${service.id}`;
+
+  const title = document.createElement('h5');
+  title.className = 'card-title'; 
+  title.textContent = service.name || "Tên dịch vụ không xác định";
+
+  titleLabel.appendChild(title);
+
+  const description = document.createElement('p');
+  description.className = 'card-text text-muted small flex-grow-1';
+  description.textContent = service.description ? (service.description.length > 100 ? service.description.substring(0, 97) + '...' : service.description) : 'Không có mô tả chi tiết.';
+
+  const price = document.createElement('p');
+  price.className = 'card-text fw-bold mb-1';
+  price.textContent = `Giá từ: ${service.basePrice ? service.basePrice.toLocaleString('vi-VN') + ' VNĐ' : 'Liên hệ'}`;
+
+  const durationText = service.duration ? `${service.duration} phút` : 'Thời gian không xác định';
+  const duration = document.createElement('p');
+  duration.className = 'card-text small text-muted';
+  duration.innerHTML = `<i class="far fa-clock me-1"></i> ${durationText}`;
+  
+  formCheckDiv.appendChild(checkbox);
+  formCheckDiv.appendChild(titleLabel);
+
+  cardBody.appendChild(formCheckDiv);
+  cardBody.appendChild(description);
+  cardBody.appendChild(price);
+  cardBody.appendChild(duration);
+  cardDiv.appendChild(cardBody);
+  colDiv.appendChild(cardDiv);
+
+  cardDiv.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a, button')) {
+        return;
+    }
+    checkbox.checked = !checkbox.checked;
+    const changeEvent = new Event('change', { bubbles: true });
+    checkbox.dispatchEvent(changeEvent);
+  });
+
+  return colDiv;
+}
+
+// Handle service selection
+function handleServiceSelection(event, service) {
+  const checkbox = event.target;
+  if (checkbox.checked) {
+    if (!selectedServices.find(s => s.id === service.id)) {
+      selectedServices.push(service);
+    }
+  } else {
+    selectedServices = selectedServices.filter(s => s.id !== service.id);
+  }
+  updateSelectedServicesCount();
+}
+
+// Update selected services count display
+function updateSelectedServicesCount() {
+  const countElement = document.getElementById('selected-services-count');
+  if (countElement) {
+    countElement.textContent = selectedServices.length;
+  }
+  const nextButtonStep1 = document.querySelector('#step1-tab-pane .btn-next-step');
+  if (nextButtonStep1) {
+    nextButtonStep1.disabled = selectedServices.length === 0;
+  }
+}
+
+// The rest of the file remains unchanged
+// ...

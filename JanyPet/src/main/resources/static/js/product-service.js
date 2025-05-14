@@ -1,102 +1,189 @@
 /**
  * Product Service - Handles product-related operations
  */
-import api from './api-service.js';
-import { fileUploadService } from './file-upload-service.js';
-
 const ProductService = {
-  // Get all products
-  getAllProducts: async () => {
-    try {
-      return await api.get('/products');
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      throw error;
-    }
+  // Base URL của API
+  baseUrl: '/api/products',
+  
+  /**
+   * Lấy tất cả sản phẩm
+   * @returns {Promise<Array>} Promise trả về mảng các sản phẩm
+   */
+  getAllProducts: async function() {
+      try {
+          const response = await fetch(this.baseUrl);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching products: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error('Error fetching products:', error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Lấy sản phẩm theo ID
+   * @param {string} productId - ID của sản phẩm cần lấy
+   * @returns {Promise<Object>} Promise trả về thông tin sản phẩm
+   */
+  getProductById: async function(productId) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${productId}`);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching product: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error(`Error fetching product with ID ${productId}:`, error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Tạo sản phẩm mới
+   * @param {Object} productData - Dữ liệu sản phẩm để tạo
+   * @returns {Promise<Object>} Promise trả về thông tin sản phẩm đã tạo
+   */
+  createProduct: async function(productData) {
+      try {
+          // Kiểm tra nếu có file hình ảnh
+          if (productData instanceof FormData) {
+              const response = await fetch(this.baseUrl, {
+                  method: 'POST',
+                  body: productData
+                  // Không cần set Content-Type khi dùng FormData, browser sẽ tự set
+              });
+              
+              if (!response.ok) {
+                  throw new Error(`Error creating product: ${response.status}`);
+              }
+              
+              return await response.json();
+          } else {
+              // Nếu không có file, gửi dữ liệu JSON
+              const response = await fetch(this.baseUrl, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(productData)
+              });
+              
+              if (!response.ok) {
+                  throw new Error(`Error creating product: ${response.status}`);
+              }
+              
+              return await response.json();
+          }
+      } catch (error) {
+          console.error('Error creating product:', error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Cập nhật sản phẩm
+   * @param {string} productId - ID của sản phẩm cần cập nhật
+   * @param {Object} productData - Dữ liệu sản phẩm để cập nhật
+   * @returns {Promise<Object>} Promise trả về thông tin sản phẩm đã cập nhật
+   */
+  updateProduct: async function(productId, productData) {
+      try {
+          // Kiểm tra nếu có file hình ảnh
+          if (productData instanceof FormData) {
+              const response = await fetch(`${this.baseUrl}/${productId}`, {
+                  method: 'PUT',
+                  body: productData
+              });
+              
+              if (!response.ok) {
+                  throw new Error(`Error updating product: ${response.status}`);
+              }
+              
+              return await response.json();
+          } else {
+              // Nếu không có file, gửi dữ liệu JSON
+              const response = await fetch(`${this.baseUrl}/${productId}`, {
+                  method: 'PUT',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(productData)
+              });
+              
+              if (!response.ok) {
+                  throw new Error(`Error updating product: ${response.status}`);
+              }
+              
+              return await response.json();
+          }
+      } catch (error) {
+          console.error(`Error updating product with ID ${productId}:`, error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Xóa sản phẩm
+   * @param {string} productId - ID của sản phẩm cần xóa
+   * @returns {Promise<boolean>} Promise trả về true nếu xóa thành công
+   */
+  deleteProduct: async function(productId) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${productId}`, {
+              method: 'DELETE'
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error deleting product: ${response.status}`);
+          }
+          
+          return true;
+      } catch (error) {
+          console.error(`Error deleting product with ID ${productId}:`, error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Lấy sản phẩm theo danh mục
+   * @param {string} categoryId - ID của danh mục
+   * @returns {Promise<Array>} Promise trả về mảng các sản phẩm thuộc danh mục
+   */
+  getProductsByCategory: async function(categoryId) {
+      try {
+          const products = await this.getAllProducts();
+          return products.filter(product => product.categoryId === categoryId);
+      } catch (error) {
+          console.error(`Error filtering products by category ${categoryId}:`, error);
+          throw error;
+      }
   },
 
-  // Get product by ID
-  getProductById: async (productId) => {
-    try {
-      return await api.get(`/products/${productId}`);
-    } catch (error) {
-      console.error(`Error fetching product ${productId}:`, error);
-      throw error;
-    }
-  },
-
-  // Create a new product
-  createProduct: async (productData) => {
-    try {
-      // Handle file upload separately if imageFile is present
-      if (productData.imageFile) {
-        const uploadResult = await ProductService.uploadProductImage(productData.imageFile);
-        productData.imageUrl = uploadResult.data.filename || uploadResult.data.url;
-        delete productData.imageFile; // Remove the file object before sending JSON
+  /**
+   * Lấy URL hình ảnh đúng cho sản phẩm
+   * @param {string} imageUrl - Đường dẫn ảnh sản phẩm
+   * @returns {string} URL hình ảnh hoàn chỉnh
+   */
+  getImageUrl: function(imageUrl) {
+      if (!imageUrl) {
+        return '/images/logo.png'; // Ảnh mặc định nếu không có URL
       }
 
-      return await api.post('/products', productData);
-    } catch (error) {
-      console.error('Error creating product:', error);
-      throw error;
-    }
-  },
-
-  // Update product
-  updateProduct: async (productId, productData) => {
-    try {
-      // Handle file upload separately if imageFile is present
-      if (productData.imageFile) {
-        const uploadResult = await ProductService.uploadProductImage(productData.imageFile);
-        productData.imageUrl = uploadResult.data.filename || uploadResult.data.url;
-        delete productData.imageFile; // Remove the file object before sending JSON
+      // Trả về URL đầy đủ nếu đã là URL hoàn chỉnh
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
       }
 
-      return await api.put(`/products/${productId}`, productData);
-    } catch (error) {
-      console.error(`Error updating product ${productId}:`, error);
-      throw error;
-    }
-  },
-
-  // Delete product
-  deleteProduct: async (productId) => {
-    try {
-      await api.delete(`/products/${productId}`);
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      throw error;
-    }
-  },
-
-  // Upload product image
-  uploadProductImage: async (file) => {
-    try {
-      const result = await fileUploadService.uploadFile(file, '/api/upload/file');
-      if (!result.success) {
-        throw new Error(result.message || 'Image upload failed');
-      }
-      return result;
-    } catch (error) {
-      console.error('Error uploading product image:', error);
-      throw error;
-    }
-  },
-
-  // Get image URL with proper context path
-  getImageUrl: (imageUrl) => {
-    if (!imageUrl) {
-      return '/images/logo.png'; // Default image if no URL is provided
-    }
-
-    // Return as is if it's already a full URL
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return imageUrl;
-    }
-
-    // Handle image path from the server
-    return `/uploads/${imageUrl}`;
+      // Xử lý đường dẫn ảnh từ server
+      return `${imageUrl}`;
   }
 };
 
-export default ProductService;
+// Đặt vào object window để sử dụng toàn cục
+window.ProductService = ProductService;

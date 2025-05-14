@@ -267,25 +267,23 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h2 class="display-4 fw-normal">Pet Spa Services</h2>
+            <h2 class="display-4 fw-normal">Dịch Vụ Spa Thú Cưng</h2>
             <p class="lead">
-              Pamper your furry friend with our premium spa treatments
+              Chăm sóc thư giãn cho thú cưng của bạn với dịch vụ spa cao cấp
             </p>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  Book Services
+                  Đặt lịch dịch vụ
                 </li>
               </ol>
             </nav>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
-            <img
-              src="https://via.placeholder.com/400x200?text=Pet+Spa"
-              alt="Pet Spa"
-              class="img-fluid rounded"
-            />
+            <div class="service-icon-large">
+              <i class="fas fa-spa fa-4x text-primary"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -296,9 +294,9 @@
       <div class="container">
         <div class="row">
           <div class="col-12 text-center mb-5">
-            <h2 class="display-5">Book Your Pet's Spa Day</h2>
+            <h2 class="display-5">Đặt Lịch Chăm Sóc Thú Cưng</h2>
             <p class="lead">
-              Choose from our range of premium services for your beloved pet
+              Chọn dịch vụ chăm sóc chất lượng cao cho thú cưng của bạn
             </p>
           </div>
         </div>
@@ -307,121 +305,76 @@
         <div class="row mb-5">
           <div class="col-12">
             <div class="booking-steps">
-              <ul
-                class="nav nav-pills nav-justified mb-4 booking-steps-nav"
-                id="bookingSteps"
-                role="tablist"
-              >
+              <ul class="nav nav-pills nav-justified mb-4 booking-steps-nav" 
+                  id="bookingSteps" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link active"
-                    id="step1-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#step1"
-                    type="button"
-                    role="tab"
-                    aria-controls="step1"
-                    aria-selected="true"
-                  >
-                    <span class="step-number">1</span> Choose Service
+                  <button class="nav-link active" id="step1-tab" data-bs-toggle="pill"
+                    data-bs-target="#step1" type="button" role="tab"
+                    aria-controls="step1" aria-selected="true">
+                    <span class="step-number">1</span> Chọn dịch vụ
                   </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link"
-                    id="step2-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#step2"
-                    type="button"
-                    role="tab"
-                    aria-controls="step2"
-                    aria-selected="false"
-                  >
-                    <span class="step-number">2</span> Select Pet
+                  <button class="nav-link" id="step2-tab" data-bs-toggle="pill"
+                    data-bs-target="#step2" type="button" role="tab"
+                    aria-controls="step2" aria-selected="false">
+                    <span class="step-number">2</span> Chọn thú cưng
                   </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link"
-                    id="step3-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#step3"
-                    type="button"
-                    role="tab"
-                    aria-controls="step3"
-                    aria-selected="false"
-                  >
-                    <span class="step-number">3</span> Schedule
+                  <button class="nav-link" id="step3-tab" data-bs-toggle="pill"
+                    data-bs-target="#step3" type="button" role="tab"
+                    aria-controls="step3" aria-selected="false">
+                    <span class="step-number">3</span> Chọn lịch hẹn
                   </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button
-                    class="nav-link"
-                    id="step4-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#step4"
-                    type="button"
-                    role="tab"
-                    aria-controls="step4"
-                    aria-selected="false"
-                  >
-                    <span class="step-number">4</span> Confirm
+                  <button class="nav-link" id="step4-tab" data-bs-toggle="pill"
+                    data-bs-target="#step4" type="button" role="tab"
+                    aria-controls="step4" aria-selected="false">
+                    <span class="step-number">4</span> Xác nhận
                   </button>
                 </li>
               </ul>
-
               <div
                 class="tab-content p-4 bg-white rounded shadow-sm"
                 id="bookingStepsContent"
               >
                 <!-- Step 1: Select Services -->
-                <div
-                  class="tab-pane fade show active"
-                  id="step1"
-                  role="tabpanel"
-                  aria-labelledby="step1-tab"
-                >
-                  <h3 class="mb-4 fw-bold">Select Service</h3>
+                <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
+                  <h3 class="mb-4 fw-bold">Chọn Dịch Vụ</h3>
                   <p class="text-muted mb-4">
-                    Choose one or more services for your pet's spa day
+                    Chọn một hoặc nhiều dịch vụ cho thú cưng của bạn
                   </p>
                   <div class="row" id="services-container">
                     <!-- Services will be loaded dynamically -->
-                    <div class="col-12 spinner-container">
+                    <div class="col-12 text-center spinner-container py-5">
                       <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading services...</span>
+                        <span class="visually-hidden">Đang tải dịch vụ...</span>
                       </div>
-                      <p class="mt-3">Loading available services...</p>
+                      <p class="mt-3">Đang tải danh sách dịch vụ...</p>
                     </div>
                   </div>
-                  <div class="d-flex justify-content-end mt-4">
-                    <button
-                      class="btn btn-primary next-step"
-                      data-next="step2-tab"
-                    >
-                      Continue <i class="fas fa-arrow-right ms-1"></i>
+                  <div class="d-flex justify-content-between mt-4">
+                    <div>
+                      <span id="selected-services-count" class="badge bg-primary rounded-pill">0</span> dịch vụ đã chọn
+                    </div>
+                    <button class="btn btn-primary next-step" data-next="step2-tab" id="btn-step1-continue" disabled>
+                      Tiếp theo <i class="fas fa-arrow-right ms-1"></i>
                     </button>
                   </div>
                 </div>
 
                 <!-- Step 2: Choose Pet -->
-                <div
-                  class="tab-pane fade"
-                  id="step2"
-                  role="tabpanel"
-                  aria-labelledby="step2-tab"
-                >
-                  <h3 class="mb-4 fw-bold">Select Your Pet</h3>
+                <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
+                  <h3 class="mb-4 fw-bold">Chọn Thú Cưng</h3>
                   <p class="text-muted mb-4">
-                    Choose a pet for this appointment or add a new one
+                    Chọn thú cưng cho lịch hẹn này hoặc thêm thú cưng mới
                   </p>
 
                   <div class="d-flex justify-content-end mb-3">
-                    <button
-                      class="btn btn-outline-primary btn-sm"
-                      id="refresh-pets-btn"
-                    >
-                      <i class="fas fa-sync me-1"></i> Refresh Pet List
+                    <button class="btn btn-outline-primary btn-sm" id="refresh-pets-btn">
+                      <i class="fas fa-sync me-1"></i> Cập nhật danh sách
                     </button>
                   </div>
 
@@ -429,56 +382,42 @@
                     <!-- Pets will be loaded dynamically -->
                     <div class="col-12 text-center py-4">
                       <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading pets...</span>
+                        <span class="visually-hidden">Đang tải thú cưng...</span>
                       </div>
-                      <p class="mt-3">Loading your pets...</p>
+                      <p class="mt-3">Đang tải danh sách thú cưng...</p>
                     </div>
                   </div>
 
-                  <div
-                    class="mt-4 mb-3 p-3 bg-light rounded"
-                    id="selected-pet-details"
-                  >
+                  <div class="mt-4 mb-3 p-3 bg-light rounded" id="selected-pet-details">
                     <p class="text-muted mb-0">
-                      Please select a pet to see details
+                      Vui lòng chọn một thú cưng để xem chi tiết
                     </p>
                   </div>
 
                   <div class="d-flex justify-content-between mt-4">
-                    <button
-                      class="btn btn-outline-secondary prev-step"
-                      data-prev="step1-tab"
-                    >
-                      <i class="fas fa-arrow-left me-1"></i> Back
+                    <button class="btn btn-outline-secondary prev-step" data-prev="step1-tab">
+                      <i class="fas fa-arrow-left me-1"></i> Quay lại
                     </button>
                     <button class="btn btn-success" id="add-new-pet-btn">
-                      <i class="fas fa-plus me-1"></i> Add New Pet
+                      <i class="fas fa-plus me-1"></i> Thêm thú cưng mới
                     </button>
-                    <button
-                      class="btn btn-primary next-step"
-                      data-next="step3-tab"
-                    >
-                      Continue <i class="fas fa-arrow-right ms-1"></i>
+                    <button class="btn btn-primary next-step" data-next="step3-tab" id="btn-step2-continue" disabled>
+                      Tiếp theo <i class="fas fa-arrow-right ms-1"></i>
                     </button>
                   </div>
                 </div>
 
                 <!-- Step 3: Select Date & Time -->
-                <div
-                  class="tab-pane fade"
-                  id="step3"
-                  role="tabpanel"
-                  aria-labelledby="step3-tab"
-                >
-                  <h3 class="mb-4 fw-bold">Choose Appointment Time</h3>
+                <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
+                  <h3 class="mb-4 fw-bold">Chọn Thời Gian Hẹn</h3>
                   <p class="text-muted mb-4">
-                    Select your preferred date and time for the appointment
+                    Chọn ngày và giờ phù hợp cho cuộc hẹn
                   </p>
 
                   <div class="row">
                     <div class="col-md-6 mb-4">
                       <label for="booking-date" class="form-label fw-medium"
-                        >Select Date</label
+                        >Chọn ngày</label
                       >
                       <div class="input-group">
                         <span class="input-group-text"
@@ -491,10 +430,13 @@
                           required
                         />
                       </div>
+                      <div class="invalid-feedback" id="date-feedback">
+                        Vui lòng chọn một ngày hợp lệ.
+                      </div>
                     </div>
                     <div class="col-md-6 mb-4">
                       <label for="booking-time" class="form-label fw-medium"
-                        >Select Time</label
+                        >Chọn giờ</label
                       >
                       <div class="input-group">
                         <span class="input-group-text"
@@ -502,23 +444,39 @@
                         ></span>
                         <select class="form-select" id="booking-time" required>
                           <option value="" selected disabled>
-                            Choose a time slot
+                            Chọn khung giờ
                           </option>
-                          <!-- Time slots will be loaded dynamically -->
+                          <option value="08:00:00">08:00</option>
+                          <option value="09:00:00">09:00</option>
+                          <option value="09:30:00">09:30</option>
+                          <option value="10:00:00">10:00</option>
+                          <option value="10:30:00">10:30</option>
+                          <option value="11:00:00">11:00</option>
+                          <option value="13:30:00">13:30</option>
+                          <option value="14:00:00">14:00</option>
+                          <option value="14:30:00">14:30</option>
+                          <option value="15:00:00">15:00</option>
+                          <option value="15:30:00">15:30</option>
+                          <option value="16:00:00">16:00</option>
+                          <option value="16:30:00">16:30</option>
+                          <option value="17:00:00">17:00</option>
                         </select>
+                      </div>
+                      <div class="invalid-feedback" id="time-feedback">
+                        Vui lòng chọn một khung giờ.
                       </div>
                     </div>
                   </div>
 
                   <div class="mb-4">
                     <label for="booking-notes" class="form-label fw-medium"
-                      >Special Instructions</label
+                      >Ghi chú đặc biệt</label
                     >
                     <textarea
                       class="form-control"
                       id="booking-notes"
                       rows="3"
-                      placeholder="Any special requirements or notes for your booking"
+                      placeholder="Yêu cầu đặc biệt hoặc ghi chú cho đơn hàng của bạn"
                     ></textarea>
                   </div>
 
@@ -527,92 +485,79 @@
                       class="btn btn-outline-secondary prev-step"
                       data-prev="step2-tab"
                     >
-                      <i class="fas fa-arrow-left me-1"></i> Back
+                      <i class="fas fa-arrow-left me-1"></i> Quay lại
                     </button>
                     <button
                       class="btn btn-primary next-step"
                       data-next="step4-tab"
+                      id="btn-step3-continue"
                     >
-                      Review Booking <i class="fas fa-arrow-right ms-1"></i>
+                      Xem lại đặt lịch <i class="fas fa-arrow-right ms-1"></i>
                     </button>
                   </div>
                 </div>
 
                 <!-- Step 4: Confirm Booking -->
-                <div
-                  class="tab-pane fade"
-                  id="step4"
-                  role="tabpanel"
-                  aria-labelledby="step4-tab"
-                >
-                  <h3 class="mb-4 fw-bold">Review and Confirm</h3>
+                <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
+                  <h3 class="mb-4 fw-bold">Xem Lại và Xác Nhận</h3>
                   <p class="text-muted mb-4">
-                    Please review your booking details before confirming
+                    Vui lòng kiểm tra lại thông tin trước khi xác nhận đặt lịch
                   </p>
 
                   <div class="card summary-card mb-4">
                     <div class="card-header">
-                      <h5 class="mb-0 fw-bold">Booking Summary</h5>
+                      <h5 class="mb-0 fw-bold">Thông Tin Đặt Lịch</h5>
                     </div>
                     <div class="card-body">
                       <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Selected Services:</div>
+                        <div class="col-md-4 fw-bold">Dịch vụ đã chọn:</div>
                         <div class="col-md-8" id="summary-services"></div>
                       </div>
                       <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Pet:</div>
+                        <div class="col-md-4 fw-bold">Thú cưng:</div>
                         <div class="col-md-8" id="summary-pet"></div>
                       </div>
                       <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Date:</div>
+                        <div class="col-md-4 fw-bold">Ngày:</div>
                         <div class="col-md-8" id="summary-date"></div>
                       </div>
                       <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Time:</div>
+                        <div class="col-md-4 fw-bold">Giờ:</div>
                         <div class="col-md-8" id="summary-time"></div>
                       </div>
                       <div class="row mb-3">
-                        <div class="col-md-4 fw-bold">Notes:</div>
-                        <div class="col-md-8" id="summary-notes"></div>
+                        <div class="col-md-4 fw-bold">Ghi chú:</div>
+                        <div class="col-md-8 text-muted" id="summary-notes">
+                          <em>Không có ghi chú</em>
+                        </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-4 fw-bold">Total:</div>
-                        <div
-                          class="col-md-8 fw-bold text-primary fs-5"
-                          id="summary-total"
-                        ></div>
+                        <div class="col-md-4 fw-bold">Tổng chi phí:</div>
+                        <div class="col-md-8 fw-bold text-primary fs-5" id="summary-total">
+                          0₫
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div class="form-check mb-4">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="terms-checkbox"
-                    />
+                    <input class="form-check-input" type="checkbox" id="terms-checkbox" />
                     <label class="form-check-label" for="terms-checkbox">
-                      I agree to the
-                      <a
-                        href="#"
-                        data-bs-toggle="modal"
-                        data-bs-target="#termsModal"
-                        >terms and conditions</a
-                      >
+                      Tôi đồng ý với
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal"
+                        >điều khoản và điều kiện</a
+                      > của dịch vụ
                     </label>
                   </div>
 
                   <div id="alert-container"></div>
 
                   <div class="d-flex justify-content-between mt-4">
-                    <button
-                      class="btn btn-outline-secondary prev-step"
-                      data-prev="step3-tab"
-                    >
-                      <i class="fas fa-arrow-left me-1"></i> Back
+                    <button class="btn btn-outline-secondary prev-step" data-prev="step3-tab">
+                      <i class="fas fa-arrow-left me-1"></i> Quay lại
                     </button>
-                    <button class="btn btn-success" id="confirm-booking-btn">
-                      <i class="fas fa-check me-1"></i> Confirm Booking
+                    <button class="btn btn-success" id="confirm-booking-btn" disabled>
+                      <i class="fas fa-check me-1"></i> Xác nhận đặt lịch
                     </button>
                   </div>
                 </div>
@@ -1092,12 +1037,14 @@
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <!-- API and Auth Services -->
+    <script src="js/booking-api.js"></script>
     <script src="js/api-service.js"></script>
     <script src="js/auth_service.js"></script>
+
     <!-- Cart functionality -->
     <script src="js/cart.js"></script>
     <!-- Custom JS -->
-    <script src="js/service.js"></script>
+    <script src="js/booking-service.js"></script>
     <script>
       // Show booking detail modal after successful booking
       function showBookingDetailModal(booking) {

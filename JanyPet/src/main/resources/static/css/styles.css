@@ -604,7 +604,20 @@ textarea {
 
 .data-table img:hover {
   transform: scale(1.1);
+}
+
+.data-table .product-image img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.data-table .product-image img:hover {
+  transform: scale(1.1);
 }
 
 .status {
@@ -1389,12 +1402,14 @@ textarea {
 .image-preview-modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
 }
 
 .image-preview-modal img {
@@ -1402,10 +1417,24 @@ textarea {
   max-height: 90%;
   margin: auto;
   display: block;
+  border-radius: 8px;
+}
+
+.image-preview-modal .close {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 20px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.image-preview-modal .close:hover,
+.image-preview-modal .close:focus {
+  color: #bbb;
+  text-decoration: none;
 }
 
 /* Hide elements for non-authenticated users */
@@ -1884,4 +1913,9 @@ label[for*="service-xlarge-pet-price"]::after {
 
 #orders-section .filters .filter-group:last-child {
     margin-left: auto; /* Push date filters to the right if desired, or adjust flex properties */
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
 }

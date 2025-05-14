@@ -1,37 +1,45 @@
 /**
  * JanyPet - Checkout Management
- * This script handles checkout functionality
+ * This script handles checkout UI functionality, data collection, and summary updates.
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize checkout
-  initCheckout();
-  
-  // Display cart items in the checkout page
-  loadCheckoutItems();
-  
-  // Calculate and update order summary
-  calculateOrderSummary();
-  
-  // Add event listeners for shipping method changes
+  // Initialize checkout UI elements and listeners
+  initCheckout(); // Loads saved methods, updates UI
+  loadCheckoutItems(); // Displays cart items
+  calculateOrderSummary(); // Initial calculation
+
+  // Initialize event listeners for various parts of the form
   initShippingMethodListeners();
-  
-  // Add event listeners for payment method changes
-  initPaymentMethodListeners();
-  
-  // Add event listener for checkout form submission
-  initCheckoutForm();
-  
-  // Add event listener for coupon code
-  initCouponCode();
-  
-  // Add event listeners for bank transfer specific functionality
-  initBankTransferFunctionality();
+  initPaymentMethodListeners(); // This is likely where initializePaymentMethodHandler was intended
+  initAddressDropdowns(); // For city/district/ward
+  initCouponCode(); // For coupon input and button
+  initBankTransferFunctionality(); // For bank transfer specific UI
+
+  console.log("Checkout.js: All initializers called.");
 });
 
-// Initialize checkout page
+const vietnameseAddressData = {
+    "Hà Nội": {
+        "Ba Đình": ["Phúc Xá", "Trúc Bạch", "Vĩnh Phúc", "Cống Vị", "Liễu Giai", "Nguyễn Trung Trực", "Quán Thánh", "Ngọc Hà", "Điện Biên", "Đội Cấn", "Ngọc Khánh", "Kim Mã", "Giảng Võ", "Thành Công"],
+        "Hoàn Kiếm": ["Chương Dương", "Cửa Đông", "Cửa Nam", "Đồng Xuân", "Hàng Bạc", "Hàng Bài", "Hàng Bồ", "Hàng Bông", "Hàng Buồm", "Hàng Đào", "Hàng Gai", "Hàng Mã", "Hàng Trống", "Lý Thái Tổ", "Phan Chu Trinh", "Phúc Tân", "Trần Hưng Đạo", "Tràng Tiền"],
+        "Hai Bà Trưng": ["Bạch Đằng", "Bách Khoa", "Bạch Mai", "Cầu Dền", "Đống Mác", "Đồng Nhân", "Đồng Tâm", "Lê Đại Hành", "Minh Khai", "Nguyễn Du", "Phạm Đình Hổ", "Phố Huế", "Quỳnh Lôi", "Quỳnh Mai", "Thanh Lương", "Thanh Nhàn", "Trương Định", "Vĩnh Tuy"],
+        "Đống Đa": ["Cát Linh", "Hàng Bột", "Khâm Thiên", "Khương Thượng", "Kim Liên", "Láng Hạ", "Láng Thượng", "Nam Đồng", "Ngã Tư Sở", "Ô Chợ Dừa", "Phương Liên", "Phương Mai", "Quang Trung", "Quốc Tử Giám", "Thịnh Quang", "Thổ Quan", "Trung Liệt", "Trung Phụng", "Trung Tự", "Văn Chương", "Văn Miếu"],
+        "Tây Hồ": ["Bưởi", "Nhật Tân", "Phú Thượng", "Quảng An", "Thụy Khuê", "Tứ Liên", "Xuân La", "Yên Phụ"]
+    },
+    "TP. Hồ Chí Minh": {
+        "Quận 1": ["Bến Nghé", "Bến Thành", "Cầu Kho", "Cầu Ông Lãnh", "Cô Giang", "Đa Kao", "Nguyễn Cư Trinh", "Nguyễn Thái Bình", "Phạm Ngũ Lão", "Tân Định"],
+        "Quận 3": ["Phường 1", "Phường 2", "Phường 3", "Phường 4", "Phường 5", "Võ Thị Sáu", "Phường 9", "Phường 10", "Phường 11", "Phường 12", "Phường 13", "Phường 14"],
+        "Quận Bình Thạnh": ["Phường 1", "Phường 2", "Phường 3", "Phường 5", "Phường 6", "Phường 7", "Phường 11", "Phường 12", "Phường 13", "Phường 14", "Phường 15", "Phường 17", "Phường 19", "Phường 21", "Phường 22", "Phường 24", "Phường 25", "Phường 26", "Phường 27", "Phường 28"]
+    },
+    "Đà Nẵng": {
+        "Hải Châu": ["Bình Hiên", "Bình Thuận", "Hải Châu I", "Hải Châu II", "Hòa Cường Bắc", "Hòa Cường Nam", "Hòa Thuận Đông", "Hòa Thuận Tây", "Nam Dương", "Phước Ninh", "Thạch Thang", "Thanh Bình", "Thuận Phước"],
+        "Sơn Trà": ["An Hải Bắc", "An Hải Đông", "An Hải Tây", "Mân Thái", "Nại Hiên Đông", "Phước Mỹ", "Thọ Quang"],
+        "Ngũ Hành Sơn": ["Hòa Hải", "Hòa Quý", "Khuê Mỹ", "Mỹ An"]
+    }
+};
+
 function initCheckout() {
-  // Apply saved shipping method if exists
   const shippingMethod = localStorage.getItem('shippingMethod') || 'standard';
   console.log("Loading saved shipping method:", shippingMethod);
   
@@ -46,14 +54,12 @@ function initCheckout() {
     console.log("Applied shipping method:", methodElement.id);
   }
   
-  // Load saved payment method if exists
   const savedPaymentMethod = localStorage.getItem('paymentMethod');
   if (savedPaymentMethod) {
     const paymentMethodElement = document.getElementById(savedPaymentMethod);
     if (paymentMethodElement) {
       paymentMethodElement.checked = true;
       
-      // Show/hide specific payment forms based on saved method
       const cardPaymentForm = document.getElementById('card-payment-form');
       const bankTransferInfo = document.getElementById('bank-transfer-info');
       
@@ -70,7 +76,6 @@ function initCheckout() {
     }
   }
   
-  // Update payment method selection visual
   const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
   paymentMethods.forEach(method => {
     if (method.checked) {
@@ -78,7 +83,6 @@ function initCheckout() {
     }
   });
   
-  // Apply saved coupon if exists
   const savedCouponCode = localStorage.getItem('couponCode');
   const couponInput = document.querySelector('.coupon-form .input-group input');
   if (savedCouponCode && couponInput) {
@@ -86,22 +90,17 @@ function initCheckout() {
     updateCouponDisplay(savedCouponCode, parseInt(localStorage.getItem('couponDiscount') || '0'));
   }
   
-  // Update estimated delivery date based on shipping method
   updateEstimatedDeliveryDate();
 }
 
-// Load items from cart into checkout page
 function loadCheckoutItems() {
   const checkoutItemsList = document.getElementById('checkout-items-list');
   if (!checkoutItemsList) return;
   
-  // Get cart data
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   
-  // Clear existing items
   checkoutItemsList.innerHTML = '';
   
-  // If cart is empty, display message
   if (cart.length === 0) {
     const emptyMessage = document.createElement('div');
     emptyMessage.className = 'text-center py-4';
@@ -114,7 +113,6 @@ function loadCheckoutItems() {
     return;
   }
   
-  // Add each item to the list
   cart.forEach(item => {
     const listItem = document.createElement('div');
     listItem.className = 'list-group-item d-flex gap-3 py-3';
@@ -138,7 +136,6 @@ function loadCheckoutItems() {
   });
 }
 
-// Calculate and update order summary
 function calculateOrderSummary() {
   const checkoutItemsCount = document.getElementById('checkout-items-count');
   const checkoutSubtotal = document.getElementById('checkout-subtotal');
@@ -148,23 +145,17 @@ function calculateOrderSummary() {
   
   if (!checkoutItemsCount || !checkoutSubtotal || !checkoutTotal) return;
   
-  // Get cart data
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   
-  // Calculate totals
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
-  // Get shipping cost based on method
   let shippingCost = getShippingCost();
   
-  // Get discount amount if any
   const discount = parseInt(localStorage.getItem('couponDiscount')) || 0;
   
-  // Calculate final total
   const total = subtotal + shippingCost - discount;
   
-  // Update UI elements
   checkoutItemsCount.textContent = totalItems;
   checkoutSubtotal.textContent = formatCurrency(subtotal);
   
@@ -178,14 +169,11 @@ function calculateOrderSummary() {
   
   checkoutTotal.textContent = formatCurrency(total);
   
-  // Save current total in session for later use
   sessionStorage.setItem('checkoutTotal', total);
   
-  // Update the transfer message for bank transfers
   updateTransferMessage();
 }
 
-// Get shipping cost based on selected method
 function getShippingCost() {
   let shippingCost = 0;
   const shippingMethodElement = document.querySelector('input[name="shippingMethod"]:checked');
@@ -197,7 +185,6 @@ function getShippingCost() {
       shippingCost = 50000;
     }
     
-    // Save the selected shipping method to localStorage
     if (shippingMethodElement.id === 'standardShipping') {
       localStorage.setItem('shippingMethod', 'standard');
     } else if (shippingMethodElement.id === 'fastShipping') {
@@ -206,7 +193,6 @@ function getShippingCost() {
       localStorage.setItem('shippingMethod', 'sameDay');
     }
   } else {
-    // If no shipping method is selected, try to get from localStorage
     const savedMethod = localStorage.getItem('shippingMethod');
     if (savedMethod === 'fast') {
       shippingCost = 30000;
@@ -218,34 +204,32 @@ function getShippingCost() {
   return shippingCost;
 }
 
-// Initialize shipping method change listeners
 function initShippingMethodListeners() {
   const shippingMethods = document.querySelectorAll('input[name="shippingMethod"]');
-  
+  const estimatedDeliveryDateEl = document.getElementById('estimated-delivery-date');
+
   shippingMethods.forEach(method => {
     method.addEventListener('change', function() {
-      // Save selected shipping method
-      if (this.id === 'standardShipping') {
-        localStorage.setItem('shippingMethod', 'standard');
-      } else if (this.id === 'fastShipping') {
-        localStorage.setItem('shippingMethod', 'fast');
-      } else if (this.id === 'sameDay') {
-        localStorage.setItem('shippingMethod', 'sameDay');
-      }
-      
-      console.log("Shipping method changed to:", this.id);
-      console.log("Saved in localStorage as:", localStorage.getItem('shippingMethod'));
-      
-      // Update delivery date estimate
-      updateEstimatedDeliveryDate();
-      
-      // Recalculate order summary with new shipping fee
       calculateOrderSummary();
+      
+      if (estimatedDeliveryDateEl) {
+        if (this.id === 'standardShipping') {
+          estimatedDeliveryDateEl.textContent = 'Dự kiến giao hàng trong 2-3 ngày';
+        } else if (this.id === 'fastShipping') {
+          estimatedDeliveryDateEl.textContent = 'Dự kiến giao hàng vào ngày mai';
+        } else if (this.id === 'sameDay') {
+          estimatedDeliveryDateEl.textContent = 'Dự kiến giao hàng trong 2-6 giờ (nội thành)';
+        }
+      }
     });
   });
+  
+  const defaultShipping = document.querySelector('input[name="shippingMethod"]:checked');
+  if (defaultShipping) {
+    defaultShipping.dispatchEvent(new Event('change'));
+  }
 }
 
-// Initialize payment method change listeners
 function initPaymentMethodListeners() {
   const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
   const cardPaymentForm = document.getElementById('card-payment-form');
@@ -253,60 +237,53 @@ function initPaymentMethodListeners() {
   
   paymentMethods.forEach(method => {
     method.addEventListener('change', function() {
-      // Remove selected class from all payment cards
       document.querySelectorAll('.payment-method-card').forEach(card => {
         card.classList.remove('selected');
       });
       
-      // Add selected class to chosen payment card
       this.closest('.payment-method-card').classList.add('selected');
       
-      // Show/hide payment specific elements
-      if (this.id === 'credit' && cardPaymentForm) {
+      const paymentMethodId = this.id || this.value;
+
+      if (paymentMethodId === 'credit' && cardPaymentForm) {
         cardPaymentForm.style.display = 'block';
         if (bankTransferInfo) bankTransferInfo.classList.add('d-none');
-      } else if (this.id === 'bank' && bankTransferInfo) {
+      } else if (paymentMethodId === 'bank' && bankTransferInfo) {
         bankTransferInfo.classList.remove('d-none');
         if (cardPaymentForm) cardPaymentForm.style.display = 'none';
-        
-        // Update transfer message
         updateTransferMessage();
       } else {
         if (cardPaymentForm) cardPaymentForm.style.display = 'none';
         if (bankTransferInfo) bankTransferInfo.classList.add('d-none');
       }
-      
-      // Save selected payment method
-      localStorage.setItem('paymentMethod', this.id);
+      localStorage.setItem('paymentMethod', paymentMethodId);
     });
   });
+
+  const checkedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+  if (checkedPaymentMethod) {
+    checkedPaymentMethod.dispatchEvent(new Event('change'));
+  }
 }
 
-// Initialize bank transfer specific functionality
 function initBankTransferFunctionality() {
-  // Add event listeners for copy buttons
   const copyBtns = document.querySelectorAll('.copy-btn');
   copyBtns.forEach(btn => {
     btn.addEventListener('click', function() {
-      // Get the target input element ID
       const targetId = this.getAttribute('data-target');
       const inputEl = document.getElementById(targetId);
       
       if (inputEl) {
-        // Select the text
         inputEl.select();
-        inputEl.setSelectionRange(0, 99999); // For mobile devices
+        inputEl.setSelectionRange(0, 99999);
         
-        // Copy to clipboard
         navigator.clipboard.writeText(inputEl.value)
           .then(() => {
-            // Change button text temporarily
             const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-check"></i> Đã sao chép';
             this.classList.remove('btn-outline-secondary');
             this.classList.add('btn-success');
             
-            // Restore original button text after 2 seconds
             setTimeout(() => {
               this.innerHTML = originalText;
               this.classList.remove('btn-success');
@@ -320,7 +297,6 @@ function initBankTransferFunctionality() {
     });
   });
   
-  // Add listeners to update transfer message when relevant fields change
   const formFields = [
     'firstName', 'lastName', 'phone', 'email'
   ];
@@ -333,20 +309,16 @@ function initBankTransferFunctionality() {
   });
 }
 
-// Update the transfer message based on customer info
 function updateTransferMessage() {
   const transferMessageEl = document.getElementById('transferMessage');
   if (!transferMessageEl) return;
   
-  // Get customer information
   const firstName = document.getElementById('firstName')?.value || '';
   const lastName = document.getElementById('lastName')?.value || '';
   const phone = document.getElementById('phone')?.value || '';
   
-  // Generate order ID (using timestamp for demo purposes)
   const orderId = 'JP-' + Date.now().toString().slice(-6);
   
-  // Format message: FullName-Phone-OrderID
   const fullName = (firstName + ' ' + lastName).trim();
   let message = '';
   
@@ -360,17 +332,14 @@ function updateTransferMessage() {
     message = orderId;
   }
   
-  // Update message field
   transferMessageEl.value = message;
 }
 
-// Initialize coupon code functionality
 function initCouponCode() {
   const couponForm = document.querySelector('.coupon-form .input-group');
   const couponInput = couponForm ? couponForm.querySelector('input') : null;
   const couponBtn = couponForm ? couponForm.querySelector('button') : null;
   
-  // Update coupon display on page load if a coupon exists
   const savedCoupon = localStorage.getItem('couponCode');
   const savedDiscount = parseInt(localStorage.getItem('couponDiscount')) || 0;
   if (savedCoupon && savedDiscount > 0 && couponInput) {
@@ -382,7 +351,6 @@ function initCouponCode() {
     couponBtn.addEventListener('click', function() {
       const code = couponInput.value.trim();
       
-      // If the button says "Hủy", remove the coupon
       if (couponBtn.innerHTML.includes('Hủy')) {
         removeCoupon();
         return;
@@ -393,7 +361,6 @@ function initCouponCode() {
         return;
       }
       
-      // Sample coupon codes (in production, these would be validated server-side)
       const coupons = {
         'WELCOME10': 10000,
         'SALE20': 20000,
@@ -401,17 +368,13 @@ function initCouponCode() {
       };
       
       if (coupons[code]) {
-        // Apply discount
         localStorage.setItem('couponDiscount', coupons[code]);
         localStorage.setItem('couponCode', code);
         
-        // Update UI to show coupon is applied
         updateCouponDisplay(code, coupons[code]);
         
-        // Show success message
         showToast('success', 'Thành công', `Mã giảm giá ${code} đã được áp dụng. Bạn được giảm ${formatCurrency(coupons[code])}`);
         
-        // Recalculate order summary
         calculateOrderSummary();
       } else {
         showToast('danger', 'Thất bại', 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
@@ -420,24 +383,20 @@ function initCouponCode() {
   }
 }
 
-// Update UI to show coupon is applied
 function updateCouponDisplay(code, discountAmount) {
   const couponForm = document.querySelector('.coupon-form');
   const couponInput = couponForm.querySelector('input');
   const couponBtn = couponForm.querySelector('button');
   
   if (couponForm && couponInput && couponBtn) {
-    // Disable input and update button text
     couponInput.value = code;
     couponInput.setAttribute('readonly', true);
     couponInput.classList.add('bg-light');
     
-    // Change button text to "Cancel"
     couponBtn.innerHTML = '<i class="fas fa-times"></i> Hủy';
     couponBtn.classList.remove('btn-outline-primary');
     couponBtn.classList.add('btn-outline-danger');
     
-    // Add coupon badge if not exists
     if (!document.getElementById('coupon-badge')) {
       const couponBadge = document.createElement('div');
       couponBadge.id = 'coupon-badge';
@@ -461,7 +420,6 @@ function updateCouponDisplay(code, discountAmount) {
   }
 }
 
-// Remove coupon and reset UI
 function removeCoupon() {
   const couponForm = document.querySelector('.coupon-form');
   const couponInput = couponForm.querySelector('input');
@@ -469,277 +427,106 @@ function removeCoupon() {
   const couponBadge = document.getElementById('coupon-badge');
   
   if (couponForm && couponInput && couponBtn) {
-    // Reset input
     couponInput.value = '';
     couponInput.removeAttribute('readonly');
     couponInput.classList.remove('bg-light');
     
-    // Reset button
     couponBtn.innerHTML = 'Áp dụng';
     couponBtn.classList.remove('btn-outline-danger');
     couponBtn.classList.add('btn-outline-primary');
     
-    // Remove badge if exists
     if (couponBadge) {
       couponBadge.remove();
     }
     
-    // Remove from localStorage
     localStorage.removeItem('couponDiscount');
     localStorage.removeItem('couponCode');
     
-    // Recalculate summary
     calculateOrderSummary();
     
-    // Show message
     showToast('info', 'Thông báo', 'Đã hủy mã giảm giá');
   }
 }
 
-// Initialize checkout form submission
-function initCheckoutForm() {
-  const checkoutForm = document.getElementById('checkout-form');
-  const orderBtn = document.getElementById('place-order-btn');
-  
-  if (checkoutForm) {
-    checkoutForm.addEventListener('submit', function(event) {
-      event.preventDefault(); // Always prevent default to handle payment redirection
-      if (!checkoutForm.checkValidity()) {
-        event.stopPropagation();
-        checkoutForm.classList.add('was-validated');
-        return; // Stop if form is invalid
-      }
-      
-      checkoutForm.classList.add('was-validated'); // Show validation feedback if any missed
-
-      // Loading effect for the order button
-      orderBtn.disabled = true;
-      orderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
-      
-      const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-      const orderData = collectOrderData(); // Ensure this function collects necessary order details
-
-      if (selectedPaymentMethod && selectedPaymentMethod.value === 'VNPAY') {
-        // Handle VNPAY payment
-        const paymentPayload = {
-          amount: parseFloat(sessionStorage.getItem('checkoutTotal')) || 0, // Get total amount
-          orderInfo: `Thanh toan don hang JanyPet ${orderData.orderId || new Date().getTime()}`, // Customize order info
-          bankCode: '', // Optional: for specific bank, otherwise VNPAY shows selection
-          language: 'vn'
-        };
-
-        fetch('/api/vnpay/create_payment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(paymentPayload),
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.URL) {
-            window.location.href = data.URL;
-          } else {
-            showToast('danger', 'Lỗi', data.message || 'Không thể tạo yêu cầu thanh toán VNPAY.');
-            orderBtn.disabled = false;
-            orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
-          }
-        })
-        .catch(error => {
-          showToast('danger', 'Lỗi', 'Lỗi kết nối khi tạo thanh toán VNPAY.');
-          orderBtn.disabled = false;
-          orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
-        });
-
-      } else if (selectedPaymentMethod && selectedPaymentMethod.id === 'bank') {
-        // Handle Bank Transfer (existing logic)
-        orderData.transferMessage = document.getElementById('transferMessage')?.value;
-        // Simulate order processing for bank transfer
-        processOrderSimulation(orderData, true); // Pass true for bank transfer
-      } else if (selectedPaymentMethod && selectedPaymentMethod.id === 'cod') {
-        // Handle COD (existing logic)
-        processOrderSimulation(orderData, false); // Pass false for non-bank transfer
-      } else {
-        // Handle other payment methods or show error
-        showToast('warning', 'Thông báo', 'Vui lòng chọn phương thức thanh toán hợp lệ.');
-        orderBtn.disabled = false;
-        orderBtn.innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
-      }
-
-      // Additional VNPAY logic for order creation response
-      if (selectedPaymentMethod === 'VNPAY' && orderCreationResponse && orderCreationResponse.orderCode) {
-        const vnpayPayload = {
-          orderCode: orderCreationResponse.orderCode, // From your backend order creation
-          amount: orderCreationResponse.totalAmount,  // From your backend order creation (ensure this is the final amount in VND)
-          orderInfo: "Thanh toan don hang " + orderCreationResponse.orderCode,
-          bankCode: "", // Optional: let user choose on VNPAY page, or provide specific bank code
-          language: "vn"
-        };
-
-        fetch('/api/vnpay/create_payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(vnpayPayload)
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'OK' && data.paymentUrl) {
-            window.location.href = data.paymentUrl; // Redirect to VNPAY
-          } else {
-            showToast('error', 'Lỗi VNPAY', data.message || 'Không thể tạo yêu cầu thanh toán VNPAY.');
-            console.error("VNPAY creation error:", data.message);
-          }
-        })
-        .catch(error => {
-          showToast('error', 'Lỗi kết nối', 'Không thể kết nối đến VNPAY.');
-          console.error('Error calling VNPAY create_payment:', error);
-        });
-      }
-    });
-  }
-}
-
-// It's good to have a common function to simulate/process order after payment or for COD/Bank
-function processOrderSimulation(orderData, isBankTransfer) {
-    // This is part of your existing logic, ensure it's called appropriately
-    setTimeout(function() {
-        const orderId = 'JP-' + Date.now().toString().slice(-6); // Or get from orderData if pre-generated
-        document.getElementById('order-id').textContent = orderId;
-        
-        const successModal = new bootstrap.Modal(document.getElementById('orderSuccessModal'));
-        const successModalBody = document.querySelector('#orderSuccessModal .modal-body');
-        const modalFooter = document.querySelector('#orderSuccessModal .modal-footer');
-
-        // Clear previous bank transfer notes if any
-        const existingBankNote = successModalBody.querySelector('.alert.alert-info');
-        if (existingBankNote) existingBankNote.remove();
-        const existingFbLink = modalFooter.querySelector('a[href*="facebook.com"]');
-        if (existingFbLink && modalFooter.firstChild.isSameNode(existingFbLink)) existingFbLink.remove();
-
-
-        if (isBankTransfer) {
-            if (successModalBody) {
-              const bankTransferNote = document.createElement('div');
-              bankTransferNote.className = 'alert alert-info mt-3';
-              bankTransferNote.innerHTML = `
-                <h5 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Hướng dẫn thanh toán</h5>
-                <p>Vui lòng chuyển khoản với nội dung: <strong>${orderData.transferMessage || 'Thanh toan don hang ' + orderId}</strong></p>
-                <p class="mb-0">Sau khi chuyển khoản, hãy gửi biên lai cho chúng tôi qua Facebook để đơn hàng được xử lý nhanh chóng.</p>
-              `;
-              successModalBody.appendChild(bankTransferNote);
-              
-              if (modalFooter) {
-                const fbLink = document.createElement('a');
-                fbLink.href = 'https://www.facebook.com/JanyPet'; // Your Facebook page
-                fbLink.target = '_blank';
-                fbLink.className = 'btn btn-info'; // Changed to btn-info for distinction
-                fbLink.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i> Gửi biên lai NH';
-                modalFooter.insertBefore(fbLink, modalFooter.firstChild);
-              }
-            }
-        }
-        
-        successModal.show();
-        
-        document.getElementById('place-order-btn').disabled = false;
-        document.getElementById('place-order-btn').innerHTML = '<i class="fas fa-shopping-bag me-2"></i>Đặt hàng';
-        
-        // Clear cart and related data
-        localStorage.removeItem('cart');
-        localStorage.removeItem('couponDiscount');
-        localStorage.removeItem('couponCode');
-        
-        saveOrderToHistory(orderId, orderData); // Ensure this function exists and works
-        updateCartBadgeCount(); // Ensure this function exists and works
-    }, 1500);
-}
-
-// Collect order data from form
 function collectOrderData() {
-  const shippingInfo = {
-    firstName: document.getElementById('firstName').value,
-    lastName: document.getElementById('lastName').value,
-    email: document.getElementById('email').value,
-    phone: document.getElementById('phone').value,
-    address: document.getElementById('address').value,
-    city: document.getElementById('city').value,
-    district: document.getElementById('district').value,
-    ward: document.getElementById('ward').value
+  const shippingInfo = { // Giữ lại để dễ đọc, nhưng sẽ trải phẳng khi gửi
+    firstName: document.getElementById('firstName')?.value || '',
+    lastName: document.getElementById('lastName')?.value || '',
+    email: document.getElementById('email')?.value || '',
+    phone: document.getElementById('phone')?.value || '',
+    address: document.getElementById('address')?.value || '',
+    city: document.getElementById('city')?.value || '',
+    district: document.getElementById('district')?.value || '',
+    ward: document.getElementById('ward')?.value || ''
   };
   
-  // Get selected payment method
-  let paymentMethod = '';
-  document.querySelectorAll('input[name="paymentMethod"]').forEach(method => {
-    if (method.checked) {
-      paymentMethod = method.id;
-    }
-  });
+  let paymentMethodValue = '';
+  const paymentMethodChecked = document.querySelector('input[name="paymentMethod"]:checked');
+  if (paymentMethodChecked) {
+    paymentMethodValue = paymentMethodChecked.value;
+  }
   
-  // Get selected shipping method
-  let shippingMethod = '';
-  document.querySelectorAll('input[name="shippingMethod"]').forEach(method => {
-    if (method.checked) {
-      shippingMethod = method.id;
-    }
-  });
+  let shippingMethodValue = '';
+  const shippingMethodChecked = document.querySelector('input[name="shippingMethod"]:checked');
+  if (shippingMethodChecked) {
+    if (shippingMethodChecked.id === 'standardShipping') shippingMethodValue = 'STANDARD';
+    else if (shippingMethodChecked.id === 'fastShipping') shippingMethodValue = 'FAST';
+    else if (shippingMethodChecked.id === 'sameDay') shippingMethodValue = 'SAME_DAY';
+    else shippingMethodValue = shippingMethodChecked.id;
+  }
   
-  // Get cart items from localStorage
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
-  // Get order notes
-  const notes = document.getElementById('order-notes') ? document.getElementById('order-notes').value : '';
-  
-  // Calculate totals
-  const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart')) || [];
+  const notesValue = document.getElementById('order-notes')?.value || ''; // Đổi tên biến để tránh nhầm lẫn
+  const subtotal = cartFromLocalStorage.reduce((total, item) => total + (item.price * item.quantity), 0);
   let shippingFee = getShippingCost();
-  
-  // Get coupon discount if any
   const couponDiscount = parseInt(localStorage.getItem('couponDiscount')) || 0;
   const couponCode = localStorage.getItem('couponCode') || '';
-  
-  // Calculate total
   const totalAmount = subtotal + shippingFee - couponDiscount;
   
   return {
-    shippingInfo,
-    paymentMethod,
-    shippingMethod,
-    cart,
-    notes,
+    // Trải phẳng các trường từ shippingInfo
+    customerFirstName: shippingInfo.firstName,
+    customerLastName: shippingInfo.lastName,
+    customerEmail: shippingInfo.email,
+    customerPhone: shippingInfo.phone,
+    shippingAddress: shippingInfo.address,
+    shippingCity: shippingInfo.city,
+    shippingDistrict: shippingInfo.district,
+    shippingWard: shippingInfo.ward,
+
+    paymentMethod: paymentMethodValue,
+    shippingMethod: shippingMethodValue,
+    cart: cartFromLocalStorage,
+    notes: notesValue, // Hoặc orderNotes nếu backend DTO là orderNotes
     subtotal,
     shippingFee,
     couponDiscount,
     couponCode,
     totalAmount,
-    orderDate: new Date().toISOString(),
-    status: 'pending'
+    // orderDate và status thường được set ở backend
+    // orderDate: new Date().toISOString(), 
+    // status: 'PENDING'
   };
 }
 
-// Save order to order history in localStorage
 function saveOrderToHistory(orderId, orderData) {
-  // Get existing order history
   const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
   
-  // Add new order
   orderHistory.push({
     id: orderId,
     ...orderData
   });
   
-  // Save back to localStorage
   localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
 }
 
-// Update estimated delivery date based on selected shipping method
 function updateEstimatedDeliveryDate() {
   const estimatedElement = document.getElementById('estimated-delivery-date');
   if (!estimatedElement) return;
   
   const today = new Date();
-  let deliveryDays = 3; // Default for standard shipping
+  let deliveryDays = 3;
   
-  // First check for selected shipping method
   const shippingMethodElement = document.querySelector('input[name="shippingMethod"]:checked');
   
   if (shippingMethodElement) {
@@ -749,7 +536,6 @@ function updateEstimatedDeliveryDate() {
       deliveryDays = 0;
     }
   } else {
-    // If no shipping method is selected yet, check localStorage
     const savedMethod = localStorage.getItem('shippingMethod');
     if (savedMethod === 'fast') {
       deliveryDays = 1;
@@ -767,7 +553,6 @@ function updateEstimatedDeliveryDate() {
   const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
   
   if (deliveryDays === 0) {
-    // Same day delivery
     const hours = today.getHours();
     const deliveryTime = hours < 12 ? 'chiều nay' : 'tối nay';
     estimatedElement.textContent = `Dự kiến giao hàng vào ${deliveryTime} (${deliveryDate.toLocaleDateString('vi-VN', options)})`;
@@ -776,7 +561,6 @@ function updateEstimatedDeliveryDate() {
   }
 }
 
-// Update cart badges count in header
 function updateCartBadgeCount() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -787,9 +571,7 @@ function updateCartBadgeCount() {
   });
 }
 
-// Display toast notification
 function showToast(type, title, message) {
-  // Create toast element
   const toastContainer = document.getElementById('toast-container') || createToastContainer();
   const toast = document.createElement('div');
   toast.className = `toast bg-${type} text-white` + (type === 'warning' ? ' text-dark' : '');
@@ -807,7 +589,6 @@ function showToast(type, title, message) {
   `;
   toastContainer.appendChild(toast);
   
-  // Initialize and show toast
   const bsToast = new bootstrap.Toast(toast, {
     autohide: true,
     delay: 3000
@@ -815,13 +596,11 @@ function showToast(type, title, message) {
   
   bsToast.show();
   
-  // Remove toast after it's hidden
   toast.addEventListener('hidden.bs.toast', function() {
     toast.remove();
   });
 }
 
-// Create toast container if it doesn't exist
 function createToastContainer() {
   const container = document.createElement('div');
   container.id = 'toast-container';
@@ -831,7 +610,47 @@ function createToastContainer() {
   return container;
 }
 
-// Format currency for display
 function formatCurrency(amount) {
-  return amount.toLocaleString('vi-VN') + '₫';
+  return (amount || 0).toLocaleString('vi-VN') + '₫';
+}
+
+function initAddressDropdowns() {
+  const citySelect = document.getElementById('city');
+  const districtSelect = document.getElementById('district');
+  const wardSelect = document.getElementById('ward');
+
+  if (!citySelect || !districtSelect || !wardSelect) {
+    console.warn("Address select elements not found.");
+    return;
+  }
+
+  citySelect.addEventListener('change', function() {
+    const selectedCity = this.value;
+    populateDropdown(districtSelect, selectedCity ? Object.keys(vietnameseAddressData[selectedCity] || {}) : []);
+    populateDropdown(wardSelect, []); 
+    districtSelect.dispatchEvent(new Event('change'));
+  });
+
+  districtSelect.addEventListener('change', function() {
+    const selectedCity = citySelect.value;
+    const selectedDistrict = this.value;
+    if (selectedCity && selectedDistrict && vietnameseAddressData[selectedCity] && vietnameseAddressData[selectedCity][selectedDistrict]) {
+      populateDropdown(wardSelect, vietnameseAddressData[selectedCity][selectedDistrict]);
+    } else {
+      populateDropdown(wardSelect, []);
+    }
+  });
+}
+
+function populateDropdown(selectElement, optionsArray) {
+  selectElement.innerHTML = '<option value="">Chọn...</option>';
+  if (optionsArray && optionsArray.length > 0) {
+    optionsArray.forEach(optionValue => {
+      const option = new Option(optionValue, optionValue);
+      selectElement.add(option);
+    });
+  }
+  if (optionsArray.length === 0) {
+    selectElement.value = ""; 
+  }
 }

@@ -44,7 +44,7 @@ public class OrderMapperImpl implements OrderMapper {
         dto.setUserId(entity.getUser() != null ? entity.getUser().getId() : null);
         dto.setOrderDate(entity.getOrderDate());
         dto.setStatus(entity.getStatus());
-        
+
         
         // Customer info
         dto.setCustomerFirstName(entity.getCustomerFirstName());
@@ -251,12 +251,12 @@ public class OrderMapperImpl implements OrderMapper {
     
     // Helper method to create an OrderDetail from OrderItemRequest
     private OrderDetail createOrderDetail(OrderItemRequest itemRequest, Order order) {
-        if (itemRequest == null || itemRequest.getProductId() == null) {
+        if (itemRequest == null || itemRequest.getId() == null) {
             return null;
         }
         
         // Find the product
-        Product product = productRepository.findById(itemRequest.getProductId()).orElse(null);
+        Product product = productRepository.findById(itemRequest.getId()).orElse(null);
         if (product == null) {
             return null;
         }
@@ -267,16 +267,16 @@ public class OrderMapperImpl implements OrderMapper {
         detail.setQuantity(itemRequest.getQuantity());
         
         // Set price - use provided price or fetch from product
-        if (itemRequest.getUnitPrice() != null) {
-            detail.setUnitPrice(itemRequest.getUnitPrice());
+        if (itemRequest.getPrice() != null) {
+            detail.setUnitPrice(itemRequest.getPrice());
         } else {
             // Assume product has a getPrice() method - adjust accordingly
             detail.setUnitPrice(product.getPrice());
         }
         
         // Set variant information
-        detail.setProductColor(itemRequest.getColor());
-        detail.setProductSize(itemRequest.getSize());
+        detail.setProductColor(itemRequest.getVariant());
+        //detail.setProductSize(itemRequest.getSize());
         
         return detail;
     }

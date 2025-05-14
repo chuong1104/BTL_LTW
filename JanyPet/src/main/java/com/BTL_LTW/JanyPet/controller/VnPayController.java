@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/vnpay")
@@ -41,8 +42,8 @@ public class VnPayController {
                 return ResponseEntity.badRequest().body(new PaymentResponseDTO("ERROR", "Invalid amount", null, paymentRequestDTO.getOrderCode()));
             }
 
-            String vnp_TxnRef = paymentRequestDTO.getOrderCode(); // This should be your unique order ID
-            long amount = paymentRequestDTO.getAmount() * 100L; // Amount in VND * 100
+            String vnp_TxnRef = paymentRequestDTO.getOrderCode();
+            long amount = paymentRequestDTO.getAmount() * 100L;
 
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", "2.1.0");
@@ -59,7 +60,7 @@ public class VnPayController {
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
             String orderInfo = paymentRequestDTO.getOrderInfo() != null ? paymentRequestDTO.getOrderInfo() : "Thanh toan don hang " + vnp_TxnRef;
             vnp_Params.put("vnp_OrderInfo", orderInfo);
-            vnp_Params.put("vnp_OrderType", "other"); // Default type
+            vnp_Params.put("vnp_OrderType", "other");
 
             String locate = paymentRequestDTO.getLanguage();
             if (locate == null || locate.isEmpty()) {
@@ -78,11 +79,12 @@ public class VnPayController {
             String vnp_ExpireDate = formatter.format(cld.getTime());
             vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-            // Build query URL for hashing
+            // Tạo chuỗi dữ liệu để tạo hash (isForHash = true)
             String queryUrlForHash = VnPayUtil.getPaymentUrl(vnp_Params, true);
+            logger.info("String to hash for order " + vnp_TxnRef + " (create_payment): " + queryUrlForHash); // ADD THIS LINE
             String vnp_SecureHash = VnPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), queryUrlForHash);
             
-            // Build query URL for redirection (without hash in params)
+            // Tạo chuỗi query cho URL redirect (isForHash = false, các giá trị sẽ được URL encode)
             String queryUrlForRedirect = VnPayUtil.getPaymentUrl(vnp_Params, false);
             String paymentUrl = vnPayConfig.getPaymentUrl() + "?" + queryUrlForRedirect + "&vnp_SecureHash=" + vnp_SecureHash;
             
@@ -106,15 +108,15 @@ public class VnPayController {
             }
         }
 
-        String vnp_SecureHash = fields.remove("vnp_SecureHash"); // Remove hash before building data for verification
+        String vnp_SecureHash = fields.remove("vnp_SecureHash"); 
 
         if (vnp_SecureHash == null) {
             logger.warning("IPN call missing vnp_SecureHash for order: " + fields.getOrDefault("vnp_TxnRef", "UNKNOWN"));
             return ResponseEntity.ok("{\"RspCode\":\"97\",\"Message\":\"Invalid Checksum\"}");
         }
         
-        // Build data string for hash verification from remaining fields
         String dataForHashVerification = VnPayUtil.getPaymentUrl(fields, true);
+        logger.info("String to hash for IPN verification, order " + fields.getOrDefault("vnp_TxnRef", "UNKNOWN") + ": " + dataForHashVerification); // ADD THIS LINE
         String calculatedHash = VnPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), dataForHashVerification);
 
         if (!calculatedHash.equals(vnp_SecureHash)) {
@@ -127,7 +129,7 @@ public class VnPayController {
         String vnpTransactionNo = fields.get("vnp_TransactionNo");
         String vnpBankCode = fields.get("vnp_BankCode");
         String vnpCardType = fields.get("vnp_CardType");
-        String amountStr = fields.get("vnp_Amount"); // Amount in VNPAY format (VND * 100)
+        String amountStr = fields.get("vnp_Amount");
 
         if (orderCode == null || vnpResponseCode == null || amountStr == null) {
              logger.warning("IPN missing required parameters for order: " + orderCode);
@@ -135,20 +137,16 @@ public class VnPayController {
         }
 
         try {
-            BigDecimal paidAmountVND = new BigDecimal(amountStr).divide(new BigDecimal(100)); // Convert to VND
-
+            BigDecimal paidAmountVND = new BigDecimal(amountStr).divide(new BigDecimal(100));
+            
             boolean updateSuccess = orderService.updateOrderStatusAfterVnPay(orderCode, vnpResponseCode, vnpTransactionNo, vnpBankCode, vnpCardType, paidAmountVND);
 
             if (updateSuccess) {
-                logger.info("IPN processed successfully for order: " + orderCode + ", VNPAY Response: " + vnpResponseCode);
-                if ("00".equals(vnpResponseCode)) {
-                     return ResponseEntity.ok("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
-                } else {
-                    return ResponseEntity.ok("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
-                }
+                logger.info("IPN processed successfully by OrderService for order: " + orderCode + ", VNPAY Response: " + vnpResponseCode);
+                return ResponseEntity.ok("{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}");
             } else {
-                logger.warning("IPN processing failed by OrderService for order: " + orderCode);
-                return ResponseEntity.ok("{\"RspCode\":\"99\",\"Message\":\"Unknown error on merchant server\"}");
+                logger.warning("IPN OrderService update failed for order: " + orderCode + ". Check OrderService logs for details (e.g., order not found, already processed, invalid data).");
+                return ResponseEntity.ok("{\"RspCode\":\"01\",\"Message\":\"Order not found or cannot be updated\"}");
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "IPN amount parsing error for order: " + orderCode, e);
@@ -170,33 +168,59 @@ public class VnPayController {
             }
         }
 
-        String vnp_SecureHash = fields.get("vnp_SecureHash");
+        String vnp_SecureHash = fields.remove("vnp_SecureHash"); // Remove hash before building data for verification
+        String redirectUrlParams = "";
+
+        if (vnp_SecureHash != null && vnPayConfig.getHashSecret() != null) {
+            String dataForHashVerification = VnPayUtil.getPaymentUrl(fields, true);
+            logger.info("String to hash for payment_return verification, order " + fields.getOrDefault("vnp_TxnRef", "UNKNOWN") + ": " + dataForHashVerification); // ADD THIS LINE
+            String calculatedHash = VnPayUtil.hmacSHA512(vnPayConfig.getHashSecret(), dataForHashVerification);
+
+            if (!calculatedHash.equals(vnp_SecureHash)) {
+                logger.warning("Payment return URL checksum failed for order: " + fields.getOrDefault("vnp_TxnRef", "UNKNOWN"));
+                fields.put("vnp_ResponseCode", "97");
+            }
+        } else if (vnPayConfig.getHashSecret() != null) {
+             logger.warning("Payment return URL missing vnp_SecureHash for order: " + fields.getOrDefault("vnp_TxnRef", "UNKNOWN"));
+             fields.put("vnp_ResponseCode", "97");
+        }
 
         String orderId = fields.getOrDefault("vnp_TxnRef", "");
         String responseCode = fields.getOrDefault("vnp_ResponseCode", "99");
         String amount = fields.getOrDefault("vnp_Amount", "0");
         String messageCode;
 
-        String redirectUrl = "/payment-result.html?";
+        String statusParam;
 
         if ("00".equals(responseCode)) {
             messageCode = "SUCCESS";
-            redirectUrl += "status=success";
+            statusParam = "success";
         } else if ("24".equals(responseCode)) {
             messageCode = "USER_CANCELLED";
-            redirectUrl += "status=cancelled";
-        } else {
-            messageCode = "FAILED";
-            redirectUrl += "status=failed";
+            statusParam = "cancelled";
+        } else if ("97".equals(responseCode)){
+            messageCode = "INVALID_CHECKSUM";
+            statusParam = "failed";
         }
-
-        redirectUrl += "&orderId=" + URLEncoder.encode(orderId, StandardCharsets.UTF_8);
-        redirectUrl += "&amount=" + URLEncoder.encode(amount, StandardCharsets.UTF_8);
-        redirectUrl += "&rspCode=" + URLEncoder.encode(responseCode, StandardCharsets.UTF_8);
-        redirectUrl += "&message=" + URLEncoder.encode(messageCode, StandardCharsets.UTF_8);
+        else {
+            messageCode = "FAILED";
+            statusParam = "failed";
+        }
         
-        logger.info("Redirecting to: " + redirectUrl + " for order " + orderId);
-        return new RedirectView(redirectUrl);
+        try {
+            redirectUrlParams = "status=" + URLEncoder.encode(statusParam, StandardCharsets.UTF_8.toString()) +
+                                "&orderId=" + URLEncoder.encode(orderId, StandardCharsets.UTF_8.toString()) +
+                                "&amount=" + URLEncoder.encode(amount, StandardCharsets.UTF_8.toString()) +
+                                "&rspCode=" + URLEncoder.encode(responseCode, StandardCharsets.UTF_8.toString()) +
+                                "&message=" + URLEncoder.encode(messageCode, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            logger.log(Level.SEVERE, "Error encoding redirect URL params for payment_return", e);
+            redirectUrlParams = "status=failed&orderId=" + orderId;
+        }
+        
+        String finalRedirectUrl = "/payment-result.html?" + redirectUrlParams;
+        logger.info("Redirecting to: " + finalRedirectUrl + " for order " + orderId);
+        return new RedirectView(finalRedirectUrl);
     }
 
     static class PaymentRequestDTO {

@@ -1669,8 +1669,6 @@ United States</textarea
     </div>
 
     <!-- Add/Edit Product Modal -->
-    <!-- This is a partial HTML snippet to fix the product modal -->
-    <!-- Replace the existing product modal in your HTML with this -->
     <div id="product-modal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -1679,59 +1677,38 @@ United States</textarea
         </div>
         <div class="modal-body">
           <form id="product-form">
-            <input type="hidden" id="product-id" name="id" />
-
+            <input type="hidden" id="product-id" />
             <div class="form-group">
-              <label for="product-name">Product Name*</label>
-              <input type="text" id="product-name" name="name" required />
+              <label for="product-name">Product Name</label>
+              <input type="text" id="product-name" placeholder="Enter product name" required />
             </div>
-
             <div class="form-row">
               <div class="form-group">
-                <label for="product-price">Price*</label>
-                <input
-                  type="number"
-                  id="product-price"
-                  name="price"
-                  min="0"
-                  step="0.01"
-                  required
-                />
+                <label for="product-price">Price</label>
+                <input type="number" id="product-price" placeholder="Enter price" required />
               </div>
               <div class="form-group">
-                <label for="product-stock">Stock*</label>
-                <input
-                  type="number"
-                  id="product-stock"
-                  name="stock"
-                  min="0"
-                  required
-                />
+                <label for="product-stock">Stock</label>
+                <input type="number" id="product-stock" placeholder="Enter stock quantity" required />
               </div>
             </div>
-
             <div class="form-group">
-              <label for="product-category-modal">Category*</label>
-              <select id="product-category-modal" name="categoryId" required></select>
+              <label for="product-category-modal">Category</label>
+              <select id="product-category-modal" required>
                 <option value="">Select Category</option>
-                <!-- Categories will be populated here by JavaScript -->
+                <!-- Categories will be populated by JavaScript -->
               </select>
             </div>
-
             <div class="form-group">
-              <label for="editor-container">Description*</label>
-              <div id="editor-container"></div>
+              <label for="product-description">Description</label>
+              <div id="editor-container" style="height: 150px;"></div>
             </div>
-
             <div class="form-group">
               <label for="product-image">Product Image</label>
-              <input
-                type="file"
-                id="product-image"
-                name="image"
-                accept="image/*"
-              />
-              <div id="image-preview"></div>
+              <input type="file" id="product-image" accept="image/*" />
+              <div id="image-preview" class="mt-2">
+                <!-- Image preview will be shown here -->
+              </div>
             </div>
           </form>
         </div>
@@ -1851,6 +1828,11 @@ United States</textarea
     <script src="js/auth_service.js"></script>
     <script src="js/order-service.js"></script>
     <script src="js/order-history.js"></script>
+    <script src="js/category-service.js"></script>
+    <script src="js/product-service.js"></script>
+    <!-- Add this with the other service scripts -->
+    <script src="js/shop-product-service.js"></script>
+
 
     <!-- Feature handlers -->
     <script src="js/service-handlers.js"></script>

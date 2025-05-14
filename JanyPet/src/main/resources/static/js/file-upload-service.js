@@ -1,87 +1,70 @@
-// File Upload Service - Handles file uploads to the server
-class FileUploadService {
-    constructor() {
-      this.baseUrl = "http://localhost:8080/api"
-    }
-  
-    // Upload a single file
-    async uploadFile(file, endpoint = "/upload") {
-      try {
-        const formData = new FormData()
-        formData.append("file", file)
-  
-        const response = await fetch(`${this.baseUrl}${endpoint}`, {
-          method: "POST",
-          body: formData,
-          credentials: "include", // Para enviar cookies de autenticação
-        })
-  
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
-        }
-  
-        const data = await response.json()
-        return { success: true, data }
-      } catch (error) {
-        console.error("File upload failed:", error)
-        return { success: false, message: error.message }
+/**
+ * File Upload Service - Xử lý việc upload file lên server
+ */
+const FileUploadService = {
+  /**
+   * Upload file lên server
+   * @param {File} file - File cần upload
+   * @param {string} endpoint - Endpoint API để upload
+   * @returns {Promise<Object>} Kết quả từ API
+   */
+  uploadFile: async function(file, endpoint = '/api/upload') {
+    try {
+      if (!file) {
+        throw new Error('No file provided');
       }
-    }
-  
-    // Upload multiple files
-    async uploadMultipleFiles(files, endpoint = "/upload/multiple") {
-      try {
-        const formData = new FormData()
-  
-        for (let i = 0; i < files.length; i++) {
-          formData.append("files", files[i])
-        }
-  
-        const response = await fetch(`${this.baseUrl}${endpoint}`, {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        })
-  
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
-        }
-  
-        const data = await response.json()
-        return { success: true, data }
-      } catch (error) {
-        console.error("Multiple file upload failed:", error)
-        return { success: false, message: error.message }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to upload file: ${response.status}`);
       }
+      
+      const result = await response.json();
+      return {
+        success: true,
+        data: result,
+        message: 'File uploaded successfully'
+      };
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return {
+        success: false,
+        message: error.message || 'Error uploading file'
+      };
     }
+  },
   
-    // Create a file reader promise
-    readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-  
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject(new Error("Failed to read file"))
-  
-        reader.readAsDataURL(file)
-      })
-    }
-  
-    // Create a file reader promise for text files
-    readFileAsText(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-  
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject(new Error("Failed to read file"))
-  
-        reader.readAsText(file)
-      })
+  /**
+   * Upload nhiều file lên server
+   * @param {FileList} files - Danh sách file cần upload
+   * @param {string} endpoint - Endpoint API để upload
+   * @returns {Promise<Array>} Mảng kết quả từ API
+   */
+  uploadMultipleFiles: async function(files, endpoint = '/api/upload') {
+    try {
+      if (!files || files.length === 0) {
+        throw new Error('No files provided');
+      }
+      
+      const uploadPromises = Array.from(files).map(file => this.uploadFile(file, endpoint));
+      return await Promise.all(uploadPromises);
+    } catch (error) {
+      console.error('Error uploading multiple files:', error);
+      return {
+        success: false,
+        message: error.message || 'Error uploading multiple files'
+      };
     }
   }
-  
-  // Export a singleton instance
-  export const fileUploadService = new FileUploadService()
-  
+};
+
+// Đặt vào object window để sử dụng toàn cục
+window.FileUploadService = FileUploadService;

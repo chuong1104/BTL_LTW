@@ -2,6 +2,7 @@ package com.BTL_LTW.JanyPet.dto.request;
 
 import com.BTL_LTW.JanyPet.common.PaymentMethod;
 import com.BTL_LTW.JanyPet.common.ShippingMethod;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +31,7 @@ public class OrderCreateRequest {
     private String orderNotes;
     
     // Danh sách sản phẩm
+    @JsonProperty("cart")
     private List<OrderItemRequest> items;
 
     // Getters and setters

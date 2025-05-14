@@ -61,6 +61,9 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user);
         }
 
+        if (request.getItems() == null || request.getItems().isEmpty()) { // SỬA Ở ĐÂY NẾU TÊN TRƯỜNG LÀ KHÁC
+            throw new IllegalArgumentException("Order must contain at least one item.");
+        }
         order.setOrderDate(LocalDateTime.now());
         order.setOrderCode(generateUniqueOrderCode());
 
@@ -90,8 +93,8 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Order must contain at least one item.");
         }
         for (OrderItemRequest itemRequest : request.getItems()) {
-            Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + itemRequest.getProductId()));
+            Product product = productRepository.findById(itemRequest.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + itemRequest.getId()));
 
             if (product.getStock() < itemRequest.getQuantity()) {
                 throw new IllegalArgumentException("Not enough stock for product: " + product.getName());
@@ -101,9 +104,9 @@ public class OrderServiceImpl implements OrderService {
             detail.setOrder(order);
             detail.setProduct(product);
             detail.setQuantity(itemRequest.getQuantity());
-            detail.setUnitPrice(itemRequest.getUnitPrice() != null ? itemRequest.getUnitPrice() : product.getPrice());
-            detail.setProductColor(itemRequest.getColor());
-            detail.setProductSize(itemRequest.getSize());
+            detail.setUnitPrice(itemRequest.getPrice() != null ? itemRequest.getPrice() : product.getPrice());
+            detail.setProductColor(itemRequest.getVariant());
+//            detail.setProductSize(itemRequest.getSize());
             orderDetails.add(detail);
             subtotalAmount = subtotalAmount.add(detail.getSubtotal());
         }

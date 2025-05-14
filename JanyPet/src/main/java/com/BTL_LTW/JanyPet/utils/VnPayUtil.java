@@ -36,7 +36,6 @@ public class VnPayUtil {
             throw new RuntimeException("Failed to generate HMACSHA512", e);
         }
     }
-
     public static String getIpAddress(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-FORWARDED-FOR");
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
@@ -71,35 +70,53 @@ public class VnPayUtil {
         return sb.toString();
     }
 
-    // Builds the query string for VNPAY.
-    // isForHash = true: builds string for hashing (key=value&key=value)
-    // isForHash = false: builds query string for URL (key=encodedValue&key=encodedValue)
-    public static String getPaymentUrl(Map<String, String> paramsMap, boolean isForHash) {
-        List<String> fieldNames = new ArrayList<>(paramsMap.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder stringBuilder = new StringBuilder();
+    // Builds the query string for VNPAY, adapted from the servlet example.
+    // isForHash = true: builds string for hashing (fieldName=URLEncode(fieldValue, "US-ASCII"))
+    // isForHash = false: builds query string for URL (URLEncode(fieldName, "US-ASCII")=URLEncode(fieldValue, "US-ASCII"))
+    public static String getPaymentUrl(Map<String, String> vnp_Params, boolean isForHash) {
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        Collections.sort(fieldNames); // Sorting alphabetically is critical!
+        
+        StringBuilder sb = new StringBuilder();
+        
         Iterator<String> itr = fieldNames.iterator();
         while (itr.hasNext()) {
             String fieldName = itr.next();
-            String fieldValue = paramsMap.get(fieldName);
+            String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append("&");
-                }
-                stringBuilder.append(fieldName);
-                stringBuilder.append("=");
-                if (isForHash) {
-                    stringBuilder.append(fieldValue);
-                } else {
-                    try {
-                        stringBuilder.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
-                    } catch (UnsupportedEncodingException e) {
-                        logger.log(Level.SEVERE, "Error encoding URL parameter: " + fieldValue, e);
-                        // Or rethrow as a runtime exception
+                try {
+                    if (isForHash) {
+                        // For hashData: fieldName=URLEncode(fieldValue, "US-ASCII")
+                        sb.append(fieldName);
+                        sb.append('=');
+                        sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                    } else {
+                        // For query string: URLEncode(fieldName, "US-ASCII")=URLEncode(fieldValue, "US-ASCII")
+                        sb.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                        sb.append('=');
+                        sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                    }
+                    
+                    if (itr.hasNext()) {
+                        sb.append('&');
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    // US_ASCII should always be supported.
+                    // This is a critical error if it happens, as it will likely lead to signature mismatch.
+                    logger.log(Level.SEVERE, "US_ASCII encoding not supported! This will cause issues.", e);
+                    // As a fallback, append raw values, but this is not per servlet example and will likely fail.
+                    // Consider throwing a runtime exception or handling more gracefully if this is a possibility.
+                    if (isForHash) {
+                        sb.append(fieldName).append('=').append(fieldValue);
+                    } else {
+                        sb.append(fieldName).append('=').append(fieldValue);
+                    }
+                    if (itr.hasNext()) {
+                        sb.append('&');
                     }
                 }
             }
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 }

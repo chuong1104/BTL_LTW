@@ -1,49 +1,124 @@
-// Category Service - Specific implementation for Category entity
-
-// Import necessary modules or declare variables
-const apiService = window.apiService // Assuming apiService is available globally or adjust import accordingly
-const API_BASE_URL = window.API_BASE_URL // Assuming API_BASE_URL is available globally or adjust import accordingly
-
-const categoryService = {
-  // Get all categories
-  getAllCategories: async () => {
-    return await apiService.getAll("categories")
-  },
-
-  // Get a category by ID
-  getCategoryById: async (id) => {
-    return await apiService.getById("categories", id)
-  },
-
-  // Create a new category
-  createCategory: async (categoryData) => {
-    return await apiService.create("categories", categoryData)
-  },
-
-  // Update an existing category
-  updateCategory: async (id, categoryData) => {
-    return await apiService.update("categories", id, categoryData)
-  },
-
-  // Delete a category
-  deleteCategory: async (id) => {
-    return await apiService.delete("categories", id)
-  },
-
-  // Get products by category ID
-  getProductsByCategory: async (categoryId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/categories/${categoryId}/products`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+/**
+ * Category Service - Handles category-related operations
+ */
+const CategoryService = {
+  // Base URL của API
+  baseUrl: '/api/categories',
+  
+  /**
+   * Lấy tất cả danh mục
+   * @returns {Promise<Array>} Promise trả về mảng các danh mục
+   */
+  getAllCategories: async function() {
+      try {
+          const response = await fetch(this.baseUrl);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching categories: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error('Error fetching categories:', error);
+          throw error;
       }
-      return await response.json()
-    } catch (error) {
-      console.error(`Error fetching products for category ${categoryId}:`, error)
-      throw error
-    }
   },
-}
+  
+  /**
+   * Lấy danh mục theo ID
+   * @param {string} categoryId - ID của danh mục cần lấy
+   * @returns {Promise<Object>} Promise trả về thông tin danh mục
+   */
+  getCategoryById: async function(categoryId) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${categoryId}`);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching category: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error(`Error fetching category with ID ${categoryId}:`, error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Tạo danh mục mới
+   * @param {Object} categoryData - Dữ liệu danh mục để tạo
+   * @returns {Promise<Object>} Promise trả về thông tin danh mục đã tạo
+   */
+  createCategory: async function(categoryData) {
+      try {
+          const response = await fetch(this.baseUrl, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(categoryData)
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error creating category: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error('Error creating category:', error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Cập nhật danh mục
+   * @param {string} categoryId - ID của danh mục cần cập nhật
+   * @param {Object} categoryData - Dữ liệu danh mục để cập nhật
+   * @returns {Promise<Object>} Promise trả về thông tin danh mục đã cập nhật
+   */
+  updateCategory: async function(categoryId, categoryData) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${categoryId}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(categoryData)
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error updating category: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error(`Error updating category with ID ${categoryId}:`, error);
+          throw error;
+      }
+  },
+  
+  /**
+   * Xóa danh mục
+   * @param {string} categoryId - ID của danh mục cần xóa
+   * @returns {Promise<boolean>} Promise trả về true nếu xóa thành công
+   */
+  deleteCategory: async function(categoryId) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${categoryId}`, {
+              method: 'DELETE'
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error deleting category: ${response.status}`);
+          }
+          
+          return true;
+      } catch (error) {
+          console.error(`Error deleting category with ID ${categoryId}:`, error);
+          throw error;
+      }
+  }
+};
 
-// Export the category service
-window.categoryService = categoryService
+// Đặt vào object window để sử dụng toàn cục
+window.CategoryService = CategoryService;

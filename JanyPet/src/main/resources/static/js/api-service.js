@@ -5,9 +5,38 @@
 
 // Create the API service as a global object
 window.apiService = {
-    API_BASE_URL: '/api',
+    API_BASE_URL: '/api', // This will be prefixed by the domain, e.g., http://localhost:8080/api
     isAvailable: true,
-    
+
+    // Add the missing testConnection method
+    testConnection: async function() {
+        try {
+            // Use a simple GET request to a known health or lightweight endpoint
+            // Make sure your backend has a /api/health endpoint or similar
+            const response = await fetch(`${this.API_BASE_URL}/products`); 
+            if (!response.ok) {
+                // Try to get a more detailed error message if the server provides one
+                let errorMsg = `API connection test failed: ${response.status} ${response.statusText}`;
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.message) {
+                        errorMsg = `API connection test failed: ${errorData.message}`;
+                    }
+                } catch (e) {
+                    // Ignore if parsing errorData fails, stick with statusText
+                }
+                throw new Error(errorMsg);
+            }
+            console.log('API connection test: Successful');
+            this.isAvailable = true; // Ensure this is set on success
+            return true;
+        } catch (error) {
+            console.error('API connection test: Failed -', error.message);
+            this.isAvailable = false; // Ensure this is set on failure
+            throw error; // Re-throw so init can catch it
+        }
+    },
+
     init: async function() {
         console.log('Initializing API Service');
         try {
@@ -18,29 +47,6 @@ window.apiService = {
         }
     },
     
-    testConnection: async function() {
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/health`, {
-                method: 'GET',
-                headers: { 'Accept': 'application/json' },
-                timeout: 5000
-            });
-            
-            if (response.ok) {
-                console.log('API connection test: Success');
-                this.isAvailable = true;
-                return true;
-            } else {
-                console.log('API connection test: Failed');
-                this.isAvailable = false;
-                return false;
-            }
-        } catch (error) {
-            console.error('API connection test: Failed', error);
-            this.isAvailable = false;
-            return false;
-        }
-    },
     
     // Generic request method with fallback and retries
     request: async function(endpoint, options = {}, mockData = null) {
@@ -147,9 +153,7 @@ window.apiService = {
     },
     
     delete: function(endpoint, mockData = null) {
-        return this.request(endpoint, {
-            method: 'DELETE'
-        }, mockData);
+        return this.request(endpoint, { method: 'DELETE' }, mockData);
     },
     
     // Generic RESTful API method that works with any endpoint
@@ -286,7 +290,6 @@ window.apiService = {
         ]);
     },
     
-    // Add these convenience methods for category operations
     getCategories: function() {
         return this.fetchData('/api/categories', 'GET');
     },
@@ -316,42 +319,39 @@ window.apiService = {
         return this.get(`/orders/${orderId}`);
     },
 
-    getAllOrders: function() {
-        return this.get('/orders'); // No pagination params
+    getAllOrders: function(page = 0, size = 10, sort = 'orderDate,desc') {
+        return this.get(`/orders?page=${page}&size=${size}&sort=${sort}`);
     },
 
-    getOrdersByUserId: function(userId) {
-        return this.get(`/orders/user/${userId}`); // No pagination params
+    getOrdersByUserId: function(userId, page = 0, size = 10, sort = 'orderDate,desc') {
+        return this.get(`/orders/user/${userId}?page=${page}&size=${size}&sort=${sort}`);
     },
 
-    getOrdersByStatus: function(status) {
-        return this.get(`/orders/status/${status}`); // No pagination params
+    getOrdersByStatus: function(status, page = 0, size = 10, sort = 'orderDate,desc') {
+        return this.get(`/orders/status/${status}?page=${page}&size=${size}&sort=${sort}`);
     },
 
-    getOrdersByDateRange: function(startDate, endDate) {
-        // Dates should be in ISO format (e.g., "2025-05-11T00:00:00")
-        return this.get(`/orders/date-range?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`); // No pagination params
+    getOrdersByDateRange: function(startDate, endDate, page = 0, size = 10, sort = 'orderDate,desc') {
+        return this.get(`/orders/date-range?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&page=${page}&size=${size}&sort=${sort}`);
     },
 
     updateOrderStatus: function(orderId, statusUpdateRequest) {
-        // statusUpdateRequest should be like { "status": "PROCESSING" }
         return this.put(`/orders/${orderId}/status`, statusUpdateRequest);
     },
 
     cancelOrder: function(orderId) {
-        return this.put(`/orders/${orderId}/cancel`, {}); // Empty body for this PUT request
+        return this.put(`/orders/${orderId}/cancel`, {});
     },
 
     deleteOrder: function(orderId) {
         return this.delete(`/orders/${orderId}`);
     },
 
-    getRecentOrders: function(limit) {
+    getRecentOrders: function(limit = 5) {
         return this.get(`/orders/recent?limit=${limit}`);
     },
 
     getRevenueByDateRange: function(startDate, endDate) {
-        // Dates should be in ISO format
         return this.get(`/orders/revenue?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`);
     },
 
@@ -360,90 +360,13 @@ window.apiService = {
     }
 };
 
-// OrderService implementation
-const API_BASE_URL = "/api"; // Or your actual API base URL for OrderService
-
-window.OrderService = {
-    getAllOrders: async () => {
-        const response = await fetch(`${API_BASE_URL}/orders`);
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to fetch all orders`);
-        }
-        return response.json();
-    },
-
-    getOrderById: async (orderId) => {
-        const response = await fetch(`${API_BASE_URL}/orders/${orderId}`);
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to fetch order ${orderId}`);
-        }
-        return response.json();
-    },
-
-    getOrdersByStatus: async (status) => {
-        const response = await fetch(`${API_BASE_URL}/orders/status/${status}`); // Adjust endpoint as needed
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to fetch orders by status ${status}`);
-        }
-        return response.json();
-    },
-    
-    getOrdersByDateRange: async (startDate, endDate) => {
-        const response = await fetch(`${API_BASE_URL}/orders/date-range?startDate=${startDate}&endDate=${endDate}`); // Adjust endpoint
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to fetch orders by date range`);
-        }
-        return response.json();
-    },
-
-    updateOrderStatus: async (orderId, newStatus) => {
-        const response = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, { 
-            method: 'PUT', 
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: newStatus }), 
-        });
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to update order status`);
-        }
-        // For PUT, backend might return the updated object or 200 OK / 204 No Content
-        if (response.status === 204) return { success: true, id: orderId, status: newStatus };
-        return response.json();
-    },
-
-    deleteOrderById: async (orderId) => {
-        const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            // For DELETE, a 204 No Content is often a success
-            if (response.status === 204) {
-                return { success: true, message: "Order deleted successfully." }; 
-            }
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorData.message || `Failed to delete order ${orderId}`);
-        }
-        // For DELETE, a 204 No Content is often a success, response.json() might fail
-        if (response.status === 204) {
-            return { success: true, message: "Order deleted successfully." };
-        }
-        // If backend returns a JSON body on successful delete (e.g. a confirmation message)
-        try {
-            return await response.json(); 
-        } catch (e) {
-            // If no body or non-JSON body, but status was ok (e.g. 200 OK with no content)
-            return { success: true, message: "Order deleted (status " + response.status + ")." };
-        }
-    }
-};
-
 // Initialize the API service
 document.addEventListener('DOMContentLoaded', () => {
-    window.apiService.init().catch(console.error);
+    if (window.apiService && typeof window.apiService.init === 'function') {
+        window.apiService.init().catch(error => {
+            console.error("DOMContentLoaded: API Service init failed:", error);
+        });
+    } else {
+        console.error("DOMContentLoaded: apiService is not defined or init function is missing.");
+    }
 });
