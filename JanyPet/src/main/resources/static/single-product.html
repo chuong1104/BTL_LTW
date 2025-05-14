@@ -257,7 +257,7 @@
 
 <body>
   
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ hàng của tôi">
+  <!-- <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ hàng của tôi">
     <div class="offcanvas-header justify-content-center">
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
     </div>
@@ -268,7 +268,7 @@
           <span class="badge bg-primary rounded-circle pt-2">0</span>
         </h4>
         <ul id="offcanvas-cart-list" class="list-group mb-3">
-          <!-- Cart items will be loaded here by JavaScript -->
+          
         </ul>
         <li class="list-group-item d-flex justify-content-between">
           <span class="fw-bold">Tổng cộng (VNĐ)</span>
@@ -279,9 +279,9 @@
         <a href="checkout.html" class="w-100 btn btn-dark btn-lg" type="submit">Thanh toán</a>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
+  <!-- <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
     aria-labelledby="Tìm kiếm">
     <div class="offcanvas-header justify-content-center">
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
@@ -297,7 +297,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Header -->
   <header class="auto-hide-header">
@@ -336,14 +336,10 @@
 
             <!-- User info when logged in -->
             <div class="user-info d-flex align-items-center">
-              <span class="me-2">Xin chào, <strong id="userName">User</strong></span>
               <div class="d-flex">
                 <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
                   <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
                 </button>
-                <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill">
-                  <i class="fas fa-cog me-1"></i> Quản trị
-                </a>
               </div>
             </div>
           </div>
@@ -385,17 +381,6 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link fw-medium" href="index.html">Trang chủ</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown" 
-               aria-expanded="false">Thú cưng</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Chó cảnh</a></li>
-              <li><a class="dropdown-item" href="#">Mèo cảnh</a></li>
-              <li><a class="dropdown-item" href="#">Thú cưng khác</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="shop.html">Tất cả thú cưng</a></li>
-            </ul>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle active fw-medium" href="#" role="button" data-bs-toggle="dropdown"
@@ -1708,140 +1693,6 @@
   });
   </script>
 
-  <!-- Script cho giỏ hàng -->
-  <script>
-    // Khởi tạo giỏ hàng từ localStorage hoặc tạo mới nếu chưa có
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Cập nhật số lượng sản phẩm trong giỏ hàng
-    function updateCartCount() {
-      const cartCountElements = document.querySelectorAll('.badge.bg-primary');
-      cartCountElements.forEach(element => {
-        element.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-      });
-    }
-    
-    // Hàm thêm sản phẩm vào giỏ hàng
-    function addToCart(id, name, price, image, quantity) {
-      // Kiểm tra nếu sản phẩm đã có trong giỏ hàng
-      const existingItemIndex = cart.findIndex(item => item.id === id);
-      
-      if (existingItemIndex > -1) {
-        // Sản phẩm đã có trong giỏ, cập nhật số lượng
-        cart[existingItemIndex].quantity += quantity;
-      } else {
-        // Sản phẩm chưa có trong giỏ, thêm mới
-        cart.push({
-          id: id,
-          name: name,
-          price: price,
-          image: image,
-          quantity: quantity
-        });
-      }
-      
-      // Lưu giỏ hàng vào localStorage
-      localStorage.setItem('cart', JSON.stringify(cart));
-      
-      // Cập nhật hiển thị
-      updateCartCount();
-      
-      // Thông báo thành công
-      alert('Đã thêm sản phẩm vào giỏ hàng!');
-      
-      // Cập nhật giỏ hàng offcanvas nếu đang hiển thị
-      updateOffcanvasCart();
-      
-      return false;
-    }
-    
-    // Cập nhật giỏ hàng offcanvas
-    function updateOffcanvasCart() {
-      const cartListElement = document.getElementById('offcanvas-cart-list');
-      const cartTotalElement = document.getElementById('offcanvas-cart-total');
-      
-      if (cartListElement && cartTotalElement) {
-        // Xóa tất cả sản phẩm hiện tại
-        cartListElement.innerHTML = '';
-        
-        // Thêm các sản phẩm từ giỏ hàng
-        if (cart.length === 0) {
-          cartListElement.innerHTML = '<li class="list-group-item">Giỏ hàng trống</li>';
-          cartTotalElement.textContent = '0đ';
-        } else {
-          let total = 0;
-          
-          cart.forEach(item => {
-            const itemTotal = item.price * item.quantity;
-            total += itemTotal;
-            
-            cartListElement.innerHTML += `
-              <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div class="d-flex">
-                  <img src="${item.image}" alt="${item.name}" class="img-fluid me-2" style="width: 50px; height: 50px; object-fit: cover;">
-                  <div>
-                    <h6 class="my-0">${item.name}</h6>
-                    <small class="text-muted">${item.price.toLocaleString()}đ x ${item.quantity}</small>
-                  </div>
-                </div>
-                <span class="text-muted">${itemTotal.toLocaleString()}đ</span>
-              </li>
-            `;
-          });
-          
-          cartTotalElement.textContent = `${total.toLocaleString()}đ`;
-        }
-      }
-    }
-    
-    // Hàm xóa sản phẩm khỏi giỏ hàng
-    function removeFromCart(id) {
-      cart = cart.filter(item => item.id !== id);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartCount();
-      updateOffcanvasCart();
-    }
-    
-    // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
-    function updateCartItemQuantity(id, newQuantity) {
-      const itemIndex = cart.findIndex(item => item.id === id);
-      
-      if (itemIndex > -1) {
-        if (newQuantity > 0) {
-          cart[itemIndex].quantity = newQuantity;
-        } else {
-          // Nếu số lượng <= 0, xóa sản phẩm khỏi giỏ hàng
-          cart.splice(itemIndex, 1);
-        }
-        
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        updateOffcanvasCart();
-      }
-    }
-    
-    // Cập nhật số lượng sản phẩm khi tải trang
-    document.addEventListener('DOMContentLoaded', function() {
-      updateCartCount();
-      updateOffcanvasCart();
-      
-      // Thêm sự kiện cho nút thêm vào giỏ hàng trong trang chi tiết sản phẩm
-      const addToCartBtn = document.querySelector('.btn-primary.btn-lg.w-100');
-      const quantityInput = document.getElementById('quantity');
-      
-      if (addToCartBtn && quantityInput) {
-        addToCartBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const quantity = parseInt(quantityInput.value);
-          
-          if (quantity > 0) {
-            // Thay đổi thông tin sản phẩm tại đây theo từng sản phẩm cụ thể
-            addToCart('p001', 'Áo hoodie cho chó', 170000, 'images/item7.jpg', quantity);
-          }
-        });
-      }
-    });
-  </script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@
 // Configuration
 const API_URL = "http://localhost:8080/api" // Update with your API URL
 const TOKEN_NAME = "token"
-const DEBUG = false
+const DEBUG = true
 
 // Debug logging helper
 function debugLog(...args) {
@@ -19,7 +19,6 @@ function debugLog(...args) {
 let isProcessingAuth = false
 let lastAuthCheck = 0
 let redirectInProgress = false
-let authCheckInterval = null
 
 // Define a variable to cache the current user
 let currentUser = null
@@ -89,48 +88,48 @@ function parseJwt(token) {
  */
 async function login(username, password, rememberMe = false) {
   if (isProcessingAuth) {
-    debugLog("Login already in progress, skipping")
-    return { success: false, message: "Login already in progress" }
+    debugLog("Login already in progress, skipping");
+    return { success: false, message: "Login already in progress" };
   }
 
-  isProcessingAuth = true
-  debugLog("Starting login process for:", username)
+  isProcessingAuth = true;
+  debugLog("Starting login process for:", username);
 
   try {
-    // Call login API from Spring Boot backend
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // Support CORS with allowCredentials
+      credentials: "include",
       body: JSON.stringify({ username, password }),
-    })
+    });
 
     if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.message || "Login failed")
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Login failed");
     }
 
     const data = await response.json();
     const token = data.token;
     saveToken(token, rememberMe);
     const userData = parseJwt(token);
-    currentUser = userData; // Set the currentUser variable
-    storeUserData(userData); // Also store in localStorage
-    console.log("Token:", token); // Log token
-    console.log("User data:", userData); // Log dữ liệu người dùng
-    console.log("Has ADMIN role:", hasRole("ADMIN", userData)); // Log vai trò
-    redirectInProgress = true;
+    currentUser = userData; 
+    storeUserData(userData); 
+    debugLog("Token:", token); 
+    debugLog("User data:", userData); 
+    
+    updateAuthUI(); 
+    
     return { success: true, user: userData };
   } catch (error) {
-    debugLog("Login error:", error)
+    debugLog("Login error:", error);
     return {
       success: false,
       message: error.message || "Đăng nhập thất bại",
-    }
+    };
   } finally {
     setTimeout(() => {
-      isProcessingAuth = false
-    }, 500)
+      isProcessingAuth = false;
+    }, 500);
   }
 }
 
@@ -149,30 +148,26 @@ async function register(userData) {
   debugLog("Starting registration process")
 
   try {
-    // Validate required fields
     if (!userData.username && !userData.userName) {
       throw new Error("Username is required")
     }
-
     if (!userData.email) {
       throw new Error("Email is required")
     }
-
     if (!userData.password) {
       throw new Error("Password is required")
     }
 
-    // Call register API from Spring Boot backend
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // Support CORS with allowCredentials
+      credentials: "include",
       body: JSON.stringify({
-        username: userData.username || userData.userName, // Use userName to match data
+        username: userData.username || userData.userName,
         email: userData.email,
         phoneNumber: userData.phoneNumber || "",
         password: userData.password,
-        confirmPassword: userData.confirmPassword || userData.password, // Add confirmPassword
+        confirmPassword: userData.confirmPassword || userData.password,
       }),
     })
 
@@ -188,7 +183,6 @@ async function register(userData) {
     debugLog("Registration error:", error)
     return { success: false, message: error.message }
   } finally {
-    // Reset processing flag after a short delay
     setTimeout(() => {
       isProcessingAuth = false
     }, 500)
@@ -202,32 +196,30 @@ async function register(userData) {
  */
 function logout(redirect = true) {
   if (isProcessingAuth) {
-    debugLog("Logout already in progress, skipping")
-    return
+    debugLog("Logout already in progress, skipping");
+    return;
   }
 
-  isProcessingAuth = true
-  debugLog("Starting logout process")
+  isProcessingAuth = true;
+  debugLog("Starting logout process");
 
-  // Clear token from storage
   clearToken();
-  currentUser = null; // Clear the current user
-  localStorage.removeItem('currentUser'); // Clear from localStorage too
+  currentUser = null; 
+  localStorage.removeItem('currentUser'); 
+  
+  updateAuthUI(); 
 
-  // Set flag to prevent multiple redirects
   if (redirect) {
-    redirectInProgress = true
-
-    // Redirect after a short delay
+    redirectInProgress = true;
     setTimeout(() => {
-      window.location.href = "index.html"
-    }, 100)
+      window.location.href = "index.html"; 
+    }, 100); 
+  } else {
+     setTimeout(() => {
+        isProcessingAuth = false;
+        redirectInProgress = false; 
+     }, 500);
   }
-
-  // // Reset processing flag after a short delay
-  // setTimeout(() => {
-  //   isProcessingAuth = false
-  // }, 500)
 }
 
 /**
@@ -238,17 +230,14 @@ function isAuthenticated() {
   const token = getToken()
   if (!token) return false
 
-  // Check if token is valid
   const userData = parseJwt(token)
   if (!userData) return false
 
-  // Check if token is expired
   const currentTime = Date.now() / 1000
   if (userData.exp && userData.exp < currentTime) {
     clearToken()
     return false
   }
-
   return true
 }
 
@@ -256,31 +245,26 @@ function isAuthenticated() {
  * Get current user data
  * @returns {Object|null} User data or null if not authenticated
  */
-// function getCurrentUser() {
-//     // First check memory cache
-//     if (currentUser) {
-//         return currentUser;
-//     }
-    
-//     // Then check token-based user data
-//     if (isAuthenticated()) {
-//         const token = getToken();
-//         try {
-//             currentUser = parseJwt(token);
-//             return currentUser;
-//         } catch (error) {
-//             debugLog("Error getting current user:", error);
-//             logout(false); // Invalid token, log out without redirect
-//             return null;
-//         }
-//     }
-    
-//     // Then check storage as fallback
-//     return getUserFromStorage();
-// }
+function getCurrentUser() {
+    if (currentUser) {
+        return currentUser;
+    }
+    if (isAuthenticated()) {
+        const token = getToken();
+        try {
+            currentUser = parseJwt(token);
+            return currentUser;
+        } catch (error) {
+            debugLog("Error getting current user:", error);
+            logout(false); 
+            return null;
+        }
+    }
+    return getUserFromStorage();
+}
 
 /**
- * Check if user has a specific role
+ * Check if user has a specific role (giữ lại nếu cần cho logic khác, nhưng không dùng cho UI admin)
  * @param {string} role - Role to check
  * @param {Object} userData - Optional user data (uses current user if not provided)
  * @returns {boolean} Whether user has the role
@@ -288,22 +272,15 @@ function isAuthenticated() {
 function hasRole(role, userData = null) {
   const user = userData || getCurrentUser()
   if (!user) return false
-
-  // Check in authorities array
   if (user.authorities && Array.isArray(user.authorities)) {
     return user.authorities.some((auth) => auth.authority === `ROLE_${role}` || auth.authority === role)
   }
-
-  // Check role field
   if (user.role) {
     return user.role === role
   }
-
-  // Check in roles array if present
   if (user.roles && Array.isArray(user.roles)) {
     return user.roles.includes(role) || user.roles.includes(`ROLE_${role}`)
   }
-
   return false
 }
 
@@ -315,81 +292,64 @@ function hasRole(role, userData = null) {
  */
 async function fetchWithAuth(url, options = {}) {
   const token = getToken()
-
   if (!token) {
-    throw new Error("No authentication token")
+    console.warn("No authentication token for fetchWithAuth");
+    return Promise.reject(new Error("User not authenticated"));
   }
 
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  };
+  if (options.body && typeof options.body !== 'string') {
+    options.body = JSON.stringify(options.body);
   }
 
   try {
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    })
-
-    if (response.status === 401) {
-      // Invalid or expired token
-      logout()
-      throw new Error("Session expired")
+    const response = await fetch(url, { ...options, headers });
+    if (response.status === 401 || response.status === 403) {
+      debugLog("Unauthorized or Forbidden. Logging out.");
+      logout(); 
+      return Promise.reject(new Error("Session expired or unauthorized."));
     }
-
-    return response
+    return response;
   } catch (error) {
-    debugLog("API error:", error)
-    throw error
+    debugLog("API request error:", error);
+    throw error; 
   }
 }
+
 
 // ===== UI Management =====
 
 /**
  * Update UI elements based on authentication state
  */
-/**
- * Update UI elements based on authentication state
- */
 function updateAuthUI() {
   const isLoggedIn = isAuthenticated();
-  const user = getCurrentUser();
 
-  // Get UI elements 
-  const authButtons = document.querySelector('.auth-buttons');
-  const userInfo = document.querySelector('.user-info');
-  const userName = document.querySelector('.user-name');
-  
-  // Skip if elements aren't found (normal on pages without auth UI)
-  if (!authButtons && !userInfo) {
-    debugLog('Auth UI elements not found on this page - skipping UI update');
-    return;
-  }
-
-  if (isLoggedIn && user) {
-    // User is logged in
-    if (authButtons) authButtons.style.display = 'none';
-    if (userInfo) userInfo.style.display = 'flex'; // Show user info
-    if (userName) {
-      userName.textContent = user.name || user.username || 'User';
-    }
+  if (isLoggedIn) {
+    document.body.classList.add('authenticated');
+    document.body.classList.remove('not-authenticated');
+    document.body.classList.remove('is-admin'); 
   } else {
-    // User is not logged in
-    if (authButtons) authButtons.style.display = 'flex';
-    if (userInfo) userInfo.style.display = 'none';
+    document.body.classList.add('not-authenticated');
+    document.body.classList.remove('authenticated');
+    document.body.classList.remove('is-admin');
   }
+  
+  debugLog('Auth UI updated. Logged in:', isLoggedIn);
 }
 
 // Add logout handler
 function setupLogoutHandler() {
-  const logoutBtn = document.querySelector('.logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
+  document.body.addEventListener('click', function(event) {
+    if (event.target.matches('.logout-btn') || event.target.closest('.logout-btn')) {
+      event.preventDefault(); 
       logout();
-      updateAuthUI();
-    });
-  }
+    }
+  });
 }
 
 /**
@@ -397,74 +357,57 @@ function setupLogoutHandler() {
  * @param {boolean} forceCheck - Whether to force check regardless of throttling
  */
 function checkAuthRedirect(forceCheck = false) {
-  // Skip if redirection is already in progress
   if (redirectInProgress) {
     debugLog("Redirection already in progress, skipping check")
     return
   }
 
-  // Throttle checks to prevent excessive processing
   const now = Date.now()
   if (!forceCheck && now - lastAuthCheck < 1000) {
-    // Only check once per second at most
     return
   }
   lastAuthCheck = now
 
-  const currentPath = window.location.pathname
+  const currentPath = window.location.pathname.split('/').pop(); 
   debugLog("Checking auth redirect for path:", currentPath)
 
   const isLoggedIn = isAuthenticated()
-  const isAdmin = isLoggedIn && hasRole("ADMIN")
 
-  // Admin page protection
-  if (currentPath.includes("admin.html")) {
-    if (!isLoggedIn) {
-      debugLog("Not authenticated, redirecting to login")
-      redirectInProgress = true
-      window.location.replace("login_admin.html") // Use replace instead of href
-      return
-    }
+  const protectedPages = ["checkout.html", "wishlist.html", "BookingService.html"]; 
+  const guestPages = ["login.html", "register.html", "login_admin.html"];
 
-    if (!isAdmin) {
-      debugLog("Not admin, redirecting to home")
-      redirectInProgress = true
-      window.location.replace("index.html") // Use replace instead of href
-      return
-    }
 
-    debugLog("User is admin, staying on admin page")
-  }
-  // Login page redirect if already logged in
-  else if (currentPath.includes("login_admin.html") && isLoggedIn) {
-    if (isAdmin) {
-      debugLog("Already authenticated as admin, redirecting to admin")
-      redirectInProgress = true
-      window.location.replace("admin.html") // Use replace instead of href
-      return
-    } else {
-      debugLog("Already authenticated but not admin, redirecting to home")
-      redirectInProgress = true
-      window.location.replace("index.html") // Use replace instead of href
-      return
-    }
+  if (protectedPages.includes(currentPath) && !isLoggedIn) {
+    debugLog(`Accessing protected page ${currentPath} without login. Redirecting to login.`);
+    redirectInProgress = true;
+    window.location.href = `login.html?redirect=${encodeURIComponent(currentPath)}`;
+    return;
   }
 
-  debugLog("No redirection needed")
+  if (guestPages.includes(currentPath) && isLoggedIn) {
+    debugLog(`Accessing guest page ${currentPath} while logged in. Redirecting to home.`);
+    redirectInProgress = true;
+    window.location.href = "index.html";
+    return;
+  }
+
+  debugLog("No redirection needed for path:", currentPath);
 }
 
 /**
  * Initialize authentication system
  */
 function initAuth() {
-  updateAuthUI();
-  setupLogoutHandler();
+  debugLog("Initializing Auth Service...");
+  updateAuthUI(); 
+  setupLogoutHandler(); 
+  checkAuthRedirect(); 
+  debugLog("Auth Service Initialized.");
 }
 
-// Initialize on DOM content loaded
-document.addEventListener("DOMContentLoaded", initAuth)
+document.addEventListener("DOMContentLoaded", initAuth);
 
-// Direct logout handler for buttons
+// Direct logout handler for buttons (nếu cần)
 function handleDirectLogout(event) {
   event.preventDefault()
   logout()
@@ -485,33 +428,10 @@ function getUserFromStorage() {
             return JSON.parse(userData);
         } catch (e) {
             console.error('Failed to parse user data from storage', e);
+            localStorage.removeItem('currentUser'); 
         }
     }
     return null;
-}
-
-// Make sure your getCurrentUser function checks localStorage:
-function getCurrentUser() {
-    // First check memory cache
-    if (currentUser) {
-        return currentUser;
-    }
-    
-    // Then check token-based user data
-    if (isAuthenticated()) {
-        const token = getToken();
-        try {
-            currentUser = parseJwt(token);
-            return currentUser;
-        } catch (error) {
-            debugLog("Error getting current user:", error);
-            logout(false); // Invalid token, log out without redirect
-            return null;
-        }
-    }
-    
-    // Then check storage as fallback
-    return getUserFromStorage();
 }
 
 // Export the auth service
@@ -521,13 +441,10 @@ window.authService = {
   logout,
   isAuthenticated,
   getCurrentUser,
-  hasRole,
+  hasRole, 
   fetchWithAuth,
   updateAuthUI,
   checkAuthRedirect,
   initAuth,
   handleDirectLogout,
-  // Expose state for debugging
-  isProcessingAuth,
-  redirectInProgress,
 }

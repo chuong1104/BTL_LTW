@@ -36,71 +36,67 @@
 
 <body>
 
-  <header class="auto-hide-header">
-  <div class="container py-2">
-    <div class="row py-3 align-items-center">
-      <!-- Logo -->
-      <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
-        <div class="main-logo">
-          <a href="index.html">
-            <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
-          </a>
-        </div>
-      </div>
-
-      <!-- Search bar - visible on large screens -->
-      <div class="col-lg-5 d-none d-lg-block">
-        <div class="search-bar border rounded-pill px-3 border-primary-subtle">
-          <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-            <input type="text" class="form-control border-0 bg-transparent py-2"
-              placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
-            <button type="submit" class="btn btn-link p-0 text-primary">
-              <i class="fas fa-search"></i>
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Auth and user actions -->
-      <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
-        <div class="auth-container ms-auto">
-          <!-- Login/Register buttons -->
-          <div class="auth-buttons">
-            <a href="login.html" class="btn btn-outline-primary rounded-pill">
-              <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+   <header class="auto-hide-header">
+    <div class="container py-2">
+      <div class="row py-3 align-items-center">
+        <!-- Logo -->
+        <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
+          <div class="main-logo">
+            <a href="index.html">
+              <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
             </a>
           </div>
+        </div>
 
-          <!-- User info when logged in -->
-          <div class="user-info d-flex align-items-center" style="display: none;">
-            <span class="me-2">Xin chào, <strong id="userName">User</strong></span>
-            <div class="d-flex">
-              <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
-                <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+        <!-- Search bar - visible on large screens -->
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+            <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
+              <input type="text" name="keyword" class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
+              <button type="submit" class="btn btn-link p-0 text-primary">
+                <i class="fas fa-search"></i>
               </button>
-              <a href="admin.html" class="admin-link btn btn-outline-dark btn-sm rounded-pill" style="display: none;">
-                <i class="fas fa-cog me-1"></i> Quản trị
-              </a>
-            </div>
+            </form>
           </div>
         </div>
 
-        <!-- Cart and wishlist icons -->
-        <div class="ms-3 d-flex">
-          <a href="wishlist.html" class="mx-2 position-relative text-dark">
-            <i class="fas fa-heart fs-5"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
-          </a>
-          <a href="cart.html" class="mx-2 position-relative text-dark">
-            <i class="fas fa-shopping-cart fs-5"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
-          </a>
+        <!-- Auth and user actions -->
+        <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+          <div class="auth-container ms-auto">
+            <!-- Login/Register buttons -->
+            <div class="auth-buttons">
+              <a href="login.html" class="btn btn-outline-primary rounded-pill">
+                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+              </a>
+            </div>
+
+            <!-- User info when logged in -->
+            <div class="user-info d-flex align-items-center" style="display: none;">
+              <div class="d-flex">
+                <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
+                  <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                </button>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart and wishlist icons -->
+          <div class="ms-3 d-flex">
+            <a href="wishlist.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-heart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count">0</span>
+            </a>
+            <a href="cart.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-shopping-cart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary cart-count">0</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </header>
-
   <!-- Navigation menu -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
     <div class="container">
