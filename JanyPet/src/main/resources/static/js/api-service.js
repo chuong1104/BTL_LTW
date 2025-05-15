@@ -47,24 +47,26 @@ window.apiService = {
         }
     },
     
+    // Helper function to ensure Authorization header
+    ensureAuthHeader: function(options = {}) {
+        if (!options.headers) options.headers = {};
+        
+        const token = localStorage.getItem('token');
+        if (token) {
+            options.headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        return options;
+    },
     
     // Generic request method with fallback and retries
     request: async function(endpoint, options = {}, mockData = null) {
+        options = this.ensureAuthHeader(options);
         // Try 2 times
         for (let attempt = 0; attempt < 2; attempt++) {
             try {
                 // Make sure API_BASE_URL doesn't end with slash and endpoint starts with slash
                 const url = `${this.API_BASE_URL.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
-                
-                // Add auth token if available
-                if (!options.headers) {
-                    options.headers = {};
-                }
-                
-                const token = localStorage.getItem('token');
-                if (token && !options.headers.Authorization) {
-                    options.headers.Authorization = `Bearer ${token}`;
-                }
                 
                 // Add json content-type if not set
                 if (options.method && (options.method === 'POST' || options.method === 'PUT') && !options.headers['Content-Type']) {

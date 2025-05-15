@@ -1,30 +1,41 @@
 // Constants
 
-// let currentUser = null; // Comment out or remove this line if another script declares it
-// If this script IS the owner, ensure no other script loaded on BookingService.html declares 'currentUser' globally.
-// For now, let's assume it's declared elsewhere or we are fixing a re-declaration within this file's scope if it was accidentally duplicated.
-// If it's meant to be local to this script's module/closure, ensure it's not leaking to global.
-
+let currentUser; // Will be populated by authService.getCurrentUser()
 let selectedServices = [];
 let selectedPet = null;
 let allServices = [];
 let userPets = [];
 
+// DOM Elements that might need to be shown/hidden
+let bookingProcessContainer = null;
+let bookingContentContainer = null;
+let loginMessageContainer = null;
+
 // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
-  // Ensure currentUser is declared at the top of the file: let currentUser = null;
-  checkUserLogin();
-  initEventListeners(); // Error at line 101 occurs here or within this function
+  // Initialize references to DOM elements after they are loaded
+  bookingProcessContainer = document.getElementById('bookingSteps'); // The ul.nav
+  bookingContentContainer = document.getElementById('bookingStepsContent'); // The div.tab-content
+  
+  setupLoginMessageContainer(); // Prepare the login message placeholder
+
+  // auth_service.js should be initialized by its own DOMContentLoaded listener
+  // as it's included before this script.
+  if (typeof authService === 'undefined') {
+    console.error("CRITICAL: authService is not loaded. Booking page will not function correctly.");
+    showLoginRequired(); // Show login message as a fallback
+    return; // Stop further initialization if authService is missing
+  }
+  
+  checkUserLogin(); 
+  initEventListeners(); 
 
   const bookingDateElem = document.getElementById('booking-date');
   if (bookingDateElem) {
     bookingDateElem.min = new Date().toISOString().split('T')[0];
   } else {
-    // This is not in initEventListeners, but good to check
     console.warn("Element 'booking-date' for min date setting not found directly in DOMContentLoaded.");
   }
-  
-  loadServices();
   
   const termsCheckbox = document.getElementById('terms-checkbox');
   if (termsCheckbox) {
@@ -35,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   } else {
-     // This is not in initEventListeners, but good to check
     console.warn("Element 'terms-checkbox' not found directly in DOMContentLoaded.");
   }
   
@@ -43,71 +53,85 @@ document.addEventListener('DOMContentLoaded', function() {
   if (step4Tab) {
     step4Tab.addEventListener('shown.bs.tab', updateSummary);
   } else {
-     // This is not in initEventListeners, but good to check
     console.warn("Element 'step4-tab' not found directly in DOMContentLoaded.");
   }
 });
 
+function setupLoginMessageContainer() {
+  const bookingSectionRoot = document.querySelector('.booking-steps'); // The main container for booking steps and messages
+  if (bookingSectionRoot) {
+    loginMessageContainer = bookingSectionRoot.querySelector('#login-required-message-container');
+    if (!loginMessageContainer) {
+      loginMessageContainer = document.createElement('div');
+      loginMessageContainer.id = 'login-required-message-container';
+      loginMessageContainer.className = 'alert alert-warning py-4 text-center';
+      loginMessageContainer.style.display = 'none'; // Initially hidden
+      loginMessageContainer.innerHTML = `
+        <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
+        <h4 class="alert-heading">Bạn cần đăng nhập để sử dụng tính năng này</h4>
+        <p>Vui lòng <a href="login.html" class="alert-link">đăng nhập</a> hoặc <a href="register.html" class="alert-link">đăng ký</a> để tiếp tục.</p>
+      `;
+      // Insert the message container before the booking navigation tabs
+      const bookingNav = bookingSectionRoot.querySelector('.booking-steps-nav');
+      if (bookingNav) {
+        bookingNav.parentNode.insertBefore(loginMessageContainer, bookingNav);
+      } else {
+        bookingSectionRoot.prepend(loginMessageContainer);
+      }
+    }
+  } else {
+    console.error("'.booking-steps' container not found for login message setup.");
+  }
+}
+
 // Check user login
 function checkUserLogin() {
-  // Try to get token from localStorage
-  const token = localStorage.getItem('authToken'); // Ensure this is the correct key you use for storing the token
-
-  if (!token) {
-    // Show login required message
-    showLoginRequired();
-    return;
+  if (!bookingProcessContainer || !bookingContentContainer) {
+    console.warn("Booking containers not yet initialized in checkUserLogin. DOM might not be fully ready or IDs are incorrect.");
+    bookingProcessContainer = document.getElementById('bookingSteps');
+    bookingContentContainer = document.getElementById('bookingStepsContent');
   }
+  
+  if (window.authService && authService.isAuthenticated()) {
+    const user = authService.getCurrentUser();
+    if (user && user.id) { // Ensure user and user.id exist
+      currentUser = user; 
 
-  // Get current user
-  // Use the API_URL from BookingAPI
-  fetch(`${BookingAPI.API_URL}/users/me`, { 
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
-        console.warn('User token is invalid or expired.');
-        localStorage.removeItem('authToken'); // Clear invalid token
+      // Hide login required message
+      if (loginMessageContainer) loginMessageContainer.style.display = 'none';
+      
+      // Show booking content
+      if (bookingProcessContainer) bookingProcessContainer.style.display = ''; 
+      if (bookingContentContainer) bookingContentContainer.style.display = 'block';
+
+      loadPets(); 
+      if (allServices.length === 0) { 
+        loadServices(); 
       }
-      throw new Error('Unauthorized or failed to fetch user data');
+    } else {
+      console.error('Authenticated via authService but no user data (or user.id) found.');
+      showLoginRequired();
     }
-    return response.json();
-  })
-  .then(data => {
-    // Make currentUser globally available if other functions in this file need it directly
-    // Or, pass it as an argument to functions that need it.
-    // For now, assuming it's intended to be a global within the scope of booking-service.js
-    window.currentUser = data; // Or just currentUser = data; if it's declared with let at the top
-    
-    // Hide login required message and show booking content
-    const loginRequiredDiv = document.querySelector('.booking-steps .alert-warning');
-    if (loginRequiredDiv) {
-        loginRequiredDiv.parentElement.style.display = 'none'; // Hide the container of the message
-    }
-    // You might need to explicitly show the main booking content container here if it's initially hidden
-    // e.g., document.getElementById('main-booking-content').style.display = 'block';
-
-    loadPets(); // Load pets now that user is confirmed
-  })
-  .catch(error => {
-    console.error('Error fetching user:', error);
+  } else {
     showLoginRequired();
-  });
+  }
 }
 
 // Show login required message
 function showLoginRequired() {
-  const bookingSteps = document.querySelector('.booking-steps');
-  bookingSteps.innerHTML = `
-    <div class="alert alert-warning py-4 text-center">
-      <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
-      <h4 class="alert-heading">Bạn cần đăng nhập để sử dụng tính năng này</h4>
-      <p>Vui lòng <a href="login.html" class="alert-link">đăng nhập</a> hoặc <a href="register.html" class="alert-link">đăng ký</a> để tiếp tục.</p>
-    </div>
-  `;
+  if (!loginMessageContainer) {
+    setupLoginMessageContainer(); // Attempt to set it up if not already
+    if (!loginMessageContainer) {
+      console.error("Login message container could not be set up.");
+      return;
+    }
+  }
+
+  loginMessageContainer.style.display = 'block';
+  
+  // Hide booking content
+  if (bookingProcessContainer) bookingProcessContainer.style.display = 'none';
+  if (bookingContentContainer) bookingContentContainer.style.display = 'none';
 }
 
 // Initialize event listeners
@@ -139,8 +163,7 @@ function initEventListeners() {
   if (confirmBookingBtn) {
     confirmBookingBtn.addEventListener('click', confirmBooking);
   } else {
-    // If this is the element causing the error at line 101, this message will appear.
-    console.error("CRITICAL: Element with ID 'confirm-booking-btn' not found for event listener. This might be line 101's issue.");
+    console.error("CRITICAL: Element with ID 'confirm-booking-btn' not found.");
   }
 
   const stepButtons = document.querySelectorAll('.next-step, .prev-step');
@@ -188,8 +211,11 @@ function initEventListeners() {
 
 // Load services from API
 function loadServices() {
-  const serviceContainer = document.getElementById('service-list-container');
-  // Show loading spinner
+  const serviceContainer = document.getElementById('services-container'); 
+  if (!serviceContainer) {
+    console.error("CRITICAL: Service container 'services-container' not found.");
+    return;
+  }
   serviceContainer.innerHTML = `
     <div class="col-12 text-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -199,7 +225,9 @@ function loadServices() {
     </div>
   `;
 
-  fetch(`${BookingAPI.API_URL}/services`, {
+  const apiUrl = (typeof BookingAPI !== 'undefined' && BookingAPI.API_URL) ? BookingAPI.API_URL : '/api';
+
+  fetch(`${apiUrl}/services`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -207,41 +235,27 @@ function loadServices() {
   })
   .then(response => {
     if (!response.ok) {
-      return response.text().then(text => { 
-        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
-      });
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
   })
   .then(services => {
-    allServices = services;
-    serviceContainer.innerHTML = '';
-
+    serviceContainer.innerHTML = ''; // Clear spinner
     if (services && services.length > 0) {
+      allServices = services; // Store all services
       services.forEach(service => {
-        serviceContainer.appendChild(createServiceElement(service));
+        if (service.active) { // Only display active services
+            const serviceElement = createServiceElement(service);
+            serviceContainer.appendChild(serviceElement);
+        }
       });
     } else {
-      serviceContainer.innerHTML = `
-        <div class="col-12">
-          <div class="alert alert-info text-center" role="alert">
-            Hiện tại không có dịch vụ nào.
-          </div>
-        </div>
-      `;
+      serviceContainer.innerHTML = '<div class="col-12 text-center"><p>Không có dịch vụ nào.</p></div>';
     }
-    updateSelectedServicesCount();
   })
   .catch(error => {
     console.error('Error loading services:', error);
-    serviceContainer.innerHTML = `
-      <div class="col-12">
-        <div class="alert alert-danger text-center" role="alert">
-          Không thể tải danh sách dịch vụ. Vui lòng thử lại sau. <br>
-          <small>${error.message}</small>
-        </div>
-      </div>
-    `;
+    serviceContainer.innerHTML = `<div class="col-12 text-center"><p class="text-danger">Lỗi khi tải dịch vụ. Vui lòng thử lại.</p></div>`;
   });
 }
 
@@ -251,82 +265,48 @@ function createServiceElement(service) {
   colDiv.className = 'col-md-6 col-lg-4 mb-4';
 
   const cardDiv = document.createElement('div');
-  cardDiv.className = 'card h-100 service-item shadow-sm';
-  cardDiv.dataset.serviceId = service.id;
-  cardDiv.style.cursor = 'pointer';
+  cardDiv.className = 'card h-100 service-card shadow-sm';
+  cardDiv.dataset.serviceId = service.id; // Store service ID
 
   const cardBody = document.createElement('div');
   cardBody.className = 'card-body d-flex flex-column';
 
-  const formCheckDiv = document.createElement('div');
-  formCheckDiv.className = 'form-check mb-2';
-
-  const checkbox = document.createElement('input');
-  checkbox.className = 'form-check-input service-checkbox visually-hidden';
-  checkbox.type = 'checkbox';
-  checkbox.value = service.id;
-  checkbox.id = `service-checkbox-${service.id}`;
-  checkbox.addEventListener('change', (event) => {
-    handleServiceSelection(event, service);
-    cardDiv.classList.toggle('selected', checkbox.checked);
-  });
-  
-  const titleLabel = document.createElement('label');
-  titleLabel.className = 'form-check-label w-100';
-  titleLabel.htmlFor = `service-checkbox-${service.id}`;
-
-  const title = document.createElement('h5');
-  title.className = 'card-title'; 
-  title.textContent = service.name || "Tên dịch vụ không xác định";
-
-  titleLabel.appendChild(title);
+  const name = document.createElement('h5');
+  name.className = 'card-title';
+  name.textContent = service.name || "Tên dịch vụ";
 
   const description = document.createElement('p');
-  description.className = 'card-text text-muted small flex-grow-1';
-  description.textContent = service.description ? (service.description.length > 100 ? service.description.substring(0, 97) + '...' : service.description) : 'Không có mô tả chi tiết.';
+  description.className = 'card-text small text-muted flex-grow-1';
+  description.textContent = service.description || "Mô tả dịch vụ.";
 
   const price = document.createElement('p');
-  price.className = 'card-text fw-bold mb-1';
-  price.textContent = `Giá từ: ${service.basePrice ? service.basePrice.toLocaleString('vi-VN') + ' VNĐ' : 'Liên hệ'}`;
+  price.className = 'card-text fw-bold mt-auto';
+  price.textContent = service.basePrice ? `${service.basePrice.toLocaleString('vi-VN')} VNĐ` : 'Liên hệ';
 
-  const durationText = service.duration ? `${service.duration} phút` : 'Thời gian không xác định';
-  const duration = document.createElement('p');
-  duration.className = 'card-text small text-muted';
-  duration.innerHTML = `<i class="far fa-clock me-1"></i> ${durationText}`;
-  
-  formCheckDiv.appendChild(checkbox);
-  formCheckDiv.appendChild(titleLabel);
-
-  cardBody.appendChild(formCheckDiv);
+  cardBody.appendChild(name);
   cardBody.appendChild(description);
   cardBody.appendChild(price);
-  cardBody.appendChild(duration);
   cardDiv.appendChild(cardBody);
   colDiv.appendChild(cardDiv);
 
-  cardDiv.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a, button')) {
-        return;
-    }
-    checkbox.checked = !checkbox.checked;
-    const changeEvent = new Event('change', { bubbles: true });
-    checkbox.dispatchEvent(changeEvent);
-  });
-
+  cardDiv.addEventListener('click', () => toggleServiceSelection(cardDiv, service));
   return colDiv;
 }
 
 // Handle service selection
-function handleServiceSelection(event, service) {
-  const checkbox = event.target;
-  if (checkbox.checked) {
-    if (!selectedServices.find(s => s.id === service.id)) {
-      selectedServices.push(service);
-    }
+function toggleServiceSelection(cardElement, service) {
+  const serviceId = service.id;
+  const index = selectedServices.findIndex(s => s.id === serviceId);
+
+  if (index > -1) {
+    selectedServices.splice(index, 1); // Deselect
+    cardElement.classList.remove('selected');
   } else {
-    selectedServices = selectedServices.filter(s => s.id !== service.id);
+    selectedServices.push(service); // Select
+    cardElement.classList.add('selected');
   }
   updateSelectedServicesCount();
+  validateStep1();
 }
 
 // Update selected services count display
@@ -335,9 +315,12 @@ function updateSelectedServicesCount() {
   if (countElement) {
     countElement.textContent = selectedServices.length;
   }
-  const nextButtonStep1 = document.querySelector('#step1-tab-pane .btn-next-step');
-  if (nextButtonStep1) {
-    nextButtonStep1.disabled = selectedServices.length === 0;
+}
+
+function validateStep1() {
+  const btnStep1Continue = document.getElementById('btn-step1-continue');
+  if (btnStep1Continue) {
+    btnStep1Continue.disabled = selectedServices.length === 0;
   }
 }
 

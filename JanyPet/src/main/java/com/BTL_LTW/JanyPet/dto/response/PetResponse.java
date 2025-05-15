@@ -66,8 +66,9 @@ public class PetResponse {
         this.name = name;
     }
 
-    public String getSpecies(String species) {
-        return this.species;
+    // Corrected getter for species
+    public String getSpecies() {
+        return species;
     }
 
     public void setSpecies(String species) {

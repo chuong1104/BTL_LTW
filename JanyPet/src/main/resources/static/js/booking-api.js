@@ -4,6 +4,27 @@
  */
 const BookingAPI = {
   API_URL: 'http://localhost:8080/api',
+
+  /**
+   * Helper to get authorization headers.
+   * Relies on window.authService being available.
+   */
+  _getAuthHeaders: function() {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (window.authService && typeof window.authService.getToken === 'function') {
+      const token = window.authService.getToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      } else {
+        console.warn('BookingAPI: No auth token found via authService.getToken()');
+      }
+    } else {
+      console.warn('BookingAPI: authService.getToken() is not available. Request will be unauthenticated.');
+    }
+    return headers;
+  },
   
   /**
    * Create a new booking
@@ -14,15 +35,12 @@ const BookingAPI = {
     try {
       const response = await fetch(`${this.API_URL}/bookings`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
+        headers: this._getAuthHeaders(),
         body: JSON.stringify(bookingData)
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Failed to create booking and parse error response.' }));
         throw new Error(errorData.message || 'Failed to create booking');
       }
       
@@ -40,14 +58,16 @@ const BookingAPI = {
    */
   getBookingById: async function(id) {
     try {
+      const headers = this._getAuthHeaders();
+      // Content-Type is not strictly needed for GET but doesn't hurt
+      // delete headers['Content-Type']; // Optionally remove for GET
+
       const response = await fetch(`${this.API_URL}/bookings/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        headers: headers
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Failed to get booking and parse error response.' }));
         throw new Error(errorData.message || 'Failed to get booking');
       }
       
@@ -65,26 +85,23 @@ const BookingAPI = {
    */
   getAllBookings: async function(filters = {}) {
     try {
-      // Build query string from filters
       const queryParams = new URLSearchParams();
-      if (filters.userId) queryParams.append('userId', filters.userId); // For fetching specific user's bookings
+      if (filters.userId) queryParams.append('userId', filters.userId);
       if (filters.status) queryParams.append('status', filters.status);
-      if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom); // Changed from 'date'
-      if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);     // Added for range
+      if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
+      if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
       if (filters.search) queryParams.append('search', filters.search);
       
       const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+      const headers = this._getAuthHeaders();
+      // delete headers['Content-Type']; // Optionally remove for GET
       
-      // Changed from /admin/bookings to /bookings to align with BookingController.getAll()
-      // Assumes BookingController.getAll() will be enhanced to handle these query parameters.
       const response = await fetch(`${this.API_URL}/bookings${queryString}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        headers: headers
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Failed to get bookings and parse error response.' }));
         throw new Error(errorData.message || 'Failed to get bookings');
       }
       
@@ -96,15 +113,23 @@ const BookingAPI = {
   },
 
   /**
-   * Get all bookings for the current user (Simplified: uses getAllBookings with a filter)
+   * Get all bookings for the current user
    * @returns {Promise<Array>} - List of user bookings
    */
   getUserBookings: async function() {
-    const user = JSON.parse(localStorage.getItem('janypet_user')); // Assuming 'janypet_user' stores the user object
-    if (!user || !user.id) {
+    let userId = null;
+    if (window.authService && typeof window.authService.getCurrentUser === 'function') {
+        const user = window.authService.getCurrentUser();
+        if (user && user.id) {
+            userId = user.id;
+        }
+    }
+
+    if (!userId) {
+      console.warn('BookingAPI: User not authenticated or user ID missing via authService.getCurrentUser()');
       return Promise.reject(new Error('User not authenticated or user ID missing.'));
     }
-    return this.getAllBookings({ userId: user.id });
+    return this.getAllBookings({ userId: userId });
   },
   
   /**
@@ -117,15 +142,12 @@ const BookingAPI = {
     try {
       const response = await fetch(`${this.API_URL}/bookings/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
+        headers: this._getAuthHeaders(),
         body: JSON.stringify(updateData)
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Failed to update booking and parse error response.' }));
         throw new Error(errorData.message || 'Failed to update booking');
       }
       
@@ -143,9 +165,18 @@ const BookingAPI = {
    */
   cancelBooking: async function(id) {
     try {
+      // Backend might prefer a dedicated endpoint or a specific payload for cancellation.
+      // This example assumes updating status via the general updateBooking endpoint.
       const updateData = {
-        status: 'CANCELLED'
+        status: 'CANCELLED' 
       };
+      // If your backend has a specific cancel endpoint like PATCH /bookings/{id}/cancel, use that:
+      // const response = await fetch(`${this.API_URL}/bookings/${id}/cancel`, {
+      //   method: 'PATCH', // or POST
+      //   headers: this._getAuthHeaders(),
+      // });
+      // if (!response.ok) { /* ... error handling ... */ }
+      // return await response.json();
       
       return await this.updateBooking(id, updateData);
     } catch (error) {
@@ -161,17 +192,23 @@ const BookingAPI = {
    */
   deleteBooking: async function(id) {
     try {
+      const headers = this._getAuthHeaders();
+      // delete headers['Content-Type']; // Optionally remove for DELETE if no body
+
       const response = await fetch(`${this.API_URL}/bookings/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        headers: headers
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        // DELETE might return 204 No Content on success, or error details in JSON
+        if (response.status === 204) return; // Successful deletion with no content
+        const errorData = await response.json().catch(() => ({ message: 'Failed to delete booking and parse error response.' }));
         throw new Error(errorData.message || 'Failed to delete booking');
       }
+      // If backend returns JSON on successful DELETE (e.g. the deleted object or a success message)
+      // return await response.json(); 
+      // Otherwise, for 200 OK or 204 No Content, just return (or return a success indicator)
     } catch (error) {
       console.error(`Error deleting booking ${id}:`, error);
       throw error;
@@ -180,4 +217,6 @@ const BookingAPI = {
 };
 
 // Make BookingAPI available globally
-window.BookingAPI = BookingAPI;
+if (window) {
+  window.BookingAPI = BookingAPI;
+}

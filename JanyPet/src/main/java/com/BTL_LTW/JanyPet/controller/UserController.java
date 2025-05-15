@@ -64,13 +64,17 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<?> getUserProfile() {
         try {
-            User currentUser = SecurityUtils.getCurrentUser(userRepository);
-            // Use the user...
-            return ResponseEntity.ok("ok");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error retrieving user profile: " + e.getMessage());
+        User currentUser = SecurityUtils.getCurrentUser(userRepository);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("User not authenticated."));
         }
+        UserResponse userResponse = userService.getUserById(currentUser.getId()); // Assuming userService.getUserById returns UserResponse
+        return ResponseEntity.ok(userResponse);
+    } catch (Exception e) {
+       
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new MessageResponse("Error retrieving user profile: " + e.getMessage()));
+    }
     }
 
     // Cập nhật thông tin người dùng
