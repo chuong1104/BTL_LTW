@@ -4,6 +4,14 @@
     context-path: /
 
 spring:
+#  cloud:
+#    gcp:
+#      core:
+#        enabled: false
+#      pubsub:
+#        enabled: false
+#      storage:
+#        enabled: false
   datasource:
     url: "jdbc:mysql://localhost:3307/janypet"
     username: root
@@ -50,5 +58,11 @@ vnpay:
   ipnUrl: ${app.base-url}/api/vnpay/ipn
   tmnCode: CBV4016A
   hashSecret: 3RJVZXLUE88KVIC143SMRKGCSXYNASBJ
+
+#gemini:
+#  api:
+#    key: AIzaSyDVTYAeK0qvg_uC5n0XosEOYfdPFuVyx1I  # Note: In production, use environment variables
+#  model: gemini-pro
+#  timeout: 30000  # Timeout in milliseconds
 
 

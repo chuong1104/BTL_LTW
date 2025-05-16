@@ -90,7 +90,10 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/uploads/**",
-                                "/api/upload/files/**" // Cho phép truy cập công khai vào hình ảnh
+                                "/api/upload/files/**", // Cho phép truy cập công khai vào hình ảnh
+                                "/api/chatbot/**",
+                                "/chatbot-widget",
+                                "/chatbot-widget.html"
                         ).permitAll()
                         .requestMatchers(
                                 "/**",
@@ -99,16 +102,14 @@ public class SecurityConfig {
                                 "/api/users/init-admin",
                                 "/api/**",
                                 "/api/admin/**"
-
                         ).permitAll()
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
                         .requestMatchers("/api/users/**").hasAnyRole(
                                 Role.ADMIN.name(),
                                 Role.EMPLOYEE.name(),
                                 Role.CUSTOMER.name()
                         )
-//                        .anyRequest().authenticated()
+                        // .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

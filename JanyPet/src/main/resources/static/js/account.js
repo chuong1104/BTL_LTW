@@ -70,7 +70,7 @@ const accountManager = {
             // Kiểm tra token trong localStorage
             const token = localStorage.getItem('token');
             const tokenExpiry = localStorage.getItem('tokenExpiry');
-            const userData = localStorage.getItem('userData');
+            const userData = localStorage.getItem('currentUser'); // Changed 'userData' to 'currentUser'
             
             if (!token) {
                 console.log('No authentication token found');
@@ -144,7 +144,7 @@ const accountManager = {
             console.log('User authenticated successfully');
             
             // Cập nhật dữ liệu người dùng trong localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('currentUser', JSON.stringify(userData)); // Changed 'userData' to 'currentUser'
             
             // Cập nhật UI
             this.updateUserUI(userData);
@@ -199,7 +199,7 @@ const accountManager = {
     
     clearAuthData: function() {
         localStorage.removeItem('token');
-        localStorage.removeItem('userData');
+        localStorage.removeItem('currentUser'); // Changed 'userData' to 'currentUser'
         localStorage.removeItem('tokenExpiry');
     },
     

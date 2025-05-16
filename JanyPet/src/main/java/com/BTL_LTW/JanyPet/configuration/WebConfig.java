@@ -70,6 +70,12 @@ public class WebConfig implements WebMvcConfigurer {
             logger.error("Error configuring resource handler", e);
             throw new RuntimeException("Error configuring resource handler", e);
         }
+
+        registry.addResourceHandler("/chatbot-widget")
+                .addResourceLocations("classpath:/static/chatbot-widget.html");
+                
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
     }
 }
 

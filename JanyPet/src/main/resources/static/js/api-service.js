@@ -51,7 +51,7 @@ window.apiService = {
     ensureAuthHeader: function(options = {}) {
         if (!options.headers) options.headers = {};
         
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (token) {
             options.headers['Authorization'] = `Bearer ${token}`;
         }

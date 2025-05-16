@@ -279,12 +279,12 @@
                     <form id="profile-edit-form" class="d-none card border-0 mb-4">
                       <div class="card-body">
                         <div class="mb-3">
-                          <label for="edit-fullName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" id="edit-fullName" required>
+                          <label for="edit-fullName" class="form-label">Họ và tên</label>
+                          <input type="text" class="form-control" id="edit-fullName">
                         </div>
                         <div class="mb-3">
                           <label for="edit-email" class="form-label">Email (không thể thay đổi)</label>
-                          <input type="email" class="form-control" id="edit-email" readonly disabled>
+                          <input type="email" class="form-control" id="edit-email" readonly>
                         </div>
                         <div class="mb-3">
                           <label for="edit-phone" class="form-label">Số điện thoại</label>
@@ -296,7 +296,9 @@
                         </div>
                         <div class="d-flex justify-content-end">
                           <button type="button" id="cancel-edit-profile-btn" class="btn btn-secondary rounded-pill me-2">Hủy</button>
-                          <button type="submit" class="btn btn-primary rounded-pill">Lưu thay đổi</button>
+                          <button type="submit" id="save-profile-changes-btn" class="btn btn-primary rounded-pill">
+                            <i class="fas fa-save me-1"></i> Lưu thay đổi
+                          </button>
                         </div>
                       </div>
                     </form>
@@ -306,20 +308,19 @@
                     <form id="change-password-form" class="card border-0">
                       <div class="card-body">
                         <div class="mb-3">
-                          <label for="current-password" class="form-label">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                          <label for="current-password" class="form-label">Mật khẩu hiện tại</label>
                           <input type="password" class="form-control" id="current-password" required>
                         </div>
                         <div class="mb-3">
-                          <label for="new-password" class="form-label">Mật khẩu mới <span class="text-danger">*</span></label>
-                          <input type="password" class="form-control" id="new-password" required minlength="6">
-                          <div class="form-text">Mật khẩu phải có ít nhất 6 ký tự</div>
+                          <label for="new-password" class="form-label">Mật khẩu mới</label>
+                          <input type="password" class="form-control" id="new-password" required>
                         </div>
                         <div class="mb-3">
-                          <label for="confirm-new-password" class="form-label">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                          <label for="confirm-new-password" class="form-label">Xác nhận mật khẩu mới</label>
                           <input type="password" class="form-control" id="confirm-new-password" required>
                         </div>
                         <div class="d-flex justify-content-end">
-                          <button type="submit" class="btn btn-warning rounded-pill">
+                          <button type="submit" id="save-password-btn" class="btn btn-primary rounded-pill">
                             <i class="fas fa-key me-1"></i> Đổi mật khẩu
                           </button>
                         </div>
@@ -337,45 +338,36 @@
                         <i class="fas fa-plus me-1"></i> Thêm thú cưng mới
                       </button>
                     </div>
-                    
-                    <!-- Pet Cards Grid View -->
-                    <div id="pets-grid-container" class="row" style="display: none;">
-                      <!-- Pet cards will be inserted here -->
+
+                    <!-- Loading Spinner for Pets -->
+                    <div id="pets-loading-spinner" class="text-center my-4" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải thú cưng...</span>
+                        </div>
+                        <p>Đang tải danh sách thú cưng...</p>
                     </div>
                     
-                    <!-- Pet Table View -->
+                    <!-- View Toggle Buttons -->
+                    <div class="mb-3 d-flex justify-content-end" id="pet-view-toggle-buttons" style="display: none;"> <!-- Initially hidden until pets are loaded -->
+                        <button id="table-view-btn" class="btn btn-sm btn-outline-secondary me-2" title="Xem dạng bảng"><i class="fas fa-list"></i></button>
+                        <button id="grid-view-btn" class="btn btn-sm btn-outline-secondary" title="Xem dạng lưới"><i class="fas fa-th-large"></i></button>
+                    </div>
+                    
+                    <!-- Pet Grid View Container -->
+                    <div id="pets-grid-container" class="row g-4" style="display: none;">
+                      <!-- Pet cards will be inserted here by renderGridView -->
+                    </div>
+                    
+                    <!-- Pet Table View Container -->
                     <div id="pets-table-container" style="display: none;">
-                      <div class="mb-3 d-flex justify-content-end">
-                        <div class="btn-group">
-                          <button type="button" id="grid-view-btn" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-th-large"></i>
-                          </button>
-                          <button type="button" id="table-view-btn" class="btn btn-sm btn-outline-primary active">
-                            <i class="fas fa-list"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <table class="table table-hover align-middle">
-                        <thead>
-                          <tr>
-                            <th>Tên</th>
-                            <th>Loài</th>
-                            <th>Giống</th>
-                            <th>Tuổi</th>
-                            <th>Hành động</th>
-                          </tr>
-                        </thead>
-                        <tbody id="pet-list-tbody">
-                          <!-- Pet rows will be inserted here by pet-management.js -->
-                        </tbody>
-                      </table>
+                      <!-- Table will be inserted here by renderTableView -->
                     </div>
                     
                     <!-- Empty State - No Pets -->
-                    <div id="no-pets-alert" class="empty-state" style="display: none;">
-                      <i class="fas fa-paw"></i>
+                    <div id="no-pets-alert" class="empty-state text-center p-4 border rounded" style="display: none;">
+                      <i class="fas fa-paw fa-3x text-muted mb-3"></i>
                       <h4>Chưa có thú cưng nào</h4>
-                      <p>Bạn chưa có thông tin thú cưng nào. Hãy thêm thú cưng để quản lý dễ dàng hơn và sử dụng các dịch vụ chăm sóc!</p>
+                      <p>Bạn chưa có thông tin thú cưng nào. Hãy thêm thú cưng để quản lý dễ dàng hơn!</p>
                       <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#petModal">
                         <i class="fas fa-plus me-1"></i> Thêm thú cưng đầu tiên
                       </button>

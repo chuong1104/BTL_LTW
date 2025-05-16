@@ -7,403 +7,545 @@
 const petManager = {
     pets: [],
     currentUser: null,
-    viewMode: 'table', // 'table' or 'grid'
-    
+    viewMode: 'table', // Default view mode
+    isLoading: false,
+
     init: function() {
-        console.log('Initializing Pet Manager');
+        console.log('PetManager: Initializing...');
+        // Attempt to load persisted view mode
+        const savedViewMode = localStorage.getItem('petViewMode');
+        if (savedViewMode) {
+            this.viewMode = savedViewMode;
+        }
+        // Set initial active state for view toggle buttons
+        this.updateViewToggleButtons();
+
         this.bindEvents();
-        this.loadCurrentUser()
-            .then(() => this.loadPets());
+        // If the pet management tab is already active on page load (e.g. direct link with hash)
+        const petTabPane = document.getElementById('pet-management');
+        if (petTabPane && petTabPane.classList.contains('active')) {
+            this.checkAuthAndLoadData();
+        }
+        // Note: user-profile.js also calls checkAuthAndLoadData, which is good.
     },
-    
+
+    updateViewToggleButtons: function() {
+        const gridBtn = document.getElementById('grid-view-btn');
+        const tableBtn = document.getElementById('table-view-btn');
+        if (gridBtn) gridBtn.classList.toggle('active', this.viewMode === 'grid');
+        if (tableBtn) tableBtn.classList.toggle('active', this.viewMode === 'table');
+    },
+
+    checkAuthAndLoadData: function() {
+        console.log('PetManager: checkAuthAndLoadData called.');
+        this.currentUser = null; // Reset to ensure fresh check
+
+        // 1. Try authService.getCurrentUser()
+        if (window.authService && typeof window.authService.getCurrentUser === 'function') {
+            const authUser = window.authService.getCurrentUser();
+            if (authUser && (authUser.id || authUser.sub)) {
+                console.log('PetManager: User found via authService.getCurrentUser()', authUser);
+                this.currentUser = authUser;
+                this.loadPets();
+                return;
+            }
+        }
+
+        // 2. Try localStorage.getItem('currentUser')
+        const storedUserStr = localStorage.getItem('currentUser');
+        if (storedUserStr) {
+            try {
+                const storedUser = JSON.parse(storedUserStr);
+                if (storedUser && (storedUser.id || storedUser.sub)) {
+                    console.log('PetManager: User found in localStorage', storedUser);
+                    this.currentUser = storedUser;
+                    this.loadPets();
+                    return;
+                }
+            } catch (e) {
+                console.error('PetManager: Error parsing user from localStorage', e);
+                localStorage.removeItem('currentUser'); // Clear invalid entry
+            }
+        }
+
+        // 3. Fallback to API call if token exists
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (token) {
+            console.log('PetManager: User not found in cache/localStorage, attempting API fetch.');
+            this.loadCurrentUserFromAPI()
+                .then(userFromApi => {
+                    // loadCurrentUserFromAPI already sets this.currentUser and localStorage
+                    if (this.currentUser && (this.currentUser.id || this.currentUser.sub)) {
+                        console.log('PetManager: User successfully fetched from API.', this.currentUser);
+                        this.loadPets();
+                    } else {
+                        console.error('PetManager: API fetch processed but currentUser is still invalid.');
+                        this.handleUnauthenticatedState();
+                    }
+                })
+                .catch(error => {
+                    console.error('PetManager: Error fetching user from API via loadCurrentUserFromAPI.', error);
+                    this.handleUnauthenticatedState();
+                });
+        } else {
+            console.log('PetManager: No token found, user is not authenticated.');
+            this.handleUnauthenticatedState();
+        }
+    },
+
+    loadCurrentUserFromAPI: function() {
+        return new Promise((resolve, reject) => {
+            console.log('PetManager: loadCurrentUserFromAPI (API fetch) initiated...');
+
+            apiService.get('/users/profile')
+                .then(user => {
+                    if (user && (user.id || user.sub)) { // Ensure 'sub' from JWT or 'id' from full profile
+                        console.log('PetManager: Successfully loaded user from API:', user);
+                        this.currentUser = user;
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        resolve(user);
+                    } else {
+                        console.error('PetManager: API returned invalid user data.', user);
+                        this.currentUser = null;
+                        localStorage.removeItem('currentUser');
+                        reject(new Error('Invalid user data from API'));
+                    }
+                })
+                .catch(error => {
+                    console.error('PetManager: Error fetching current user from API:', error);
+                    this.currentUser = null;
+                    localStorage.removeItem('currentUser');
+                    // Optionally clear token if it's an auth error
+                    if (error && (error.status === 401 || error.status === 403)) {
+                        localStorage.removeItem('token');
+                        sessionStorage.removeItem('token');
+                    }
+                    reject(error);
+                });
+        });
+    },
+
     bindEvents: function() {
         // Save pet button
         const savePetBtn = document.getElementById('save-pet-btn');
         if (savePetBtn) {
             savePetBtn.addEventListener('click', this.handleSavePet.bind(this));
         }
-        
+
         // View toggle buttons
         const gridViewBtn = document.getElementById('grid-view-btn');
         const tableViewBtn = document.getElementById('table-view-btn');
-        
+
         if (gridViewBtn) {
             gridViewBtn.addEventListener('click', () => this.toggleView('grid'));
         }
-        
         if (tableViewBtn) {
             tableViewBtn.addEventListener('click', () => this.toggleView('table'));
         }
-        
-        // Reset form when modal is opened for a new pet
+
+        // Reset form when modal is opened for a new pet (triggered by 'Add Pet' button)
+        const addPetModalTrigger = document.querySelector('[data-bs-target="#petModal"]'); // Or specific ID if 'add-pet-btn' is for modal trigger
+        if (addPetModalTrigger) {
+             addPetModalTrigger.addEventListener('click', this.resetPetForm.bind(this));
+        }
+        // If you have a separate "Add Pet" button that doesn't directly open the modal but should reset form:
         const addPetBtn = document.getElementById('add-pet-btn');
-        if (addPetBtn) {
+        if (addPetBtn && !addPetBtn.hasAttribute('data-bs-target')) { // Ensure it's not the modal trigger itself
             addPetBtn.addEventListener('click', this.resetPetForm.bind(this));
         }
-        
+
+
         // Listen for tab activation to refresh data
-        const petTab = document.querySelector('a[href="#pet-management"]');
-        if (petTab) {
-            petTab.addEventListener('shown.bs.tab', () => {
-                this.loadPets();
+        const petTabLink = document.querySelector('a[data-bs-toggle="tab"][href="#pet-management"], a[data-bs-toggle="tab"][data-bs-target="#pet-management"]');
+        if (petTabLink) {
+            petTabLink.addEventListener('shown.bs.tab', () => {
+                console.log('PetManager: Pet management tab shown.');
+                this.checkAuthAndLoadData(); // Reload data when tab becomes active
             });
         }
     },
-    
-    loadCurrentUser: function() {
-        return new Promise((resolve, reject) => {
-            apiService.get('/users/profile')
-                .then(user => {
-                    this.currentUser = user;
-                    resolve(user);
-                })
-                .catch(error => {
-                    console.error('Error fetching current user:', error);
-                    toastManager.showToast('Không thể tải thông tin người dùng. Vui lòng đăng nhập lại.', 'error');
-                    reject(error);
-                });
-        });
+
+    handleUnauthenticatedState: function() {
+        console.log('PetManager: User is not authenticated or user data is invalid.');
+        this.pets = []; // Clear any existing pets
+        
+        const petManagementContainer = document.getElementById('pet-management-container');
+        if (petManagementContainer) {
+            petManagementContainer.innerHTML = `
+                <div class="alert alert-warning text-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Vui lòng đăng nhập để xem và quản lý thú cưng của bạn.
+                </div>
+            `;
+        }
+        // Ensure other specific pet elements are hidden if they exist outside the main container logic
+        const addPetBtn = document.getElementById('add-pet-btn');
+        if (addPetBtn) addPetBtn.style.display = 'none';
+        
+        const petsLoadingSpinner = document.getElementById('pets-loading-spinner');
+        if (petsLoadingSpinner) petsLoadingSpinner.style.display = 'none';
+        
+        const noPetsAlert = document.getElementById('no-pets-alert');
+        if (noPetsAlert) noPetsAlert.style.display = 'none';
+
+        const petsGridContainer = document.getElementById('pets-grid-container');
+        if (petsGridContainer) petsGridContainer.style.display = 'none';
+
+        const petsTableContainer = document.getElementById('pets-table-container');
+        if (petsTableContainer) petsTableContainer.style.display = 'none';
+
+        const petViewToggleButtons = document.getElementById('pet-view-toggle-buttons');
+        if(petViewToggleButtons) petViewToggleButtons.style.display = 'none';
     },
-    
+
     loadPets: function() {
-        if (!this.currentUser || !this.currentUser.id) {
-            console.error('Cannot load pets: Current user is not available');
+        if (!this.currentUser || !(this.currentUser.id || this.currentUser.sub)) {
+            console.error('PetManager: loadPets called but currentUser is invalid or missing ID/SUB.', this.currentUser);
+            this.handleUnauthenticatedState();
             return;
         }
+
+        const userId = this.currentUser.id || this.currentUser.sub;
+        console.log('PetManager: Loading pets for user ID:', userId);
+
+        this.isLoading = true;
+        const petsLoadingSpinner = document.getElementById('pets-loading-spinner');
+        if (petsLoadingSpinner) petsLoadingSpinner.style.display = 'block';
+
+        // Hide content areas while loading
+        const petsGridContainer = document.getElementById('pets-grid-container');
+        if (petsGridContainer) petsGridContainer.style.display = 'none';
+        const petsTableContainer = document.getElementById('pets-table-container');
+        if (petsTableContainer) petsTableContainer.style.display = 'none';
+        const noPetsAlert = document.getElementById('no-pets-alert');
+        if (noPetsAlert) noPetsAlert.style.display = 'none';
+        const petViewToggleButtons = document.getElementById('pet-view-toggle-buttons');
+        if(petViewToggleButtons) petViewToggleButtons.style.display = 'none';
+
+
+        // Ensure the main "add pet" button is visible if authenticated
+        const addPetBtn = document.getElementById('add-pet-btn');
+        if (addPetBtn) {
+            addPetBtn.style.display = 'block'; // Or 'inline-block' or ''
+        }
         
-        // Show loading state
-        document.getElementById('pets-grid-container').innerHTML = '<div class="col-12 text-center my-5"><div class="spinner-border text-primary"></div></div>';
-        document.getElementById('pet-list-tbody').innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary mx-auto"></div></td></tr>';
-        
-        apiService.get(`/pets/owner/${this.currentUser.id}`)
+        // Clear previous "unauthenticated" message if present in the main container
+        const mainPetManagementContainer = document.getElementById('pet-management-container');
+        if(mainPetManagementContainer) {
+            const unauthAlert = mainPetManagementContainer.querySelector('.alert-warning');
+            if(unauthAlert && unauthAlert.textContent.includes('Vui lòng đăng nhập')) {
+                // Instead of clearing all innerHTML, just remove the alert
+                // This assumes the structure from the HTML snippet is present
+                unauthAlert.remove();
+            }
+        }
+
+        apiService.get(`/pets/owner/${userId}`)
             .then(pets => {
-                this.pets = pets;
-                this.renderPets();
-                
-                // Toggle empty state
-                const hasNoPets = pets.length === 0;
-                document.getElementById('no-pets-alert').style.display = hasNoPets ? 'block' : 'none';
-                document.getElementById('pets-table-container').style.display = hasNoPets ? 'none' : 'block';
-                document.getElementById('pets-grid-container').style.display = 'none';
-                
-                // Update view based on preference
-                this.toggleView(this.viewMode, false);
+                console.log('PetManager: Pets loaded successfully:', pets);
+                this.pets = pets || [];
+                this.renderPets(); // This will handle displaying pets or "no pets" message
             })
             .catch(error => {
-                console.error('Error fetching pets:', error);
-                document.getElementById('pet-list-tbody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Không thể tải dữ liệu thú cưng</td></tr>';
-                document.getElementById('pets-grid-container').innerHTML = '<div class="col-12 text-center text-danger">Không thể tải dữ liệu thú cưng</div>';
-                toastManager.showToast('Không thể tải danh sách thú cưng. Vui lòng thử lại sau.', 'error');
+                console.error('PetManager: Error loading pets:', error);
+                if (window.toastManager) {
+                    toastManager.showToast('Không thể tải dữ liệu thú cưng. Vui lòng thử lại sau.', 'error');
+                }
+                // Display error within the pet management area
+                if(mainPetManagementContainer) {
+                    mainPetManagementContainer.innerHTML = '<div class="alert alert-danger text-center">Lỗi tải danh sách thú cưng. Vui lòng thử lại.</div>';
+                }
+            })
+            .finally(() => {
+                this.isLoading = false;
+                if (petsLoadingSpinner) petsLoadingSpinner.style.display = 'none';
             });
     },
-    
+
     renderPets: function() {
-        // Render table view
-        const tbody = document.getElementById('pet-list-tbody');
-        tbody.innerHTML = '';
-        
-        this.pets.forEach(pet => {
-            const row = document.createElement('tr');
-            
-            // Calculate age from birthDate if available
-            let age = 'Không rõ';
-            if (pet.birthDate) {
-                const birthDate = new Date(pet.birthDate);
-                const today = new Date();
-                const ageInYears = Math.floor((today - birthDate) / (365.25 * 24 * 60 * 60 * 1000));
-                
-                if (ageInYears < 1) {
-                    const ageInMonths = Math.floor((today - birthDate) / (30.44 * 24 * 60 * 60 * 1000));
-                    age = `${ageInMonths} tháng`;
-                } else {
-                    age = `${ageInYears} tuổi`;
-                }
+        const petsGridContainer = document.getElementById('pets-grid-container');
+        const petsTableContainer = document.getElementById('pets-table-container');
+        const noPetsAlert = document.getElementById('no-pets-alert');
+        const petViewToggleButtons = document.getElementById('pet-view-toggle-buttons');
+
+        if (!petsGridContainer || !petsTableContainer || !noPetsAlert || !petViewToggleButtons) {
+            console.error('PetManager: One or more pet display containers not found.');
+            return;
+        }
+
+        // Clear previous content
+        petsGridContainer.innerHTML = '';
+        petsTableContainer.innerHTML = '';
+
+        if (this.pets.length === 0) {
+            noPetsAlert.style.display = 'block';
+            petsGridContainer.style.display = 'none';
+            petsTableContainer.style.display = 'none';
+            petViewToggleButtons.style.display = 'none';
+        } else {
+            noPetsAlert.style.display = 'none';
+            petViewToggleButtons.style.display = 'flex'; // Show toggle buttons
+
+            if (this.viewMode === 'table') {
+                this.renderTableView(petsTableContainer);
+                petsTableContainer.style.display = 'block';
+                petsGridContainer.style.display = 'none';
+            } else { // 'grid'
+                this.renderGridView(petsGridContainer);
+                petsGridContainer.style.display = 'flex'; // Assuming grid uses flex for row
+                petsTableContainer.style.display = 'none';
             }
-            
+            this.addPetEventListeners();
+        }
+        this.updateViewToggleButtons(); // Ensure buttons reflect current view
+    },
+
+    renderTableView: function(container) {
+        const table = document.createElement('table');
+        table.className = 'table table-hover align-middle'; // Added align-middle for better vertical alignment
+        table.innerHTML = `
+            <thead class="table-light">
+                <tr>
+                    <th>Tên thú cưng</th>
+                    <th>Loài</th>
+                    <th>Giống</th>
+                    <th>Ngày sinh/Tuổi</th>
+                    <th>Giới tính</th>
+                    <th>Cân nặng</th>
+                    <th>Đã tiêm phòng</th>
+                    <th>Ghi chú sức khỏe</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        `;
+        const tbody = table.querySelector('tbody');
+
+        this.pets.forEach(pet => {
+            const row = tbody.insertRow();
+            const ageDisplay = pet.birthDate ? new Date(pet.birthDate).toLocaleDateString('vi-VN') : (pet.age ? `${pet.age} tuổi` : 'Không rõ');
             row.innerHTML = `
-                <td>
-                    <div class="d-flex align-items-center">
-                        <div class="pet-icon me-2">
-                            <i class="fas fa-${this.getPetIcon(pet.species)}"></i>
-                        </div>
-                        <div>
-                            <strong>${pet.name}</strong>
-                            ${pet.vaccinated ? '<span class="badge bg-success ms-2">Đã tiêm phòng</span>' : ''}
-                        </div>
-                    </div>
-                </td>
-                <td>${this.getSpeciesName(pet.species)}</td>
+                <td>${pet.name || 'Không rõ'}</td>
+                <td>${pet.species || 'Không rõ'}</td>
                 <td>${pet.breed || 'Không rõ'}</td>
-                <td>${age}</td>
+                <td>${ageDisplay}</td>
+                <td>${this.getGenderText(pet.gender)}</td>
+                <td>${pet.weight ? pet.weight + ' kg' : 'Không rõ'}</td>
+                <td>${pet.vaccinated ? '<span class="badge bg-success">Đã tiêm</span>' : '<span class="badge bg-secondary">Chưa tiêm</span>'}</td>
+                <td>${pet.healthNotes || 'Không có'}</td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-primary edit-pet-btn" data-pet-id="${pet.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger delete-pet-btn" data-pet-id="${pet.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    <button class="btn btn-sm btn-outline-primary edit-pet-btn" data-pet-id="${pet.id}" title="Sửa">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger delete-pet-btn" data-pet-id="${pet.id}" title="Xóa">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             `;
-            
-            tbody.appendChild(row);
         });
-        
-        // Add event listeners to the newly created buttons
-        document.querySelectorAll('.edit-pet-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleEditPet(e.currentTarget.dataset.petId));
-        });
-        
-        document.querySelectorAll('.delete-pet-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleDeletePet(e.currentTarget.dataset.petId));
-        });
-        
-        // Render grid view
-        const gridContainer = document.getElementById('pets-grid-container');
-        gridContainer.innerHTML = '';
-        
+        container.appendChild(table);
+    },
+
+    renderGridView: function(container) {
+        const row = document.createElement('div');
+        row.className = 'row g-4';
+
         this.pets.forEach(pet => {
-            const card = document.createElement('div');
-            card.className = 'col-md-6 col-lg-4 mb-4';
-            
-            let healthInfo = '';
-            if (pet.vaccinated) {
-                healthInfo += '<span class="badge bg-success me-1">Đã tiêm phòng</span>';
-            }
-            if (pet.healthNotes) {
-                healthInfo += `<div class="mt-2 small"><i class="fas fa-notes-medical me-1 text-danger"></i> ${pet.healthNotes}</div>`;
-            }
-            
-            card.innerHTML = `
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-light">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">${pet.name}</h5>
-                            <span class="pet-icon-large">
-                                <i class="fas fa-${this.getPetIcon(pet.species)} fa-2x"></i>
-                            </span>
-                        </div>
-                    </div>
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4';
+            const ageDisplay = pet.birthDate ? new Date(pet.birthDate).toLocaleDateString('vi-VN') : (pet.age ? `${pet.age} tuổi` : 'Không rõ');
+            col.innerHTML = `
+                <div class="card h-100 shadow-sm pet-card">
                     <div class="card-body">
-                        <p class="card-text mb-1"><strong>Loài:</strong> ${this.getSpeciesName(pet.species)}</p>
+                        <h5 class="card-title text-primary">${pet.name || 'Không rõ'}</h5>
+                        <p class="card-text mb-1"><strong>Loài:</strong> ${pet.species || 'Không rõ'}</p>
                         <p class="card-text mb-1"><strong>Giống:</strong> ${pet.breed || 'Không rõ'}</p>
-                        <p class="card-text mb-1"><strong>Giới tính:</strong> ${this.getGenderName(pet.gender)}</p>
-                        <p class="card-text mb-1"><strong>Ngày sinh:</strong> ${pet.birthDate ? new Date(pet.birthDate).toLocaleDateString('vi-VN') : 'Không rõ'}</p>
+                        <p class="card-text mb-1"><strong>Ngày sinh/Tuổi:</strong> ${ageDisplay}</p>
+                        <p class="card-text mb-1"><strong>Giới tính:</strong> ${this.getGenderText(pet.gender)}</p>
                         <p class="card-text mb-1"><strong>Cân nặng:</strong> ${pet.weight ? pet.weight + ' kg' : 'Không rõ'}</p>
-                        <div class="mt-2">
-                            ${healthInfo}
-                        </div>
+                        <p class="card-text mb-1"><strong>Tiêm phòng:</strong> ${pet.vaccinated ? '<span class="badge bg-success">Đã tiêm</span>' : '<span class="badge bg-secondary">Chưa tiêm</span>'}</p>
+                        <p class="card-text mb-1"><strong>Sức khỏe:</strong> ${pet.healthNotes || 'Không có ghi chú'}</p>
                     </div>
-                    <div class="card-footer bg-white border-0">
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-sm btn-outline-primary edit-pet-grid-btn" data-pet-id="${pet.id}" data-bs-toggle="modal" data-bs-target="#petModal">
-                                <i class="fas fa-edit me-1"></i> Chỉnh sửa
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger delete-pet-grid-btn" data-pet-id="${pet.id}">
-                                <i class="fas fa-trash me-1"></i> Xóa
-                            </button>
-                        </div>
+                    <div class="card-footer bg-light border-top-0 text-end">
+                        <button class="btn btn-sm btn-outline-primary edit-pet-btn me-2" data-pet-id="${pet.id}" title="Sửa">
+                            <i class="fas fa-edit"></i> Sửa
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-pet-btn" data-pet-id="${pet.id}" title="Xóa">
+                            <i class="fas fa-trash"></i> Xóa
+                        </button>
                     </div>
                 </div>
             `;
-            
-            gridContainer.appendChild(card);
+            row.appendChild(col);
         });
-        
-        // Add event listeners for grid view buttons
-        document.querySelectorAll('.edit-pet-grid-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleEditPet(e.currentTarget.dataset.petId));
+        container.appendChild(row);
+    },
+
+    addPetEventListeners: function() {
+        document.querySelectorAll('.edit-pet-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const petId = event.currentTarget.getAttribute('data-pet-id');
+                this.editPet(petId);
+            });
         });
-        
-        document.querySelectorAll('.delete-pet-grid-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleDeletePet(e.currentTarget.dataset.petId));
+
+        document.querySelectorAll('.delete-pet-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const petId = event.currentTarget.getAttribute('data-pet-id');
+                this.deletePet(petId);
+            });
         });
     },
-    
-    toggleView: function(mode, updateButtons = true) {
-        this.viewMode = mode;
-        
-        const gridContainer = document.getElementById('pets-grid-container');
-        const tableContainer = document.getElementById('pets-table-container');
-        
-        if (mode === 'grid') {
-            gridContainer.style.display = 'flex';
-            tableContainer.style.display = 'none';
-            
-            if (updateButtons) {
-                document.getElementById('grid-view-btn').classList.add('active');
-                document.getElementById('table-view-btn').classList.remove('active');
-            }
-        } else {
-            gridContainer.style.display = 'none';
-            tableContainer.style.display = 'block';
-            
-            if (updateButtons) {
-                document.getElementById('grid-view-btn').classList.remove('active');
-                document.getElementById('table-view-btn').classList.add('active');
-            }
-        }
+
+    toggleView: function(viewMode) {
+        this.viewMode = viewMode;
+        localStorage.setItem('petViewMode', viewMode);
+        this.renderPets(); // This will re-render and show/hide correct containers
+        // updateViewToggleButtons is called at the end of renderPets
     },
-    
-    handleEditPet: function(petId) {
-        const pet = this.pets.find(p => p.id === petId);
-        if (!pet) return;
-        
-        // Show modal
-        const petModal = new bootstrap.Modal(document.getElementById('petModal'));
-        petModal.show();
-        
-        // Populate form
-        document.getElementById('petModalLabel').innerText = 'Chỉnh sửa thông tin thú cưng';
-        document.getElementById('pet-id').value = pet.id;
-        document.getElementById('pet-name').value = pet.name || '';
-        document.getElementById('pet-species').value = pet.species || '';
-        document.getElementById('pet-breed').value = pet.breed || '';
-        
-        // Convert ISO date to YYYY-MM-DD format for input
-        if (pet.birthDate) {
-            const birthDate = new Date(pet.birthDate);
-            const formattedDate = birthDate.toISOString().split('T')[0];
-            document.getElementById('pet-birthDate').value = formattedDate;
-        } else {
-            document.getElementById('pet-birthDate').value = '';
-        }
-        
-        document.getElementById('pet-gender').value = pet.gender || '';
-        document.getElementById('pet-weight').value = pet.weight || '';
-        document.getElementById('pet-vaccinated').checked = pet.vaccinated || false;
-        document.getElementById('pet-healthNotes').value = pet.healthNotes || '';
-    },
-    
-    handleDeletePet: function(petId) {
-        if (confirm('Bạn có chắc chắn muốn xóa thú cưng này không?')) {
-            apiService.delete(`/pets/${petId}`)
-                .then(() => {
-                    // Remove from local array
-                    this.pets = this.pets.filter(pet => pet.id !== petId);
-                    this.renderPets();
-                    
-                    // Toggle empty state if no pets left
-                    const hasNoPets = this.pets.length === 0;
-                    document.getElementById('no-pets-alert').style.display = hasNoPets ? 'block' : 'none';
-                    document.getElementById('pets-table-container').style.display = hasNoPets ? 'none' : 'block';
-                    
-                    toastManager.showToast('Đã xóa thú cưng thành công!', 'success');
-                })
-                .catch(error => {
-                    console.error('Error deleting pet:', error);
-                    toastManager.showToast('Không thể xóa thú cưng. Vui lòng thử lại sau.', 'error');
-                });
-        }
-    },
-    
+
     resetPetForm: function() {
-        document.getElementById('petModalLabel').innerText = 'Thêm thú cưng mới';
-        document.getElementById('pet-form').reset();
-        document.getElementById('pet-id').value = '';
+        const petForm = document.getElementById('pet-form');
+        if (petForm) petForm.reset();
+
+        document.getElementById('pet-id').value = ''; // Clear hidden ID field
+        // Set default values for your form fields if any, e.g.,
+        // document.getElementById('pet-species').value = 'DOG';
+        // document.getElementById('pet-gender').value = 'MALE';
+        const modalLabel = document.getElementById('petModalLabel');
+        if (modalLabel) modalLabel.textContent = 'Thêm thú cưng mới';
     },
-    
-    handleSavePet: function() {
-        // Get form data
-        const petId = document.getElementById('pet-id').value;
-        const petData = {
-            name: document.getElementById('pet-name').value,
-            species: document.getElementById('pet-species').value,
-            breed: document.getElementById('pet-breed').value,
-            birthDate: document.getElementById('pet-birthDate').value || null,
-            gender: document.getElementById('pet-gender').value || null,
-            weight: document.getElementById('pet-weight').value || null,
-            vaccinated: document.getElementById('pet-vaccinated').checked,
-            healthNotes: document.getElementById('pet-healthNotes').value || null
-        };
-        
-        // Form validation
-        if (!petData.name || !petData.species) {
-            toastManager.showToast('Vui lòng điền đầy đủ thông tin bắt buộc.', 'warning');
+
+    editPet: function(petId) {
+        const pet = this.pets.find(p => p.id === petId);
+        if (!pet) {
+            console.error('Pet not found for editing:', petId);
+            if(window.toastManager) toastManager.showToast('Không tìm thấy thú cưng để sửa.', 'error');
             return;
         }
+        this.resetPetForm(); // Reset form first
+
+        document.getElementById('pet-id').value = pet.id;
+        document.getElementById('pet-name').value = pet.name || '';
+        // Assuming your form IDs match these, adjust as necessary:
+        if(document.getElementById('pet-species')) document.getElementById('pet-species').value = pet.species || '';
+        if(document.getElementById('pet-breed')) document.getElementById('pet-breed').value = pet.breed || '';
+        if(document.getElementById('pet-birthDate')) document.getElementById('pet-birthDate').value = pet.birthDate || ''; // Ensure date format matches input type="date"
+        if(document.getElementById('pet-gender')) document.getElementById('pet-gender').value = pet.gender || '';
+        if(document.getElementById('pet-weight')) document.getElementById('pet-weight').value = pet.weight || '';
+        if(document.getElementById('pet-vaccinated')) document.getElementById('pet-vaccinated').checked = pet.vaccinated || false;
+        if(document.getElementById('pet-healthNotes')) document.getElementById('pet-healthNotes').value = pet.healthNotes || '';
         
-        // Create new pet or update existing one
-        const isNewPet = !petId;
+        const modalLabel = document.getElementById('petModalLabel');
+        if (modalLabel) modalLabel.textContent = 'Chỉnh sửa thông tin thú cưng';
         
-        if (isNewPet) {
-            apiService.post(`/pets/owner/${this.currentUser.id}`, petData)
-                .then(response => {
-                    // Hide modal
-                    bootstrap.Modal.getInstance(document.getElementById('petModal')).hide();
-                    
-                    // Add to array and re-render
-                    this.pets.push(response);
-                    this.renderPets();
-                    
-                    // Show success message
-                    toastManager.showToast('Đã thêm thú cưng thành công!', 'success');
-                    
-                    // Update empty state
-                    document.getElementById('no-pets-alert').style.display = 'none';
-                    document.getElementById('pets-table-container').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error creating pet:', error);
-                    toastManager.showToast('Không thể tạo mới thú cưng. Vui lòng thử lại sau.', 'error');
-                });
-        } else {
-            apiService.put(`/pets/${petId}`, petData)
-                .then(response => {
-                    // Hide modal
-                    bootstrap.Modal.getInstance(document.getElementById('petModal')).hide();
-                    
-                    // Update in array and re-render
-                    const index = this.pets.findIndex(p => p.id === petId);
-                    if (index !== -1) {
-                        this.pets[index] = response;
-                    }
-                    this.renderPets();
-                    
-                    // Show success message
-                    toastManager.showToast('Đã cập nhật thông tin thú cưng thành công!', 'success');
-                })
-                .catch(error => {
-                    console.error('Error updating pet:', error);
-                    toastManager.showToast('Không thể cập nhật thú cưng. Vui lòng thử lại sau.', 'error');
-                });
+        const petModal = new bootstrap.Modal(document.getElementById('petModal'));
+        petModal.show();
+    },
+
+    deletePet: function(petId) {
+        if (!confirm('Bạn có chắc chắn muốn xóa thú cưng này không? Hành động này không thể hoàn tác.')) {
+            return;
         }
+        apiService.delete(`/pets/${petId}`)
+            .then(() => {
+                this.pets = this.pets.filter(pet => pet.id !== petId);
+                this.renderPets(); // Re-render the list
+                if(window.toastManager) toastManager.showToast('Đã xóa thú cưng thành công.', 'success');
+                if (this.pets.length === 0) {
+                     const noPetsMsg = document.getElementById('no-pets-message');
+                     if (noPetsMsg) noPetsMsg.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting pet:', error);
+                if(window.toastManager) toastManager.showToast('Lỗi xóa thú cưng. Vui lòng thử lại.', 'error');
+            });
+    },
+
+    handleSavePet: function(event) {
+        event.preventDefault();
+        if (!this.currentUser || !(this.currentUser.id || this.currentUser.sub)) {
+            if(window.toastManager) toastManager.showToast('Phiên làm việc hết hạn hoặc lỗi xác thực. Vui lòng đăng nhập lại.', 'error');
+            return;
+        }
+
+        const petId = document.getElementById('pet-id').value;
+        // Adapt to your actual form field IDs
+        const petData = {
+            name: document.getElementById('pet-name').value,
+            species: document.getElementById('pet-species') ? document.getElementById('pet-species').value : null,
+            breed: document.getElementById('pet-breed') ? document.getElementById('pet-breed').value : null,
+            birthDate: document.getElementById('pet-birthDate') ? document.getElementById('pet-birthDate').value : null, // Ensure this is in YYYY-MM-DD format if sending to backend expecting LocalDate
+            gender: document.getElementById('pet-gender') ? document.getElementById('pet-gender').value : null,
+            weight: document.getElementById('pet-weight') ? parseFloat(document.getElementById('pet-weight').value) : null,
+            vaccinated: document.getElementById('pet-vaccinated') ? document.getElementById('pet-vaccinated').checked : false,
+            healthNotes: document.getElementById('pet-healthNotes') ? document.getElementById('pet-healthNotes').value : null,
+            ownerId: this.currentUser.id || this.currentUser.sub // Important: associate with current user
+        };
+
+        if (!petData.name || !petData.species) {
+            if(window.toastManager) toastManager.showToast('Tên thú cưng và loài là bắt buộc.', 'warning');
+            return;
+        }
+        if (petData.birthDate === "") petData.birthDate = null;
+
+
+        const saveButton = document.getElementById('save-pet-btn');
+        const originalButtonText = saveButton.innerHTML;
+        saveButton.disabled = true;
+        saveButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang lưu...';
+
+        const apiCall = petId 
+            ? apiService.put(`/pets/${petId}`, petData) 
+            : apiService.post(`/pets/owner/${petData.ownerId}`, petData); // Use correct endpoint for creation
+
+        apiCall.then(savedPet => {
+            if (petId) { // Update
+                const index = this.pets.findIndex(p => p.id === petId);
+                if (index !== -1) this.pets[index] = savedPet;
+                if(window.toastManager) toastManager.showToast('Cập nhật thông tin thú cưng thành công!', 'success');
+            } else { // Create
+                this.pets.push(savedPet);
+                if(window.toastManager) toastManager.showToast('Thêm thú cưng mới thành công!', 'success');
+            }
+            this.renderPets();
+            const petModal = bootstrap.Modal.getInstance(document.getElementById('petModal'));
+            if (petModal) petModal.hide();
+        })
+        .catch(error => {
+            console.error('Error saving pet:', error);
+            if(window.toastManager) toastManager.showToast(`Lỗi lưu thông tin thú cưng: ${error.message || 'Vui lòng thử lại.'}`, 'error');
+        })
+        .finally(() => {
+            saveButton.disabled = false;
+            saveButton.innerHTML = originalButtonText;
+        });
     },
     
-    // Helper methods
-    getPetIcon: function(species) {
-        switch (species) {
-            case 'DOG': return 'dog';
-            case 'CAT': return 'cat';
-            case 'BIRD': return 'dove';
-            case 'FISH': return 'fish';
-            case 'SMALL_ANIMAL': return 'rabbit';
-            default: return 'paw';
-        }
-    },
-    
-    getSpeciesName: function(species) {
-        switch (species) {
-            case 'DOG': return 'Chó';
-            case 'CAT': return 'Mèo';
-            case 'BIRD': return 'Chim';
-            case 'FISH': return 'Cá';
-            case 'SMALL_ANIMAL': return 'Động vật nhỏ';
-            default: return 'Khác';
-        }
-    },
-    
-    getGenderName: function(gender) {
-        switch (gender) {
+    getGenderText: function(gender) {
+        // Assuming gender might be 'MALE', 'FEMALE', 'UNKNOWN' or your enum values
+        if (!gender) return 'Không rõ';
+        switch (gender.toUpperCase()) {
             case 'MALE': return 'Đực';
             case 'FEMALE': return 'Cái';
-            default: return 'Không rõ';
+            case 'UNKNOWN': return 'Không xác định';
+            default: return gender; // Display as is if not recognized
         }
-    }
+    },
+
+    // calculateAge is not strictly needed if birthDate is primary and age is derived for display
+    // but if your PetResponse has an 'age' field, you might use it.
+    // For now, rendering birthDate directly or formatting it.
 };
 
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    const savedViewMode = localStorage.getItem('petViewMode');
+    if (savedViewMode) {
+        petManager.viewMode = savedViewMode;
+    }
+    // petManager.init() will be called, which now also calls updateViewToggleButtons.
     petManager.init();
 });
