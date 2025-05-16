@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @Autowired 
+    @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
@@ -143,26 +143,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getAllProducts() {
-        List<Product> productList = productRepository.findAll();
-        return productList.stream()
+        return productRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void deleteProduct(String id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với id: " + id));
-        // Xóa ảnh nếu tồn tại
-        if (product.getImage() != null && !product.getImage().isEmpty()) {
-            try {
-                fileStorageService.deleteFile(product.getImage());
-            } catch (Exception e) {
-                // Log lỗi nếu cần
-                System.err.println("Failed to delete image during product deletion: " + e.getMessage());
-            }
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Product not found with id: " + id);
         }
+        // Consider deleting image file if necessary
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponse> searchProductsByName(String name) { // Add this method
+        return productRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     private ProductResponse mapToResponse(Product product) {
@@ -172,17 +171,17 @@ public class ProductServiceImpl implements ProductService {
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
         response.setStock(product.getStock());
-        
-        // Chuyển tên file thành URL đầy đủ
-        if (product.getImage() != null && !product.getImage().isEmpty()) {
-            // Nếu image không bắt đầu bằng http hoặc https, thì thêm tiền tố /uploads/
-            String imageUrl = product.getImage();
-            if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && !imageUrl.startsWith("/uploads/")) {
-                imageUrl = "/uploads/" + imageUrl;
-            }
+
+        // Construct full image URL if imageUrl is just a filename
+        String imageUrl = product.getImage();
+        if (imageUrl != null && !imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+            // Assuming images are served from a specific path, e.g., /uploads/
+            // Adjust this path based on your FileStorageService configuration
+            response.setImageUrl("/uploads/" + imageUrl);
+        } else {
             response.setImageUrl(imageUrl);
         }
-        // Map Category Info
+
         if (product.getCategory() != null) {
             response.setCategoryId(product.getCategory().getId());
             response.setCategoryName(product.getCategory().getName());

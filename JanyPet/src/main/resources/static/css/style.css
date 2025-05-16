@@ -406,6 +406,22 @@ nav.navbar .navbar-nav .nav-link.active::after {
   border-radius: 2px;
 }
 
+nav.navbar .navbar-nav .nav-link.active {
+  color: var(--primary-color);
+  position: relative;
+}
+
+nav.navbar .navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0px; 
+  left: 1rem; 
+  right: 1rem; 
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
 nav.navbar .dropdown-menu {
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
@@ -1391,4 +1407,49 @@ Single Product section style start
 /* Fix for button hover states */
 .btn-outline-primary:hover, .btn-outline-secondary:hover {
   color: white;
+}
+
+/*--------------------------------------------------------------
+Search Suggestions Styles
+--------------------------------------------------------------*/
+.search-suggestions-container {
+  position: absolute;
+  top: 100%; /* Position below the search bar */
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 .25rem .25rem;
+  z-index: 1050; /* Ensure it's above other content */
+  max-height: 300px;
+  overflow-y: auto;
+  display: none; /* Hidden by default */
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.search-suggestions-container .suggestion-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.search-suggestions-container .suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.search-suggestions-container .suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-suggestions-container .suggestion-item a {
+  text-decoration: none;
+  color: #212529;
+  display: block;
+}
+
+/* Specific adjustments for sidebar suggestions if needed */
+.sidebar .widget-search-bar .search-suggestions-container {
+  /* You might adjust width or other properties if the default is not suitable */
+  /* Example: width: 100%; */
 }

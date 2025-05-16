@@ -48,16 +48,17 @@
         </div>
 
         <!-- Search bar - visible on large screens -->
-        <div class="col-lg-5 d-none d-lg-block">
+        <div class="col-lg-5 d-none d-lg-block position-relative"> 
           <div class="search-bar border rounded-pill px-3 border-primary-subtle">
             <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
-              <input type="text" name="keyword" class="form-control border-0 bg-transparent py-2"
-                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
+              <input type="text" name="keyword" id="searchInputHeader" class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." autocomplete="off" /> 
               <button type="submit" class="btn btn-link p-0 text-primary">
                 <i class="fas fa-search"></i>
               </button>
             </form>
           </div>
+          <div id="searchSuggestionsHeader" class="search-suggestions-container"></div>
         </div>
 
         <!-- Auth and user actions -->
@@ -165,14 +166,16 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form>
+          <form id="search-form-modal" action="shop.html" method="GET"> 
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
-              <button class="btn btn-primary" type="button">
+              <input type="text" name="keyword" id="searchInputModal" class="form-control" placeholder="Tìm kiếm sản phẩm..." autocomplete="off"> {/* Added id, name, autocomplete="off" */}
+              <button class="btn btn-primary" type="submit">
                 <i class="fas fa-search"></i>
               </button>
             </div>
           </form>
+         
+          <div id="searchSuggestionsModal" class="search-suggestions-container mt-1"></div>
         </div>
       </div>
     </div>
@@ -498,7 +501,7 @@
       <div class="products-carousel swiper">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
+            <div class="z-1 position-absolute rounded-3 m-3 px-3 pt-1 bg-light">
               New
             </div>
             <div class="card position-relative">
@@ -537,7 +540,7 @@
             </div>
           </div>
           <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
+            <div class="z-1 position-absolute rounded-3 m-3 px-3 pt-1 bg-light">
               -10%
             </div>
             <div class="card position-relative">
@@ -751,7 +754,7 @@
 
                   <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
                   <h3 class="secondary-font text-primary">$18.00</h3>
-  
+    
                   <div class="d-flex flex-wrap mt-3">
                     <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
                       <i class="fas fa-shopping-cart"></i>
@@ -760,6 +763,7 @@
                       <i class="fas fa-heart"></i>
                     </a>
                   </div>
+
 
               </div>
 
@@ -790,7 +794,7 @@
 
                   <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
                   <h3 class="secondary-font text-primary">$18.00</h3>
-  
+    
                   <div class="d-flex flex-wrap mt-3">
                     <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
                       <i class="fas fa-shopping-cart"></i>
@@ -830,7 +834,7 @@
 
                   <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
                   <h3 class="secondary-font text-primary">$18.00</h3>
-  
+    
                   <div class="d-flex flex-wrap mt-3">
                     <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
                       <i class="fas fa-shopping-cart"></i>
@@ -868,17 +872,17 @@
                 </span>
                 5.0
 
-                <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                <h3 class="secondary-font text-primary">$18.00</h3>
-
-                <div class="d-flex flex-wrap mt-3">
-                  <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                    <i class="fas fa-shopping-cart"></i>
-                  </a>
-                  <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                    <i class="fas fa-heart"></i>
-                  </a>
-                </div>
+                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
+                  <h3 class="secondary-font text-primary">$18.00</h3>
+  
+                  <div class="d-flex flex-wrap mt-3">
+                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
+                      <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
+                      <i class="fas fa-heart"></i>
+                    </a>
+                  </div>
 
 
               </div>
@@ -1411,6 +1415,7 @@
             <h3 class="secondary-font text-primary m-0">22</h3>
             <p class="secondary-font fs-6 m-0">Feb</p>
   
+           
           </div>
           <div class="card position-relative">
             <a href="single-post.html"><img src="images/blog3.jpg" class="img-fluid rounded-4" alt="image"></a>
@@ -1708,6 +1713,8 @@
 <script src="js/index-script.js"></script>
 <script src="js/responsive-elements.js"></script>
 <script src="js/quick-view.js"></script>
+<script src="js/search-suggestions.js"></script>
+
 
 <!-- Enhanced UX JavaScript - luôn đặt cuối cùng vì nó phụ thuộc vào tất cả các script khác -->
 <script src="js/enhanced-ux.js"></script>

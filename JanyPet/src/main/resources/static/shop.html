@@ -74,27 +74,18 @@
           </div>
 
           <!-- Search bar - visible on large screens -->
-          <div class="col-lg-5 d-none d-lg-block">
-            <div
-              class="search-bar border rounded-pill px-3 border-primary-subtle"
-            >
-              <form
-                id="search-form"
-                class="text-center d-flex align-items-center"
-                action=""
-                method=""
-              >
-                <input
-                  type="text"
-                  class="form-control border-0 bg-transparent py-2"
-                  placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..."
-                />
-                <button type="submit" class="btn btn-link p-0 text-primary">
-                  <i class="fas fa-search"></i>
-                </button>
-              </form>
-            </div>
+          <div class="col-lg-5 d-none d-lg-block position-relative"> 
+          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+            <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
+              <input type="text" name="keyword" id="searchInputHeader" class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." autocomplete="off" /> 
+              <button type="submit" class="btn btn-link p-0 text-primary">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
           </div>
+          <div id="searchSuggestionsHeader" class="search-suggestions-container"></div>
+        </div>
 
           <!-- Auth and user actions -->
           <div
@@ -907,15 +898,18 @@
           <aside class="col-md-3 mt-5">
             <div class="sidebar">
               <div class="widget-menu">
-                <div class="widget-search-bar">
+                <div class="widget-search-bar" style="position: relative;"> <!-- Add position: relative here -->
                   <div class="search-bar border rounded-2 border-dark-subtle pe-3">
-                    <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-                      <input type="text" class="form-control border-0 bg-transparent" placeholder="Tìm kiếm sản phẩm..." />
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-                      </svg>
+                    <!-- Updated search form for sidebar -->
+                    <form id="search-form-sidebar" class="text-center d-flex align-items-center" action="shop.html" method="GET">
+                      <input type="text" name="keyword" id="searchInputSidebar" class="form-control border-0 bg-transparent py-2" placeholder="Tìm kiếm sản phẩm..." autocomplete="off" />
+                      <button type="submit" class="btn btn-link p-0 text-secondary"> <!-- Using a button for consistency -->
+                        <i class="fas fa-search"></i>
+                      </button>
                     </form>
                   </div>
+                  <!-- Container for search suggestions in sidebar -->
+                  <div id="searchSuggestionsSidebar" class="search-suggestions-container"></div>
                 </div>
               </div>
               <div class="widget-product-categories pt-5">
@@ -1315,6 +1309,7 @@
     <script src="js/script.js"></script>
     <script src="js/cart.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src ="js/search-suggestions.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const params = new URLSearchParams(window.location.search);
