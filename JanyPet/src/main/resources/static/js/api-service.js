@@ -1,11 +1,8 @@
-/**
- * API Service
- * Centralizes API access and provides fallback mechanisms
- */
+
 
 // Create the API service as a global object
 window.apiService = {
-    API_BASE_URL: '/api', // This will be prefixed by the domain, e.g., http://localhost:8080/api
+    API_BASE_URL: '/api',
     isAvailable: true,
 
     // Add the missing testConnection method

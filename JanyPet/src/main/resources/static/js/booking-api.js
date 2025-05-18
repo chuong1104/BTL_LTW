@@ -3,7 +3,7 @@
  * Handles all API communication related to bookings
  */
 const BookingAPI = {
-  API_URL: 'http://localhost:8080/api',
+  API_URL: 'http://localhost:8080/api', // Ensure this is correct
 
   /**
    * Helper to get authorization headers.
@@ -113,25 +113,33 @@ const BookingAPI = {
   },
 
   /**
-   * Get all bookings for the current user
-   * @returns {Promise<Array>} - List of user bookings
+   * Get all bookings for a specific user by their ID.
+   * @param {string} userId - The ID of the user.
+   * @returns {Promise<Array>} - List of user bookings.
    */
-  getUserBookings: async function() {
-    let userId = null;
-    if (window.authService && typeof window.authService.getCurrentUser === 'function') {
-        const user = window.authService.getCurrentUser();
-        if (user && user.id) {
-            userId = user.id;
-        }
-    }
-
+  getBookingsByUserId: async function(userId) {
     if (!userId) {
-      console.warn('BookingAPI: User not authenticated or user ID missing via authService.getCurrentUser()');
-      return Promise.reject(new Error('User not authenticated or user ID missing.'));
+      console.warn('BookingAPI: userId is required to fetch user bookings.');
+      return Promise.reject(new Error('User ID is required.'));
     }
-    return this.getAllBookings({ userId: userId });
+    try {
+      const headers = this._getAuthHeaders();
+      const response = await fetch(`${this.API_URL}/bookings/user/${userId}`, {
+        headers: headers
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to get user bookings and parse error response.' }));
+        throw new Error(errorData.message || 'Failed to get user bookings');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching bookings for user ${userId}:`, error);
+      throw error;
+    }
   },
-  
+
   /**
    * Update a booking
    * @param {string} id - Booking ID

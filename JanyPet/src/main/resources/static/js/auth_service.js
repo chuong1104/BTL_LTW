@@ -22,6 +22,8 @@ let redirectInProgress = false
 
 // Define a variable to cache the current user
 let currentUser = null
+const DETAILED_USER_KEY = 'janyPetDetailedUser'; // New key for the full user object from login response
+let cachedDetailedUser = null; // Cache for the detailed user object
 
 // ===== Token Management =====
 
@@ -62,18 +64,23 @@ function clearToken() {
  */
 function parseJwt(token) {
   try {
-    const base64Url = token.split(".")[1]
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
       atob(base64)
         .split("")
         .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    )
-    return JSON.parse(jsonPayload)
+        .join("")
+    );
+    const payload = JSON.parse(jsonPayload);
+    // Ensure 'id' field exists, map from 'sub' if necessary
+    if (typeof payload.id === 'undefined' && payload.sub) {
+        payload.id = payload.sub;
+    }
+    return payload;
   } catch (error) {
-    debugLog("Error parsing JWT token:", error)
-    return null
+    debugLog("Error parsing JWT token:", error);
+    return null;
   }
 }
 
@@ -99,29 +106,69 @@ async function login(username, password, rememberMe = false) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      credentials: "include", 
       body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Login failed");
+      let errorData = { message: "Login failed and error response unparseable" };
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        debugLog("Could not parse error response JSON", e);
+      }
+      throw new Error(errorData.message || `Login failed with status: ${response.status}`);
     }
 
-    const data = await response.json();
-    const token = data.token;
-    saveToken(token, rememberMe);
-    const userData = parseJwt(token);
-    currentUser = userData; 
-    storeUserData(userData); 
-    debugLog("Token:", token); 
-    debugLog("User data:", userData); 
+    const loginResponseData = await response.json();
+    // **CRITICAL DEBUG LOG: Check this output in your browser console**
+    console.log('AuthService: Full login API Response Data:', JSON.stringify(loginResponseData, null, 2));
+    debugLog("AuthService: Full login API Response Data (object):", loginResponseData);
+
+
+    // ---- ADAPT THIS SECTION BASED ON YOUR ACTUAL BACKEND RESPONSE ----
+    // Your backend's JwtResponse sends fields directly, not nested under 'user'
+    
+    const token = loginResponseData.token; // Assuming JwtResponse has a 'token' field for the JWT
+    
+    // Construct the 'detailedUserFromResponse' object from the flat JwtResponse fields
+    const detailedUserFromResponse = {
+        id: loginResponseData.id, // Assuming JwtResponse has an 'id' field for user ID
+        username: loginResponseData.username,
+        email: loginResponseData.email,
+        phoneNumber: loginResponseData.phoneNumber,
+        roles: loginResponseData.roles, // Assuming JwtResponse has a 'roles' field
+        // Add any other relevant user fields that JwtResponse might provide
+        // authorities: loginResponseData.roles ? loginResponseData.roles.map(role => ({ authority: role })) : [] // Optional: if you need 'authorities' structure elsewhere
+    };
+    // ---- END ADAPTATION SECTION ----
+
+
+    if (!token || !detailedUserFromResponse || typeof detailedUserFromResponse.id === 'undefined') {
+        console.error('AuthService: Login response missing expected fields (token, user.id). Actual data received:', loginResponseData);
+        clearToken();
+        localStorage.removeItem(DETAILED_USER_KEY);
+        cachedDetailedUser = null;
+        throw new Error('Login failed: Invalid response structure from server.');
+    }
+
+    saveToken(token, rememberMe); 
+
+    localStorage.setItem(DETAILED_USER_KEY, JSON.stringify(detailedUserFromResponse));
+    cachedDetailedUser = detailedUserFromResponse; 
+    
+    debugLog("Token stored successfully."); 
+    debugLog("Detailed user data stored successfully:", detailedUserFromResponse); 
     
     updateAuthUI(); 
     
-    return { success: true, user: userData };
+    return { success: true, user: detailedUserFromResponse };
   } catch (error) {
-    debugLog("Login error:", error);
+    debugLog("Login error:", error.message, error);
+    clearToken();
+    localStorage.removeItem(DETAILED_USER_KEY);
+    cachedDetailedUser = null;
+    updateAuthUI(); 
     return {
       success: false,
       message: error.message || "Đăng nhập thất bại",
@@ -195,29 +242,34 @@ async function register(userData) {
  * @returns {void}
  */
 function logout(redirect = true) {
-  if (isProcessingAuth) {
-    debugLog("Logout already in progress, skipping");
-    return;
+  if (isProcessingAuth && !redirectInProgress) { // Allow logout even if processing other auth, unless redirecting
+    debugLog("Logout called while another auth process might be running, but proceeding.");
   }
 
-  isProcessingAuth = true;
+  isProcessingAuth = true; // Mark as processing to avoid immediate re-checks
   debugLog("Starting logout process");
 
-  clearToken();
-  currentUser = null; 
-  localStorage.removeItem('currentUser'); 
+  clearToken(); // Clears JWT token
+  localStorage.removeItem(DETAILED_USER_KEY); // Clear the stored detailed user object
+  cachedDetailedUser = null; // Clear the in-memory cache
   
   updateAuthUI(); 
 
   if (redirect) {
+    if (redirectInProgress) return; // Avoid multiple redirects
     redirectInProgress = true;
+    // Redirect to home or login page after a short delay
     setTimeout(() => {
       window.location.href = "index.html"; 
+      // Reset flags after navigation attempt, though page context will be lost
+      // isProcessingAuth = false; 
+      // redirectInProgress = false;
     }, 100); 
   } else {
+     // If not redirecting, reset processing flag after a delay
      setTimeout(() => {
         isProcessingAuth = false;
-        redirectInProgress = false; 
+        // redirectInProgress should already be false or handled by the caller
      }, 500);
   }
 }
@@ -227,18 +279,24 @@ function logout(redirect = true) {
  * @returns {boolean} Authentication status
  */
 function isAuthenticated() {
-  const token = getToken()
-  if (!token) return false
+  const token = getToken();
+  if (!token) return false;
 
-  const userData = parseJwt(token)
-  if (!userData) return false
-
-  const currentTime = Date.now() / 1000
-  if (userData.exp && userData.exp < currentTime) {
-    clearToken()
-    return false
+  const jwtPayload = parseJwt(token); // Use our parseJwt that ensures id mapping
+  if (!jwtPayload) { // Token is malformed
+      clearToken(); // Clean up bad token
+      localStorage.removeItem(DETAILED_USER_KEY);
+      cachedDetailedUser = null;
+      return false;
   }
-  return true
+
+  const currentTime = Date.now() / 1000;
+  if (jwtPayload.exp && jwtPayload.exp < currentTime) {
+    debugLog("Token expired. Clearing session.");
+    logout(false); // Logout without immediate redirect to clear state
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -246,21 +304,51 @@ function isAuthenticated() {
  * @returns {Object|null} User data or null if not authenticated
  */
 function getCurrentUser() {
-    if (currentUser) {
-        return currentUser;
+    // 1. Try the in-memory cache first
+    if (cachedDetailedUser && typeof cachedDetailedUser.id !== 'undefined') {
+        return cachedDetailedUser;
     }
-    if (isAuthenticated()) {
-        const token = getToken();
+
+    // 2. Try to get the detailed user object from localStorage
+    const storedUserJson = localStorage.getItem(DETAILED_USER_KEY);
+    if (storedUserJson) {
         try {
-            currentUser = parseJwt(token);
-            return currentUser;
+            const storedUser = JSON.parse(storedUserJson);
+            if (storedUser && typeof storedUser.id !== 'undefined') {
+                cachedDetailedUser = storedUser; // Cache it
+                return storedUser;
+            } else {
+                // Invalid data in storage, clear it
+                debugLog("Invalid detailed user data in localStorage. Clearing.");
+                localStorage.removeItem(DETAILED_USER_KEY);
+                // Also clear token if user data is essential for authenticated state
+                // clearToken(); 
+            }
         } catch (error) {
-            debugLog("Error getting current user:", error);
-            logout(false); 
-            return null;
+            debugLog("Error parsing detailed user data from localStorage:", error);
+            localStorage.removeItem(DETAILED_USER_KEY); // Remove corrupted data
         }
     }
-    return getUserFromStorage();
+
+    // 3. Fallback: If detailed user is not found, but a token exists (isAuthenticated might be true)
+    //    Attempt to construct a minimal user object from the token.
+    //    This is a less ideal state, login should provide the full user object.
+    const token = getToken();
+    if (token) {
+        const jwtPayload = parseJwt(token); // parseJwt now maps 'sub' to 'id' if 'id' is missing
+        if (jwtPayload && typeof jwtPayload.id !== 'undefined') {
+            // This user object might be less complete than the one from login response
+            debugLog("Falling back to user data from JWT payload.", jwtPayload);
+            cachedDetailedUser = jwtPayload; // Cache this minimal user object
+            // Optionally, store this minimal version if nothing else is available
+            // localStorage.setItem(DETAILED_USER_KEY, JSON.stringify(jwtPayload)); 
+            return jwtPayload;
+        }
+    }
+    
+    // If all attempts fail, clear cache and return null
+    cachedDetailedUser = null;
+    return null;
 }
 
 /**
@@ -413,27 +501,6 @@ function handleDirectLogout(event) {
   logout()
 }
 
-// Store the user object in localStorage
-function storeUserData(user) {
-    if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-    }
-}
-
-// Get user from localStorage
-function getUserFromStorage() {
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-        try {
-            return JSON.parse(userData);
-        } catch (e) {
-            console.error('Failed to parse user data from storage', e);
-            localStorage.removeItem('currentUser'); 
-        }
-    }
-    return null;
-}
-
 // Export the auth service
 window.authService = {
   login,
@@ -447,4 +514,14 @@ window.authService = {
   checkAuthRedirect,
   initAuth,
   handleDirectLogout,
-}
+  getToken // Expose getToken if other services need it directly
+};
+
+// Initialize Auth Service on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.authService && typeof window.authService.initAuth === 'function') {
+        window.authService.initAuth();
+    } else {
+        console.error("AuthService or initAuth not found on DOMContentLoaded.");
+    }
+});

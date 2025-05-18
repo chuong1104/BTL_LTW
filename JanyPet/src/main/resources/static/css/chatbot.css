@@ -254,6 +254,8 @@
     display: none;
 }
 
+.clear-btn { color: #fff; }
+
 /* Responsive Design */
 @media (max-width: 480px) {
     .chatbot-container {

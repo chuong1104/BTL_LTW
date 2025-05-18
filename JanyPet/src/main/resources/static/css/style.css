@@ -109,7 +109,7 @@ CSS STRUCTURE:
   --danger-hover: #c9323e;
   --success-color: #2A9D8F; 
   --warning-color: #E9C46A;
-  --secondary-color: #6c757d;
+  --secondary-color: #7c8f9f;
 }
 
 /* Fonts */
@@ -726,33 +726,6 @@ header .auth-container {
   gap: 8px; /* Reduced from 10px */
 }
 
-/* Điều chỉnh kích thước icon giỏ hàng và yêu thích */
-/* header .fa-heart,  /* Covered by .ms-3.d-flex > a .fas */
-/* header .fa-shopping-cart {
-  font-size: 1.2rem;
-} */
-
-/* header .badge { /* Covered by .ms-3.d-flex > a .badge */
-/* font-size: 0.7rem;
-  padding: 0.25em 0.5em;
-} */
-
-/* Điều chỉnh kích thước user info */
-/* header .user-info { /* Covered by .auth-container .user-info */
-/* font-size: 0.9rem;
-  margin-right: 8px;
-} */
-
-/* header .admin-link { /* Covered by .auth-container .btn */
-/* padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-} */
-
-/* Điều chỉnh nút đăng xuất */
-/* header .logout-btn { /* Covered by .auth-container .btn */
-/* padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-} */
 
 /* pet clothing */
 .card {
@@ -1036,7 +1009,9 @@ Account section style start
 .bg-primary {
   background-color: var(--primary-color) !important;
 }
-
+.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
 .bg-danger {
   background-color: var(--danger-color) !important;
 }
@@ -1452,4 +1427,220 @@ Search Suggestions Styles
 .sidebar .widget-search-bar .search-suggestions-container {
   /* You might adjust width or other properties if the default is not suitable */
   /* Example: width: 100%; */
+}
+
+/* filepath: d:\BTL_LTW\JanyPet\src\main\resources\static\BookingService.html */
+/* Add these styles inside the existing <style> tag or to your style.css */
+/* ... existing styles ... */
+.booking-steps-nav {
+  display: flex; /* Sử dụng flexbox để các item nằm trên một hàng */
+  flex-direction: column; /* Xếp các item theo cột */
+  gap: 10px; /* Khoảng cách giữa các nút */
+  padding-left: 0; /* Bỏ padding mặc định của ul/nav */
+  margin-bottom: 1.5rem; /* Khoảng cách với content bên dưới */
+}
+
+.booking-steps-nav .nav-item {
+  width: 100%; /* Cho mỗi item chiếm toàn bộ chiều rộng */
+  list-style: none; /* Bỏ dấu chấm của list item nếu là ul */
+}
+
+.booking-steps-nav .nav-link {
+  display: flex; /* Căn chỉnh số và chữ bên trong nút */
+  align-items: center;
+  width: 100%; /* Nút chiếm toàn bộ chiều rộng của nav-item */
+  padding: 12px 20px;
+  font-weight: 600;
+  color: var(--light-dark-color, #457B9D); /* Màu chữ khi không active */
+  background-color: #e9ecef; /* Màu nền khi không active (xám nhạt) */
+  border: 1px solid #dee2e6; /* Viền nhẹ cho nút không active */
+  border-radius: 50rem; /* Bo tròn hoàn toàn */
+  text-align: left; /* Căn chữ sang trái */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Thêm shadow nhẹ */
+}
+
+.booking-steps-nav .nav-link:hover {
+  background-color: #dee2e6; /* Màu nền khi hover */
+  border-color: var(--light-dark-color, #457B9D);
+}
+
+.booking-steps-nav .nav-link.active {
+  background-color: var(--warning-color, #E9C46A); /* Màu nền khi active (vàng cam) */
+  color: var(--dark-color, #1D3557); /* Màu chữ khi active */
+  border-color: var(--warning-color, #E9C46A);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow rõ hơn khi active */
+}
+
+.booking-steps-nav .nav-link .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9em;
+  line-height: calc(28px - 2px); /* Điều chỉnh cho border */
+  border: 1px solid var(--light-dark-color, #457B9D); /* Viền cho số */
+  color: var(--light-dark-color, #457B9D); /* Màu cho số */
+  background-color: var(--bs-white, #fff); /* Nền trắng cho số */
+  margin-right: 12px; /* Khoảng cách giữa số và chữ */
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.booking-steps-nav .nav-link.active .step-number {
+  background-color: var(--dark-color, #1D3557); /* Nền cho số khi active */
+  color: var(--warning-color, #E9C46A); /* Màu cho số khi active */
+  border-color: var(--dark-color, #1D3557); /* Viền cho số khi active */
+}
+
+/* Custom styles for account page */
+.account-sidebar .list-group-item {
+    border-radius: 0.5rem; /* Consistent rounded corners */
+    margin-bottom: 5px; /* Add some space between items */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.account-sidebar .list-group-item.active {
+    background-color: var(--bs-primary); /* Use Bootstrap primary color */
+    color: white;
+    border-color: var(--bs-primary);
+}
+
+.account-sidebar .list-group-item:not(.active):hover {
+    background-color: #f8f9fa; /* Lighter hover for non-active items */
+}
+
+/* Style for the logout button to make it darker */
+.account-sidebar .logout-btn {
+    color: #a71d2a !important; /* Darker red color */
+    font-weight: 500;
+}
+
+.account-sidebar .logout-btn:hover {
+    background-color: #f8d7da !important; /* Light red background on hover */
+    color: #721c24 !important; /* Even darker red text on hover */
+}
+
+.profile-stat {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.profile-stat i {
+    font-size: 2rem;
+    color: var(--bs-primary);
+    margin-bottom: 10px;
+}
+
+.profile-stat h5 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.profile-stat p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0;
+}
+
+/* Styles for Pet Management Cards and Table */
+.pet-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    transition: box-shadow 0.3s ease;
+}
+.pet-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.pet-card .card-img-top {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: calc(0.5rem - 1px);
+    border-top-right-radius: calc(0.5rem - 1px);
+}
+.pet-card .card-body {
+    padding: 1rem;
+}
+.pet-card .card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.pet-card .card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+.pet-card .badge {
+    font-size: 0.75rem;
+}
+
+#pets-table-container table th,
+#pets-table-container table td {
+    vertical-align: middle;
+}
+
+/* Order History Card Styling */
+.order-card {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.order-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+    padding: 0.75rem 1.25rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(0.5rem - 1px);
+    border-top-right-radius: calc(0.5rem - 1px);
+}
+
+.order-body {
+    padding: 1.25rem;
+}
+
+.order-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: calc(0.5rem - 1px);
+    border-bottom-right-radius: calc(0.5rem - 1px);
+}
+
+.order-status {
+    padding: 0.25em 0.6em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.status-pending { background-color: #ffc107; color: #212529 !important; } /* Bootstrap warning */
+.status-processing { background-color: #0dcaf0; } /* Bootstrap info */
+.status-shipped, .status-shipping { background-color: #0d6efd; } /* Bootstrap primary */
+.status-delivered, .status-completed { background-color: #198754; } /* Bootstrap success */
+.status-cancelled, .status-failed { background-color: #dc3545; } /* Bootstrap danger */
+.status-refunded { background-color: #6c757d; } /* Bootstrap secondary */
+
+/* Booking History Styling */
+#booking-history-container .list-group-item {
+    border-radius: 0.375rem; /* Bootstrap's default rounded corners */
+}
+#booking-history-container .list-group-item h5 {
+    color: var(--bs-primary);
 }

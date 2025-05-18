@@ -16,8 +16,8 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, String> {
 
-
-    List<Booking> findByUser(User user);
+    @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.services WHERE b.user = :user")
+    List<Booking> findByUser(@Param("user") User user); 
 
     long countByStatus(String pending);
 
@@ -41,7 +41,8 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.services WHERE b.id = :id")
     Optional<Booking> findBookingWithServices(@Param("id") String id);
-
+    @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.user LEFT JOIN FETCH b.pet LEFT JOIN FETCH b.services LEFT JOIN FETCH b.assignedStaff WHERE b.id = :id")
+    Optional<Booking> findByIdWithAllDetails(@Param("id") String id);
 
 }
 

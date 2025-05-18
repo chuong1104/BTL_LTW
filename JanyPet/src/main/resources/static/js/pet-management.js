@@ -1,8 +1,4 @@
-// filepath: d:\BTL_LTW\JanyPet\src\main\resources\static\js\pet-management.js
-/**
- * Pet Management
- * Handles CRUD operations for user's pets
- */
+
 
 const petManager = {
     pets: [],

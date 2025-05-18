@@ -5,16 +5,16 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize checkout UI elements and listeners
-  initCheckout(); // Loads saved methods, updates UI
-  loadCheckoutItems(); // Displays cart items
-  calculateOrderSummary(); // Initial calculation
+  initCheckout(); 
+  loadCheckoutItems(); 
+  calculateOrderSummary(); 
 
   // Initialize event listeners for various parts of the form
   initShippingMethodListeners();
-  initPaymentMethodListeners(); // This is likely where initializePaymentMethodHandler was intended
-  initAddressDropdowns(); // For city/district/ward
-  initCouponCode(); // For coupon input and button
-  initBankTransferFunctionality(); // For bank transfer specific UI
+  initPaymentMethodListeners(); 
+  initAddressDropdowns(); 
+  initCouponCode(); 
+  initBankTransferFunctionality(); 
 
   console.log("Checkout.js: All initializers called.");
 });

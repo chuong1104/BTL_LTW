@@ -208,23 +208,26 @@
               <!-- Sidebar Navigation for Account -->
               <div class="account-sidebar list-group shadow-sm">
                 <a href="#profile-info" class="list-group-item list-group-item-action active" data-bs-toggle="tab" role="tab" aria-controls="profile-info" aria-selected="true">
-                  <i class="fas fa-user-edit me-2"></i>Thông tin tài khoản
+                  <i class="fas fa-user-circle me-2"></i>Thông tin cá nhân
                 </a>
                 <a href="#pet-management" class="list-group-item list-group-item-action" data-bs-toggle="tab" role="tab" aria-controls="pet-management" aria-selected="false">
-                  <i class="fas fa-paw me-2"></i>Quản lý thú cưng
+                  <i class="fas fa-paw me-2"></i>Thú cưng của tôi
                 </a>
                 <a href="#order-history" class="list-group-item list-group-item-action" data-bs-toggle="tab" role="tab" aria-controls="order-history" aria-selected="false">
-                  <i class="fas fa-history me-2"></i>Lịch sử đơn hàng
+                    <i class="fas fa-receipt me-2"></i>Lịch sử đơn hàng
+                </a>
+                <a href="#booking-history" class="list-group-item list-group-item-action" data-bs-toggle="tab" role="tab" aria-controls="booking-history" aria-selected="false">
+                    <i class="fas fa-calendar-alt me-2"></i>Lịch hẹn của tôi
                 </a>
                 <a href="#" class="list-group-item list-group-item-action text-danger logout-btn">
-                  <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                 </a>
               </div>
             </div>
             <div class="col-lg-9">
               <!-- Tab Content -->
               <div class="tab-content card card-body shadow-sm p-4">
-                <!-- Profile Info Tab -->
+                <!-- Profile Info Tab Pane -->
                 <div class="tab-pane fade show active" id="profile-info" role="tabpanel" aria-labelledby="profile-info-tab">
                   <div id="user-profile-container">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -329,7 +332,7 @@
                   </div>
                 </div>
                 
-                <!-- Pet Management Tab -->
+                <!-- Pet Management Tab Pane -->
                 <div class="tab-pane fade" id="pet-management" role="tabpanel" aria-labelledby="pet-management-tab">
                   <div id="pet-management-container">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -375,7 +378,7 @@
                   </div>
                 </div>
                 
-                <!-- Order History Tab -->
+                <!-- Order History Tab Pane -->
                 <div class="tab-pane fade" id="order-history" role="tabpanel" aria-labelledby="order-history-tab">
                   <div id="order-history-container">
                     <h3 class="mb-4">Lịch sử đơn hàng</h3>
@@ -433,6 +436,20 @@
                       </a>
                     </div>
                   </div>
+                </div>
+                
+                <!-- Booking History Tab Pane -->
+                <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+                    <h4 class="mb-4">Lịch hẹn của tôi</h4>
+                    <div id="booking-history-container">
+                        <!-- Bookings will be loaded here -->
+                        <div class="text-center p-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải lịch hẹn...</span>
+                            </div>
+                            <p class="mt-2">Đang tải lịch hẹn của bạn...</p>
+                        </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -649,6 +666,7 @@
   <script src="js/toast-manager.js"></script>
   <script src="js/auth_service.js"></script>
   <script src="js/api-service.js"></script>
+  <script src="js/booking-api.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/order-service.js"></script>
 

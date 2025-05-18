@@ -1,78 +1,80 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
 import com.BTL_LTW.JanyPet.common.BookingStatus;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 public class BookingUpdateRequest {
-    private String userId;
-    private String petId;
-    private List<String> serviceIds;
-    private String staffId;
-    private LocalDate bookingDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+     private String userId;
+     private String petId;
+     private List<String> serviceIds;
+     private String staffId;
+     private LocalDate bookingDate;
+     private LocalTime startTime;
+     private LocalTime endTime;
+    @NotNull
     private BookingStatus status;
     private String notes;
 
-    // Getters and Setters
-    public String getUserId() {
-        return userId;
-    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+     public String getUserId() {
+         return userId;
+     }
 
-    public String getPetId() {
-        return petId;
-    }
+     public void setUserId(String userId) {
+         this.userId = userId;
+     }
 
-    public void setPetId(String petId) {
-        this.petId = petId;
-    }
+     public String getPetId() {
+         return petId;
+     }
 
-    public List<String> getServiceIds() {
-        return serviceIds;
-    }
+     public void setPetId(String petId) {
+         this.petId = petId;
+     }
 
-    public void setServiceIds(List<String> serviceIds) {
-        this.serviceIds = serviceIds;
-    }
+     public List<String> getServiceIds() {
+         return serviceIds;
+     }
 
-    public String getStaffId() {
-        return staffId;
-    }
+     public void setServiceIds(List<String> serviceIds) {
+         this.serviceIds = serviceIds;
+     }
 
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
+     public String getStaffId() {
+         return staffId;
+     }
 
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
+     public void setStaffId(String staffId) {
+         this.staffId = staffId;
+     }
 
-    public void setBookingDate(LocalDate bookingDate) {
-        this.bookingDate = bookingDate;
-    }
+     public LocalDate getBookingDate() {
+         return bookingDate;
+     }
 
-    public LocalTime getStartTime() {
-        return startTime;
-    }
+     public void setBookingDate(LocalDate bookingDate) {
+         this.bookingDate = bookingDate;
+     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
+     public LocalTime getStartTime() {
+         return startTime;
+     }
 
-    public LocalTime getEndTime() {
-        return endTime;
-    }
+     public void setStartTime(LocalTime startTime) {
+         this.startTime = startTime;
+     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
+     public LocalTime getEndTime() {
+         return endTime;
+     }
+
+     public void setEndTime(LocalTime endTime) {
+         this.endTime = endTime;
+     }
 
     public BookingStatus getStatus() {
         return status;

@@ -4,14 +4,6 @@
     context-path: /
 
 spring:
-#  cloud:
-#    gcp:
-#      core:
-#        enabled: false
-#      pubsub:
-#        enabled: false
-#      storage:
-#        enabled: false
   datasource:
     url: "jdbc:mysql://localhost:3307/janypet"
     username: root
