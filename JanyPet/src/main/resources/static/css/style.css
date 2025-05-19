@@ -1015,16 +1015,23 @@ Account section style start
 .bg-danger {
   background-color: var(--danger-color) !important;
 }
-
+.bg-warning {
+  background-color: var(--warning-color) !important;
+  /* text-dark is added by JS, so no need to specify color here if text-dark handles it */
+}
+.bg-success {
+  background-color: var(--success-color) !important;
+  color: #fff !important; /* Ensuring text is white for good contrast */
+}
+.bg-info {
+  background-color: #0dcaf0 !important; /* Using a common info color, similar to Bootstrap's info */
+  /* text-dark is added by JS, so no need to specify color here if text-dark handles it */
+}
 .bg-primary-subtle {
   background-color: var(--light-primary-color) !important;
   color: var(--primary-color) !important;
 }
 
-/* Trong style.css */
-
-/* Trạng thái mặc định (hoặc khi chưa xác thực / body.not-authenticated):
-   Hiển thị nút Đăng nhập/Đăng ký, ẩn nút Đăng xuất. */
 .auth-container .auth-buttons {
   display: block; /* Hoặc inline-block, flex tùy theo layout mong muốn */
 }
@@ -1032,8 +1039,6 @@ Account section style start
   display: none !important; /* Quan trọng: dùng !important để ghi đè style inline cũ nếu chưa xóa hết */
 }
 
-/* Khi người dùng đã đăng nhập (body.authenticated):
-   Ẩn nút Đăng nhập/Đăng ký, hiển thị nút Đăng xuất. */
 body.authenticated .auth-container .auth-buttons {
   display: none !important;
 }
