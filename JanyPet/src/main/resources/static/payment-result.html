@@ -53,7 +53,7 @@
             <p class="mb-0">&copy; <span id="currentYear"></span> JanyPet. Tất cả quyền được bảo lưu.</p>
         </div>
     </footer>
-
+    <script src="js/checkout-handler.js"></script>
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         document.addEventListener('DOMContentLoaded', function () {
@@ -80,12 +80,45 @@
                     <p>Cảm ơn bạn đã đặt hàng. Đơn hàng <strong>#${orderId || 'N/A'}</strong> của bạn đã được thanh toán thành công.</p>
                     <p>Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.</p>
                 `;
-                // Clear cart if payment was successful and confirmed by return URL
-                // Note: IPN is the primary source of truth for payment confirmation.
-                // Consider clearing cart after IPN confirmation if possible, or use a flag.
-                // localStorage.removeItem('cart'); 
-                // localStorage.removeItem('couponDiscount');
-                // updateCartBadgeCount(); // You'd need this function available or re-implement
+                
+                // Xóa sản phẩm khỏi giỏ hàng sau khi thanh toán VNPAY thành công
+                if (typeof clearCartAndResetForm === 'function') {
+                    clearCartAndResetForm(null);
+                } else {
+                    // Fallback nếu hàm clearCartAndResetForm không tồn tại
+                    const orderedItemsString = sessionStorage.getItem('itemsForCheckout');
+                    
+                    if (orderedItemsString) {
+                        const orderedItems = JSON.parse(orderedItemsString);
+                        let mainCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                        // Lọc ra các sản phẩm đã đặt hàng (có trong itemsForCheckout) khỏi giỏ hàng chính
+                        const orderedItemSignatures = orderedItems.map(item => `${item.id}-${item.variant || ''}`);
+                        mainCart = mainCart.filter(cartItem => {
+                            const cartItemSignature = `${cartItem.id}-${cartItem.variant || ''}`;
+                            return !orderedItemSignatures.includes(cartItemSignature);
+                        });
+                        
+                        // Cập nhật lại localStorage với giỏ hàng mới
+                        localStorage.setItem('cart', JSON.stringify(mainCart));
+                    } else {
+                        // Nếu không tìm thấy itemsForCheckout, xóa toàn bộ giỏ hàng (fallback)
+                        localStorage.removeItem('cart');
+                    }
+                    
+                    // Xóa các dữ liệu liên quan đến thanh toán
+                    sessionStorage.removeItem('itemsForCheckout');
+                    sessionStorage.removeItem('checkoutTotal');
+                    localStorage.removeItem('couponDiscount');
+                    localStorage.removeItem('couponCode');
+                    localStorage.removeItem('freeShipping');
+                    localStorage.removeItem('shippingMethod');
+                    localStorage.removeItem('paymentMethod');
+                }
+                
+                // Cập nhật số lượng sản phẩm hiển thị trên biểu tượng giỏ hàng
+                updateCartBadgeCount();
+
             } else if (status === 'cancelled' || rspCode === '24') {
                  htmlContent = `
                     <i class="fas fa-exclamation-triangle status-icon pending"></i>
@@ -104,7 +137,16 @@
             }
             container.innerHTML = htmlContent;
 
-            // function updateCartBadgeCount() { ... } // If you have this globally
+            // Thêm hàm updateCartBadgeCount nếu chưa có
+            function updateCartBadgeCount() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+                
+                const badges = document.querySelectorAll('.fa-shopping-cart + .badge');
+                badges.forEach(badge => {
+                    badge.textContent = itemCount;
+                });
+            }
         });
     </script>
 </body>
