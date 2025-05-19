@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
       initCheckoutHandler();
     }).catch(error => {
       console.error("Checkout-handler: API Service failed to initialize:", error);
-      initCheckoutHandler(); // Vẫn thử init, có thể dùng mock nếu OrderService hỗ trợ
+      initCheckoutHandler(); 
     });
   } else {
     console.warn("Checkout-handler: apiService not found or init function missing.");
@@ -25,7 +25,7 @@ function initCheckoutHandler() {
   if (checkoutForm && placeOrderBtn) {
     checkoutForm.addEventListener("submit", async function (event) {
       event.preventDefault();
-      let orderData; // Khai báo ở đây để có phạm vi rộng hơn
+      let orderData; 
 
       if (!checkoutForm.checkValidity()) {
         event.stopPropagation();
@@ -39,7 +39,6 @@ function initCheckoutHandler() {
       placeOrderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Đang xử lý...';
 
       try {
-        // Đảm bảo collectOrderData được định nghĩa (thường trong checkout.js)
         if (typeof collectOrderData !== 'function') {
             throw new Error("collectOrderData function is not defined.");
         }
@@ -53,8 +52,6 @@ function initCheckoutHandler() {
 
         console.log("Sending order data to backend:", orderData);
 
-        // Sử dụng window.apiService.createOrder nếu bạn muốn thống nhất
-        // Hoặc window.OrderService.createOrder nếu nó được thiết kế để gọi API trực tiếp
         let createdOrder;
         if (window.apiService && typeof window.apiService.createOrder === 'function') {
             createdOrder = await window.apiService.createOrder(orderData);
@@ -180,19 +177,22 @@ function clearCartAndResetForm(checkoutFormElement) {
         localStorage.setItem('cart', JSON.stringify(mainCart));
     } else {
         // Fallback or if itemsForCheckout was already cleared, clear the whole cart
-        // This case should ideally not happen if flow is correct.
         localStorage.removeItem('cart'); 
         console.warn("clearCartAndResetForm: 'itemsForCheckout' not found in sessionStorage. Cleared entire cart as a fallback.");
     }
 
     // Clear checkout-specific storage
     sessionStorage.removeItem('itemsForCheckout');
-    sessionStorage.removeItem('checkoutTotal'); // If you stored this
+    sessionStorage.removeItem('checkoutTotal'); 
 
     // Clear coupon info related to this checkout
-    localStorage.removeItem('couponDiscount'); // Assuming coupon was for selected items
+    localStorage.removeItem('couponDiscount'); 
     localStorage.removeItem('couponCode');
-    // localStorage.removeItem('freeShipping'); // If this was a coupon effect
+    localStorage.removeItem('freeShipping'); 
+
+    // Clear selected shipping and payment methods from localStorage
+    localStorage.removeItem('shippingMethod');
+    localStorage.removeItem('paymentMethod');
 
     if (checkoutFormElement) {
         checkoutFormElement.reset();
@@ -200,12 +200,11 @@ function clearCartAndResetForm(checkoutFormElement) {
     }
 
     // Update cart badge in the header
-    if (typeof updateCartCount === 'function') { // From cart.js, if global
+    if (typeof updateCartCount === 'function') { 
         updateCartCount();
     } else if (window.cartService && typeof window.cartService.updateCartUI === 'function') {
-        window.cartService.updateCartUI(); // If using a service pattern
+        window.cartService.updateCartUI(); 
     } else {
-        // Fallback: try to find a generic badge updater
         const cartCountElements = document.querySelectorAll('.badge.bg-primary'); 
         const remainingCart = JSON.parse(localStorage.getItem('cart')) || [];
         const itemCount = remainingCart.reduce((total, item) => total + item.quantity, 0);
@@ -213,10 +212,11 @@ function clearCartAndResetForm(checkoutFormElement) {
     }
     
     // Reload items on checkout page (will show empty or redirect)
+    // Ensure these functions are available or their absence is handled gracefully
     if (typeof loadCheckoutItems === 'function') loadCheckoutItems(); 
     if (typeof calculateOrderSummary === 'function') calculateOrderSummary();
 
-    console.log("Selected items removed from cart, checkout form reset.");
+    console.log("Selected items removed from cart, checkout form reset, and related localStorage cleared.");
 }
 
 function handleOrderSuccess(orderCode, orderDataForBankTransfer) {

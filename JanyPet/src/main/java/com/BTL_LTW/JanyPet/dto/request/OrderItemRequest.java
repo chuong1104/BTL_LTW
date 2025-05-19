@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class OrderItemRequest {
     private String id;
-    private String name; 
+    private String name;
     private BigDecimal price;
     private String image;
     private int quantity;

@@ -198,7 +198,9 @@ function getShippingCost() {
   const shippingMethodElement = document.querySelector('input[name="shippingMethod"]:checked');
   
   if (shippingMethodElement) {
-    if (shippingMethodElement.id === 'fastShipping') {
+    if (shippingMethodElement.id === 'standardShipping') {
+      shippingCost = 0; // Free shipping
+    } else if (shippingMethodElement.id === 'fastShipping') {
       shippingCost = 30000;
     } else if (shippingMethodElement.id === 'sameDay') {
       shippingCost = 50000;
@@ -213,7 +215,9 @@ function getShippingCost() {
     }
   } else {
     const savedMethod = localStorage.getItem('shippingMethod');
-    if (savedMethod === 'fast') {
+    if (savedMethod === 'standard') { 
+      shippingCost = 0; // Free shipping
+    } else if (savedMethod === 'fast') {
       shippingCost = 30000;
     } else if (savedMethod === 'sameDay') {
       shippingCost = 50000;

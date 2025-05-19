@@ -185,13 +185,11 @@ function addCartTableEventListeners() {
     });
   });
 }
-
-// Update cart summary on cart.html page (based on selected items)
 function updateCartSummary() {
   const cartItemsCountElement = document.getElementById('cart-items-count');
   const cartSubtotalElement = document.getElementById('cart-subtotal');
   const cartTotalElement = document.getElementById('cart-total');
-  const shippingFeeElement = document.getElementById('shipping-fee');
+  const shippingFeeElement = document.getElementById('shipping-fee'); // Assuming this element might still exist for display
   const proceedToCheckoutBtn = document.getElementById('proceed-to-checkout-btn');
 
   const selectedItems = cart.filter(item => item.selected && item.quantity > 0);
@@ -202,19 +200,11 @@ function updateCartSummary() {
   if (cartItemsCountElement) cartItemsCountElement.textContent = itemCount;
   if (cartSubtotalElement) cartSubtotalElement.textContent = formatCurrency(subtotal);
   
-  let shippingFee = 0;
-  // User's shipping fee logic (ensure elements exist if relying on them)
-  const standardShipping = document.getElementById('standardShipping');
-  const fastShipping = document.getElementById('fastShipping');
-  const sameDay = document.getElementById('sameDay');
-
-  if (fastShipping && fastShipping.checked) shippingFee = 30000;
-  else if (sameDay && sameDay.checked) shippingFee = 50000;
-  else if (standardShipping && standardShipping.checked) shippingFee = 0; 
-  // Add default or handle no selection if necessary
-
+  let shippingFee = 0; // Default or placeholder
+  // Shipping is now chosen on checkout.html. Cart page can show a default or placeholder.
   if (shippingFeeElement) {
-    shippingFeeElement.textContent = shippingFee === 0 ? 'Miễn phí' : formatCurrency(shippingFee);
+
+    shippingFeeElement.textContent = "Miễn phí (Tiêu chuẩn)"; // Or formatCurrency(0)
   }
   
   const total = subtotal + shippingFee - (parseFloat(localStorage.getItem('couponDiscount')) || 0);
@@ -379,11 +369,14 @@ function addCartPageEventListeners() {
     });
   }
 
+  // Shipping method selection is moved to checkout.html
+  // If shipping options are still displayed on cart.html for estimation,
+  // their 'change' event should only call updateCartSummary() without saving to localStorage.
   const shippingMethods = document.querySelectorAll('input[name="shippingMethod"]');
   shippingMethods.forEach(method => {
     method.addEventListener('change', () => {
-        // localStorage.setItem('shippingMethod', method.id); // If needed by checkout
-        updateCartSummary();
+        // DO NOT save to localStorage here: localStorage.setItem('shippingMethod', method.id);
+        updateCartSummary(); // Only update the visual summary on this page
     });
   });
   
@@ -438,17 +431,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('cart-items')) { // Check if on cart page
     addCartPageEventListeners();
     
-    // Restore shipping selection if on cart page and it exists
-    const shippingMethod = localStorage.getItem('shippingMethod');
-    if (shippingMethod) {
-        const methodElement = document.getElementById(shippingMethod);
-        if (methodElement && methodElement.type === 'radio') methodElement.checked = true;
-    }
-    // Initial call to update summary after potential shipping restoration
+    // Remove shipping method restoration from localStorage on cart page
+    // const shippingMethod = localStorage.getItem('shippingMethod');
+    // if (shippingMethod) {
+    //     const methodElement = document.getElementById(shippingMethod);
+    //     if (methodElement && methodElement.type === 'radio') methodElement.checked = true;
+    // }
+    // Initial call to update summary
     updateCartSummary(); 
   }
   
   // User's existing logic for estimated delivery date
+  // This function might still be relevant if cart.html shows estimated dates based on its own (non-persistent) selection
   if (typeof updateEstimatedDeliveryDate === 'function' && document.getElementById('estimated-delivery-date')) {
     updateEstimatedDeliveryDate();
   }

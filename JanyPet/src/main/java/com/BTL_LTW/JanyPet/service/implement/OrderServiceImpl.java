@@ -146,9 +146,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private BigDecimal calculateShippingFee(ShippingMethod shippingMethod, String shippingAddress) {
-        if (shippingMethod == ShippingMethod.FAST) return BigDecimal.valueOf(50000);
-        if (shippingMethod == ShippingMethod.STANDARD) return BigDecimal.valueOf(30000);
-        return BigDecimal.valueOf(30000);
+        if (shippingMethod == ShippingMethod.FAST) return BigDecimal.valueOf(30000);
+        if (shippingMethod == ShippingMethod.STANDARD) return BigDecimal.valueOf(0);
+        return BigDecimal.valueOf(50000);
     }
 
     private BigDecimal calculateDiscount(String couponCode, BigDecimal subtotal) {
