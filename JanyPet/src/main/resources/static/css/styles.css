@@ -1831,91 +1831,102 @@ label[for*="service-xlarge-pet-price"]::after {
     color: #a94442;
 }
 
-/* Order Status Specific Styles */
-.status-badge.status-pending, .payment-badge.payment-pending {
-  background-color: #fff3cd; /* Light yellow */
-  color: #856404; /* Dark yellow */
-  border: 1px solid #ffeeba;
-}
-.status-badge.status-processing {
-  background-color: #cce5ff; /* Light blue */
-  color: #004085; /* Dark blue */
-  border: 1px solid #b8daff;
-}
-.status-badge.status-shipped, .status-badge.status-shipping { /* Added status-shipping */
-  background-color: #d1ecf1; /* Light cyan */
-  color: #0c5460; /* Dark cyan */
-  border: 1px solid #bee5eb;
-}
-.status-badge.status-delivered {
-  background-color: #d4edda; /* Light green */
-  color: #155724; /* Dark green */
-  border: 1px solid #c3e6cb;
-}
-.status-badge.status-completed, .payment-badge.payment-paid {
-  background-color: #d4edda; /* Light green */
-  color: #155724; /* Dark green */
-  border: 1px solid #c3e6cb;
-}
-.status-badge.status-cancelled, .payment-badge.payment-failed {
-  background-color: #f8d7da; /* Light red */
-  color: #721c24; /* Dark red */
-  border: 1px solid #f5c6cb;
-}
-.status-badge.status-refunded, .payment-badge.payment-refunded {
-  background-color: #e2e3e5; /* Light gray */
-  color: #383d41; /* Dark gray */
-  border: 1px solid #d6d8db;
-}
-.status-badge.status-unknown, .payment-badge.payment-unknown {
-  background-color: #fefefe; /* White */
-  color: #6c757d; /* Muted gray */
-  border: 1px solid #ddd;
+/* Color definitions for status-badge combined with background utility classes */
+/* These ensure that the bg-* classes from admin-bookings.js apply color */
+
+.status-badge.bg-primary {
+  background-color: var(--primary-color, #0d6efd); /* Uses your --primary-color if defined, else Bootstrap blue */
+  color: #fff;
 }
 
-/* Ensure action buttons in tables are spaced a bit */
-.data-table td .btn {
-  margin-right: 5px;
-}
-.data-table td .btn:last-child {
-  margin-right: 0;
+.status-badge.bg-secondary {
+  background-color: var(--secondary-color, #6c757d); /* Uses your --secondary-color if defined, else Bootstrap gray */
+  color: #fff;
 }
 
-/* Modal styling for order details and edit */
-.modal-dialog-scrollable .modal-body {
-    max-height: 70vh; /* Adjust as needed */
-    overflow-y: auto;
+.status-badge.bg-success {
+  background-color: var(--success-color, #198754); /* Uses your --success-color if defined, else Bootstrap green */
+  color: #fff;
 }
 
-#orders-section .filters .filter-group {
-    display: flex;
-    flex-direction: column; /* Stack label and input/select */
-    margin-bottom: 10px; /* Add some space between filter groups */
+.status-badge.bg-danger {
+  background-color: var(--danger-color, #dc3545); /* Uses your --danger-color if defined, else Bootstrap red */
+  color: #fff;
 }
 
-#orders-section .filters .filter-group label {
-    margin-bottom: .25rem;
-    font-size: 0.875em;
+.status-badge.bg-warning { /* For PENDING status, often used with text-dark */
+  background-color: var(--warning-color, #ffc107); /* Uses your --warning-color if defined, else Bootstrap yellow */
+  color: #000; /* Default to black text for yellow background */
 }
 
-#orders-section .filters .filter-group input[type="date"],
-#orders-section .filters .filter-group select {
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    border: 1px solid #ced4da;
+.status-badge.bg-info {
+  background-color: var(--info-color, #0dcaf0); /* Uses your --info-color if defined, else Bootstrap cyan */
+  color: #000;
 }
 
-#orders-section .filters {
-    align-items: flex-end; /* Align items to the bottom for better layout with labels on top */
+.status-badge.bg-light {
+  background-color: #f8f9fa; /* Bootstrap light gray */
+  color: #000;
 }
 
-#orders-section .filters .filter-group:last-child {
-    margin-left: auto; /* Push date filters to the right if desired, or adjust flex properties */
+.status-badge.bg-dark {
+  background-color: #212529; /* Bootstrap dark gray */
+  color: #fff;
 }
 
-.fade-out {
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
+/* Utility class for dark text, if needed and not provided by a framework */
+.status-badge.text-dark {
+  color: #212529 !important; /* Ensure dark text for light backgrounds like yellow */
+}
+
+/* Styles for the hardcoded statuses in the "Recent Appointments" table on the dashboard */
+/* Your existing CSS has .status.scheduled, .status.confirmed, .status.pending */
+/* To make them consistent, you might want to update their HTML to use status-badge and bg-* classes, */
+/* or ensure these specific classes are styled: */
+
+.status-scheduled, 
+.status-confirmed, 
+.status-pending,
+.status-completed,
+.status-processing,
+.status-shipping
+ { /* General styling for these specific status texts if not using status-badge + bg-* */
+  padding: 0.25em 0.6em;
+  border-radius: 0.25rem;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.status-scheduled { /* Example for dashboard widget */
+  background-color: rgba(245, 158, 11, 0.1); /* Light warning */
+  color: var(--warning-color, #f59e0b);
+}
+
+.status-confirmed { /* Example for dashboard widget */
+  background-color: rgba(16, 185, 129, 0.1); /* Light success */
+  color: var(--success-color, #10b981);
+}
+
+.status-pending { /* Example for dashboard widget, if different from booking PENDING */
+  background-color: rgba(245, 158, 11, 0.1); /* Light warning */
+  color: var(--warning-color, #f59e0b);
+}
+
+.status-completed { /* Example for dashboard widget */
+    background-color: rgba(13, 110, 253, 0.1); /* Light primary */
+    color: var(--primary-color, #0d6efd);
+}
+.status-processing { /* Example for dashboard widget */
+    background-color: rgba(13, 202, 240, 0.1); /* Light info */
+    color: var(--info-color, #0dcaf0);
+}
+.status-shipping { /* Example for dashboard widget */
+    background-color: #e9ecef; /* Light gray */
+    color: #495057; /* Darker gray */
 }

@@ -70,7 +70,7 @@ window.BookingHandlers = (() => {
                     <td>${booking.services && booking.services.length > 0 ? booking.services.map(s => s.name).join(', ') : 'N/A'}</td>
                     <td>${booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString('vi-VN') : 'N/A'}</td>
                     <td>${booking.startTime || 'N/A'}</td>
-                    <td><span class="badge bg-${getBookingStatusClass(booking.status)}">${booking.status || 'N/A'}</span></td>
+                    <td><span class="status-badge ${getBookingStatusClass(booking.status)}">${booking.status || 'N/A'}</span></td>
                     <td>
                         <button class="btn btn-sm btn-info booking-view-btn" data-id="${booking.id}" title="View Details"><i class="fas fa-eye"></i></button>
                         <button class="btn btn-sm btn-warning booking-edit-btn" data-id="${booking.id}" title="Edit Status"><i class="fas fa-edit"></i></button>
@@ -91,13 +91,13 @@ window.BookingHandlers = (() => {
     };
 
     const getBookingStatusClass = (status) => {
-        if (!status) return 'secondary';
+        if (!status) return 'bg-secondary';
         switch (status.toUpperCase()) {
-            case 'CONFIRMED': return 'success';
-            case 'PENDING': return 'warning text-dark';
-            case 'CANCELLED': return 'danger';
-            case 'COMPLETED': return 'primary';
-            default: return 'secondary';
+            case 'CONFIRMED': return 'bg-success';
+            case 'PENDING': return 'bg-warning text-dark';
+            case 'CANCELLED': return 'bg-danger';
+            case 'COMPLETED': return 'bg-primary';
+            default: return 'bg-secondary';
         }
     };
     
@@ -134,9 +134,9 @@ window.BookingHandlers = (() => {
         document.getElementById('appointment-date-display').value = booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString('vi-VN') : 'N/A';
         document.getElementById('appointment-time-display').value = booking.startTime || 'N/A';
         
-        document.getElementById('appointment-staff-display').value = booking.assignedStaff ? booking.assignedStaff.name : 'None'; // Assuming staff has a name property
+        // document.getElementById('appointment-staff-display').value = booking.assignedStaff ? booking.assignedStaff.name : 'None'; // Assuming staff has a name property
 
-        const statusSelect = document.getElementById('appointment-status');
+        const statusSelect = document.getElementById('appointment-status-display');
         if (statusSelect) {
             statusSelect.value = booking.status || 'PENDING';
         }
@@ -184,7 +184,7 @@ window.BookingHandlers = (() => {
                 : '<li>N/A</li>';
             document.getElementById('view-booking-date').textContent = booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString('vi-VN') : 'N/A';
             document.getElementById('view-booking-time').textContent = booking.startTime || 'N/A';
-            document.getElementById('view-booking-status').innerHTML = `<span class="badge ${getBookingStatusClass(booking.status)}">${booking.status}</span>`;
+            document.getElementById('view-booking-status').innerHTML = `<span class="status-badge ${getBookingStatusClass(booking.status)}">${booking.status||'N/A'}</span>`;
             document.getElementById('view-booking-notes').textContent = booking.notes || 'Không có ghi chú.';
             document.getElementById('view-created-at').textContent = booking.createdAt ? new Date(booking.createdAt).toLocaleString('vi-VN') : 'N/A';
             document.getElementById('view-updated-at').textContent = booking.updatedAt ? new Date(booking.updatedAt).toLocaleString('vi-VN') : 'N/A';
@@ -233,7 +233,7 @@ window.BookingHandlers = (() => {
             return;
         }
         
-        const newStatus = document.getElementById('appointment-status').value;
+        const newStatus = document.getElementById('appointment-status-display').value;
         
         const bookingUpdateData = { status: newStatus };
 

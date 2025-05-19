@@ -212,12 +212,15 @@ function updateBookingsTable() {
 // Update admin bookings table in the dedicated panel
 function updateAdminBookingsTable() {
   const tableBody = document.getElementById('booking-table-body');
-  if (!tableBody) return;
+  if (!tableBody) {
+    // console.warn('Admin bookings table body (booking-table-body) not found.'); // Optional: less verbose
+    return;
+  }
   
   // Clear table
   tableBody.innerHTML = '';
   
-  if (adminBookings.length === 0) {
+  if (!adminBookings || adminBookings.length === 0) {
     tableBody.innerHTML = `
       <tr>
         <td colspan="7" class="text-center py-4">
@@ -239,42 +242,40 @@ function updateAdminBookingsTable() {
   paginatedBookings.forEach(booking => {
     const row = document.createElement('tr');
     
-    // Format date and time
-    const bookingDate = new Date(booking.bookingDate).toLocaleDateString();
+    const bookingDate = new Date(booking.bookingDate).toLocaleDateString('vi-VN');
     const bookingTime = booking.startTime ? booking.startTime.substring(0, 5) : 'N/A';
     
-    // Get service names
     const serviceNames = Array.isArray(booking.services) 
       ? booking.services.map(s => s.name).join(', ')
       : 'No services';
     
-    // Get status badge class
-    let statusBadgeClass = 'bg-secondary';
-    switch (booking.status) {
-      case 'PENDING':
-        statusBadgeClass = 'bg-warning text-dark';
-        break;
-      case 'CONFIRMED':
-        statusBadgeClass = 'bg-primary';
-        break;
-      case 'COMPLETED':
-        statusBadgeClass = 'bg-success';
-        break;
-      case 'CANCELLED':
-        statusBadgeClass = 'bg-danger';
-        break;
+    let statusBadgeClass = 'secondary';
+    if (booking.status) {
+        switch (booking.status.toUpperCase()) {
+          case 'PENDING':
+            statusBadgeClass = 'warning text-dark';
+            break;
+          case 'CONFIRMED': // Using booking-handlers.js style
+            statusBadgeClass = 'success'; 
+            break;
+          case 'COMPLETED': // Using booking-handlers.js style
+            statusBadgeClass = 'primary';
+            break;
+          case 'CANCELLED':
+            statusBadgeClass = 'danger';
+            break;
+        }
     }
     
-    // For shortened ID display
-    const shortId = booking.id.length > 8 ? booking.id.substring(0, 8) + '...' : booking.id;
+    const shortId = booking.id && booking.id.length > 8 ? booking.id.substring(0, 8) + '...' : (booking.id || 'N/A');
     
     row.innerHTML = `
       <td>${shortId}</td>
-      <td>${booking.user ? booking.user.username : 'Unknown'}</td>
-      <td>${booking.pet ? booking.pet.name : 'Unknown'}</td>
+      <td>${booking.user ? (booking.user.username || `${booking.user.firstName || ''} ${booking.user.lastName || ''}`.trim() || 'N/A') : 'N/A'}</td>
+      <td>${booking.pet ? (booking.pet.name || 'N/A') : 'N/A'}</td>
       <td>${serviceNames}</td>
       <td>${bookingDate} ${bookingTime}</td>
-      <td><span class="badge ${statusBadgeClass}">${booking.status}</span></td>
+      <td><span class="status-badge ${statusBadgeClass}">${booking.status || 'N/A'}</span></td>
       <td>
         <button class="btn btn-sm btn-primary view-booking-btn" data-booking-id="${booking.id}">
           <i class="fas fa-eye"></i>
@@ -282,16 +283,133 @@ function updateAdminBookingsTable() {
       </td>
     `;
     
-    // Add view button event
     const viewBtn = row.querySelector('.view-booking-btn');
     if (viewBtn) {
       viewBtn.addEventListener('click', () => {
-        showBookingDetails(booking);
+        // Attempt to use BookingHandlers modal if available, otherwise use admin-bookings specific one
+        if (window.BookingHandlers && typeof window.BookingHandlers.openViewBookingModal === 'function') {
+            window.BookingHandlers.openViewBookingModal(booking.id);
+        } else if (typeof showBookingDetails === 'function') { // Fallback to admin-bookings.js's own detail view
+            showBookingDetails(booking); 
+        } else {
+            console.warn('No view function available for booking details.');
+        }
       });
     }
     
     tableBody.appendChild(row);
   });
+}
+
+// Update appointments table in the main dashboard section
+function updateAppointmentsTable() {
+  const tableBody = document.getElementById('appointments-table-body');
+  if (!tableBody) {
+    console.warn('Appointments table body (appointments-table-body) not found in admin-bookings.js for updateAppointmentsTable');
+    return;
+  }
+  
+  tableBody.innerHTML = ''; // Clear existing content
+
+  if (!adminBookings || adminBookings.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="text-center py-4"> <!-- Ensure colspan matches your table headers -->
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No bookings found with current filters.
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const start = (currentPage - 1) * pageSize;
+  const end = Math.min(start + pageSize, adminBookings.length);
+  const paginatedBookings = adminBookings.slice(start, end);
+
+  paginatedBookings.forEach(booking => {
+    const row = tableBody.insertRow();
+
+    const bookingIdToDisplay = booking.id || 'N/A';
+    const customerName = booking.user ? (booking.user.username || `${booking.user.firstName || ''} ${booking.user.lastName || ''}`.trim() || 'N/A') : 'N/A';
+    const petName = booking.pet ? (booking.pet.name || 'N/A') : 'N/A';
+    const serviceNames = booking.services && booking.services.length > 0 
+      ? booking.services.map(s => s.name).join(', ') 
+      : 'N/A';
+    const bookingDateFormatted = booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString('vi-VN') : 'N/A';
+    const bookingTimeFormatted = booking.startTime ? booking.startTime.substring(0, 5) : 'N/A';
+    
+    const statusValue = booking.status ? String(booking.status).toUpperCase() : 'N/A';
+    let statusBadgeClass = 'bg-secondary'; // Default badge class
+
+    switch (statusValue) {
+        case 'CONFIRMED': 
+            statusBadgeClass = 'bg-success'; 
+            break;
+        case 'PENDING': 
+            statusBadgeClass = 'bg-warning text-dark'; 
+            break;
+        case 'CANCELLED': 
+            statusBadgeClass = 'danger'; 
+            break;
+        case 'COMPLETED': 
+            statusBadgeClass = 'bg-primary'; 
+            break;
+    }
+    
+    row.innerHTML = `
+      <td>${bookingIdToDisplay}</td>
+      <td>${customerName}</td>
+      <td>${petName}</td>
+      <td>${serviceNames}</td>
+      <td>${bookingDateFormatted}</td>
+      <td>${bookingTimeFormatted}</td>
+      <td><span class="status-badge ${statusBadgeClass}">${booking.status || 'N/A'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-info view-booking-btn-admin" data-booking-id="${booking.id}" title="View Details"><i class="fas fa-eye"></i></button>
+        <button class="btn btn-sm btn-warning edit-booking-btn-admin" data-booking-id="${booking.id}" title="Edit Status"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger delete-booking-btn-admin" data-booking-id="${booking.id}" title="Delete"><i class="fas fa-trash"></i></button>
+      </td>
+    `;
+
+    // Attach event listeners for action buttons
+    const viewBtn = row.querySelector('.view-booking-btn-admin');
+    if (viewBtn) {
+      viewBtn.addEventListener('click', () => {
+        if (window.BookingHandlers && typeof window.BookingHandlers.openViewBookingModal === 'function') {
+             window.BookingHandlers.openViewBookingModal(booking.id);
+        } else if (typeof showBookingDetails === 'function') {
+            showBookingDetails(booking); 
+        } else {
+            console.warn('No view function available for booking details (appointments table).');
+        }
+      });
+    }
+
+    const editBtn = row.querySelector('.edit-booking-btn-admin');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            if (window.BookingHandlers && typeof window.BookingHandlers.openEditBookingModal === 'function') {
+                window.BookingHandlers.openEditBookingModal(booking.id);
+            } else {
+                console.warn("Edit booking modal not available via BookingHandlers (appointments table).");
+            }
+        });
+    }
+
+    const deleteBtn = row.querySelector('.delete-booking-btn-admin');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+             if (window.BookingHandlers && typeof window.BookingHandlers.confirmDeleteBooking === 'function') {
+                window.BookingHandlers.confirmDeleteBooking(booking.id);
+            } else {
+                 console.warn("Confirm delete booking not available via BookingHandlers (appointments table).");
+            }
+        });
+    }
+  });
+  updatePagination(); 
 }
 
 // Save booking (create or update)

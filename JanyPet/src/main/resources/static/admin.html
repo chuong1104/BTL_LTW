@@ -210,28 +210,28 @@
                       <td>Max (Dog)</td>
                       <td>Grooming</td>
                       <td>Today, 10:00 AM</td>
-                      <td><span class="status scheduled">Scheduled</span></td>
+                      <td><span class="status-scheduled">Scheduled</span></td>
                     </tr>
                     <tr>
                       <td>Sarah Johnson</td>
                       <td>Luna (Cat)</td>
                       <td>Vaccination</td>
                       <td>Today, 2:30 PM</td>
-                      <td><span class="status confirmed">Confirmed</span></td>
+                      <td><span class="status-confirmed">Confirmed</span></td>
                     </tr>
                     <tr>
                       <td>Michael Davis</td>
                       <td>Rocky (Dog)</td>
                       <td>Checkup</td>
                       <td>Tomorrow, 9:15 AM</td>
-                      <td><span class="status pending">Pending</span></td>
+                      <td><span class="status-pending">Pending</span></td>
                     </tr>
                     <tr>
                       <td>Emily Wilson</td>
                       <td>Coco (Rabbit)</td>
                       <td>Nail Trimming</td>
                       <td>Tomorrow, 11:00 AM</td>
-                      <td><span class="status scheduled">Scheduled</span></td>
+                      <td><span class="status-scheduled">Scheduled</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -260,28 +260,28 @@
                       <td>Robert Brown</td>
                       <td>3 items</td>
                       <td>$58.25</td>
-                      <td><span class="status completed">Delivered</span></td>
+                      <td><span class="status-completed">Delivered</span></td>
                     </tr>
                     <tr>
                       <td>#ORD-7830</td>
                       <td>Lisa Anderson</td>
                       <td>2 items</td>
                       <td>$124.99</td>
-                      <td><span class="status processing">Processing</span></td>
+                      <td><span class="status-processing">Processing</span></td>
                     </tr>
                     <tr>
                       <td>#ORD-7831</td>
                       <td>Thomas Clark</td>
                       <td>5 items</td>
                       <td>$93.85</td>
-                      <td><span class="status shipping">Shipping</span></td>
+                      <td><span class="status-shipping">Shipping</span></td>
                     </tr>
                     <tr>
                       <td>#ORD-7832</td>
                       <td>Jennifer Martinez</td>
                       <td>1 item</td>
                       <td>$32.50</td>
-                      <td><span class="status processing">Processing</span></td>
+                      <td><span class="status-processing">Processing</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -455,16 +455,12 @@
         <div class="content-section" id="appointments-section"> <!-- or id="bookings-section" -->
           <div class="section-header">
             <h1>Bookings Management</h1> <!-- Changed from Appointments -->
-            <!-- REMOVE THIS BUTTON 
-            <button id="add-appointment-btn" class="primary-btn"> 
-              <i class="fas fa-plus"></i> Add New Booking
-            </button> 
-            -->
+           
           </div>
 
           <div class="filters">
             <!-- Add filter controls here if needed -->
-            <select id="filter-appointment-status" class="form-control d-inline-block w-auto me-2">
+            <select id="filter-appointment-status-display" class="form-control d-inline-block w-auto me-2">
                 <option value="">All Statuses</option>
                 <option value="PENDING">Pending</option>
                 <option value="CONFIRMED">Confirmed</option>
@@ -533,18 +529,18 @@
                     </div>
                      <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="appointment-status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select id="appointment-status" class="form-select" required>
+                            <label for="appointment-status-display" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="appointment-status-display" class="form-select" required>
                                 <option value="PENDING">Pending</option>
                                 <option value="CONFIRMED">Confirmed</option>
                                 <option value="COMPLETED">Completed</option>
                                 <option value="CANCELLED">Cancelled</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <!-- <div class="col-md-6 mb-3">
                             <label for="appointment-staff-display" class="form-label">Assigned Staff</label>
                             <input type="text" id="appointment-staff-display" class="form-control" readonly>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="mb-3">
                       <label for="appointment-notes-display" class="form-label">Notes</label>
@@ -569,26 +565,51 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <p><strong>Booking ID:</strong> <span id="view-appointment-id"></span></p>
-                  <hr>
-                  <h6>Customer Information</h6>
-                  <p><strong>Name:</strong> <span id="view-customer-name"></span></p>
-                  <p><strong>Email:</strong> <span id="view-customer-email"></span></p>
-                  <p><strong>Phone:</strong> <span id="view-customer-phone"></span></p>
-                  <hr>
-                  <h6>Pet Information</h6>
-                  <p><strong>Pet Name:</strong> <span id="view-pet-name"></span></p>
-                  <hr>
-                  <h6>Booking Details</h6>
-                  <p><strong>Services:</strong></p>
-                  <ul id="view-services-list" class="list-unstyled ps-3"></ul>
-                  <p><strong>Date:</strong> <span id="view-booking-date"></span></p>
-                  <p><strong>Time:</strong> <span id="view-booking-time"></span></p>
-                  <p><strong>Status:</strong> <span id="view-booking-status"></span></p>
-                  <p><strong>Notes:</strong> <span id="view-booking-notes"></span></p>
-                  <hr>
-                  <p><small><em>Created At: <span id="view-created-at"></span></em></small></p>
-                  <p><small><em>Last Updated: <span id="view-updated-at"></span></em></small></p>
+                  <dl class="row">
+                    <dt class="col-sm-3">Booking ID:</dt>
+                    <dd class="col-sm-9" id="view-appointment-id"></dd>
+
+                    <dt class="col-sm-12 mt-2">Customer Information</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9" id="view-customer-name"></dd>
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9" id="view-customer-email"></dd>
+                    <dt class="col-sm-3">Phone:</dt>
+                    <dd class="col-sm-9" id="view-customer-phone"></dd>
+
+                    <dt class="col-sm-12 mt-2">Pet Information</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Pet Name:</dt>
+                    <dd class="col-sm-9" id="view-pet-name"></dd>
+
+                    <dt class="col-sm-12 mt-2">Booking Details</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Services:</dt>
+                    <dd class="col-sm-9">
+                      <ul id="view-services-list" class="list-unstyled mb-0"></ul>
+                    </dd>
+                    <dt class="col-sm-3">Date:</dt>
+                    <dd class="col-sm-9" id="view-booking-date"></dd>
+                    <dt class="col-sm-3">Time:</dt>
+                    <dd class="col-sm-9" id="view-booking-time"></dd>
+                    
+                    <!-- PHẦN HIỂN THỊ STATUS -->
+                    <dt class="col-sm-3">Status:</dt>
+                    <dd class="col-sm-9" id="view-booking-status">
+                      <!-- Nội dung trạng thái sẽ được JS chèn vào đây -->
+                    </dd>
+
+                    <dt class="col-sm-3">Notes:</dt>
+                    <dd class="col-sm-9" id="view-booking-notes"></dd>
+
+                    <dt class="col-sm-12 mt-2">Timestamps</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Created At:</dt>
+                    <dd class="col-sm-9" id="view-created-at"></dd>
+                    <dt class="col-sm-3">Last Updated:</dt>
+                    <dd class="col-sm-9" id="view-updated-at"></dd>
+                  </dl>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1130,7 +1151,7 @@
                       <td>Pet Food</td>
                       <td>42</td>
                       <td>20</td>
-                      <td><span class="status active">In Stock</span></td>
+                      <td><span class="status-active">In Stock</span></td>
                       <td>Apr 10, 2025</td>
                     </tr>
                     <tr>
@@ -1138,7 +1159,7 @@
                       <td>Toys</td>
                       <td>15</td>
                       <td>10</td>
-                      <td><span class="status active">In Stock</span></td>
+                      <td><span class="status-active">In Stock</span></td>
                       <td>Apr 8, 2025</td>
                     </tr>
                     <tr>
@@ -1146,7 +1167,7 @@
                       <td>Accessories</td>
                       <td>28</td>
                       <td>15</td>
-                      <td><span class="status active">In Stock</span></td>
+                      <td><span class="status-active">In Stock</span></td>
                       <td>Apr 12, 2025</td>
                     </tr>
                     <tr>
@@ -1154,7 +1175,7 @@
                       <td>Medicine</td>
                       <td>5</td>
                       <td>10</td>
-                      <td><span class="status pending">Low Stock</span></td>
+                      <td><span class="status-pending">Low Stock</span></td>
                       <td>Apr 5, 2025</td>
                     </tr>
                     <tr>
@@ -1162,7 +1183,7 @@
                       <td>Accessories</td>
                       <td>0</td>
                       <td>5</td>
-                      <td><span class="status inactive">Out of Stock</span></td>
+                      <td><span class="status-inactive">Out of Stock</span></td>
                       <td>Mar 28, 2025</td>
                     </tr>
                   </tbody>
