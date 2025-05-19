@@ -255,20 +255,20 @@ function showAddPetModal() {
 
 function createServiceElement(service) {
   const colDiv = document.createElement('div');
-  colDiv.className = 'col-md-6 col-lg-4 mb-4'; // Giữ 3 cột trên desktop
+  colDiv.className = 'col-md-6 col-lg-4 mb-4'; 
 
   const cardDiv = document.createElement('div');
   cardDiv.className = 'card h-100 service-card shadow-sm';
   cardDiv.dataset.serviceId = service.id;
 
   let imageHTML = '';
-  if (service.images && service.images.split(',').length > 0) {
-    const firstImage = service.images.split(',')[0].trim();
-    const imageUrl = firstImage.startsWith('http') || firstImage.startsWith('/') ? firstImage : `images/services/${firstImage}`;
-    imageHTML = `<img src="${imageUrl}" class="card-img-top" alt="${service.name || "Dịch vụ"}" style="height: 180px; object-fit: cover;">`;
-  } else {
-    imageHTML = `<img src="images/default-service.jpg" class="card-img-top" alt="Dịch vụ mặc định" style="height: 180px; object-fit: cover;">`;
-  }
+  // if (service.images && service.images.split(',').length > 0) {
+  //   const firstImage = service.images.split(',')[0].trim();
+  //   const imageUrl = firstImage.startsWith('http') || firstImage.startsWith('/') ? firstImage : `images/services/${firstImage}`;
+  //   imageHTML = `<img src="${imageUrl}" class="card-img-top" alt="${service.name || "Dịch vụ"}" style="height: 180px; object-fit: cover;">`;
+  // } else {
+  //   imageHTML = `<img src="images/default-service.jpg" class="card-img-top" alt="Dịch vụ mặc định" style="height: 180px; object-fit: cover;">`;
+  // }
 
   const cardBody = document.createElement('div');
   cardBody.className = 'card-body d-flex flex-column';
@@ -279,16 +279,23 @@ function createServiceElement(service) {
 
   const description = document.createElement('p');
   description.className = 'card-text small text-muted flex-grow-1';
-  const fullDescription = service.description || "Mô tả dịch vụ.";
+
+  let serviceDescription = service.description || "Mô tả dịch vụ.";
+ 
+  serviceDescription = serviceDescription.replace(/<\/?[^>]+(>|$)/g, '');
+
+
+
+
   // Hiển thị một phần mô tả, phần còn lại trong tooltip
-  const shortDescription = fullDescription.length > 80 ? fullDescription.substring(0, 77) + '...' : fullDescription;
+  const shortDescription = serviceDescription.length > 80 ? serviceDescription.substring(0, 77) + '...' : serviceDescription;
   description.textContent = shortDescription;
   
   // Thêm tooltip cho mô tả nếu nó dài
-  if (fullDescription.length > 80) {
+  if (serviceDescription.length > 80) {
     description.setAttribute('data-bs-toggle', 'tooltip');
     description.setAttribute('data-bs-placement', 'top');
-    description.setAttribute('title', fullDescription);
+    description.setAttribute('title', serviceDescription);
   }
 
   const price = document.createElement('p');
