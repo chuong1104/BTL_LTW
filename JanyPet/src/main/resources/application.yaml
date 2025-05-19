@@ -51,10 +51,11 @@ vnpay:
   tmnCode: CBV4016A
   hashSecret: 3RJVZXLUE88KVIC143SMRKGCSXYNASBJ
 
-#gemini:
-#  api:
-#    key: AIzaSyDVTYAeK0qvg_uC5n0XosEOYfdPFuVyx1I  # Note: In production, use environment variables
-#  model: gemini-pro
-#  timeout: 30000  # Timeout in milliseconds
+gemini:
+  api:
+    key: AIzaSyDVTYAeK0qvg_uC5n0XosEOYfdPFuVyx1I  # Note: In production, use environment variables
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+  timeout: 30000  # Timeout in milliseconds
+
 
 

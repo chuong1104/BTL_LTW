@@ -8,8 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInputField = document.getElementById('user-input');
     const messagesContainer = document.getElementById('messages');
 
-    const API_KEY = 'AIzaSyDVTYAeK0qvg_uC5n0XosEOYfdPFuVyx1I';
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    
+
+    // ĐỊNH NGHĨA ENDPOINT API BACKEND CỦA BẠN
+    const BACKEND_API_URL = '/api/chatbot/query'; // API endpoint trên backend của bạn
 
     // Toggle chatbot visibility
     if (chatbotToggle) {
@@ -29,22 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Minimize chatbot (basic toggle, can be expanded)
+    // Minimize chatbot
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
-            chatbotContainer.classList.toggle('minimized'); // You'll need to add CSS for .minimized
-            // A simple way to minimize is to reduce height or hide body/footer
+            chatbotContainer.classList.toggle('minimized');
             const body = chatbotContainer.querySelector('.chatbot-body');
             const footer = chatbotContainer.querySelector('.chatbot-footer');
             if (body && footer) {
                 if (chatbotContainer.classList.contains('minimized')) {
                     body.style.display = 'none';
                     footer.style.display = 'none';
-                    chatbotContainer.style.height = '50px'; // Adjust as needed
+                    chatbotContainer.style.height = '50px'; // Hoặc chiều cao header
                 } else {
-                    body.style.display = 'flex';
-                    footer.style.display = 'block';
-                    chatbotContainer.style.height = '500px'; // Original height
+                    body.style.display = 'flex'; // Hoặc giá trị display ban đầu
+                    footer.style.display = 'block'; // Hoặc giá trị display ban đầu
+                    chatbotContainer.style.height = '500px'; // Chiều cao ban đầu
                 }
             }
         });
@@ -54,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             messagesContainer.innerHTML = '';
-            // Thêm lại lời chào nếu muốn:
             addMessageToUI("Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?", "bot");
         });
     }
@@ -71,45 +71,45 @@ document.addEventListener('DOMContentLoaded', () => {
             showTypingIndicator();
 
             try {
-                const response = await fetch(API_URL, {
+                // GỌI API BACKEND
+                const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        contents: [
-                            {
-                                parts: [
-                                    {
-                                        text: userMessage,
-                                    },
-                                ],
-                            },
-                        ],
+                        message: userMessage, // Chỉ gửi tin nhắn người dùng
                     }),
                 });
 
                 removeTypingIndicator();
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('API Error:', errorData);
-                    addMessageToUI(`Lỗi: ${errorData.error?.message || response.statusText || 'Không thể kết nối tới bot.'}`, 'bot', true);
+                    let errorMessage = 'Lỗi kết nối với máy chủ hỗ trợ.';
+                    try {
+                        const errorData = await response.json();
+                        // Ưu tiên message từ backend nếu có, nếu không thì dùng statusText
+                        errorMessage = errorData.botResponse || errorData.message || `Lỗi ${response.status}: ${response.statusText}`;
+                    } catch (parseError) {
+                        // Nếu không parse được JSON lỗi, dùng statusText
+                         errorMessage = `Lỗi ${response.status}: ${response.statusText || 'Không thể xử lý phản hồi lỗi từ máy chủ.'}`;
+                    }
+                    console.error('Backend API Error:', response.status, errorMessage);
+                    addMessageToUI(errorMessage, 'bot', true);
                     return;
                 }
 
                 const data = await response.json();
                 
-                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
-                    const botResponse = data.candidates[0].content.parts[0].text;
-                    addMessageToUI(botResponse, 'bot');
+                if (data && data.botResponse) {
+                    addMessageToUI(data.botResponse, 'bot');
                 } else {
-                    addMessageToUI('Xin lỗi, tôi không thể xử lý yêu cầu của bạn lúc này.', 'bot', true);
+                    addMessageToUI('Xin lỗi, tôi không nhận được phản hồi phù hợp từ máy chủ.', 'bot', true);
                 }
 
             } catch (error) {
                 removeTypingIndicator();
-                console.error('Fetch Error:', error);
+                console.error('Fetch Error to Backend:', error);
                 addMessageToUI('Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.', 'bot', true);
             }
         });
@@ -145,7 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const messageContentDiv = document.createElement('div');
         messageContentDiv.classList.add('message-content');
-        messageContentDiv.textContent = message; // Use textContent to prevent XSS
+        if (sender === 'bot' && !isError) {
+            messageContentDiv.innerHTML = message; // Use innerHTML for bot's HTML formatted responses
+        } else {
+            messageContentDiv.textContent = message; // Use textContent for user messages and errors
+        }
 
         const timeSpan = document.createElement('span');
         timeSpan.classList.add('time');
@@ -161,6 +165,5 @@ document.addEventListener('DOMContentLoaded', () => {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Initial greeting if needed, or keep the static one in HTML
-    // addMessageToUI("Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn?", "bot");
+    // Lời chào ban đầu được giữ lại từ HTML trong file chatbot-widget.html
 });

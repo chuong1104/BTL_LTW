@@ -29,8 +29,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
   <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->
+
   <link rel="stylesheet" type="text/css" href="css/style.css" />
   <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
+  <link rel="stylesheet" type="text/css" href="css/chatbot.css" />
 </head>
 
 <body>
@@ -1687,7 +1689,43 @@
     </div>
   </div>
 </div>
-
+  <!-- Chatbot Widget -->
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <img src="images/logo.png" alt="JanyPet Logo" class="chatbot-logo">
+                <span>JanyPet Hỗ trợ</span>
+            </div>
+            <div class="chatbot-actions">
+                <button class="minimize-btn"><i class="fas fa-minus"></i></button>
+                <button class="clear-btn" title="Xóa cuộc trò chuyện"><i class="fas fa-trash"></i></button>
+                <button class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="chatbot-body">
+            <div class="messages-container" id="messages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?
+                    </div>
+                    <span class="time">12:00</span>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-footer">
+            <form id="chatbot-form">
+                <div class="input-group">
+                    <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn..." required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </form>
+            <div class="powered-by">Powered by JanyPet</div>
+        </div>
+    </div>
+    <button class="chatbot-toggle">
+        <i class="fas fa-comments"></i>
+    </button>
+    <!-- End Chatbot Widget -->
 <!-- Toast container for notifications -->
 <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
 
@@ -1714,6 +1752,7 @@
 <script src="js/responsive-elements.js"></script>
 <script src="js/quick-view.js"></script>
 <script src="js/search-suggestions.js"></script>
+<script src="js/chatbot.js"></script>
 
 
 <!-- Enhanced UX JavaScript - luôn đặt cuối cùng vì nó phụ thuộc vào tất cả các script khác -->

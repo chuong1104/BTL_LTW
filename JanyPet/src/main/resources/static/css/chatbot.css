@@ -1,18 +1,16 @@
 :root {
-    --primary-color: #4CAF50;
-    --secondary-color: #E8F5E9;
     --text-color: #333333;
     --light-text: #757575;
     --background: #FFFFFF;
     --border-radius: 12px;
     --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
+} 
 
 /* Chatbot Container */
 .chatbot-container {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px; /* Changed from right to left */
     width: 350px;
     height: 500px;
     background-color: var(--background);
@@ -128,7 +126,7 @@
 
 .bot {
     align-self: flex-start;
-    background-color: var(--secondary-color);
+    background-color: #ace6f7;
     color: var(--text-color);
     border-bottom-left-radius: 0;
 }
@@ -232,7 +230,7 @@
 .chatbot-toggle {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px; /* Changed from right to left */
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -262,12 +260,12 @@
         width: 100%;
         height: 100%;
         bottom: 0;
-        right: 0;
+        left: 0; /* Changed from right to left */
         border-radius: 0;
     }
     
     .chatbot-toggle {
         bottom: 10px;
-        right: 10px;
+        left: 10px; /* Changed from right to left */
     }
 }

@@ -107,7 +107,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     @Transactional(readOnly = true)
     public List<ServiceResponse> searchServices(String keyword) {
-        List<Service> services = serviceRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+        List<Service> services = serviceRepository.searchServicesByKeyword(keyword);
         return serviceMapper.toDTOList(services);
     }
 

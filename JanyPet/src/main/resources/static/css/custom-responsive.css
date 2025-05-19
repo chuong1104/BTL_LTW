@@ -15,7 +15,7 @@
   --danger-hover: #ff5a5a;
   --success-color: #68c3a3;      /* Xanh lá nhẹ nhàng */
   --warning-color: #ffd166;      /* Vàng nhẹ nhàng */
-  --secondary-color: #8a9fad;
+  /* --secondary-color: #8aada2; */
   
   /* Font sizes - responsive */
   --fs-small: clamp(0.75rem, 2vw, 0.875rem);

@@ -477,14 +477,13 @@ function collectOrderData() {
   
   const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart')) || [];
   const notesValue = document.getElementById('order-notes')?.value || ''; // Đổi tên biến để tránh nhầm lẫn
-  const subtotal = cartFromLocalStorage.reduce((total, item) => total + (item.price * item.quantity), 0);
-  let shippingFee = getShippingCost();
-  const couponDiscount = parseInt(localStorage.getItem('couponDiscount')) || 0;
+  // const subtotal = cartFromLocalStorage.reduce((total, item) => total + (item.price * item.quantity), 0); // Not sent
+  // let shippingFee = getShippingCost(); // Not sent
+  // const couponDiscount = parseInt(localStorage.getItem('couponDiscount')) || 0; // Not sent
   const couponCode = localStorage.getItem('couponCode') || '';
-  const totalAmount = subtotal + shippingFee - couponDiscount;
+  // const totalAmount = subtotal + shippingFee - couponDiscount; // Not sent
   
   return {
-    // Trải phẳng các trường từ shippingInfo
     customerFirstName: shippingInfo.firstName,
     customerLastName: shippingInfo.lastName,
     customerEmail: shippingInfo.email,
@@ -496,13 +495,13 @@ function collectOrderData() {
 
     paymentMethod: paymentMethodValue,
     shippingMethod: shippingMethodValue,
-    cart: cartFromLocalStorage,
-    notes: notesValue, // Hoặc orderNotes nếu backend DTO là orderNotes
-    subtotal,
-    shippingFee,
-    couponDiscount,
-    couponCode,
-    totalAmount,
+    cart: cartFromLocalStorage, // This will be mapped to 'items' on the backend
+    orderNotes: notesValue,
+    couponCode: couponCode, // Keep couponCode as it's in the DTO
+    // subtotal, // Removed
+    // shippingFee, // Removed
+    // couponDiscount, // Removed
+    // totalAmount, // Removed
     // orderDate và status thường được set ở backend
     // orderDate: new Date().toISOString(), 
     // status: 'PENDING'
