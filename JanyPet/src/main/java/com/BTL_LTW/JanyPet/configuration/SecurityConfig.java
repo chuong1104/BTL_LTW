@@ -109,7 +109,7 @@ public class SecurityConfig {
                                 Role.EMPLOYEE.name(),
                                 Role.CUSTOMER.name()
                         )
-                        // .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

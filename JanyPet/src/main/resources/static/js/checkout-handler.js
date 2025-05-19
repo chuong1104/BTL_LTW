@@ -162,16 +162,61 @@ function initCheckoutHandler() {
 }
 
 function clearCartAndResetForm(checkoutFormElement) {
-    localStorage.removeItem('cart');
-    localStorage.removeItem('couponDiscount');
+    const orderedItemsString = sessionStorage.getItem('itemsForCheckout');
+    
+    if (orderedItemsString) {
+        const orderedItems = JSON.parse(orderedItemsString);
+        let mainCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Create a way to uniquely identify items (e.g., id + variant)
+        const orderedItemSignatures = orderedItems.map(item => `${item.id}-${item.variant || ''}`);
+        
+        // Filter out the ordered items from the main localStorage cart
+        mainCart = mainCart.filter(cartItem => {
+            const cartItemSignature = `${cartItem.id}-${cartItem.variant || ''}`;
+            return !orderedItemSignatures.includes(cartItemSignature);
+        });
+
+        localStorage.setItem('cart', JSON.stringify(mainCart));
+    } else {
+        // Fallback or if itemsForCheckout was already cleared, clear the whole cart
+        // This case should ideally not happen if flow is correct.
+        localStorage.removeItem('cart'); 
+        console.warn("clearCartAndResetForm: 'itemsForCheckout' not found in sessionStorage. Cleared entire cart as a fallback.");
+    }
+
+    // Clear checkout-specific storage
+    sessionStorage.removeItem('itemsForCheckout');
+    sessionStorage.removeItem('checkoutTotal'); // If you stored this
+
+    // Clear coupon info related to this checkout
+    localStorage.removeItem('couponDiscount'); // Assuming coupon was for selected items
     localStorage.removeItem('couponCode');
-    if (typeof updateCartBadgeCount === 'function') updateCartBadgeCount();
+    // localStorage.removeItem('freeShipping'); // If this was a coupon effect
+
     if (checkoutFormElement) {
         checkoutFormElement.reset();
         checkoutFormElement.classList.remove('was-validated');
     }
-    if (typeof loadCheckoutItems === 'function') loadCheckoutItems();
+
+    // Update cart badge in the header
+    if (typeof updateCartCount === 'function') { // From cart.js, if global
+        updateCartCount();
+    } else if (window.cartService && typeof window.cartService.updateCartUI === 'function') {
+        window.cartService.updateCartUI(); // If using a service pattern
+    } else {
+        // Fallback: try to find a generic badge updater
+        const cartCountElements = document.querySelectorAll('.badge.bg-primary'); 
+        const remainingCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const itemCount = remainingCart.reduce((total, item) => total + item.quantity, 0);
+        cartCountElements.forEach(element => { element.textContent = itemCount; });
+    }
+    
+    // Reload items on checkout page (will show empty or redirect)
+    if (typeof loadCheckoutItems === 'function') loadCheckoutItems(); 
     if (typeof calculateOrderSummary === 'function') calculateOrderSummary();
+
+    console.log("Selected items removed from cart, checkout form reset.");
 }
 
 function handleOrderSuccess(orderCode, orderDataForBankTransfer) {

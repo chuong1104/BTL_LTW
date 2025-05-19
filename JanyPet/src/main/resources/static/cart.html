@@ -280,15 +280,18 @@
                 <table class="table table-hover align-middle mb-0">
                   <thead class="bg-light">
                     <tr>
-                      <th scope="col" class="border-0 py-3 ps-4">Sản phẩm</th>
-                      <th scope="col" class="border-0 py-3 text-center">Đơn giá</th>
-                      <th scope="col" class="border-0 py-3 text-center">Số lượng</th>
-                      <th scope="col" class="border-0 py-3 text-center">Tổng tiền</th>
-                      <th scope="col" class="border-0 py-3 text-center">Thao tác</th>
+                      <th scope="col" class="border-0 py-3 text-center" style="width: 5%;">
+                        <input class="form-check-input" type="checkbox" id="select-all-cart-items" title="Chọn/Bỏ chọn tất cả">
+                      </th>
+                      <th scope="col" class="border-0 py-3 ps-4" style="width: 35%;">Sản phẩm</th>
+                      <th scope="col" class="border-0 py-3 text-center" style="width: 15%;">Đơn giá</th>
+                      <th scope="col" class="border-0 py-3 text-center" style="width: 15%;">Số lượng</th>
+                      <th scope="col" class="border-0 py-3 text-center" style="width: 15%;">Tổng tiền</th>
+                      <th scope="col" class="border-0 py-3 text-center" style="width: 15%;">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody id="cart-items">
-                    <!-- Mẫu hiển thị item trong giỏ hàng -->
+                    <!-- Cart items will be rendered here by js/cart.js -->
                   </tbody>
                 </table>
               </div>
@@ -302,101 +305,57 @@
               </a>
             </div>
           </div>
-        
         </div>
 
         <!-- Cart Summary -->
         <div class="col-lg-4">
           <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header bg-white border-bottom py-3">
-              <h4 class="mb-0">Thông tin đơn hàng</h4>
+              <h4 class="mb-0">Thông tin đơn hàng (sản phẩm đã chọn)</h4>
             </div>
             <div class="card-body">
               <div class="price-detail-row">
-                <span>Tổng sản phẩm:</span>
+                <span>Số lượng sản phẩm (đã chọn):</span>
                 <span id="cart-items-count">0</span>
               </div>
               <div class="price-detail-row">
-                <span>Tạm tính:</span>
+                <span>Tạm tính (đã chọn):</span>
                 <span id="cart-subtotal">0₫</span>
               </div>
               
-              <!-- Enhanced shipping options section -->
+              <!-- Shipping options section (ensure IDs match JS if uncommented) -->
               <!-- <div class="shipping-options mt-4 mb-4">
                 <p class="fw-medium mb-3">Phương thức vận chuyển:</p>
-                <div class="shipping-option-card mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="standardShipping" checked>
-                    <label class="form-check-label" for="standardShipping">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <span class="fw-medium">Giao hàng tiêu chuẩn</span>
-                          <div class="text-muted small">
-                            <i class="far fa-calendar-alt me-1"></i> Nhận hàng trong 3-5 ngày
-                          </div>
-                        </div>
-                        <span class="text-success">Miễn phí</span>
-                      </div>
-                    </label>
-                  </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="shippingMethod" id="standardShipping" checked>
+                  <label class="form-check-label" for="standardShipping">Giao hàng tiêu chuẩn (Miễn phí)</label>
                 </div>
-                <div class="shipping-option-card mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="fastShipping">
-                    <label class="form-check-label" for="fastShipping">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <span class="fw-medium">Giao hàng nhanh</span>
-                          <div class="text-muted small">
-                            <i class="far fa-calendar-alt me-1"></i> Nhận hàng trong 1-2 ngày
-                          </div>
-                        </div>
-                        <span>30.000₫</span>
-                      </div>
-                    </label>
-                  </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="shippingMethod" id="fastShipping">
+                  <label class="form-check-label" for="fastShipping">Giao hàng nhanh (30.000₫)</label>
                 </div>
-                <div class="shipping-option-card">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingMethod" id="sameDay">
-                    <label class="form-check-label" for="sameDay">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <span class="fw-medium">Giao hàng trong ngày</span>
-                          <div class="text-muted small">
-                            <i class="far fa-clock me-1"></i> Nhận hàng trong 2-3 giờ
-                            <div class="badge bg-warning text-dark mt-1">Chỉ áp dụng nội thành</div>
-                          </div>
-                        </div>
-                        <span>50.000₫</span>
-                      </div>
-                    </label>
-                  </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="shippingMethod" id="sameDay">
+                  <label class="form-check-label" for="sameDay">Giao hàng trong ngày (50.000₫)</label>
                 </div>
-              </div> -->
-              
-              <!-- Estimated Delivery Time -->
-              <!-- <div class="estimated-delivery p-3 mb-3 bg-light rounded border">
-                <div class="d-flex align-items-center mb-2">
-                  <i class="fas fa-truck text-primary me-2"></i>
-                  <span class="fw-medium">Dự kiến giao hàng</span>
-                </div>
-                <p class="mb-0 text-muted small" id="estimated-delivery-date">
-                  Dự kiến giao hàng vào ngày 5-7/5/2025
-                </p>
               </div>
               
               <div class="price-detail-row">
                 <span>Phí vận chuyển:</span>
                 <span id="shipping-fee">Miễn phí</span>
               </div> -->
+              <!-- Coupon discount display (optional, if you want to show it here) -->
+              <!-- <div class="price-detail-row text-danger">
+                <span>Giảm giá Coupon:</span>
+                <span id="cart-coupon-discount">-0₫</span>
+              </div> -->
               <div class="price-detail-row total">
-                <span>Tổng cộng:</span>
+                <span>Tổng cộng (đã chọn):</span>
                 <span id="cart-total" class="text-primary">0₫</span>
               </div>
             </div>
             <div class="card-footer bg-white py-3">
-              <a href="checkout.html" class="btn btn-primary w-100 py-2 checkout-btn">
+              <a href="checkout.html" id="proceed-to-checkout-btn" class="btn btn-primary w-100 py-2 checkout-btn disabled" aria-disabled="true">
                 <i class="fas fa-credit-card me-2"></i>Tiến hành thanh toán
               </a>
             </div>

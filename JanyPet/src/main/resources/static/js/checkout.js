@@ -93,43 +93,71 @@ function initCheckout() {
   updateEstimatedDeliveryDate();
 }
 
+// Helper function (ensure it's defined, or use the one from cart.js if made global)
+if (typeof formatCurrency !== 'function') {
+  function formatCurrency(amount) {
+    if (typeof amount !== 'number' || isNaN(amount)) amount = 0;
+    return (amount || 0).toLocaleString('vi-VN') + '₫';
+  }
+}
+
 function loadCheckoutItems() {
   const checkoutItemsList = document.getElementById('checkout-items-list');
+  const placeOrderBtn = document.getElementById('place-order-btn'); // Assuming this ID exists
+
   if (!checkoutItemsList) return;
-  
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
-  checkoutItemsList.innerHTML = '';
-  
-  if (cart.length === 0) {
-    const emptyMessage = document.createElement('div');
-    emptyMessage.className = 'text-center py-4';
-    emptyMessage.innerHTML = `
-      <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-      <p>Giỏ hàng của bạn đang trống</p>
-      <a href="shop.html" class="btn btn-primary btn-sm">Tiếp tục mua sắm</a>
-    `;
-    checkoutItemsList.appendChild(emptyMessage);
+
+  const itemsForCheckoutString = sessionStorage.getItem('itemsForCheckout');
+  let currentCheckoutCart = [];
+
+  if (!itemsForCheckoutString) {
+    checkoutItemsList.innerHTML = `
+      <div class="text-center py-4">
+        <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+        <p>Không có sản phẩm nào được chọn để thanh toán.</p>
+        <a href="cart.html" class="btn btn-primary btn-sm">Quay lại giỏ hàng</a>
+      </div>`;
+    if (placeOrderBtn) placeOrderBtn.disabled = true;
+    // Optionally disable the form or parts of it
+    document.getElementById('checkout-form')?.classList.add('form-disabled-due-to-empty-cart');
+    return; // Exit early
+  }
+
+  currentCheckoutCart = JSON.parse(itemsForCheckoutString);
+  checkoutItemsList.innerHTML = ''; 
+
+  if (!currentCheckoutCart || currentCheckoutCart.length === 0) {
+    checkoutItemsList.innerHTML = `
+      <div class="text-center py-4">
+        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+        <p>Không có sản phẩm nào trong đơn hàng này.</p>
+        <a href="cart.html" class="btn btn-primary btn-sm">Quay lại giỏ hàng</a>
+      </div>`;
+    if (placeOrderBtn) placeOrderBtn.disabled = true;
+    document.getElementById('checkout-form')?.classList.add('form-disabled-due-to-empty-cart');
     return;
   }
   
-  cart.forEach(item => {
+  // Enable form/button if items are present
+  if (placeOrderBtn) placeOrderBtn.disabled = false;
+  document.getElementById('checkout-form')?.classList.remove('form-disabled-due-to-empty-cart');
+
+  currentCheckoutCart.forEach(item => {
     const listItem = document.createElement('div');
-    listItem.className = 'list-group-item d-flex gap-3 py-3';
+    listItem.className = 'list-group-item d-flex gap-3 py-3'; // User's existing class
+    // Adjust HTML to match user's checkout item display if different
     listItem.innerHTML = `
       <div class="text-center">
-        <img src="${item.image}" alt="${item.name}" class="product-image rounded">
+        <img src="${item.image || 'images/default-product.png'}" alt="${item.name}" class="product-image rounded" style="width: 60px; height: 60px; object-fit: cover;">
         <div class="text-muted mt-1">x${item.quantity}</div>
       </div>
       <div class="flex-grow-1">
         <h6 class="mb-1">${item.name}</h6>
-        ${(item.size !== 'Default' || item.color !== 'Default') ? 
-          `<p class="mb-0 small text-muted">
-            ${item.size !== 'Default' ? 'Size: ' + item.size : ''}
-            ${item.size !== 'Default' && item.color !== 'Default' ? ', ' : ''}
-            ${item.color !== 'Default' ? 'Màu: ' + item.color : ''}
-          </p>` : ''}
+        ${item.variant ? `<small class="text-muted d-block">${item.variant}</small>` : ''}
         <p class="mb-0 text-primary fw-bold mt-1">${formatCurrency(item.price)}</p>
+      </div>
+      <div class="text-end fw-medium">
+        ${formatCurrency(item.price * item.quantity)}
       </div>
     `;
     checkoutItemsList.appendChild(listItem);
@@ -138,40 +166,31 @@ function loadCheckoutItems() {
 
 function calculateOrderSummary() {
   const checkoutItemsCount = document.getElementById('checkout-items-count');
-  const checkoutSubtotal = document.getElementById('checkout-subtotal');
-  const checkoutShipping = document.getElementById('checkout-shipping');
-  const discountAmount = document.getElementById('discount-amount');
-  const checkoutTotal = document.getElementById('checkout-total');
+  const checkoutSubtotalEl = document.getElementById('checkout-subtotal');
+  const checkoutShippingEl = document.getElementById('checkout-shipping');
+  const discountAmountEl = document.getElementById('discount-amount'); // User's ID
+  const checkoutTotalEl = document.getElementById('checkout-total');
+
+  const itemsForCheckoutString = sessionStorage.getItem('itemsForCheckout');
+  const cartForSummary = itemsForCheckoutString ? JSON.parse(itemsForCheckoutString) : [];
+
+  const totalItems = cartForSummary.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cartForSummary.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
-  if (!checkoutItemsCount || !checkoutSubtotal || !checkoutTotal) return;
-  
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
-  let shippingCost = getShippingCost();
-  
-  const discount = parseInt(localStorage.getItem('couponDiscount')) || 0;
+  let shippingCost = getShippingCost(); // User's existing function
+  const discount = parseFloat(localStorage.getItem('couponDiscount')) || 0; // From localStorage
   
   const total = subtotal + shippingCost - discount;
   
-  checkoutItemsCount.textContent = totalItems;
-  checkoutSubtotal.textContent = formatCurrency(subtotal);
+  if (checkoutItemsCount) checkoutItemsCount.textContent = totalItems;
+  if (checkoutSubtotalEl) checkoutSubtotalEl.textContent = formatCurrency(subtotal);
+  if (checkoutShippingEl) checkoutShippingEl.textContent = shippingCost > 0 ? formatCurrency(shippingCost) : 'Miễn phí';
+  if (discountAmountEl) discountAmountEl.textContent = discount > 0 ? `-${formatCurrency(discount)}` : '0₫';
+  if (checkoutTotalEl) checkoutTotalEl.textContent = formatCurrency(total < 0 ? 0 : total);
   
-  if (checkoutShipping) {
-    checkoutShipping.textContent = shippingCost > 0 ? formatCurrency(shippingCost) : 'Miễn phí';
-  }
+  sessionStorage.setItem('checkoutTotal', total < 0 ? 0 : total); // Store calculated total for VNPAY or other uses
   
-  if (discountAmount) {
-    discountAmount.textContent = discount > 0 ? formatCurrency(discount) : '0₫';
-  }
-  
-  checkoutTotal.textContent = formatCurrency(total);
-  
-  sessionStorage.setItem('checkoutTotal', total);
-  
-  updateTransferMessage();
+  if (typeof updateTransferMessage === 'function') updateTransferMessage(); // If this function depends on total
 }
 
 function getShippingCost() {
@@ -460,28 +479,33 @@ function collectOrderData() {
     ward: document.getElementById('ward')?.value || ''
   };
   
-  let paymentMethodValue = '';
   const paymentMethodChecked = document.querySelector('input[name="paymentMethod"]:checked');
-  if (paymentMethodChecked) {
-    paymentMethodValue = paymentMethodChecked.value;
-  }
+  const paymentMethodValue = paymentMethodChecked ? paymentMethodChecked.value : '';
   
-  let shippingMethodValue = '';
   const shippingMethodChecked = document.querySelector('input[name="shippingMethod"]:checked');
+  let shippingMethodValue = '';
   if (shippingMethodChecked) {
+    // Adapt to user's specific values if different
     if (shippingMethodChecked.id === 'standardShipping') shippingMethodValue = 'STANDARD';
     else if (shippingMethodChecked.id === 'fastShipping') shippingMethodValue = 'FAST';
     else if (shippingMethodChecked.id === 'sameDay') shippingMethodValue = 'SAME_DAY';
-    else shippingMethodValue = shippingMethodChecked.id;
+    else shippingMethodValue = shippingMethodChecked.id; 
   }
+
+  const itemsForCheckoutString = sessionStorage.getItem('itemsForCheckout');
+  const cartForOrder = itemsForCheckoutString ? JSON.parse(itemsForCheckoutString) : [];
   
-  const cartFromLocalStorage = JSON.parse(localStorage.getItem('cart')) || [];
-  const notesValue = document.getElementById('order-notes')?.value || ''; // Đổi tên biến để tránh nhầm lẫn
-  // const subtotal = cartFromLocalStorage.reduce((total, item) => total + (item.price * item.quantity), 0); // Not sent
-  // let shippingFee = getShippingCost(); // Not sent
-  // const couponDiscount = parseInt(localStorage.getItem('couponDiscount')) || 0; // Not sent
+  if (cartForOrder.length === 0) {
+    console.error("Cannot collect order data: No items selected for checkout.");
+    if(window.ToastService) window.ToastService.error("Không có sản phẩm để đặt hàng.");
+    else alert("Không có sản phẩm để đặt hàng.");
+    return null; 
+  }
+
+  const notesValue = document.getElementById('order-notes')?.value || '';
   const couponCode = localStorage.getItem('couponCode') || '';
-  // const totalAmount = subtotal + shippingFee - couponDiscount; // Not sent
+  // The total amount for the order should be calculated on the backend based on items, prices, and coupon.
+  // Frontend total is for display and VNPAY amount suggestion.
   
   return {
     customerFirstName: shippingInfo.firstName,
@@ -492,19 +516,20 @@ function collectOrderData() {
     shippingCity: shippingInfo.city,
     shippingDistrict: shippingInfo.district,
     shippingWard: shippingInfo.ward,
-
     paymentMethod: paymentMethodValue,
     shippingMethod: shippingMethodValue,
-    cart: cartFromLocalStorage, // This will be mapped to 'items' on the backend
+    // Backend DTO might expect 'items' or 'orderDetails' instead of 'cart'
+    cart: cartForOrder.map(item => ({ 
+        id: item.id, 
+        name: item.name, 
+        price: item.price,
+        image: item.image,
+        quantity: item.quantity,
+        variant: item.variant || null 
+    })), 
     orderNotes: notesValue,
-    couponCode: couponCode, // Keep couponCode as it's in the DTO
-    // subtotal, // Removed
-    // shippingFee, // Removed
-    // couponDiscount, // Removed
-    // totalAmount, // Removed
-    // orderDate và status thường được set ở backend
-    // orderDate: new Date().toISOString(), 
-    // status: 'PENDING'
+    couponCode: couponCode,
+    // The final totalAmount will be determined by the backend
   };
 }
 
@@ -607,10 +632,6 @@ function createToastContainer() {
   container.style.zIndex = '1050';
   document.body.appendChild(container);
   return container;
-}
-
-function formatCurrency(amount) {
-  return (amount || 0).toLocaleString('vi-VN') + '₫';
 }
 
 function initAddressDropdowns() {

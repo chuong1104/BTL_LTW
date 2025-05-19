@@ -3,12 +3,12 @@ package com.BTL_LTW.JanyPet.dto.request;
 import java.math.BigDecimal;
 
 public class OrderItemRequest {
-    private String id; // Khớp với "id" từ frontend (đây là productId)
-    private String name; // Khớp với "name"
-    private BigDecimal price; // Khớp với "price"
-    private String image; // Khớp với "image"
-    private int quantity; // Khớp với "quantity"
-    private String variant; // Khớp với "variant" (có thể là size, color, etc.)
+    private String id;
+    private String name; 
+    private BigDecimal price;
+    private String image;
+    private int quantity;
+    private String variant;
 
     // Getters and Setters
     public String getId() {
