@@ -233,7 +233,7 @@ const AdminOrdersManager = (() => {
           (item) => `
         <tr>
           <td>
-            ${item.productImage ? `<img src="${item.productImage}" alt="${item.productName || 'Sản phẩm'}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">` : ''}
+            ${item.productImage ? `<img src="/uploads/${item.productImage}" alt="${item.productName || 'Sản phẩm'}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">` : ''}
             ${item.productName || "N/A"}
             ${item.productColor && item.productColor !== "Default" ? `<br><small>Màu: ${item.productColor}</small>` : ""}
             ${item.productSize && item.productSize !== "Default" ? `<br><small>Kích thước: ${item.productSize}</small>` : ""}
