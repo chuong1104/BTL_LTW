@@ -103,6 +103,36 @@ const ProductService = {
   },
   
   /**
+   * Process image URL to ensure it's valid and properly formatted
+   * @param {string} url - Raw image URL from API
+   * @returns {string} Properly formatted image URL for display
+   */
+  getImageUrl: function(url) {
+      // If URL is empty or null, return default image
+      if (!url) {
+          return '/images/placeholder-product.jpg';
+      }
+      
+      // If URL already starts with http:// or https://, return as is
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+          return url;
+      }
+      
+      // If URL starts with /uploads/, it's already a proper path
+      if (url.startsWith('/uploads/')) {
+          return url;
+      }
+      
+      // If URL is just a filename without path, assume it's in /uploads/
+      if (!url.startsWith('/')) {
+          return `/uploads/${url}`;
+      }
+      
+      // Otherwise, return the URL as is
+      return url;
+  },
+  
+  /**
    * Get products by category ID
    * @param {string} categoryId - ID of category
    * @returns {Promise<Array>} Promise that resolves to array of products in the category
@@ -231,6 +261,52 @@ const ProductService = {
           }
           
           return related.slice(0, limit);
+      }
+  },
+  
+  /**
+   * Get all products including inactive ones (for admin)
+   * @returns {Promise<Array>} Promise that resolves to array of all products
+   */
+  getAllProductsIncludingInactive: async function() {
+      try {
+          const response = await fetch(`${this.baseUrl}/all`);
+          
+          if (!response.ok) {
+              throw new Error(`Error fetching all products: ${response.status}`);
+          }
+          
+          const products = await response.json();
+          return products;
+      } catch (error) {
+          console.error('Error fetching all products:', error);
+          return this.getMockProducts(); // Return mock data as fallback
+      }
+  },
+  
+  /**
+   * Toggle product active status
+   * @param {string} productId - ID of product to toggle status
+   * @param {boolean} active - New status (true for active, false for inactive)
+   * @returns {Promise<Object>} Promise that resolves to updated product
+   */
+  toggleProductStatus: async function(productId, active) {
+      try {
+          const response = await fetch(`${this.baseUrl}/${productId}/status?active=${active}`, {
+              method: 'PATCH',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
+          
+          if (!response.ok) {
+              throw new Error(`Error toggling product status: ${response.status}`);
+          }
+          
+          return await response.json();
+      } catch (error) {
+          console.error(`Error toggling status for product with ID ${productId}:`, error);
+          throw error;
       }
   },
   

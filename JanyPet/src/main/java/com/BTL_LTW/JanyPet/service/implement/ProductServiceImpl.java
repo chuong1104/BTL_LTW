@@ -172,29 +172,10 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<ProductResponse> getAllProductsForAdmin() {
-        return productRepository.findAll().stream()
-                .filter(product -> product.getActive() && product.getCategory() != null && product.getCategory().getActive())
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public List<ProductResponse> getAllProductsForAdmin() {
-        return productRepository.findAll().stream()
-                .filter(product -> product.getActive() && product.getCategory() != null && product.getCategory().getActive())
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public List<ProductResponse> getAllProductsForAdmin() {
-        return productRepository.findAll().stream()
-                .filter(product -> product.getActive() && product.getCategory() != null && product.getCategory().getActive())
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
+
+
 
     @Override
     public List<ProductResponse> getAllProductsForAdmin() {

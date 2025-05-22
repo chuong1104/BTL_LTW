@@ -16,7 +16,7 @@ public class ProductResponse {
     private Boolean categoryActive; // Category's active status
 
 
-    private String image;
+    private String imageUrl;
 
     public String getId() {
         return id;
