@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="author" content="JanyPet">
+  <meta name="keywords" content="thú cưng, pet shop, cửa hàng thú cưng, chó, mèo">
+  <meta name="description" content="JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico">
+  
+  <!-- CSS Libraries - Thứ tự: normalize -> frameworks -> thư viện bổ sung -> style chính -->
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->  
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/chatbot.css" />
+  <link rel="stylesheet" type="text/css" href="css/product-cards.css" />
+  <link rel="stylesheet" type="text/css" href="css/product-tooltips.css" />
+  <link rel="stylesheet" type="text/css" href="css/quick-view-modal.css" />
+  <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
+</head>
+
+<body>
+
+  <header class="auto-hide-header">
+    <div class="container py-2">
+      <div class="row py-3 align-items-center">
+        <!-- Logo -->
+        <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
+          <div class="main-logo">
+            <a href="index.html">
+              <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
+            </a>
+          </div>
+        </div>
+
+        <!-- Search bar - visible on large screens -->
+        <div class="col-lg-5 d-none d-lg-block position-relative"> 
+          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+            <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
+              <input type="text" name="keyword" id="searchInputHeader" class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." autocomplete="off" /> 
+              <button type="submit" class="btn btn-link p-0 text-primary">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
+          <div id="searchSuggestionsHeader" class="search-suggestions-container"></div>
+        </div>
+
+        <!-- Auth and user actions -->
+        <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+          <div class="auth-container ms-auto">
+            <!-- Login/Register buttons -->
+            <div class="auth-buttons">
+              <a href="login.html" class="btn btn-outline-primary rounded-pill">
+                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+              </a>
+            </div>
+
+            <!-- User info when logged in -->
+            <div class="user-info d-flex align-items-center">
+              <div class="d-flex">
+                <!-- <button class="btn btn-outline-danger rounded-pill btn-sm logout-btn me-2">
+                  <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                </button> -->
+                <a href="account.html" class="btn btn-outline-secondary rounded-pill btn-sm account-link">
+                    <i class="fas fa-user-circle me-1"></i> Tài khoản
+                 </a>
+              </div>
+            </div>
+
+
+          </div>
+
+          <!-- Cart and wishlist icons -->
+          <div class="ms-3 d-flex">
+            <a href="wishlist.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-heart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count">0</span>
+            </a>
+            <a href="cart.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-shopping-cart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary cart-count">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation menu -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+    <div class="container">
+      <!-- Mobile toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Search bar - visible on mobile only -->
+      <div class="d-block d-lg-none ms-2 me-auto">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#searchModal" class="btn btn-outline-primary rounded-circle">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+
+      <!-- Main navigation -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active fw-medium" href="index.html">Trang chủ</a>
+          </li>
+      
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu" id="product-category-dropdown">
+              <!-- Categories will be loaded here by JavaScript -->
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Modal for mobile -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="searchModalLabel">Tìm kiếm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="search-form-modal" action="shop.html" method="GET"> 
+            <div class="input-group">
+              <input type="text" name="keyword" id="searchInputModal" class="form-control" placeholder="Tìm kiếm sản phẩm..." autocomplete="off"> {/* Added id, name, autocomplete="off" */}
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+         
+          <div id="searchSuggestionsModal" class="search-suggestions-container mt-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Hero section với carousel cải tiến -->
+<section id="banner" class="py-0" style="background: linear-gradient(135deg, #f9f3ec 0%, #fff8f0 100%);">
+  <div class="container">
+    <div class="swiper main-swiper rounded-4 overflow-hidden">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide py-5">
+          <div class="row banner-content align-items-center">
+            <div class="img-wrapper col-md-5 d-flex justify-content-center">
+              <img src="images/banner-img.png" class="img-fluid animation-bounce" alt="Banner pet">
+            </div>
+            <div class="content-wrapper col-md-7 p-5 mb-5">
+              <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 animated-badge">
+                Giảm giá 10-20% tất cả sản phẩm
+              </span>
+              <h1 class="banner-title display-4 fw-bold mb-4">Điểm đến tuyệt vời cho 
+                <span class="text-primary position-relative highlight-text">thú cưng</span> của bạn
+              </h1>
+              <p class="lead mb-4">Chúng tôi cung cấp các sản phẩm và dịch vụ chất lượng cao cho thú cưng của bạn, từ thực phẩm đến đồ chơi và dịch vụ chăm sóc.</p>
+              <div class="d-flex flex-wrap gap-3">
+             
+                <a href="shop.html" class="btn btn-primary btn-lg rounded-pill px-5">
+                  <i class="fas fa-shopping-cart me-2"></i> Mua ngay
+                </a>
+              
+               
+                <a href="BookingService.html" class="btn btn-outline-primary btn-lg rounded-pill px-5 ms-2 ms-md-3">
+                  <i class="fas fa-calendar-check me-2"></i> Đặt lịch ngay
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Thêm 2 slide tương tự ở đây với nội dung và hình ảnh khác -->
+      </div>
+
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev text-primary"></div>
+      <div class="swiper-button-next text-primary"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Category section improved -->
+<section id="categories" class="py-5 bg-light">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 class="section-title display-5 fw-bold">Danh mục <span class="text-primary">Phổ biến</span></h2>
+        <p class="lead">Khám phá danh mục sản phẩm và dịch vụ đa dạng của chúng tôi</p>
+      </div>
+    </div>
+    
+    <div class="row g-4" id="popular-categories-container">
+      <!-- Popular categories will be loaded here by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- REMOVE/COMMENT OUT Old Product Sections: bestselling, clothing, foodies -->
+<!-- 
+<section id="bestselling" class="my-5 overflow-hidden">
+  ... content of bestselling ...
+</section>
+<section id="clothing" class="my-5 overflow-hidden">
+  ... content of clothing ...
+</section>
+<section id="foodies" class="my-5">
+  ... content of foodies ...
+</section>
+-->
+
+<!-- NEW Container for Category-Based Product Display -->
+<div id="category-products-showcase-container" class="container my-5">
+    <!-- Product sections by category will be dynamically inserted here by JavaScript -->
+</div>
+
+<!-- Pet Services Section -->
+<section id="pet-services" class="py-5 bg-light">
+  <div class="container py-4">
+    <!-- Section Header -->
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">Chăm sóc toàn diện</span>
+        <h2 class="section-title display-4 fw-bold">Dịch vụ <span class="text-primary">Thú cưng</span></h2>
+        <p class="lead col-lg-8 mx-auto">Cung cấp các dịch vụ chăm sóc chuyên nghiệp, tận tâm và đáng tin cậy cho thú cưng của bạn</p>
+      </div>
+    </div>
+    
+    <!-- Services Cards -->
+    <div class="row g-4">
+      <!-- Service 1 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm hover-effect">
+          <div class="position-relative service-img-container">
+            <img src="images/insta1.jpg" class="card-img-top" alt="Dịch vụ spa và làm đẹp">
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-primary rounded-pill px-3 py-2">Phổ biến</span>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="service-icon-wrapper mb-3 d-inline-block p-3 rounded-circle bg-primary-subtle">
+              <i class="fas fa-cut fa-2x text-primary"></i>
+            </div>
+            <h3 class="card-title h4">Spa & Làm đẹp</h3>
+            <p class="card-text text-muted">Dịch vụ tắm, cắt tỉa lông, làm móng và chăm sóc vệ sinh tai, mắt cho thú cưng.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">Từ 200.000₫</span>
+              <a href="service.html#grooming" class="btn btn-outline-primary rounded-pill">
+                Chi tiết <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service 2 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm hover-effect">
+          <div class="position-relative service-img-container">
+            <img src="images/item1.jpg" class="card-img-top" alt="Dịch vụ y tế và khám sức khỏe">
+          </div>
+          <div class="card-body p-4">
+            <div class="service-icon-wrapper mb-3 d-inline-block p-3 rounded-circle bg-primary-subtle">
+              <i class="fas fa-heartbeat fa-2x text-primary"></i>
+            </div>
+            <h3 class="card-title h4">Y tế & Khám sức khỏe</h3>
+            <p class="card-text text-muted">Kiểm tra sức khỏe tổng quát, tiêm phòng và tư vấn dinh dưỡng cho thú cưng.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">Từ 350.000₫</span>
+              <a href="service.html#healthcare" class="btn btn-outline-primary rounded-pill">
+                Chi tiết <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service 3 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm hover-effect">
+          <div class="position-relative service-img-container">
+            <img src="images/item3.jpg" class="card-img-top" alt="Dịch vụ huấn luyện">
+          </div>
+          <div class="card-body p-4">
+            <div class="service-icon-wrapper mb-3 d-inline-block p-3 rounded-circle bg-primary-subtle">
+              <i class="fas fa-graduation-cap fa-2x text-primary"></i>
+            </div>
+            <h3 class="card-title h4">Huấn luyện thú cưng</h3>
+            <p class="card-text text-muted">Đào tạo kỹ năng cơ bản, sửa hành vi và các lớp học theo nhóm cho chó cưng.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">Từ 450.000₫</span>
+              <a href="service.html#training" class="btn btn-outline-primary rounded-pill">
+                Chi tiết <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service 4 -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm hover-effect">
+          <div class="position-relative service-img-container">
+            <img src="images/item4.jpg" class="card-img-top" alt="Khách sạn - Trông giữ thú cưng">
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-danger rounded-pill px-3 py-2">Mới</span>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="service-icon-wrapper mb-3 d-inline-block p-3 rounded-circle bg-primary-subtle">
+              <i class="fas fa-home fa-2x text-primary"></i>
+            </div>
+            <h3 class="card-title h4">Khách sạn thú cưng</h3>
+            <p class="card-text text-muted">Dịch vụ trông giữ, chăm sóc theo giờ hoặc qua đêm khi bạn bận hoặc đi xa.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">Từ 150.000₫/ngày</span>
+              <a href="service.html#hotel" class="btn btn-outline-primary rounded-pill">
+                Chi tiết <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="row mt-5">
+      <div class="col-12 text-center">
+        <a href="service.html" class="btn btn-primary btn-lg rounded-pill px-5">
+          <i class="fas fa-paw me-2"></i> Xem tất cả dịch vụ
+        </a>
+        <a href="booking.html" class="btn btn-outline-primary btn-lg rounded-pill px-5 ms-2 ms-md-3">
+          <i class="fas fa-calendar-check me-2"></i> Đặt lịch ngay
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Testimonials/Reviews -->
+<section id="service-testimonials" class="py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">Phản hồi khách hàng</span>
+        <h2 class="display-5 fw-bold mb-4">Khách hàng nói gì về <span class="text-primary">dịch vụ của chúng tôi</span></h2>
+        <p class="lead mb-4">Chúng tôi tự hào mang đến trải nghiệm dịch vụ tốt nhất cho thú cưng của bạn với đội ngũ chuyên nghiệp, tận tâm và yêu thương động vật.</p>
+        <div class="d-flex align-items-center mb-3">
+          <div class="rating me-3">
+            <i class="fas fa-star text-warning"></i>
+            <i class="fas fa-star text-warning"></i>
+            <i class="fas fa-star text-warning"></i>
+            <i class="fas fa-star text-warning"></i>
+            <i class="fas fa-star text-warning"></i>
+          </div>
+          <p class="m-0 fw-bold">4.9/5.0 - Hơn 500 đánh giá</p>
+        </div>
+        <a href="testimonials.html" class="btn btn-link text-primary p-0 fw-bold">
+          Xem tất cả đánh giá <i class="fas fa-long-arrow-alt-right ms-1"></i>
+        </a>
+      </div>
+      
+      <div class="col-lg-7">
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm p-4">
+              <div class="d-flex align-items-center mb-3">
+                <img src="images/reviewer-1.jpg" class="rounded-circle" width="60" height="60" alt="Customer">
+                <div class="ms-3">
+                  <h5 class="mb-0">Nguyễn Thị Hoa</h5>
+                  <p class="text-muted mb-0">Dịch vụ spa & làm đẹp</p>
+                </div>
+              </div>
+              <div class="rating mb-3">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+              </div>
+              <p class="fst-italic">"Cún nhà mình sau khi được tắm và cắt tỉa lông ở JanyPet trông thật sự rất đẹp. Nhân viên tư vấn rất nhiệt tình và chuyên nghiệp, sẽ tiếp tục ủng hộ!"</p>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm p-4">
+              <div class="d-flex align-items-center mb-3">
+                <img src="images/reviewer-2.jpg" class="rounded-circle" width="60" height="60" alt="Customer">
+                <div class="ms-3">
+                  <h5 class="mb-0">Trần Văn Nam</h5>
+                  <p class="text-muted mb-0">Khách sạn thú cưng</p>
+                </div>
+              </div>
+              <div class="rating mb-3">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+              </div>
+              <p class="fst-italic">"Đi công tác 3 ngày nên gửi mèo ở JanyPet. Về đến nhà thấy mèo khỏe mạnh, sạch sẽ và rất vui. Cám ơn JanyPet đã chăm sóc bé chu đáo!"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section id="banner-2" class="my-5 py-5" style="background: linear-gradient(135deg, #F9F3EC 0%, #fff8f0 100%);">
+    <div class="container">
+      <div class="row flex-row-reverse banner-content align-items-center">
+        <div class="img-wrapper col-12 col-md-6">
+          <img src="images/banner-img2.png" class="img-fluid animation-bounce" alt="Special offers">
+        </div>
+        <div class="content-wrapper col-12 offset-md-1 col-md-5 p-5">
+          <div class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3 fw-medium">
+            Chương trình đặc biệt
+          </div>
+          <h2 class="display-4 fw-bold mb-4">Ưu đãi <span class="text-primary position-relative highlight-text">khám thú cưng</span> miễn phí</h2>
+          <p class="lead mb-4">Khi mua sản phẩm từ 500.000đ, bạn sẽ được tặng voucher khám sức khỏe miễn phí cho thú cưng tại chuỗi phòng khám của chúng tôi.</p>
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <a href="shop.html" class="btn btn-primary btn-lg rounded-pill" 
+               data-toast data-toast-message="Sản phẩm đã được thêm vào giỏ hàng" data-toast-type="success">
+              <i class="fas fa-shopping-cart me-2"></i> Mua ngay
+            </a>
+            <a href="booking.html" class="btn btn-outline-primary btn-lg rounded-pill px-5 ms-2 ms-md-3"
+               data-toast data-toast-message="Đang mở trang đặt lịch..." data-toast-type="info">
+              <i class="fas fa-calendar-check me-2"></i> Đặt lịch ngay
+            </a>
+          </div>
+          <div class="mt-4 d-flex align-items-center">
+            <div class="countdown d-flex gap-3">
+              <div class="time-block bg-white rounded-3 p-2 text-center">
+                <div class="time-value fw-bold fs-4">10</div>
+                <div class="time-label small">Ngày</div>
+              </div>
+              <div class="time-block bg-white rounded-3 p-2 text-center">
+                <div class="time-value fw-bold fs-4">08</div>
+                <div class="time-label small">Giờ</div>
+              </div>
+              <div class="time-block bg-white rounded-3 p-2 text-center">
+                <div class="time-value fw-bold fs-4">45</div>
+                <div class="time-label small">Phút</div>
+              </div>
+              <div class="time-block bg-white rounded-3 p-2 text-center">
+                <div class="time-value fw-bold fs-4">30</div>
+                <div class="time-label small">Giây</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </section>
+
+  <section id="testimonial">
+    <div class="container my-5 py-5">
+      <div class="row">
+        <div class="offset-md-1 col-md-10">
+          <div class="swiper testimonial-swiper">
+            <div class="swiper-wrapper">
+
+              <div class="swiper-slide">
+                <div class="row ">
+                  <div class="col-2">
+                    <iconify-icon icon="ri:double-quotes-l" class="quote-icon text-primary"></iconify-icon>
+                  </div>
+                  <div class="col-md-10 mt-md-5 p-5 pt-0 pt-md-5">
+                    <p class="testimonial-content fs-2">At the core of our practice is the idea that cities are the
+                      incubators of our
+                      greatest achievements, and the best hope for a sustainable future.</p>
+                    <p class="text-black">- Joshima Lin</p>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row ">
+                  <div class="col-2">
+                    <iconify-icon icon="ri:double-quotes-l" class="quote-icon text-primary"></iconify-icon>
+                  </div>
+                  <div class="col-md-10 mt-md-5 p-5 pt-0 pt-md-5">
+                    <p class="testimonial-content fs-2">At the core of our practice is the idea that cities are the
+                      incubators of our
+                      greatest achievements, and the best hope for a sustainable future.</p>
+                    <p class="text-black">- Joshima Lin</p>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="row ">
+                  <div class="col-2">
+                    <iconify-icon icon="ri:double-quotes-l" class="quote-icon text-primary"></iconify-icon>
+                  </div>
+                  <div class="col-md-10 mt-md-5 p-5 pt-0 pt-md-5">
+                    <p class="testimonial-content fs-2">At the core of our practice is the idea that cities are the
+                      incubators ofour
+                      greatest achievements, and the best hope for a sustainable future.</p>
+                    <p class="text-black">- Joshima Lin</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="swiper-pagination"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+
+  <section id="latest-blog" class="my-5">
+    <div class="container py-5 my-5">
+      <div class="row mt-5">
+        <div class="section-header d-md-flex justify-content-betweenalign-items-center mb-3">
+          <h2 class="display-3 fw-normal">Latest Blog Post</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 my-4 my-md-0">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">20</h3>
+            <p class="secondary-font fs-6 m-0">Feb</p>
+  
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog1.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">10 Reasons to be helpful towards any animals</h3>
+              </a>
+  
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
+                  our greatest
+                  achievements, and the best hope for a sustainable future.</p>
+                <a href="single-post.html" class="blog-read">read more</a>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 my-4 my-md-0">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">21</h3>
+            <p class="secondary-font fs-6 m-0">Feb</p>
+  
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog2.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">How to know your pet is hungry</h3>
+              </a>
+  
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
+                  our greatest
+                  achievements, and the best hope for a sustainable future.</p>
+                <a href="single-post.html" class="blog-read">read more</a>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 my-4 my-md-0">
+          <div class="z-1 position-absolute rounded-3 m-2px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">22</h3>
+            <p class="secondary-font fs-6 m-0">Feb</p>
+  
+           
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog3.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Best home for your pets</h3>
+              </a>
+  
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
+                  our greatest
+                  achievements, and the best hope for a sustainable future.</p>
+                <a href="single-post.html" class="blog-read">read more</a>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="service">
+    <div class="container py-5 my-5">
+      <div class="row g-md-5 pt-4">
+        <div class="col-md-3 my-3">
+          <div class="card">
+            <div>
+              <iconify-icon class="service-icon text-primary" icon="la:shopping-cart"></iconify-icon>
+            </div>
+            <h3 class="card-title py-2 m-0">Free Delivery</h3>
+            <div class="card-text">
+              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 my-3">
+          <div class="card">
+            <div>
+              <iconify-icon class="service-icon text-primary" icon="la:user-check"></iconify-icon>
+            </div>
+            <h3 class="card-title py-2 m-0">100% secure payment</h3>
+            <div class="card-text">
+              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 my-3">
+          <div class="card">
+            <div>
+              <iconify-icon class="service-icon text-primary" icon="la:tag"></iconify-icon>
+            </div>
+            <h3 class="card-title py-2 m-0">Daily Offer</h3>
+            <div class="card-text">
+              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 my-3">
+          <div class="card">
+            <div>
+              <iconify-icon class="service-icon text-primary" icon="la:award"></iconify-icon>
+            </div>
+            <h3 class="card-title py-2 m-0">Quality guarantee</h3>
+            <div class="card-text">
+              <p class="blog-paragraph fs-6">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <section id="insta" class="my-5">
+    <div class="row g-0 py-5">
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta1.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta2.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta3.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta4.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta5.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+      <div class="col instagram-item  text-center position-relative">
+        <div class="icon-overlay d-flex justify-content-center position-absolute">
+          <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        </div>
+        <a href="#">
+          <img src="images/insta6.jpg" alt="insta-img" class="img-fluid rounded-3">
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <footer id="footer" class="bg-light pt-5 mt-5">
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- About Company -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-about">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
+            <p class="mb-4">JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam.</p>
+            <div class="social-links">
+              <div class="d-flex gap-3">
+                <a href="#" class="social-link" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Youtube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Quick Links -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-menu">
+            <h4 class="mb-4">Liên kết nhanh</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="index.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Trang chủ</a></li>
+              <li class="mb-2"><a href="about.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Giới thiệu</a></li>
+              <li class="mb-2"><a href="shop.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Sản phẩm</a></li>
+              <li class="mb-2"><a href="service.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Dịch vụ</a></li>
+              <li class="mb-2"><a href="blog.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Tin tức</a></li>
+              <li class="mb-2"><a href="contact.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-contact">
+            <h4 class="mb-4">Thông tin liên hệ</h4>
+            <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>
+            <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
+            <p class="mb-3"><i class="fas fa-envelope me-3"></i>info@janypet.com</p>
+            <p class="mb-3"><i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
+          </div>
+        </div>
+  
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6">
+          <div>
+            <h4 class="mb-4">Nhận thông tin</h4>
+            <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyPet.</p>
+            <div class="input-group mb-3">
+              <input type="email" class="form-control rounded-start-pill" placeholder="Email của bạn">
+              <button class="btn btn-primary rounded-end-pill" type="button">Đăng ký</button>
+            </div>
+            <div class="mt-4">
+              <img src="images/payment-methods.png" alt="Payment Methods" class="img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="py-3 border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 JanyPet. Tất cả quyền được bảo lưu.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#" class="text-decoration-none me-3">Điều khoản sử dụng</a>
+            <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Back to Top Button -->
+
+<a href="#" id="back-to-top" class="btn btn-lg rounded-circle position-fixed" aria-label="Back to top">
+  <i class="fas fa-arrow-up"></i>
+</a>
+
+<div class="modal fade quickview-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="quickViewModalLabel">Xem nhanh sản phẩm</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="product-gallery">
+              <img src="" id="quickview-product-image" class="img-fluid rounded-3" alt="Product Image">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="product-info">
+              <h2 class="product-title" id="quickview-product-title"></h2>
+              <div class="d-flex align-items-center mb-3">
+                <div class="rating me-2">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                </div>
+                <span>5.0</span>
+              </div>
+              <h3 class="product-price" id="quickview-product-price"></h3>              <div class="product-info-section mb-3">
+                <h4 class="section-title mb-2">Mô tả</h4>
+                <div class="product-description mb-2" id="quickview-product-description">
+                  <!-- Mô tả sản phẩm sẽ được cập nhật bằng JavaScript -->
+                </div>
+                <a href="#" class="view-more-btn" id="view-more-btn">Xem thêm <i class="fas fa-angle-right"></i></a>
+              </div>
+              
+              <div class="quantity-selector mb-3">
+                <label for="quantity" class="me-3">Số lượng:</label>
+                <button class="quantity-btn minus me-2">-</button>
+                <input type="number" id="product-quantity" class="quantity-input" value="1" min="1" max="10">
+                <button class="quantity-btn plus ms-2">+</button>
+              </div>
+              
+              <div class="d-flex">
+                <button class="btn btn-primary rounded-pill me-2 add-to-cart-btn" data-product-id="">
+                  <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+                </button>
+                <button class="btn btn-outline-danger rounded-pill wishlist-btn" data-product-id="">
+                  <i class="fas fa-heart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Chatbot Widget -->
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <img src="images/logo.png" alt="JanyPet Logo" class="chatbot-logo">
+                <span>JanyPet Hỗ trợ</span>
+            </div>
+            <div class="chatbot-actions">
+                <button class="minimize-btn"><i class="fas fa-minus"></i></button>
+                <button class="clear-btn" title="Xóa cuộc trò chuyện"><i class="fas fa-trash"></i></button>
+                <button class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="chatbot-body">
+            <div class="messages-container" id="messages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?
+                    </div>
+                    <span class="time">12:00</span>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-footer">
+            <form id="chatbot-form">
+                <div class="input-group">
+                    <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn..." required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </form>
+            <div class="powered-by">Powered by JanyPet</div>
+        </div>
+    </div>
+    <button class="chatbot-toggle">
+        <i class="fas fa-comments"></i>
+    </button>
+    <!-- End Chatbot Widget -->
+<!-- Toast container for notifications -->
+<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+
+<!-- JavaScript Libraries - Thứ tự: jQuery -> Bootstrap -> các thư viện bổ sung -> script tùy chỉnh -->
+
+<!-- jQuery - đặt đầu tiên vì nhiều library khác phụ thuộc vào nó -->
+<script src="js/jquery-1.11.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+<!-- Thư viện bổ sung -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/toast-manager.js"></script>
+
+<!-- Custom scripts - Luôn đặt sau các library và trước enhanced-ux -->
+<script src="js/auth_service.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/category-service.js"></script> <!-- Add this line -->
+<script src="js/product-service.js"></script>
+<script src="js/index-script.js"></script> <!-- Add this line -->
+<script src="js/responsive-elements.js"></script>
+<script src="js/quick-view.js"></script> <!-- Add this line -->
+<script src="js/search-suggestions.js"></script>
+<script src="js/chatbot.js"></script>
+
+
+<!-- Enhanced UX JavaScript - luôn đặt cuối cùng vì nó phụ thuộc vào tất cả các script khác -->
+<script src="js/enhanced-ux.js"></script>
+<!-- Xử lý loading spinner và back to top button -->
+<script>
+  // Loading spinner
+  window.addEventListener('load', function() {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    if (loadingSpinner) { // Kiểm tra nếu loadingSpinner tồn tại
+      loadingSpinner.style.opacity = '0';
+      loadingSpinner.style.transition = 'opacity 0.5s';
+      setTimeout(() => {
+        loadingSpinner.style.display = 'none';
+      }, 500);
+    }
+  });
+
+  // Back to top button
+  window.addEventListener('scroll', function() {
+    const backToTopButton = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+      backToTopButton.classList.remove('d-none');
+    } else {
+      backToTopButton.classList.add('d-none');
+    }
+  });
+
+  document.getElementById('back-to-top').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+</script>
+
+<!-- Script xác nhận tài liệu đã tải -->
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    
+    // Kiểm tra nếu Bootstrap đã được tải
+    if (typeof bootstrap !== 'undefined') {
+      console.log('Bootstrap loaded successfully');
+    } else {
+      console.warn('Bootstrap not loaded!');
+    }
+  });
+</script>
+
+</body>
+
+</html>

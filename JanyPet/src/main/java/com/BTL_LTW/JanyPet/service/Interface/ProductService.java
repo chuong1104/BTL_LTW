@@ -12,4 +12,12 @@ public interface ProductService {
     ProductResponse getProductById(String id);
     List<ProductResponse> getAllProducts();
     void deleteProduct(String id);
+
+    List<ProductResponse> searchProductsByName(String name);
+
+    ProductResponse toggleProductStatus(String id, boolean active);
+
+    List<ProductResponse> getAllProductsForAdmin();
+
+    List<ProductResponse> getFilteredProducts(String type, String categoryId, int limit);
 }

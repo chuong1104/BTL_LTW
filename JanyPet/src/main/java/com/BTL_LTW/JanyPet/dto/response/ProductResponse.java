@@ -8,6 +8,14 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private Integer stock;
+    
+    
+    private String categoryId;
+    private String categoryName;
+    private boolean active; // Product's own active status
+    private Boolean categoryActive; // Category's active status
+
+
     private String image;
 
     // Getters and Setters
@@ -57,5 +65,37 @@ public class ProductResponse {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getCategoryActive() {
+        return categoryActive;
+    }
+
+    public void setCategoryActive(Boolean categoryActive) {
+        this.categoryActive = categoryActive;
     }
 }

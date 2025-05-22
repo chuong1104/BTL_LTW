@@ -12,4 +12,10 @@ public interface CategoryService {
     CategoryResponse getCategoryById(String id);
     List<CategoryResponse> getAllCategories();
     void deleteCategory(String id);
+
+    // Add a new method to get all categories including inactive ones for admin
+    List<CategoryResponse> getAllCategoriesIncludingInactive();
+
+    // Add a method to toggle category status
+    CategoryResponse toggleCategoryStatus(String id, boolean isActive);
 }

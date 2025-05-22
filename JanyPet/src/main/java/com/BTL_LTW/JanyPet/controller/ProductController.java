@@ -42,14 +42,52 @@ public class ProductController {
     // Lấy danh sách tất cả sản phẩm
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        // For USER views, calls the modified productService.getAllProducts()
         List<ProductResponse> list = productService.getAllProducts();
         return ResponseEntity.ok(list);
     }
 
-    // Xóa sản phẩm theo id
+    // For ADMIN views
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponse>> getAllProductsIncludingInactive() {
+        // Ensure ProductService interface has getAllProductsForAdmin and it's implemented
+        List<ProductResponse> products = productService.getAllProductsForAdmin(); // Changed this line
+        return ResponseEntity.ok(products);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String name) {
+        List<ProductResponse> products = productService.searchProductsByName(name);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductResponse>> getFilteredProducts(
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "categoryId", required = false) String categoryId,
+            @RequestParam(name = "limit", defaultValue = "8") int limit) {
+
+        List<ProductResponse> products = productService.getFilteredProducts(type, categoryId, limit);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ProductResponse> toggleProductStatus(
+            @PathVariable String id,
+            @RequestParam boolean active) {
+        ProductResponse response = productService.toggleProductStatus(id, active);
+        return ResponseEntity.ok(response);
     }
 }

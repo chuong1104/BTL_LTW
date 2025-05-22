@@ -1,0 +1,1678 @@
+/*--------------------------------------------------------------
+This is main CSS file that contains custom style rules used in this template
+--------------------------------------------------------------*/
+
+/*------------------------------------*\
+    Table of contents
+\*------------------------------------*/
+
+/*------------------------------------------------
+
+CSS STRUCTURE:
+
+1. VARIABLES
+
+2. GENERAL TYPOGRAPHY
+  2.1 General Styles
+  2.2 Floating & Alignment
+  2.3 Forms
+  2.4 Lists
+  2.5 Code
+  2.6 Tables
+  2.7 Spacing
+  2.8 Utilities
+  2.9 Misc
+    - Row Border
+    - Zoom Effect
+  2.10 Buttons
+    - Button Sizes
+    - Button Shapes
+    - Button Color Scheme
+    - Button Aligns
+  2.11 Section
+    - Hero Section
+    - Section Title
+    - Section Paddings
+    - Section Margins
+    - Section Bg Colors
+    - Content Colors
+    - Content Borders
+
+3. EXTENDED TYPOGRAPHY
+  3.1 Blockquote / Pullquote
+  3.2 Text Highlights
+
+4. CONTENT ELEMENTS
+  4.1 Tabs
+  4.2 Accordions
+  4.3 Brand Carousel
+  4.4 Category Carousel
+
+5. BLOG STYLES
+  5.1 Blog Single Post
+  5.2 About Author
+  5.3 Comments List
+  5.4 Comments Form3
+
+6. SITE STRUCTURE
+  6.1 Header
+    - Header Menu
+    - Nav Sidebar
+  6.2 Billboard
+  6.3 About Us Section
+  6.4 Video Section
+  6.5 Selling Products Section
+  6.6 Quotation Section
+  6.7 Latest Blogs Section
+  6.8 Newsletter Section
+  6.9 Instagram Section
+  6.10 Footer
+    - Footer Top
+    - Footer Bottom
+
+7. OTHER PAGES
+  7.1 Product detail
+  7.2 Shop page
+
+    
+/*--------------------------------------------------------------
+/** 1. VARIABLES
+--------------------------------------------------------------*/
+:root {
+  /* widths for rows and containers
+     */
+  --header-height: 160px;
+  --header-height-min: 80px;
+}
+
+/* on mobile devices below 600px
+ */
+@media screen and (max-width: 600px) {
+  :root {
+    --header-height: 100px;
+    --header-height-min: 80px;
+  }
+}
+
+/* Theme Colors - Thêm vào hoặc thay đổi phần này */
+:root {
+  --accent-color: #A8DADC;
+  --dark-color: #1D3557;
+  --light-dark-color: #457B9D;
+  --light-color: #fff;
+  --grey-color: #e5e5e5;
+  --light-grey-color: #f8f9fa;
+  --primary-color: #457B9D;
+  --primary-hover: #325277;
+  --light-primary-color: #F1FAEE;
+  --danger-color: #E63946;
+  --danger-hover: #c9323e;
+  --success-color: #2A9D8F; 
+  --warning-color: #E9C46A;
+  --secondary-color: #1aae64;
+}
+
+/* Fonts */
+:root {
+  --body-font: 'Open Sans', sans-serif;
+  --heading-font: 'Nunito', sans-serif;
+  --secondary-font: 'Montserrat', sans-serif;
+}
+
+
+body {
+  --bs-link-color: #457B9D;
+  --bs-link-hover-color: #1D3557;
+
+  --bs-link-color-rgb: 69, 123, 157;
+  --bs-link-hover-color-rgb: 29, 53, 87;
+
+  --bs-light-rgb: 248, 249, 250;
+
+  --bs-font-sans-serif: 'Open Sans', sans-serif;
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.8;
+  --bs-body-color: #333;
+
+  --bs-primary: #457B9D;
+  --bs-primary-rgb: 69, 123, 157;
+
+  --bs-primary-bg-subtle: #F1FAEE;
+  --bs-border-color: #F7F7F7;
+
+  --bs-secondary-rgb: 230, 243, 251;
+
+  --bs-success-rgb: 238, 245, 228;
+  --bs-danger-rgb: 249, 235, 231;
+  --bs-warning-rgb: 255, 249, 235;
+  --bs-info-rgb: 230, 243, 250;
+}
+
+.btn-primary {
+  padding: 1.2rem 1rem;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #457B9D;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #1D3557;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #457B9D;
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #d3d7dd;
+  --bs-btn-disabled-border-color: transparent;
+}
+
+.btn-outline-primary {
+  transition: all 0.3s ease-in;
+  padding: 1.2rem 1rem;
+  letter-spacing: 0.01375rem;
+  --bs-btn-color: #457B9D;
+  --bs-btn-border-color: #457B9D;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #457B9D;
+  --bs-btn-hover-border-color: #457B9D;
+  --bs-btn-focus-shadow-rgb: 13, 110, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #457B9D;
+  --bs-btn-active-border-color: #457B9D;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #457B9D;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #457B9D;
+  --bs-gradient: none;
+}
+
+.btn-outline-dark {
+  transition: all 0.3s ease-in;
+  padding: 1.2rem 3rem;
+  letter-spacing: 0.02375rem;
+  text-transform: uppercase;
+  --bs-btn-color: #1D3557;
+  --bs-btn-border-color: #1D3557;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #1D3557;
+  --bs-btn-hover-border-color: #1D3557;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #1D3557;
+  --bs-btn-active-border-color: #1D3557;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #1D3557;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #1D3557;
+  --bs-gradient: none;
+}
+
+.btn-dark {
+  padding: 1.2rem 3rem;
+  font-size: 1.1875rem;
+  text-transform: uppercase;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #1D3557;
+  --bs-btn-border-color: #1D3557;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #325277;
+  --bs-btn-hover-border-color: #325277;
+  --bs-btn-focus-shadow-rgb: 66, 70, 73;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #1D3557;
+  --bs-btn-active-border-color: #1D3557;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #1D3557;
+  --bs-btn-disabled-border-color: #1D3557;
+}
+
+@media screen and (max-width:991px) {
+
+  .btn-primary,
+  .btn-outline-primary,
+  .btn-outline-dark,
+  .btn-dark {
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 2rem !important;
+    transition: all 0.3s ease;
+  }
+
+  /* Nút Add to cart và wishlist nhỏ gọn hơn */
+  .btn-cart,
+  .btn-wishlist,
+  .btn-add-cart {
+    padding: 0.5rem 1.2rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 1.5rem !important;
+  }
+
+  .btn-wishlist {
+    width: 42px;
+    height: 42px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+body {
+  letter-spacing: 0.01625rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
+  color: var(--dark-color);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+a {
+  text-decoration: none;
+}
+
+.breadcrumb.text-white {
+  --bs-breadcrumb-divider-color: #fff;
+  --bs-breadcrumb-item-active-color: var(--bs-primary);
+}
+
+.dropdown-menu {
+  --bs-dropdown-link-active-bg: var(--bs-primary);
+}
+
+.secondary-font {
+  font-family: var(--secondary-font);
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+/* Fix rating stars to display in yellow */
+.rating.secondary-font {
+  font-size: 1.2rem;
+  color: yellow;
+}
+
+/* Additional selector to ensure stars are yellow regardless of other classes */
+.rating iconify-icon,
+.rating .fas.fa-star {
+  color: #FFD700 !important; /* Using gold color for better appearance */
+}
+
+
+/*----------------------------------------------*/
+/* 6. SITE STRUCTURE */
+/*----------------------------------------------*/
+/* 6.1 Header
+--------------------------------------------------------------*/
+header.auto-hide-header {
+  background-color: var(--light-color); /* Ensure a background for when it's sticky */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Add a subtle shadow */
+  position: sticky; /* Make it sticky by default, JS might override for auto-hide */
+  top: 0;
+  z-index: 1030; /* Ensure it's above most content */
+  transition: top 0.3s ease-in-out; /* Smooth transition for auto-hide */
+}
+
+.main-logo img {
+  max-height: 60px; /* Consistent logo height */
+  transition: max-height 0.3s ease;
+}
+
+.search-bar {
+  /* border: 1px solid #EAEAEA; /* Already exists */
+  background-color: #fff; /* Ensure it's visible on colored backgrounds */
+}
+
+.search-bar input.form-control {
+  font-size: 0.9rem;
+}
+.search-bar .btn-link {
+  color: var(--primary-color);
+}
+.search-bar .btn-link:hover {
+  color: var(--primary-hover);
+}
+
+.auth-container .auth-buttons .btn,
+.auth-container .user-info .btn {
+  padding: 0.5rem 1rem; /* Consistent padding for auth buttons */
+  font-size: 0.875rem; /* Slightly smaller font for auth buttons */
+}
+
+.auth-container .user-info {
+  font-size: 0.9rem;
+  color: var(--dark-color);
+}
+.auth-container .user-info strong {
+  font-weight: 600;
+}
+
+/* Cart and Wishlist icons specific styling */
+.ms-3.d-flex > a .fas { /* Targeting the icons directly */
+  font-size: 1.3rem;
+  color: var(--dark-color);
+  transition: color 0.2s ease-in-out;
+}
+.ms-3.d-flex > a:hover .fas {
+  color: var(--primary-color);
+}
+.ms-3.d-flex > a .badge {
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.3em 0.5em;
+}
+
+
+/* Navigation Menu (navbar) adjustments */
+nav.navbar {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+nav.navbar .navbar-nav .nav-link {
+  font-weight: 600; /* Make nav links bolder */
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--light-dark-color); /* Using light-dark-color for non-active links */
+}
+
+nav.navbar .navbar-nav .nav-link:hover,
+nav.navbar .navbar-nav .nav-link:focus {
+  color: var(--primary-color);
+}
+
+nav.navbar .navbar-nav .nav-link.active {
+  color: var(--primary-color);
+  position: relative;
+}
+
+nav.navbar .navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0px; 
+  left: 1rem; 
+  right: 1rem; 
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+nav.navbar .navbar-nav .nav-link.active {
+  color: var(--primary-color);
+  position: relative;
+}
+
+nav.navbar .navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0px; 
+  left: 1rem; 
+  right: 1rem; 
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+nav.navbar .dropdown-menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+  border: none;
+  margin-top: 0.5rem; 
+}
+nav.navbar .dropdown-item {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+nav.navbar .dropdown-item:hover {
+  background-color: var(--light-primary-color);
+  color: var(--primary-color);
+}
+nav.navbar .dropdown-item:active {
+  background-color: var(--primary-color);
+  color: var(--light-color);
+}
+
+/* Mobile Navbar Toggler */
+nav.navbar .navbar-toggler {
+  border-color: rgba(0,0,0,0.1);
+}
+nav.navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(29, 53, 87, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Search Modal for mobile */
+#searchModal .modal-content {
+  border-radius: 0.75rem;
+}
+#searchModal .form-control {
+  font-size: 1rem;
+}
+#searchModal .btn-primary {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Back to Top Button - General improvement */
+#back-to-top {
+  width: 45px;
+  height: 45px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden; /* Start hidden */
+  display: flex; /* Ensure flex properties apply */
+  align-items: center;
+  justify-content: center;
+}
+#back-to-top.show { /* Assuming JS adds 'show' class */
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible; /* Make visible when shown */
+}
+
+
+/* Ensure header row elements are vertically centered and spaced */
+header .row.py-3 {
+  min-height: var(--header-height-min); /* Ensure a minimum height */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 991.98px) {
+  .main-logo img {
+    max-height: 50px; /* Slightly smaller logo on medium screens */
+  }
+  nav.navbar .navbar-nav .nav-link.active::after {
+    left: 0.75rem;
+    right: 0.75rem;
+  }
+  .auth-container .auth-buttons .btn,
+  .auth-container .user-info .btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .ms-3.d-flex > a .fas {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  header.auto-hide-header .container.py-2 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  header.auto-hide-header .row.py-3 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    min-height: auto;
+  }
+  .main-logo img {
+    max-height: 45px; /* Smaller logo on small screens */
+  }
+  .auth-container {
+    flex-direction: column;
+    align-items: flex-end; /* Align to the right */
+    gap: 5px; /* Reduce gap */
+  }
+  .auth-container .user-info {
+    font-size: 0.85rem;
+    margin-right: 0; /* Remove margin when stacked */
+    text-align: right;
+  }
+  .auth-container .user-info .d-flex {
+    justify-content: flex-end; /* Align buttons to the right */
+  }
+  .ms-3.d-flex { /* Cart/Wishlist icons */
+    margin-left: 0.5rem !important; /* Reduce space from auth */
+  }
+  nav.navbar .navbar-collapse {
+    max-height: 70vh; /* Limit height of collapsed menu */
+    overflow-y: auto; /* Allow scrolling if content exceeds height */
+    background-color: var(--light-color); /* Add background to collapsed menu */
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .main-logo {
+    text-align: center !important; /* Center logo on extra small screens */
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  header .row.py-3 > div[class*="col-sm-"] { /* Target all columns in the header row for small screens */
+    display: flex;
+    justify-content: center; /* Center content of columns */
+    width: auto; /* Allow flex to manage width */
+    flex-basis: 0; /* Distribute space */
+    flex-grow: 1; /* Allow to grow */
+  }
+   header .row.py-3 .col-lg-3 { /* Logo column */
+    flex-grow: 0; /* Don't let logo column grow too much */
+    flex-basis: auto;
+  }
+  header .row.py-3 .col-lg-4 { /* Auth/Cart column */
+     justify-content: center !important;
+  }
+
+  .auth-container {
+    align-items: center; /* Center auth items */
+    width: 100%;
+    justify-content: center;
+  }
+  .auth-container .user-info {
+    text-align: center;
+  }
+   .auth-container .user-info .d-flex {
+    justify-content: center;
+  }
+  .ms-3.d-flex { /* Cart/Wishlist icons */
+    margin-top: 0.5rem; /* Add some space above cart/wishlist icons */
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Preloader */
+.preloader-wrapper {
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 111;
+  background: #fff;
+}
+
+.preloader-wrapper .preloader {
+  margin: 20% auto 0;
+  transform: translateZ(0);
+}
+
+.preloader:before,
+.preloader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+
+.preloader:before,
+.preloader:after,
+.preloader {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  animation: animation 1.2s infinite ease-in-out;
+}
+
+.preloader {
+  animation-delay: -0.16s;
+}
+
+.preloader:before {
+  left: -3.5em;
+  animation-delay: -0.32s;
+}
+
+.preloader:after {
+  left: 3.5em;
+}
+
+@keyframes animation {
+
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2em 0 -1em var(--accent-color);
+  }
+
+  40% {
+    box-shadow: 0 2em 0 0 var(--accent-color);
+  }
+}
+
+
+/* search bar style  */
+/* .search-bar {
+  border: 1px solid #EAEAEA; /* Moved to header.auto-hide-header for general shadow */
+/* } */
+
+.search-bar ::placeholder {
+  font-family: var(--secondary-font);
+}
+
+.form-control:focus {
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-color: #A8DADC;
+  outline: 0;
+  box-shadow: none;
+}
+
+
+/* nav bar style  */
+/* .navbar-nav .nav-link.active, /* Covered by more specific nav.navbar styles */
+/* .navbar-nav .nav-link.show,
+.nav-link:focus,
+.nav-link:hover {
+  color: var(--accent-color);
+} */
+
+/* category style */
+iconify-icon.category-icon {
+  color: rgba(69, 123, 157, 0.6);
+  font-size: 100px;
+  transition: all 0.3s ease-in;
+
+}
+
+a.categories-item:hover iconify-icon.category-icon {
+  color: #457B9D;
+}
+
+
+/* banner style */
+.swiper-pagination-bullet {
+  border: 1px solid var(--bs-body-color);
+  background-color: transparent;
+  opacity: 1;
+  width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 15px));
+  height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 15px));
+}
+
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background-color: var(--bs-body-color);
+  background: var(--bs-body-color);
+}
+
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+  margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 8px);
+}
+
+/* Thêm vào cuối file */
+
+/* Điều chỉnh kích thước nút trong header */
+header .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* header .btn-outline-primary { /* Covered by .auth-container .btn */
+/* padding: 0.5rem 1rem;
+} */
+
+/* header .btn-primary { /* Covered by .auth-container .btn */
+/* padding: 0.5rem 1rem;
+} */
+
+header .auth-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Reduced from 10px */
+}
+
+
+/* pet clothing */
+.card {
+  --bs-card-inner-border-radius: none;
+  --bs-card-bg: transparent;
+  background-color: transparent;
+  border: none;
+}
+
+a.btn-cart {
+  border-radius: 0.25rem;
+  border: 1px solid rgba(65, 64, 62, 0.20);
+}
+
+a.btn-wishlist {
+
+  border-radius: 0.25rem;
+  border: 1px solid rgba(65, 64, 62, 0.20);
+}
+
+
+/* pet foodies style  */
+button.filter-button {
+  letter-spacing: 0.02125rem;
+  border: none;
+  border-bottom: 2px solid #D9D9D8;
+  background: transparent;
+  text-transform: uppercase;
+  font-size: 1.0625rem;
+  transition: all 0.3s ease-in;
+}
+
+button.filter-button.active,
+button.filter-button:hover {
+  border-bottom: 2px solid #457B9D;
+}
+
+/* testimonial style  */
+.testimonial-content {
+  color: #666;
+}
+
+iconify-icon.quote-icon {
+  color: #F1FAEE;
+  font-size: 14rem;
+}
+
+
+/* register form  */
+.form-control {
+  color: #666;
+  line-height: normal;
+  letter-spacing: 0.02125rem;
+  text-transform: capitalize;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(65, 64, 62, 0.20);
+  background: #FFF;
+  display: flex;
+  padding: 1.25rem 0rem 1.25rem 1.25rem;
+  align-items: center;
+  gap: 0.375rem;
+  align-self: stretch;
+}
+
+/* .form-control:focus { /* Already defined */
+/* border-color: #A8DADC;
+} */
+
+
+/* blog style */
+.blog-paragraph {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: var(--body-font);
+}
+
+.blog-read {
+  color: #666;
+  font-size: 1rem;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+}
+
+a.blog-read {
+  border-bottom: 3px solid #D9D9D8;
+  transition: all 0.3s ease-in;
+}
+
+a.blog-read:hover {
+  border-bottom: 3px solid #457B9D;
+}
+
+
+/* services style  */
+.service-icon {
+  font-size: 30px;
+  border-radius: 3.125rem;
+  border: 1px solid #D9D9D8;
+  padding: 1.25rem;
+}
+
+
+/* insta style  */
+.instagram-item:hover:before,
+.instagram-item:hover .icon-overlay {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.icon-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  align-items: center;
+  font-size: 3rem;
+  cursor: pointer;
+  opacity: 0;
+  -moz-transition: 0.8s ease;
+  -webkit-transition: 0.8s ease;
+  transition: 0.8s ease;
+}
+
+
+/* footer style */
+iconify-icon.social-icon {
+  color: #888;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  border-radius: 4.375rem;
+  border: 1px solid #D9D9D8;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.03);
+  transition: all 0.5s ease;
+}
+
+li.social:hover iconify-icon.social-icon {
+  color: #FFF;
+  border: 1px solid #457B9D;
+  background: #457B9D;
+}
+
+iconify-icon.send-icon {
+  cursor: pointer;
+  font-size: 1.125rem;
+  padding: 0.75rem;
+  border-radius: 4.375rem;
+  color: #FFF;
+  border: 1px solid #457B9D;
+  background: #457B9D;
+}
+
+
+@media screen and (max-width: 991px) {
+
+  /* offcanvas menu */
+  .offcanvas-body .nav-item {
+    font-weight: 600;
+    border-bottom: 1px solid #d1d1d1;
+  }
+
+  .offcanvas-body .filter-categories {
+    width: 100%;
+    margin-bottom: 20px !important;
+    border: 1px solid #d1d1d1 !important;
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  /* dropdown-menu */
+  /* .dropdown-menu { /* Covered by nav.navbar .dropdown-menu */
+  /* padding: 0;
+    border: none;
+    line-height: 1.4;
+    font-size: 0.9em;
+  } */
+
+  /* .dropdown-menu a { /* Covered by nav.navbar .dropdown-item */
+  /* padding-left: 0;
+  } */
+
+  .dropdown-toggle::after {
+    position: absolute;
+    right: 0;
+    top: 21px;
+  }
+}
+
+
+/*--------------------------------------------------------------
+faqs section style start
+--------------------------------------------------------------*/
+.accordion-button:not(.collapsed) {
+  color: var(--dark-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.accordion {
+  --bs-accordion-color: var(--light-dark-color);
+  --bs-accordion-bg: none;
+  --bs-accordion-btn-color: var(--dark-color);
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%23457B9D');
+
+}
+
+.accordion-button::after {
+  background-image: url('https://api.iconify.design/eva/arrow-down-fill.svg?color=%23457B9D');
+}
+
+.accordion-button:focus {
+  z-index: 3;
+  border-color: none;
+  box-shadow: none;
+}
+
+/*--------------------------------------------------------------
+Account section style start
+--------------------------------------------------------------*/
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: var(--accent-color);
+}
+
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* .user-info {
+  margin-right: 10px;
+  white-space: nowrap;
+} */
+
+/* Ẩn các phần tử mặc định - sẽ được hiển thị bởi JavaScript */
+.login-button, .admin-link {
+  display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .auth-container {
+    margin-top: 10px;
+    justify-content: center;
+  }
+}
+
+/* Thêm các kích thước nút nhỏ hơn cho header */
+.btn-sm {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+/* Thêm hiệu ứng cho badge */
+
+.badge {
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi có sự thay đổi số lượng */
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.badge-pulse {
+  animation: badgePulse 0.5s ease-in-out;
+}
+
+/* Màu sắc cho các loại badge */
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
+.bg-danger {
+  background-color: var(--danger-color) !important;
+}
+.bg-warning {
+  background-color: var(--warning-color) !important;
+  /* text-dark is added by JS, so no need to specify color here if text-dark handles it */
+}
+.bg-success {
+  background-color: var(--success-color) !important;
+  color: #fff !important; /* Ensuring text is white for good contrast */
+}
+.bg-info {
+  background-color: #0dcaf0 !important; /* Using a common info color, similar to Bootstrap's info */
+  /* text-dark is added by JS, so no need to specify color here if text-dark handles it */
+}
+.bg-primary-subtle {
+  background-color: var(--light-primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.auth-container .auth-buttons {
+  display: block; /* Hoặc inline-block, flex tùy theo layout mong muốn */
+}
+.auth-container .user-info {
+  display: none !important; /* Quan trọng: dùng !important để ghi đè style inline cũ nếu chưa xóa hết */
+}
+
+body.authenticated .auth-container .auth-buttons {
+  display: none !important;
+}
+body.authenticated .auth-container .user-info {
+  display: flex !important; /* Hoặc block, inline-block tùy theo layout của user-info */
+}
+
+/* Đảm bảo rằng khi body có class not-authenticated, trạng thái cũng đúng */
+body.not-authenticated .auth-container .auth-buttons {
+  display: block !important; /* Hoặc inline-block, flex */
+}
+body.not-authenticated .auth-container .user-info {
+  display: none !important;
+}
+
+/* Nếu bạn có các class .auth-only và .non-auth-only, đảm bảo chúng cũng được định nghĩa đúng: */
+.non-auth-only { display: block; } /* Hoặc giá trị display phù hợp */
+.auth-only { display: none; }
+
+body.authenticated .non-auth-only { display: none; }
+body.authenticated .auth-only { display: block; } /* Hoặc giá trị display phù hợp */
+
+body.not-authenticated .non-auth-only { display: block; } /* Hoặc giá trị display phù hợp */
+body.not-authenticated .auth-only { display: none; }
+
+/* Xóa class is-admin nếu không còn sử dụng cho UI */
+body.is-admin .auth-container .user-info {
+    /* Nếu không còn UI riêng cho admin, không cần style đặc biệt ở đây */
+}
+
+
+/*--------------------------------------------------------------
+Blog section style start
+--------------------------------------------------------------*/
+/* ------ Pagination ------*/
+.pagination .page-numbers {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  color: var(--bs-body-color);
+  padding: 0 10px;
+  line-height: 1.4;
+  transition: 0.9s all;
+  border-radius: 8px;
+}
+
+.pagination .page-numbers:hover,
+.pagination .page-numbers.current {
+  color: var(--accent-color);
+}
+
+iconify-icon.pagination-arrow {
+  color: var(--bs-body-color);
+  transition: 0.9s all;
+}
+
+iconify-icon.pagination-arrow:hover {
+  color: var(--accent-color);
+}
+
+
+/*--------------------------------------------------------------
+Single Product section style start
+--------------------------------------------------------------*/
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+  color: var(--light-color);
+  background-color: var(--accent-color);
+}
+
+/* Account Page Styles */
+
+/* Sidebar Navigation */
+.account-sidebar {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+}
+
+.account-sidebar .list-group-item {
+  border: none;
+  padding: 0.85rem 1.25rem;
+  border-left: 4px solid transparent;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.account-sidebar .list-group-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.account-sidebar .list-group-item.active {
+  background-color: rgba(69, 123, 157, 0.1);
+  color: #457B9D;
+  border-left: 4px solid #457B9D;
+}
+
+.account-sidebar .list-group-item:hover:not(.active) {
+  background-color: #f8f9fa;
+  border-left: 4px solid #e9ecef;
+}
+
+/* Tab Content Area */
+.tab-content.card {
+  border-radius: 12px;
+  box-shadow: 0 3px 20px rgba(0,0,0,0.06);
+  border: none;
+}
+
+/* Profile Stats Cards */
+.profile-stat {
+  background: linear-gradient(to bottom right, rgba(168, 218, 220, 0.1), rgba(241, 250, 238, 0.4));
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.profile-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.profile-stat i {
+  color: #457B9D;
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.profile-stat h5 {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/* Pet Cards */
+.pet-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+}
+
+.pet-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.pet-card .pet-image {
+  height: 180px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pet-card .pet-image i {
+  font-size: 4rem;
+  color: rgba(69, 123, 157, 0.4);
+}
+
+/* Order Cards */
+.order-card {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  margin-bottom: 1.25rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.order-card .order-header {
+  padding: 1rem 1.25rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.order-card .order-body {
+  padding: 1.25rem;
+}
+
+.order-card .order-footer {
+  background-color: #f8f9fa;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Order Status Badges */
+.order-status {
+  padding: 0.35rem 0.75rem;
+  border-radius: 50rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-pending {
+  background-color: rgba(233, 196, 106, 0.2);
+  color: #d4a900;
+}
+
+.status-processing {
+  background-color: rgba(69, 123, 157, 0.1);
+  color: #457B9D;
+}
+
+.status-completed {
+  background-color: rgba(42, 157, 143, 0.1);
+  color: #2A9D8F;
+}
+
+.status-cancelled {
+  background-color: rgba(230, 57, 70, 0.1);
+  color: #E63946;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: rgba(69, 123, 157, 0.3);
+  margin-bottom: 1.5rem;
+}
+
+.empty-state h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: #6c757d;
+  max-width: 400px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .account-sidebar {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Button styling for account page */
+.btn {
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+/* Standard sizes */
+.btn-standard {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+/* Action buttons */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+/* Button icon spacing */
+.btn i {
+  margin-right: 0.3rem;
+}
+
+/* Button group spacing */
+.btn-group .btn {
+  padding: 0.4rem 0.8rem;
+}
+
+/* Account sidebar buttons */
+.account-sidebar .list-group-item {
+  padding: 1rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.account-sidebar .list-group-item i {
+  width: 20px;
+  text-align: center;
+  margin-right: 0.75rem;
+}
+
+/* Form action buttons */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Card action buttons */
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Styled pet management buttons */
+#pet-management .btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+/* Order history buttons */
+.order-footer .btn {
+  white-space: nowrap;
+}
+
+/* Mobile optimizations */
+@media (max-width: 767.98px) {
+  .form-actions, .card-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .form-actions .btn, .card-actions .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Make sidebar buttons easier to tap on mobile */
+  .account-sidebar .list-group-item {
+    padding: 1.2rem 1rem;
+  }
+}
+
+/* Consistent button colors */
+.btn-outline-primary, .btn-outline-secondary {
+  background-color: white;
+}
+
+/* Fix for button hover states */
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+  color: white;
+}
+
+/*--------------------------------------------------------------
+Search Suggestions Styles
+--------------------------------------------------------------*/
+.search-suggestions-container {
+  position: absolute;
+  top: 100%; /* Position below the search bar */
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 .25rem .25rem;
+  z-index: 1050; /* Ensure it's above other content */
+  max-height: 300px;
+  overflow-y: auto;
+  display: none; /* Hidden by default */
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.search-suggestions-container .suggestion-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.search-suggestions-container .suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.search-suggestions-container .suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-suggestions-container .suggestion-item a {
+  text-decoration: none;
+  color: #212529;
+  display: block;
+}
+
+/* Specific adjustments for sidebar suggestions if needed */
+.sidebar .widget-search-bar .search-suggestions-container {
+  /* You might adjust width or other properties if the default is not suitable */
+  /* Example: width: 100%; */
+}
+
+/* filepath: d:\BTL_LTW\JanyPet\src\main\resources\static\BookingService.html */
+/* Add these styles inside the existing <style> tag or to your style.css */
+/* ... existing styles ... */
+.booking-steps-nav {
+  display: flex; /* Sử dụng flexbox để các item nằm trên một hàng */
+  flex-direction: column; /* Xếp các item theo cột */
+  gap: 10px; /* Khoảng cách giữa các nút */
+  padding-left: 0; /* Bỏ padding mặc định của ul/nav */
+  margin-bottom: 1.5rem; /* Khoảng cách với content bên dưới */
+}
+
+.booking-steps-nav .nav-item {
+  width: 100%; /* Cho mỗi item chiếm toàn bộ chiều rộng */
+  list-style: none; /* Bỏ dấu chấm của list item nếu là ul */
+}
+
+.booking-steps-nav .nav-link {
+  display: flex; /* Căn chỉnh số và chữ bên trong nút */
+  align-items: center;
+  width: 100%; /* Nút chiếm toàn bộ chiều rộng của nav-item */
+  padding: 12px 20px;
+  font-weight: 600;
+  color: var(--light-dark-color, #457B9D); /* Màu chữ khi không active */
+  background-color: #e9ecef; /* Màu nền khi không active (xám nhạt) */
+  border: 1px solid #dee2e6; /* Viền nhẹ cho nút không active */
+  border-radius: 50rem; /* Bo tròn hoàn toàn */
+  text-align: left; /* Căn chữ sang trái */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Thêm shadow nhẹ */
+}
+
+.booking-steps-nav .nav-link:hover {
+  background-color: #dee2e6; /* Màu nền khi hover */
+  border-color: var(--light-dark-color, #457B9D);
+}
+
+.booking-steps-nav .nav-link.active {
+  background-color: var(--warning-color, #E9C46A); /* Màu nền khi active (vàng cam) */
+  color: var(--dark-color, #1D3557); /* Màu chữ khi active */
+  border-color: var(--warning-color, #E9C46A);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow rõ hơn khi active */
+}
+
+.booking-steps-nav .nav-link .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9em;
+  line-height: calc(28px - 2px); /* Điều chỉnh cho border */
+  border: 1px solid var(--light-dark-color, #457B9D); /* Viền cho số */
+  color: var(--light-dark-color, #457B9D); /* Màu cho số */
+  background-color: var(--bs-white, #fff); /* Nền trắng cho số */
+  margin-right: 12px; /* Khoảng cách giữa số và chữ */
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.booking-steps-nav .nav-link.active .step-number {
+  background-color: var(--dark-color, #1D3557); /* Nền cho số khi active */
+  color: var(--warning-color, #E9C46A); /* Màu cho số khi active */
+  border-color: var(--dark-color, #1D3557); /* Viền cho số khi active */
+}
+
+/* Custom styles for account page */
+.account-sidebar .list-group-item {
+    border-radius: 0.5rem; /* Consistent rounded corners */
+    margin-bottom: 5px; /* Add some space between items */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.account-sidebar .list-group-item.active {
+    background-color: var(--bs-primary); /* Use Bootstrap primary color */
+    color: white;
+    border-color: var(--bs-primary);
+}
+
+.account-sidebar .list-group-item:not(.active):hover {
+    background-color: #f8f9fa; /* Lighter hover for non-active items */
+}
+
+/* Style for the logout button to make it darker */
+.account-sidebar .logout-btn {
+    color: #a71d2a !important; /* Darker red color */
+    font-weight: 500;
+}
+
+.account-sidebar .logout-btn:hover {
+    background-color: #f8d7da !important; /* Light red background on hover */
+    color: #721c24 !important; /* Even darker red text on hover */
+}
+
+.profile-stat {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.profile-stat i {
+    font-size: 2rem;
+    color: var(--bs-primary);
+    margin-bottom: 10px;
+}
+
+.profile-stat h5 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.profile-stat p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0;
+}
+
+/* Styles for Pet Management Cards and Table */
+.pet-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    transition: box-shadow 0.3s ease;
+}
+.pet-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.pet-card .card-img-top {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: calc(0.5rem - 1px);
+    border-top-right-radius: calc(0.5rem - 1px);
+}
+.pet-card .card-body {
+    padding: 1rem;
+}
+.pet-card .card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.pet-card .card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+.pet-card .badge {
+    font-size: 0.75rem;
+}
+
+#pets-table-container table th,
+#pets-table-container table td {
+    vertical-align: middle;
+}
+
+/* Order History Card Styling */
+.order-card {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.order-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+    padding: 0.75rem 1.25rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(0.5rem - 1px);
+    border-top-right-radius: calc(0.5rem - 1px);
+}
+
+.order-body {
+    padding: 1.25rem;
+}
+
+.order-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: calc(0.5rem - 1px);
+    border-bottom-right-radius: calc(0.5rem - 1px);
+}
+
+.order-status {
+    padding: 0.25em 0.6em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.status-pending { background-color: #ffc107; color: #212529 !important; } /* Bootstrap warning */
+.status-processing { background-color: #0dcaf0; } /* Bootstrap info */
+.status-shipped, .status-shipping { background-color: #0d6efd; } /* Bootstrap primary */
+.status-delivered, .status-completed { background-color: #198754; } /* Bootstrap success */
+.status-cancelled, .status-failed { background-color: #dc3545; } /* Bootstrap danger */
+.status-refunded { background-color: #6c757d; } /* Bootstrap secondary */
+
+/* Booking History Styling */
+#booking-history-container .list-group-item {
+    border-radius: 0.375rem; /* Bootstrap's default rounded corners */
+}
+#booking-history-container .list-group-item h5 {
+    color: var(--bs-primary);
+}
+.status-active {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-inactive {
+    background-color: #6c757d;
+    color: white;
+}
+
+.inactive-product,
+.inactive-category {
+    opacity: 0.7;
+    background-color: #f8f9fa;
+}
+
+/*--------------------------------------------------------------
+Thêm quy tắc CSS cho .product-image để kiểm soát kích thước của nó
+--------------------------------------------------------------*/
+.product-image {
+  max-width: 100%; /* Ensures the image is responsive and doesn't overflow its container */
+  height: auto; /* Maintains aspect ratio */
+  display: block; /* Removes extra space below the image */
+  margin-left: auto; /* Centers the image if it's smaller than its container */
+  margin-right: auto; /* Centers the image if it's smaller than its container */
+  max-height: 400px; /* You can adjust this value to your desired maximum height */
+}

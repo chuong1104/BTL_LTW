@@ -47,4 +47,18 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CategoryResponse>> getAllCategoriesIncludingInactive() {
+        List<CategoryResponse> list = categoryService.getAllCategoriesIncludingInactive();
+        return ResponseEntity.ok(list);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<CategoryResponse> toggleCategoryStatus(
+            @PathVariable String id,
+            @RequestParam boolean active) {
+        CategoryResponse response = categoryService.toggleCategoryStatus(id, active);
+        return ResponseEntity.ok(response);
+    }
 }

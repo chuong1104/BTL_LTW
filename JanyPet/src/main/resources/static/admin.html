@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetCare Admin Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Rich Text Editor -->
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body.not-authenticated .auth-only {
+        display: none !important;
+      }
+
+      body.authenticated .non-auth-only {
+        display: none !important;
+      }
+
+      body:not(.is-admin) .admin-only {
+        display: none !important;
+      }
+
+      /* Prevent flickering during page load */
+      .auth-only,
+      .non-auth-only,
+      .admin-only {
+        transition: opacity 0.3s ease;
+      }
+
+      /* Add a class to the logout button */
+      .logout-btn {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div class="logo">
+          <h2>PetCare Admin</h2>
+          <button id="toggle-sidebar" class="toggle-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <nav class="menu">
+          <ul>
+            <li class="menu-item active" data-section="dashboard-section">
+              <a href="#"
+                ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
+              >
+            </li>
+            <li class="menu-item" data-section="products-section">
+              <a href="#"><i class="fas fa-box"></i><span>Products</span></a>
+            </li>
+            <li class="menu-item" data-section="categories-section">
+              <a href="#"><i class="fas fa-tags"></i><span>Categories</span></a>
+            </li>
+            <li class="menu-item" data-section="appointments-section">
+              <a href="#"
+                ><i class="fas fa-calendar-alt"></i><span>Appointments</span></a
+              >
+            </li>
+            <li class="menu-item" data-section="services-section">
+              <a href="#"
+                ><i class="fas fa-concierge-bell"></i><span>Services</span></a
+              >
+            </li>
+            <li class="menu-item" data-section="orders-section">
+              <a href="#"
+                ><i class="fas fa-shopping-cart"></i><span>Orders</span></a
+              >
+            </li>
+            <li class="menu-item" data-section="customers-section">
+              <a href="#"><i class="fas fa-users"></i><span>Customers</span></a>
+            </li>
+            <li class="menu-item" data-section="reports-section">
+              <a href="#"
+                ><i class="fas fa-chart-bar"></i><span>Reports</span></a
+              >
+            </li>
+            <li class="menu-item" data-section="settings-section">
+              <a href="#"><i class="fas fa-cog"></i><span>Settings</span></a>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <img src="/images/logo.png" alt="Admin" class="avatar" />
+            <div class="user-details">
+              <h4>PetShop Admin</h4>
+              <p>Administrator</p>
+            </div>
+          </div>
+          <button
+            class="logout-btn auth-only"
+            onclick="window.authService.handleDirectLogout(event)"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="navbar">
+          <div class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </div>
+          <div class="search-container">
+            <input type="text" placeholder="Search..." />
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+          </div>
+          <div class="navbar-right">
+            <div class="notification">
+              <i class="fas fa-bell"></i>
+              <span class="badge">3</span>
+            </div>
+            <div class="messages">
+              <i class="fas fa-envelope"></i>
+              <span class="badge">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="content-section active" id="dashboard-section">
+          <h1>Dashboard</h1>
+
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-card-content">
+                <h3>Total Products</h3>
+                <p class="stat-number">248</p>
+                <p class="stat-info">
+                  <i class="fas fa-arrow-up"></i> 15% from last month
+                </p>
+              </div>
+              <div class="stat-card-icon products-icon">
+                <i class="fas fa-box"></i>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-content">
+                <h3>Appointments</h3>
+                <p class="stat-number">32</p>
+                <p class="stat-info">
+                  <i class="fas fa-arrow-up"></i> 8% from last month
+                </p>
+              </div>
+              <div class="stat-card-icon appointments-icon">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-content">
+                <h3>Total Orders</h3>
+                <p class="stat-number">156</p>
+                <p class="stat-info">
+                  <i class="fas fa-arrow-down"></i> 3% from last month
+                </p>
+              </div>
+              <div class="stat-card-icon orders-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-content">
+                <h3>Revenue</h3>
+                <p class="stat-number">$12,846</p>
+                <p class="stat-info">
+                  <i class="fas fa-arrow-up"></i> 12% from last month
+                </p>
+              </div>
+              <div class="stat-card-icon revenue-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-widgets">
+            <div class="widget recent-appointments">
+              <div class="widget-header">
+                <h3>Recent Appointments</h3>
+                <a href="#" class="view-all">View All</a>
+              </div>
+              <div class="widget-content">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Pet</th>
+                      <th>Service</th>
+                      <th>Date & Time</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>John Smith</td>
+                      <td>Max (Dog)</td>
+                      <td>Grooming</td>
+                      <td>Today, 10:00 AM</td>
+                      <td><span class="status-scheduled">Scheduled</span></td>
+                    </tr>
+                    <tr>
+                      <td>Sarah Johnson</td>
+                      <td>Luna (Cat)</td>
+                      <td>Vaccination</td>
+                      <td>Today, 2:30 PM</td>
+                      <td><span class="status-confirmed">Confirmed</span></td>
+                    </tr>
+                    <tr>
+                      <td>Michael Davis</td>
+                      <td>Rocky (Dog)</td>
+                      <td>Checkup</td>
+                      <td>Tomorrow, 9:15 AM</td>
+                      <td><span class="status-pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                      <td>Emily Wilson</td>
+                      <td>Coco (Rabbit)</td>
+                      <td>Nail Trimming</td>
+                      <td>Tomorrow, 11:00 AM</td>
+                      <td><span class="status-scheduled">Scheduled</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="widget recent-orders">
+              <div class="widget-header">
+                <h3>Recent Orders</h3>
+                <a href="#" class="view-all">View All</a>
+              </div>
+              <div class="widget-content">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Items</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>#ORD-7829</td>
+                      <td>Robert Brown</td>
+                      <td>3 items</td>
+                      <td>$58.25</td>
+                      <td><span class="status-completed">Delivered</span></td>
+                    </tr>
+                    <tr>
+                      <td>#ORD-7830</td>
+                      <td>Lisa Anderson</td>
+                      <td>2 items</td>
+                      <td>$124.99</td>
+                      <td><span class="status-processing">Processing</span></td>
+                    </tr>
+                    <tr>
+                      <td>#ORD-7831</td>
+                      <td>Thomas Clark</td>
+                      <td>5 items</td>
+                      <td>$93.85</td>
+                      <td><span class="status-shipping">Shipping</span></td>
+                    </tr>
+                    <tr>
+                      <td>#ORD-7832</td>
+                      <td>Jennifer Martinez</td>
+                      <td>1 item</td>
+                      <td>$32.50</td>
+                      <td><span class="status-processing">Processing</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="content-section" id="products-section">
+          <div class="section-header">
+            <h1>Product Management</h1>
+            <button class="primary-btn" id="add-product-btn">
+              <i class="fas fa-plus"></i> Add New Product
+            </button>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label>Category</label>
+              <select id="filter-category">
+                <option value="">All Categories</option>
+                <option value="Pet Food">Pet Food</option>
+                <option value="Toys">Toys</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Medicine">Medicine</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-status">
+                <option value="">All Status</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Sort By</label>
+              <select id="sort-by">
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="data-container">
+            <!-- Cập nhật bảng sản phẩm để phù hợp với cấu trúc dữ liệu -->
+            <table class="data-table" id="products-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all" /></th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Stock Status</th>
+                  <th>Status</th> <!-- New column -->
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body">
+                <!-- Products will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="pagination-btn" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="pagination-ellipsis">...</span>
+            <button class="pagination-btn">10</button>
+            <button class="pagination-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="content-section" id="categories-section">
+          <div class="section-header">
+            <h1>Category Management</h1>
+            <button class="primary-btn" id="add-category-btn-main">
+              <i class="fas fa-plus"></i> Add New Category
+            </button>
+          </div>
+
+          <!-- Table for displaying categories -->
+          <div class="data-container">
+              <table class="data-table" id="categories-table">
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Status</th> <!-- New column -->
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody id="categories-table-body">
+                      <!-- Categories will be loaded here by JavaScript -->
+                      <tr>
+                          <td colspan="5" class="text-center">Loading categories...</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- Form for adding/editing categories -->
+          <div class="form-container card mt-4" id="category-form-container">
+              <div class="card-header">
+                  <h2 id="category-form-title">Add New Category</h2>
+              </div>
+              <div class="card-body">
+                  <form id="category-form">
+                      <input type="hidden" id="category-id">
+                      <div class="form-group">
+                          <label for="category-name">Category Name*</label>
+                          <input type="text" id="category-name" class="form-control" placeholder="Enter category name" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="category-description">Description</label>
+                          <textarea id="category-description" class="form-control" rows="3" placeholder="Enter category description"></textarea>
+                      </div>
+                      <button type="submit" class="btn primary-btn" id="save-category-btn">Save Category</button>
+                      <button type="button" class="btn secondary-btn" id="cancel-category-edit-btn" style="display:none; margin-left: 10px;">Cancel</button>
+                  </form>
+              </div>
+          </div>
+        </div>
+
+        <!-- Appointments Section (Consider renaming to Bookings Section) -->
+        <div class="content-section" id="appointments-section"> <!-- or id="bookings-section" -->
+          <div class="section-header">
+            <h1>Bookings Management</h1> <!-- Changed from Appointments -->
+           
+          </div>
+
+          <div class="filters">
+            <!-- Add filter controls here if needed -->
+            <select id="filter-appointment-status-display" class="form-control d-inline-block w-auto me-2">
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+            </select>
+            <input type="date" id="filter-date-from" class="form-control d-inline-block w-auto me-2">
+            <input type="date" id="filter-date-to" class="form-control d-inline-block w-auto me-2">
+            <button id="apply-filters-btn" class="btn btn-secondary">Apply Filters</button>
+          </div>
+
+          <div class="data-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Pet</th>
+                  <th>Services</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-table-body"> <!-- This ID is used by JS -->
+                <!-- Booking rows will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Edit Booking Modal (formerly Add/Edit Appointment Modal) -->
+          <div class="modal fade" id="appointment-modal" tabindex="-1" aria-labelledby="appointment-modal-title" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="appointment-modal-title">Edit Booking Status</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="appointment-form">
+                    <input type="hidden" id="appointment-id">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="appointment-customer-display" class="form-label">Customer</label>
+                        <input type="text" id="appointment-customer-display" class="form-control" readonly>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="appointment-pet-display" class="form-label">Pet</label>
+                        <input type="text" id="appointment-pet-display" class="form-control" readonly>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="appointment-service-display" class="form-label">Services</label>
+                      <textarea id="appointment-service-display" class="form-control" rows="2" readonly></textarea>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="appointment-date-display" class="form-label">Date</label>
+                        <input type="text" id="appointment-date-display" class="form-control" readonly>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="appointment-time-display" class="form-label">Time</label>
+                        <input type="text" id="appointment-time-display" class="form-control" readonly>
+                      </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="appointment-status-display" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select id="appointment-status-display" class="form-select" required>
+                                <option value="PENDING">Pending</option>
+                                <option value="CONFIRMED">Confirmed</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="CANCELLED">Cancelled</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-6 mb-3">
+                            <label for="appointment-staff-display" class="form-label">Assigned Staff</label>
+                            <input type="text" id="appointment-staff-display" class="form-control" readonly>
+                        </div> -->
+                    </div>
+                    <div class="mb-3">
+                      <label for="appointment-notes-display" class="form-label">Notes</label>
+                      <textarea id="appointment-notes-display" class="form-control" rows="3" readonly></textarea>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save Status</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- View Appointment Details Modal (View Booking Modal) -->
+          <div class="modal fade" id="view-appointment-modal" tabindex="-1" aria-labelledby="viewAppointmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="viewAppointmentModalLabel">Booking Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <dl class="row">
+                    <dt class="col-sm-3">Booking ID:</dt>
+                    <dd class="col-sm-9" id="view-appointment-id"></dd>
+
+                    <dt class="col-sm-12 mt-2">Customer Information</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9" id="view-customer-name"></dd>
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9" id="view-customer-email"></dd>
+                    <dt class="col-sm-3">Phone:</dt>
+                    <dd class="col-sm-9" id="view-customer-phone"></dd>
+
+                    <dt class="col-sm-12 mt-2">Pet Information</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Pet Name:</dt>
+                    <dd class="col-sm-9" id="view-pet-name"></dd>
+
+                    <dt class="col-sm-12 mt-2">Booking Details</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Services:</dt>
+                    <dd class="col-sm-9">
+                      <ul id="view-services-list" class="list-unstyled mb-0"></ul>
+                    </dd>
+                    <dt class="col-sm-3">Date:</dt>
+                    <dd class="col-sm-9" id="view-booking-date"></dd>
+                    <dt class="col-sm-3">Time:</dt>
+                    <dd class="col-sm-9" id="view-booking-time"></dd>
+                    
+                    <!-- PHẦN HIỂN THỊ STATUS -->
+                    <dt class="col-sm-3">Status:</dt>
+                    <dd class="col-sm-9" id="view-booking-status">
+                      <!-- Nội dung trạng thái sẽ được JS chèn vào đây -->
+                    </dd>
+
+                    <dt class="col-sm-3">Notes:</dt>
+                    <dd class="col-sm-9" id="view-booking-notes"></dd>
+
+                    <dt class="col-sm-12 mt-2">Timestamps</dt>
+                    <hr class="col-sm-12">
+                    <dt class="col-sm-3">Created At:</dt>
+                    <dd class="col-sm-9" id="view-created-at"></dd>
+                    <dt class="col-sm-3">Last Updated:</dt>
+                    <dd class="col-sm-9" id="view-updated-at"></dd>
+                  </dl>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pagination" id="bookings-pagination"> <!-- Changed ID for clarity -->
+              <!-- Pagination controls will be added here by JS if needed -->
+          </div>
+        </div>
+
+        <!--Service-->
+        <div class="content-section" id="services-section">
+          <div class="section-header">
+            <h1>Services Management</h1>
+            <button id="add-service-btn" class="primary-btn">
+              <i class="fas fa-plus"></i> Add Service
+            </button>
+          </div>
+
+          <div class="filters">
+            <input type="text" id="service-search" placeholder="Search services..." />
+            <select id="service-category-filter">
+              <option value="">All Categories</option>
+              <option value="GROOMING">Grooming</option>
+              <option value="BOARDING">Boarding</option>
+              <option value="HEALTHCARE">Healthcare</option>
+              <option value="PACKAGE">Packages</option>
+            </select>
+          </div>
+
+          <div class="data-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Base Price</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="services-table-body">
+                <!-- Services will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="services-pagination">
+            <!-- Pagination will be added here -->
+          </div>
+        </div>
+
+        <!-- Service Modal -->
+        <div id="service-modal" class="modal">
+          <div class="modal-content large">
+            <div class="modal-header">
+              <h2 id="service-modal-title">Add New Service</h2>
+              <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+              <form id="service-form">
+                <input type="hidden" id="service-id">
+                
+                <div class="form-group">
+                  <label for="service-name">Service Name</label>
+                  <input type="text" id="service-name" class="form-control" placeholder="Enter service name" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="service-category">Category</label>
+                  <select id="service-category" class="form-control" required>
+                    <!-- Categories will be populated by JavaScript -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="service-description-editor-container">Description</label>
+                  <div id="service-description-editor-container" style="min-height: 100px; border: 1px solid #ccc;"></div>
+                  <input type="hidden" id="service-description">
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="service-base-price">Base Price*</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input type="number" id="service-base-price" class="form-control" min="0" step="1000" placeholder="Base price" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="service-duration">Duration (minutes)</label>
+                    <input type="number" id="service-duration" class="form-control" min="1" placeholder="Duration in minutes">
+                  </div>
+                  <div class="form-group">
+                    <label for="service-max-pets">Max Pets Per Slot</label>
+                    <input type="number" id="service-max-pets" class="form-control" min="1" value="1" placeholder="Max pets">
+                  </div>
+                </div>
+
+                <h4>Pet Size Pricing</h4>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="service-small-pet-price">Small Pet</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input type="number" id="service-small-pet-price" class="form-control" min="0" step="1000" placeholder="Small pet">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="service-medium-pet-price">Medium Pet</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input type="number" id="service-medium-pet-price" class="form-control" min="0" step="1000" placeholder="Medium pet">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="service-large-pet-price">Large Pet</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input type="number" id="service-large-pet-price" class="form-control" min="0" step="1000" placeholder="Large pet">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="service-xlarge-pet-price">Extra Large Pet</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input type="number" id="service-xlarge-pet-price" class="form-control" min="0" step="1000" placeholder="Extra large pet">
+                    </div>
+                  </div>
+                </div>
+
+                <h4>Service Items</h4>
+                <div id="service-items-container">
+                  <!-- Service items will be added here dynamically -->
+                </div>
+                <button type="button" id="add-service-item-btn" class="secondary-btn mb-3">
+                  <i class="fas fa-plus"></i> Add Service Item
+                </button>
+
+                <div class="form-group">
+                  <label>Service Status</label>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" id="service-active" checked> Active
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="cancel-service-btn" class="secondary-btn">Cancel</button>
+              <button type="button" id="save-service-btn" class="primary-btn">Save Service</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="content-section" id="orders-section">
+          <div class="section-header">
+            <h1>Order Management</h1>
+            <div>
+              <button id="export-orders-btn" class="secondary-btn">
+                <i class="fas fa-file-export me-1"></i> Export Orders
+              </button>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label for="filter-order-status">Status</label>
+              <select id="filter-order-status">
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="PROCESSING">Processing</option>
+                <option value="SHIPPING">Shipping</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-payment-status">Payment Status</label>
+              <select id="filter-payment-status">
+                <option value="">All Payment Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="PAID">Paid</option>
+                <option value="FAILED">Failed</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="order-date-from">Date From</label>
+              <input type="date" id="order-date-from">
+              <label for="order-date-to">To</label>
+              <input type="date" id="order-date-to">
+            </div>
+          </div>
+
+          <div class="data-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order Code</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Payment Status</th>
+                  <th>Order Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body">
+                <!-- Orders will be loaded here -->
+                <tr>
+                  <td colspan="8" class="text-center" id="orders-loading-indicator">
+                    <i class="fas fa-spinner fa-spin"></i> Loading orders...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="orders-pagination">
+            <!-- Pagination will be added dynamically -->
+          </div>
+        </div>
+
+        <!-- Customers Section -->
+        <div class="content-section" id="customers-section">
+          <div class="section-header">
+            <h1>Customer Management</h1>
+            <button class="primary-btn" id="add-customer-btn">
+              <i class="fas fa-plus"></i> Add New Customer
+            </button>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label>Customer Type</label>
+              <select id="filter-customer-type">
+                <option value="">All Types</option>
+                <option value="Regular">Regular</option>
+                <option value="VIP">VIP</option>
+                <option value="New">New</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="filter-customer-status">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Search</label>
+              <input
+                type="text"
+                id="customer-search"
+                placeholder="Search by name, email, or phone"
+              />
+            </div>
+          </div>
+
+          <div class="data-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" class="select-all" /></th>
+                  <th>Customer</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Pets</th>
+                  <th>Total Orders</th>
+                  <th>Total Spent</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="pagination-btn" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="pagination-ellipsis">...</span>
+            <button class="pagination-btn">10</button>
+            <button class="pagination-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="content-section" id="reports-section">
+          <div class="section-header">
+            <h1>Reports & Analytics</h1>
+            <div>
+              <button class="secondary-btn" id="export-report-btn">
+                <i class="fas fa-file-export"></i> Export
+              </button>
+              <button class="primary-btn" id="generate-report-btn">
+                <i class="fas fa-chart-line"></i> Generate Report
+              </button>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label>Report Type</label>
+              <select id="report-type">
+                <option value="sales">Sales Report</option>
+                <option value="inventory">Inventory Report</option>
+                <option value="customers">Customer Report</option>
+                <option value="services">Services Report</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Time Period</label>
+              <select id="report-period">
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="this_week">This Week</option>
+                <option value="last_week">Last Week</option>
+                <option value="this_month" selected>This Month</option>
+                <option value="last_month">Last Month</option>
+                <option value="this_year">This Year</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+            <div
+              class="filter-group"
+              id="custom-date-range"
+              style="display: none"
+            >
+              <label>Custom Range</label>
+              <div style="display: flex; gap: 10px">
+                <input type="date" id="report-date-from" placeholder="From" />
+                <input type="date" id="report-date-to" placeholder="To" />
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-widgets">
+            <div class="widget">
+              <div class="widget-header">
+                <h3>Sales Overview</h3>
+                <select id="sales-chart-period">
+                  <option value="daily">Daily</option>
+                  <option value="weekly" selected>Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+              <div class="widget-content">
+                <div
+                  style="
+                    height: 300px;
+                    background-color: #f9fafb;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <p style="color: #666">Sales Chart Placeholder</p>
+                  <!-- In a real implementation, this would be a chart -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px">
+              <div class="col-md-4">
+                <div class="widget">
+                  <div class="widget-header">
+                    <h3>Top Products</h3>
+                    <a href="#" class="view-all">View All</a>
+                  </div>
+                  <div class="widget-content">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th>Sales</th>
+                          <th>Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Premium Dog Food</td>
+                          <td>42</td>
+                          <td>$1,259.58</td>
+                        </tr>
+                        <tr>
+                          <td>Cat Play Tower</td>
+                          <td>28</td>
+                          <td>$1,399.72</td>
+                        </tr>
+                        <tr>
+                          <td>Dog Collar - Medium</td>
+                          <td>35</td>
+                          <td>$454.65</td>
+                        </tr>
+                        <tr>
+                          <td>Pet Vitamins</td>
+                          <td>31</td>
+                          <td>$619.69</td>
+                        </tr>
+                        <tr>
+                          <td>Bird Cage - Large</td>
+                          <td>18</td>
+                          <td>$1,619.82</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="widget">
+                  <div class="widget-header">
+                    <h3>Top Services</h3>
+                    <a href="#" class="view-all">View All</a>
+                  </div>
+                  <div class="widget-content">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Service</th>
+                          <th>Bookings</th>
+                          <th>Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Basic Grooming</td>
+                          <td>56</td>
+                          <td>$1,960.00</td>
+                        </tr>
+                        <tr>
+                          <td>Premium Grooming</td>
+                          <td>32</td>
+                          <td>$2,080.00</td>
+                        </tr>
+                        <tr>
+                          <td>Routine Checkup</td>
+                          <td>48</td>
+                          <td>$2,160.00</td>
+                        </tr>
+                        <tr>
+                          <td>Vaccination</td>
+                          <td>37</td>
+                          <td>$925.00</td>
+                        </tr>
+                        <tr>
+                          <td>Basic Training</td>
+                          <td>24</td>
+                          <td>$960.00</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="widget">
+                  <div class="widget-header">
+                    <h3>Customer Insights</h3>
+                    <a href="#" class="view-all">View All</a>
+                  </div>
+                  <div class="widget-content">
+                    <div
+                      style="
+                        height: 200px;
+                        background-color: #f9fafb;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-bottom: 15px;
+                      "
+                    >
+                      <p style="color: #666">Customer Distribution Chart</p>
+                      <!-- In a real implementation, this would be a chart -->
+                    </div>
+                    <div class="stats-summary">
+                      <div class="stat-item">
+                        <span class="stat-label">New Customers</span>
+                        <span class="stat-value">24</span>
+                        <span class="stat-change positive">+12%</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">Returning</span>
+                        <span class="stat-value">68</span>
+                        <span class="stat-change positive">+5%</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">Avg. Spend</span>
+                        <span class="stat-value">$85.42</span>
+                        <span class="stat-change positive">+8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="widget" style="margin-top: 20px">
+              <div class="widget-header">
+                <h3>Inventory Status</h3>
+                <select id="inventory-filter">
+                  <option value="all">All Products</option>
+                  <option value="low">Low Stock</option>
+                  <option value="out">Out of Stock</option>
+                </select>
+              </div>
+              <div class="widget-content">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Current Stock</th>
+                      <th>Reorder Level</th>
+                      <th>Status</th>
+                      <th>Last Restock</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Premium Dog Food</td>
+                      <td>Pet Food</td>
+                      <td>42</td>
+                      <td>20</td>
+                      <td><span class="status-active">In Stock</span></td>
+                      <td>Apr 10, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>Cat Play Tower</td>
+                      <td>Toys</td>
+                      <td>15</td>
+                      <td>10</td>
+                      <td><span class="status-active">In Stock</span></td>
+                      <td>Apr 8, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>Dog Collar - Medium</td>
+                      <td>Accessories</td>
+                      <td>28</td>
+                      <td>15</td>
+                      <td><span class="status-active">In Stock</span></td>
+                      <td>Apr 12, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>Pet Vitamins</td>
+                      <td>Medicine</td>
+                      <td>5</td>
+                      <td>10</td>
+                      <td><span class="status-pending">Low Stock</span></td>
+                      <td>Apr 5, 2025</td>
+                    </tr>
+                    <tr>
+                      <td>Bird Cage - Large</td>
+                      <td>Accessories</td>
+                      <td>0</td>
+                      <td>5</td>
+                      <td><span class="status-inactive">Out of Stock</span></td>
+                      <td>Mar 28, 2025</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="content-section" id="settings-section">
+          <div class="section-header">
+            <h1>Settings</h1>
+            <button class="primary-btn" id="save-settings-btn">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+
+          <div class="settings-container">
+            <div class="settings-sidebar">
+              <ul class="settings-menu">
+                <li class="settings-menu-item active" data-settings="general">
+                  <i class="fas fa-cog"></i> General
+                </li>
+                <li class="settings-menu-item" data-settings="store">
+                  <i class="fas fa-store"></i> Store
+                </li>
+                <li class="settings-menu-item" data-settings="users">
+                  <i class="fas fa-users-cog"></i> Users & Permissions
+                </li>
+                <li class="settings-menu-item" data-settings="payment">
+                  <i class="fas fa-credit-card"></i> Payment Methods
+                </li>
+                <li class="settings-menu-item" data-settings="shipping">
+                  <i class="fas fa-shipping-fast"></i> Shipping
+                </li>
+                <li class="settings-menu-item" data-settings="tax">
+                  <i class="fas fa-file-invoice-dollar"></i> Tax
+                </li>
+                <li class="settings-menu-item" data-settings="email">
+                  <i class="fas fa-envelope"></i> Email Templates
+                </li>
+                <li class="settings-menu-item" data-settings="notifications">
+                  <i class="fas fa-bell"></i> Notifications
+                </li>
+                <li class="settings-menu-item" data-settings="integrations">
+                  <i class="fas fa-plug"></i> Integrations
+                </li>
+                <li class="settings-menu-item" data-settings="backup">
+                  <i class="fas fa-database"></i> Backup & Export
+                </li>
+              </ul>
+            </div>
+
+            <div class="settings-content">
+              <!-- General Settings -->
+              <div class="settings-panel active" id="general-settings">
+                <h2>General Settings</h2>
+
+                <div class="settings-card">
+                  <h3>Store Information</h3>
+                  <div class="form-group">
+                    <label for="store-name">Store Name</label>
+                    <input type="text" id="store-name" value="PetCare Store" />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="store-email">Email Address</label>
+                      <input
+                        type="email"
+                        id="store-email"
+                        value="contact@petcarestore.com"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="store-phone">Phone Number</label>
+                      <input
+                        type="tel"
+                        id="store-phone"
+                        value="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="store-address">Address</label>
+                    <textarea id="store-address">
+123 Pet Street
+Anytown, ST 12345
+United States</textarea
+                    >
+                  </div>
+                </div>
+
+                <div class="settings-card">
+                  <h3>Regional Settings</h3>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="store-country">Country</label>
+                      <select id="store-country">
+                        <option value="US" selected>United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="store-timezone">Timezone</label>
+                      <select id="store-timezone">
+                        <option value="Pacific/Honolulu">
+                          Hawaii (GMT-10:00)
+                        </option>
+                        <option value="America/Anchorage">
+                          Alaska (GMT-09:00)
+                        </option>
+                        <option value="America/Los_Angeles">
+                          Pacific Time (GMT-08:00)
+                        </option>
+                        <option value="America/Denver">
+                          Mountain Time (GMT-07:00)
+                        </option>
+                        <option value="America/Chicago">
+                          Central Time (GMT-06:00)
+                        </option>
+                        <option value="America/New_York" selected>
+                          Eastern Time (GMT-05:00)
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="store-currency">Currency</label>
+                      <select id="store-currency">
+                        <option value="USD" selected>US Dollar ($)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="GBP">British Pound (£)</option>
+                        <option value="CAD">Canadian Dollar (C$)</option>
+                        <option value="AUD">Australian Dollar (A$)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="date-format">Date Format</label>
+                      <select id="date-format">
+                        <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="settings-card">
+                  <h3>System Settings</h3>
+                  <div class="form-group">
+                    <label>Theme</label>
+                    <div class="theme-options">
+                      <div class="theme-option active">
+                        <div class="theme-preview light-theme"></div>
+                        <span>Light</span>
+                      </div>
+                      <div class="theme-option">
+                        <div class="theme-preview dark-theme"></div>
+                        <span>Dark</span>
+                      </div>
+                      <div class="theme-option">
+                        <div class="theme-preview blue-theme"></div>
+                        <span>Blue</span>
+                      </div>
+                      <div class="theme-option">
+                        <div class="theme-preview green-theme"></div>
+                        <span>Green</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>System Preferences</label>
+                    <div class="checkbox-group">
+                      <div>
+                        <input type="checkbox" id="auto-refresh" checked />
+                        <label for="auto-refresh"
+                          >Enable auto-refresh for dashboard</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          id="email-notifications"
+                          checked
+                        />
+                        <label for="email-notifications"
+                          >Receive email notifications</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          id="browser-notifications"
+                          checked
+                        />
+                        <label for="browser-notifications"
+                          >Enable browser notifications</label
+                        >
+                      </div>
+                      <div>
+                        <input type="checkbox" id="sound-alerts" />
+                        <label for="sound-alerts">Enable sound alerts</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Other Settings Panels -->
+              <div class="settings-panel" id="store-settings">
+                <h2>Store Settings</h2>
+                <p>Store configuration settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="users-settings">
+                <h2>Users & Permissions</h2>
+                <p>User management and permission settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="payment-settings">
+                <h2>Payment Methods</h2>
+                <p>Payment gateway and method settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="shipping-settings">
+                <h2>Shipping</h2>
+                <p>Shipping configuration and rates will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="tax-settings">
+                <h2>Tax</h2>
+                <p>Tax rates and settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="email-settings">
+                <h2>Email Templates</h2>
+                <p>Email template configuration will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="notifications-settings">
+                <h2>Notifications</h2>
+                <p>Notification settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="integrations-settings">
+                <h2>Integrations</h2>
+                <p>Third-party integration settings will appear here.</p>
+              </div>
+
+              <div class="settings-panel" id="backup-settings">
+                <h2>Backup & Export</h2>
+                <p>Data backup and export options will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Add New Product</h2>
+          <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="product-form">
+            <input type="hidden" id="product-id" />
+            <div class="form-group">
+              <label for="product-name">Product Name</label>
+              <input type="text" id="product-name" placeholder="Enter product name" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-price">Price</label>
+                <input type="number" id="product-price" placeholder="Enter price" required />
+              </div>
+              <div class="form-group">
+                <label for="product-stock">Stock</label>
+                <input type="number" id="product-stock" placeholder="Enter stock quantity" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="product-category-modal">Category</label>
+              <select id="product-category-modal" required>
+                <option value="">Select Category</option>
+                <!-- Categories will be populated by JavaScript -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="product-description">Description</label>
+              <div id="editor-container" style="height: 150px;"></div>
+            </div>
+            <div class="form-group">
+              <label for="product-image">Product Image</label>
+              <input type="file" id="product-image" accept="image/*" />
+              <div id="image-preview" class="mt-2">
+                <!-- Image preview will be shown here -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary-btn" id="cancel-btn">
+            Cancel
+          </button>
+          <button type="button" class="btn primary-btn" id="save-product-btn">
+            Save Product
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Confirm Delete</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to remove this product? It will be deactivated but remain in the database.
+          </p>
+          <input type="hidden" id="delete-product-id" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="confirm-delete-btn" class="danger-btn">
+            Delete
+          </button>
+          <button type="button" id="delete-cancel-btn" class="secondary-btn">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add this before the closing body tag -->
+    <template id="service-item-template">
+      <div class="service-item">
+        <div class="form-group">
+          <label>Item Name</label>
+          <input type="text" class="service-item-name form-control" placeholder="Item name" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Small Pet Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₫</span>
+              <input type="number" class="service-item-small-price form-control" min="0" step="1000" placeholder="Small pet price" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Medium Pet Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₫</span>
+              <input type="number" class="service-item-medium-price form-control" min="0" step="1000" placeholder="Medium pet price" />
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Large Pet Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₫</span>
+              <input type="number" class="service-item-large-price form-control" min="0" step="1000" placeholder="Large pet price" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Extra Large Pet Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₫</span>
+              <input type="number" class="service-item-xlarge-price form-control" min="0" step="1000" placeholder="Extra large pet price" />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Duration (mins)</label>
+          <input type="number" class="service-item-duration form-control" placeholder="Minutes" />
+        </div>
+        <button type="button" class="icon-btn delete-service-item">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        <hr />
+      </div>
+    </template>
+
+    <!-- Thêm vào cuối body trước các script -->
+    <div id="image-preview-modal" class="image-preview-modal">
+      <span class="close" onclick="this.parentElement.style.display='none'"
+        >&times;</span
+      >
+      <img id="preview-image" src="" />
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+      <div class="toast-content">
+        <i class="fas fa-check-circle"></i>
+        <div class="toast-message">Success! Product has been saved.</div>
+      </div>
+      <div class="toast-progress"></div>
+    </div>
+
+    <!-- Toast container for notifications -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <!-- Thư viện bên thứ 3 -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+
+    <!-- Core services - load these first -->
+    <script src="js/toast-service.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/auth_service.js"></script>
+    <script src="js/order-service.js"></script>
+    <script src="js/order-history.js"></script>
+    <script src="js/category-service.js"></script>
+    <script src="js/product-service.js"></script>
+    <!-- Add this with the other service scripts -->
+    <script src="js/shop-product-service.js"></script>
+
+
+    <!-- Feature handlers -->
+    <script src="js/service-handlers.js"></script>
+    <script src="js/category-handlers.js"></script>
+    <script src="js/product-handlers.js"></script>
+    <script src="js/booking-handlers.js"></script>
+    <script src="js/order-handlers.js"></script>
+    <script src="js/report-handlers.js"></script>
+    <script src="js/settings-handlers.js"></script>
+
+    <!-- Main admin script - load last -->
+    <script src="js/admin-script.js"></script>
+    <script src="js/admin-orders.js"></script>
+    <script src="js/admin-bookings.js"></script>
+    <!-- Initialize -->
+    <!-- Replace or modify the existing initialization script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize core services first
+        if (!window.authService) {
+          console.error("Auth service not loaded");
+          return;
+        }
+
+        // Initialize UI components
+        window.quill = new Quill("#editor-container", {
+          theme: "snow",
+          modules: {
+            toolbar: [
+              ["bold", "italic", "underline", "strike"],
+              ["blockquote", "code-block"],
+              [{ header: 1 }, { header: 2 }],
+              [{ size: ["small", false, "large", "huge"] }],
+              [{ color: [] }, { background: [] }],
+              [{ align: [] }],
+              ["link", "image"],
+                ["clean"],
+            ],
+          },
+          placeholder: "Enter product description...",
+        });
+
+        // Initialize handlers
+        if (window.ProductHandlers) {
+          ProductHandlers.initializeProductEvents();
+        }
+        if (window.OrderHandlers) {
+          OrderHandlers.initializeOrderEvents();
+        }
+        if (window.ReportHandlers) {
+          ReportHandlers.initializeReportEvents();
+        }
+        if (window.SettingsHandlers) {
+          SettingsHandlers.initializeSettingsEvents();
+        }
+        if (window.ServiceHandlers) {
+          ServiceHandlers.initializeServiceEvents();
+        }
+        if (window.CategoryHandlers) {
+          CategoryHandlers.initializeCategoryEvents();
+          CategoryHandlers.loadCategories();
+          CategoryHandlers.populateCategoryDropdowns();
+        }
+        if (window.BookingHandlers) {
+          BookingHandlers.initializeBookingEvents();
+        } else {
+          console.error("BookingHandlers not found.");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -4,6 +4,7 @@ public class CategoryResponse {
     private String id;
     private String name;
     private String description;
+    private boolean isActive;
 
     // Getters và Setters
     public String getId() {
@@ -29,4 +30,12 @@ public class CategoryResponse {
     public void setDescription(String description) {
         this.description = description;
     }
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+ 
 }

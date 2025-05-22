@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class VnPayConfig {
 
+
     @Value("${vnpay.payUrl}")
     private String vnpPayUrl;
 
@@ -21,6 +22,25 @@ public class VnPayConfig {
 
     public String getvnpPayUrl() {
         return vnpPayUrl;
+    
+    @Value("${vnpay.tmnCode}") // Default from prompt: CBV4016A
+    private String tmnCode;
+    
+    @Value("${vnpay.hashSecret}")
+    private String hashSecret;
+    
+    @Value("${vnpay.paymentUrl}")
+    private String paymentUrl;
+    
+    @Value("${vnpay.returnUrl}")
+    private String returnUrl;
+    
+    @Value("${vnpay.ipnUrl}")
+    private String ipnUrl;
+    
+    // Getter methods
+    public String getTmnCode() {
+        return tmnCode;
     }
 
     public String getvnpReturnUrl() {

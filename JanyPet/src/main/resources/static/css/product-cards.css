@@ -1,0 +1,196 @@
+/* Product Cards Styling */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.product-card .product-img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+.product-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-overlay button {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    transition: all 0.3s ease;
+}
+
+.product-overlay button:hover {
+    transform: scale(1.1);
+}
+
+/* Category Card Styling */
+.category-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.category-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon-wrapper {
+    transform: scale(1.1);
+}
+
+/* Product hover effect */
+.hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Animation for product images */
+.hover-lift {
+    transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+}
+
+/* Stock status styling */
+.stock-status {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Quick View Modal Styling */
+.quickview-modal .modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.product-info-section {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.section-title {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #e9ecef;
+}
+
+.quantity-input {
+    width: 40px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    margin: 0 8px;
+}
+
+/* Additional styles for product-category-section */
+.product-category-section {
+    padding: 2rem 0;
+    position: relative;
+}
+
+.product-category-section::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.1), rgba(0,0,0,0));
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+/* Horizontal scrollable category container */
+.snap-x {
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.snap-x::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome/Safari/Edge */
+}
+
+.snap-center {
+    scroll-snap-align: center;
+}
+
+/* Shadow indicator for horizontal scroll */
+.has-more-right::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.1));
+    pointer-events: none;
+}
+
+.has-more-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.1));
+    pointer-events: none;
+}

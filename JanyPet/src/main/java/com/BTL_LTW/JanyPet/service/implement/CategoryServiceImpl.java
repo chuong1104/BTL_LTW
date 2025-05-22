@@ -7,8 +7,10 @@ import com.BTL_LTW.JanyPet.entity.Category;
 import com.BTL_LTW.JanyPet.repository.CategoryRepository;
 
 import com.BTL_LTW.JanyPet.service.Interface.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setName(request.getName());
         category.setDescription(request.getDescription());
+        category.setActive(true); // Set active by default
         category = categoryRepository.save(category);
         return mapToResponse(category);
     }
@@ -51,17 +54,39 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream()
+        // Modify to only return active categories by default
+        return categoryRepository.findByIsActiveTrue().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void deleteCategory(String id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Không tìm thấy Category với id: " + id);
-        }
-        categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+
+        // Soft delete - set isActive to false
+        category.setActive(false);
+        categoryRepository.save(category);
+    }
+
+    // Add a new method to get all categories including inactive ones for admin
+    @Override
+    public List<CategoryResponse> getAllCategoriesIncludingInactive() {
+        return categoryRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Add a method to toggle category status
+    @Override
+    public CategoryResponse toggleCategoryStatus(String id, boolean isActive) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+
+        category.setActive(isActive);
+        Category savedCategory = categoryRepository.save(category);
+        return mapToResponse(savedCategory);
     }
 
     private CategoryResponse mapToResponse(Category category) {
@@ -69,6 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
         response.setId(category.getId());
         response.setName(category.getName());
         response.setDescription(category.getDescription());
+        response.setActive(category.getActive()); // Add this line
         return response;
     }
 }

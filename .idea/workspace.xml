@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bc1bef31-5bd1-4b6d-bc85-18d982054035" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/VnPayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/VnPayConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/CategoryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/CategoryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/ProductResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/CategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/GeminiApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/GeminiApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/Interface/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/Interface/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/Interface/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/Interface/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/CategoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/BookingService.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/BookingService.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/appointment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/auth_service.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/auth_service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/category-handlers.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/category-handlers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/category-service.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/category-service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/enhanced-ux.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/enhanced-ux.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/index-script.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/index-script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-handlers.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-handlers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-service.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/quick-view.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/quick-view.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/single-product.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/single-product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1747048430053_insta2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1747050726596_blog-lg3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1747681529813_item9.jpg" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2wJT5pNAaxXyXq5ibyqdXeXArd1" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.VnPaySignatureTest.executor": "Run",
+    "Notification.DisplayName-DoNotAsk-Database detector": "Database detector",
+    "Notification.DoNotAsk-Database detector": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.Run SpringbootApp.executor": "Run",
+    "ignore.preview.features.used": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Web_ban_hoa",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Run SpringbootApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ALTERNATIVE_JRE_PATH" value="22 (2)" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <module name="JanyPet" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.BTL_LTW.JanyPet.JanyPetApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bc1bef31-5bd1-4b6d-bc85-18d982054035" name="Changes" comment="" />
+      <created>1745758506603</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745758506603</updated>
+      <workItem from="1745758508096" duration="171000" />
+      <workItem from="1745758714071" duration="258000" />
+      <workItem from="1745759045923" duration="5685000" />
+      <workItem from="1745842040443" duration="2628000" />
+      <workItem from="1745892203373" duration="2542000" />
+      <workItem from="1745904211801" duration="3381000" />
+      <workItem from="1745933120812" duration="5714000" />
+      <workItem from="1746002480786" duration="6041000" />
+      <workItem from="1746092620615" duration="3566000" />
+      <workItem from="1746209127443" duration="1242000" />
+      <workItem from="1746543180518" duration="2045000" />
+      <workItem from="1746855210891" duration="3892000" />
+      <workItem from="1746888843954" duration="26654000" />
+      <workItem from="1747019250321" duration="9412000" />
+      <workItem from="1747030872641" duration="5842000" />
+      <workItem from="1747134353359" duration="7179000" />
+      <workItem from="1747198320504" duration="5693000" />
+      <workItem from="1747314510760" duration="9775000" />
+      <workItem from="1747375115052" duration="7456000" />
+      <workItem from="1747574950173" duration="7796000" />
+      <workItem from="1747641105535" duration="6642000" />
+      <workItem from="1747658649471" duration="3774000" />
+      <workItem from="1747668424684" duration="6146000" />
+      <workItem from="1747742841008" duration="2899000" />
+      <workItem from="1747757294455" duration="1140000" />
+      <workItem from="1747884705861" duration="10323000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

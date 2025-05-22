@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Chi tiết sản phẩm - JanyPet</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="author" content="JanyPet">
+  <meta name="keywords" content="thú cưng, pet shop, cửa hàng thú cưng, chó, mèo">
+  <meta name="description" content="JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico">
+  
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/chatbot.css" />
+  <link rel="stylesheet" type="text/css" href="css/product-cards.css" />
+  <link rel="stylesheet" type="text/css" href="css/product-tooltips.css" />
+  <link rel="stylesheet" type="text/css" href="css/responsive-product-page.css" />
+  <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header class="auto-hide-header">
+    <div class="container py-2">
+      <div class="row py-3 align-items-center">
+        <!-- Logo -->
+        <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
+          <div class="main-logo">
+            <a href="index.html">
+              <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
+            </a>
+          </div>
+        </div>
+
+        <!-- Search bar - visible on large screens -->
+        <div class="col-lg-5 d-none d-lg-block position-relative">
+          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+            <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
+              <input type="text" name="keyword" id="searchInputHeader" class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." autocomplete="off" />
+              <button type="submit" class="btn btn-link p-0 text-primary">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
+          <div id="searchSuggestionsHeader" class="search-suggestions-container"></div>
+        </div>
+
+        <!-- Auth and user actions -->
+        <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+          <div class="auth-container ms-auto">
+            <!-- Login/Register buttons -->
+            <div class="auth-buttons">
+              <a href="login.html" class="btn btn-outline-primary rounded-pill">
+                <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+              </a>
+            </div>
+
+            <!-- User info when logged in -->
+            <div class="user-info d-flex align-items-center">
+              <div class="d-flex">
+                <a href="account.html" class="btn btn-outline-secondary rounded-pill btn-sm account-link">
+                  <i class="fas fa-user-circle me-1"></i> Tài khoản
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart and wishlist icons -->
+          <div class="ms-3 d-flex">
+            <a href="wishlist.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-heart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count">0</span>
+            </a>
+            <a href="cart.html" class="mx-2 position-relative text-dark">
+              <i class="fas fa-shopping-cart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary cart-count">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation menu -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+    <div class="container">
+      <!-- Mobile toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Search bar - visible on mobile only -->
+      <div class="d-block d-lg-none ms-2 me-auto">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#searchModal" class="btn btn-outline-primary rounded-circle">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+
+      <!-- Main navigation -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Trang chủ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu" id="product-category-dropdown">
+              <!-- Categories will be loaded here by JavaScript -->
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Liên hệ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Modal for mobile -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="searchModalLabel">Tìm kiếm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="search-form-modal" action="shop.html" method="GET">
+            <div class="input-group">
+              <input type="text" name="keyword" id="searchInputModal" class="form-control" placeholder="Tìm kiếm sản phẩm..." autocomplete="off">
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+          <div id="searchSuggestionsModal" class="search-suggestions-container mt-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb Section -->
+  <section class="breadcrumb-section bg-light py-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+          <li class="breadcrumb-item"><a href="shop.html">Sản phẩm</a></li>
+          <li class="breadcrumb-item active" aria-current="page" id="product-name-top">Chi tiết sản phẩm</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Product Detail Section -->
+  <section class="product-details-section py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Product Images -->
+        <div class="col-lg-6">
+          <!-- Main Product Image Swiper -->
+          <div class="product-image-wrapper position-relative mb-3">
+            <div class="swiper main-product-slider">
+              <div class="swiper-wrapper" id="main-product-swiper-wrapper">
+                <!-- Main product images will be loaded dynamically -->
+                <div class="swiper-slide">
+                  <img src="images/placeholder.jpg" id="product-main-image" class="img-fluid rounded product-main-image" alt="Product Image">
+                </div>
+              </div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+            
+            <button class="btn btn-light zoom-btn position-absolute top-0 end-0 m-3" title="Phóng to">
+              <i class="fas fa-search-plus"></i>
+            </button>
+          </div>
+          
+          <!-- Product Thumbnails Swiper -->
+          <div class="swiper product-thumbnails-slider" id="product-thumbnails-swiper-wrapper">
+            <div class="swiper-wrapper">
+              <!-- Thumbnail images will be loaded dynamically -->
+              <div class="swiper-slide">
+                <img src="images/placeholder.jpg" class="img-fluid rounded product-thumb-image" alt="Product Thumbnail">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="col-lg-6">
+          <div class="product-info p-4 bg-white rounded shadow-sm">
+            <!-- Product Title and Price -->
+            <div class="mb-4">
+              <h1 class="h2 mb-2 fw-bold" id="product-title">Tên sản phẩm</h1>
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="rating">
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                </div>
+                <span>(0 đánh giá)</span>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <h3 class="text-primary fw-bold mb-0" id="product-price-top">0₫</h3>
+                <span class="text-decoration-line-through text-muted" id="product-original-price-top"></span>
+                <span class="badge bg-danger" id="product-discount-badge"></span>
+              </div>
+            </div>
+            
+            <!-- Product Description -->
+            <div class="mb-4">
+              <h5 class="fw-bold mb-2">Mô tả sản phẩm:</h5>
+              <p id="product-short-description-top" class="text-muted">Đang tải thông tin sản phẩm...</p>
+            </div>
+            
+            <!-- Product Metadata -->
+            <div class="product-meta mb-4">
+              <table class="table table-sm table-borderless">
+                <tbody>
+                  <tr>
+                    <td class="fw-bold">Mã sản phẩm:</td>
+                    <td id="product-sku">SP001</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">Danh mục:</td>
+                    <td id="product-category">Chưa phân loại</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">Xuất xứ:</td>
+                    <td id="product-origin">Không xác định</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">Tình trạng:</td>
+                    <td><span id="product-stock-status-text" class="badge bg-primary-subtle text-primary">Còn hàng</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Add to Cart -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-3">
+                <label for="quantity" class="me-3 fw-bold">Số lượng:</label>
+                <div class="quantity-control d-flex align-items-center">
+                  <button class="btn btn-outline-secondary minus-btn" id="decrease-quantity">-</button>
+                  <input type="number" id="quantity" class="form-control mx-2 text-center" value="1" min="1">
+                  <button class="btn btn-outline-secondary plus-btn" id="increase-quantity">+</button>
+                </div>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <button id="add-to-cart-btn" class="btn btn-primary btn-lg d-flex align-items-center">
+                  <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+                </button>
+                <button id="add-to-wishlist-btn" class="btn btn-outline-danger btn-lg">
+                  <i class="far fa-heart"></i>
+                </button>
+                <button id="buy-now-btn" class="btn btn-danger btn-lg">
+                  Mua ngay
+                </button>
+              </div>
+            </div>
+            
+            <!-- Share Product -->
+            <div class="product-share">
+              <h5 class="fw-bold mb-2">Chia sẻ:</h5>
+              <div class="social-share d-flex gap-2">
+                <a href="#" class="btn btn-outline-primary btn-sm rounded-circle" aria-label="Share on Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="btn btn-outline-info btn-sm rounded-circle" aria-label="Share on Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="btn btn-outline-danger btn-sm rounded-circle" aria-label="Share on Pinterest">
+                  <i class="fab fa-pinterest-p"></i>
+                </a>
+                <a href="#" class="btn btn-outline-success btn-sm rounded-circle" aria-label="Share on WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Information Tabs -->
+  <section class="product-info-tabs py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <!-- Nav tabs -->
+          <ul class="nav nav-pills mb-3" id="productDetailTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="v-pills-description-tab" data-bs-toggle="pill" data-bs-target="#v-pills-description" type="button" role="tab" aria-controls="v-pills-description" aria-selected="true">
+                <i class="fas fa-info-circle me-2"></i> Mô tả chi tiết
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="v-pills-additional-tab" data-bs-toggle="pill" data-bs-target="#v-pills-additional" type="button" role="tab" aria-controls="v-pills-additional" aria-selected="false">
+                <i class="fas fa-images me-2"></i> Hình ảnh bổ sung
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="v-pills-reviews-tab" data-bs-toggle="pill" data-bs-target="#v-pills-reviews" type="button" role="tab" aria-controls="v-pills-reviews" aria-selected="false">
+                <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="v-pills-shipping-tab" data-bs-toggle="pill" data-bs-target="#v-pills-shipping" type="button" role="tab" aria-controls="v-pills-shipping" aria-selected="false">
+                <i class="fas fa-truck me-2"></i> Vận chuyển & Đổi trả
+              </button>
+            </li>
+          </ul>
+          
+          <!-- Tab content -->
+          <div class="tab-content p-4 bg-white rounded shadow-sm" id="productDetailTabsContent">
+            <div class="tab-pane fade show active" id="v-pills-description" role="tabpanel" aria-labelledby="v-pills-description-tab">
+              <div class="row">
+                <div class="col-12">
+                  <div class="product-description mb-4">
+                    <h4 class="mb-3">Giới thiệu sản phẩm</h4>
+                    <p id="product-long-description-details-tab" class="text-muted">Đang tải thông tin chi tiết sản phẩm...</p>
+                  </div>
+                  
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <div class="product-features mb-4">
+                        <h5 class="mb-3">Tính năng nổi bật</h5>
+                        <ul class="list-group list-group-flush" id="product-detailed-features-list">
+                          <!-- Features will be loaded dynamically -->
+                          <li class="list-group-item border-0 py-2">
+                            <i class="fas fa-check-circle text-success me-2"></i> An toàn với thú cưng
+                          </li>
+                          <li class="list-group-item border-0 py-2">
+                            <i class="fas fa-check-circle text-success me-2"></i> Chất lượng cao
+                          </li>
+                          <li class="list-group-item border-0 py-2">
+                            <i class="fas fa-check-circle text-success me-2"></i> Dễ dàng sử dụng
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div class="product-usage mb-4">
+                        <h5 class="mb-3">Hướng dẫn sử dụng</h5>
+                        <ol class="ps-3">
+                          <li class="mb-2">Đọc kỹ hướng dẫn trước khi sử dụng</li>
+                          <li class="mb-2">Bảo quản sản phẩm ở nơi khô ráo, thoáng mát</li>
+                          <li class="mb-2">Để xa tầm tay trẻ em</li>
+                        </ol>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                      <div class="product-specifications mb-4">
+                        <h5 class="mb-3">Thông số kỹ thuật</h5>
+                        <table class="table table-bordered">
+                          <tbody id="product-specs-table">
+                            <tr>
+                              <th width="40%">Thương hiệu</th>
+                              <td id="product-brand">Đang cập nhật</td>
+                            </tr>
+                            <tr>
+                              <th>Xuất xứ</th>
+                              <td id="product-origin-table">Đang cập nhật</td>
+                            </tr>
+                            <tr>
+                              <th>Trọng lượng</th>
+                              <td id="product-weight">Đang cập nhật</td>
+                            </tr>
+                            <tr>
+                              <th>Hạn sử dụng</th>
+                              <td id="product-expiry">Đang cập nhật</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane fade" id="v-pills-additional" role="tabpanel" aria-labelledby="v-pills-additional-tab">
+              <div class="mb-4">
+                <h4 class="mb-3">Hình ảnh sản phẩm</h4>
+                <div class="row mb-4">
+                  <div class="col-md-4 mb-4">
+                    <div class="text-center product-main-image-container">
+                      <img src="images/placeholder.jpg" id="product-image-gallery-main" class="img-fluid rounded mb-3" alt="Product Image">
+                      <h5 id="product-title-gallery" class="mb-2">Tên sản phẩm</h5>
+                      <p class="text-muted small">Hình ảnh chính</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-4 product-gallery-section">
+                <h4 class="mb-3">Hình ảnh bổ sung</h4>
+                <div id="product-gallery-container" class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                  <!-- Dynamic gallery images will be injected here by JavaScript -->
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-center mt-5">
+                 <button class="btn btn-outline-primary rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#v-pills-description">
+                  <i class="fas fa-arrow-left me-2"></i> Quay lại mô tả chính
+                </button>
+              </div>
+            </div>
+            
+            <div class="tab-pane fade" id="v-pills-reviews" role="tabpanel" aria-labelledby="v-pills-reviews-tab">
+              <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                  <div class="reviews-summary text-center">
+                    <h4 class="mb-3">Đánh giá sản phẩm</h4>
+                    <div class="overall-rating mb-3">
+                      <span class="display-3 fw-bold">5.0</span>
+                      <div class="d-flex justify-content-center">
+                        <div class="rating">
+                          <i class="fas fa-star text-warning"></i>
+                          <i class="fas fa-star text-warning"></i>
+                          <i class="fas fa-star text-warning"></i>
+                          <i class="fas fa-star text-warning"></i>
+                          <i class="fas fa-star text-warning"></i>
+                        </div>
+                      </div>
+                      <p class="text-muted">(0 đánh giá)</p>
+                    </div>
+                    
+                    <div class="rating-breakdown">
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">5 sao</span>
+                        <div class="progress flex-grow-1" style="height: 8px;">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">0</span>
+                      </div>
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">4 sao</span>
+                        <div class="progress flex-grow-1" style="height: 8px;">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">0</span>
+                      </div>
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">3 sao</span>
+                        <div class="progress flex-grow-1" style="height: 8px;">
+                          <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">0</span>
+                      </div>
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">2 sao</span>
+                        <div class="progress flex-grow-1" style="height: 8px;">
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">0</span>
+                      </div>
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="me-2">1 sao</span>
+                        <div class="progress flex-grow-1" style="height: 8px;">
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-8">
+                  <div class="reviews-list mb-4">
+                    <h4 class="mb-3">Đánh giá từ khách hàng</h4>
+                    <div class="text-center py-5">
+                      <i class="far fa-comment-dots fa-3x mb-3 text-muted"></i>
+                      <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="write-review">
+                    <h4 class="mb-3">Viết đánh giá của bạn</h4>
+                    <form id="review-form">
+                      <div class="mb-3">
+                        <label for="reviewRating" class="form-label">Điểm đánh giá</label>
+                        <div class="rating-select">
+                          <i class="far fa-star rating-star" data-rating="1"></i>
+                          <i class="far fa-star rating-star" data-rating="2"></i>
+                          <i class="far fa-star rating-star" data-rating="3"></i>
+                          <i class="far fa-star rating-star" data-rating="4"></i>
+                          <i class="far fa-star rating-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" name="rating" value="0">
+                      </div>
+                      <div class="mb-3">
+                        <label for="reviewTitle" class="form-label">Tiêu đề đánh giá</label>
+                        <input type="text" class="form-control" id="reviewTitle" placeholder="Nhập tiêu đề đánh giá">
+                      </div>
+                      <div class="mb-3">
+                        <label for="reviewContent" class="form-label">Nội dung đánh giá</label>
+                        <textarea class="form-control" id="reviewContent" rows="4" placeholder="Chia sẻ trải nghiệm của bạn với sản phẩm này"></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary" id="submit-review-btn">
+                        <i class="fas fa-paper-plane me-2"></i> Gửi đánh giá
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane fade" id="v-pills-shipping" role="tabpanel" aria-labelledby="v-pills-shipping-tab">
+              <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                  <h4 class="mb-3">Thông tin vận chuyển</h4>
+                  <div class="shipping-info">
+                    <div class="d-flex mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-truck fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Giao hàng toàn quốc</h5>
+                        <p class="text-muted">Sản phẩm sẽ được giao trong vòng 1-5 ngày làm việc (tùy khu vực).</p>
+                      </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-money-bill-wave fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Phí vận chuyển</h5>
+                        <p class="text-muted">Phí vận chuyển sẽ được tính dựa theo khu vực giao hàng và trọng lượng.</p>
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-shipping-fast fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Dịch vụ giao hàng nhanh</h5>
+                        <p class="text-muted">Giao hàng nhanh trong ngày hoặc 24h áp dụng cho một số khu vực nội thành.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <h4 class="mb-3">Chính sách đổi trả</h4>
+                  <div class="return-policy">
+                    <div class="d-flex mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-undo-alt fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Đổi trả trong 7 ngày</h5>
+                        <p class="text-muted">Quý khách có thể đổi hoặc trả sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng.</p>
+                      </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-box-open fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Điều kiện đổi trả</h5>
+                        <p class="text-muted">Sản phẩm còn nguyên vẹn, đầy đủ tem mác, hộp đựng và chưa qua sử dụng.</p>
+                      </div>
+                    </div>
+                    <div class="d-flex">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                      </div>
+                      <div class="ms-3">
+                        <h5>Bảo hành sản phẩm</h5>
+                        <p class="text-muted">Thời gian bảo hành tùy thuộc vào từng loại sản phẩm, vui lòng liên hệ với chúng tôi để biết thêm chi tiết.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products Section -->
+  <section class="related-products-section py-5">
+    <div class="container">
+      <h2 class="section-title mb-4">Sản phẩm liên quan</h2>
+      <div class="row g-4" id="related-products-container">
+        <!-- Related products will be loaded dynamically -->
+        <div class="col-12 text-center">
+          <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+          <p>Đang tải sản phẩm liên quan...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer" class="bg-light pt-5 mt-5">
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- About Company -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-about">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
+            <p class="mb-4">JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam.</p>
+            <div class="social-links">
+              <div class="d-flex gap-3">
+                <a href="#" class="social-link" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Youtube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Quick Links -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-menu">
+            <h4 class="mb-4">Liên kết nhanh</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="index.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Trang chủ</a></li>
+              <li class="mb-2"><a href="about.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Giới thiệu</a></li>
+              <li class="mb-2"><a href="shop.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Sản phẩm</a></li>
+              <li class="mb-2"><a href="service.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Dịch vụ</a></li>
+              <li class="mb-2"><a href="blog.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Tin tức</a></li>
+              <li class="mb-2"><a href="contact.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-contact">
+            <h4 class="mb-4">Thông tin liên hệ</h4>
+            <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>
+            <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
+            <p class="mb-3"><i class="fas fa-envelope me-3"></i>info@janypet.com</p>
+            <p class="mb-3"><i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
+          </div>
+        </div>
+  
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6">
+          <div>
+            <h4 class="mb-4">Nhận thông tin</h4>
+            <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyPet.</p>
+            <div class="input-group mb-3">
+              <input type="email" class="form-control rounded-start-pill" placeholder="Email của bạn">
+              <button class="btn btn-primary rounded-end-pill" type="button">Đăng ký</button>
+            </div>
+            <div class="mt-4">
+              <img src="images/payment-methods.png" alt="Payment Methods" class="img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="py-3 border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 JanyPet. Tất cả quyền được bảo lưu.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#" class="text-decoration-none me-3">Điều khoản sử dụng</a>
+            <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <a href="#" class="btn btn-primary back-to-top">
+    <i class="fa fa-angle-double-up"></i>
+  </a>
+
+  <!-- Chatbot Widget -->
+  <div class="chatbot-container">
+    <div class="chatbot-header">
+      <div class="chatbot-title">
+        <img src="images/logo.png" alt="JanyPet Logo" class="chatbot-logo">
+        <span>JanyPet Hỗ trợ</span>
+      </div>
+      <div class="chatbot-actions">
+        <button class="minimize-btn"><i class="fas fa-minus"></i></button>
+        <button class="clear-btn" title="Xóa cuộc trò chuyện"><i class="fas fa-trash"></i></button>
+        <button class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <div class="chatbot-body">
+      <div class="messages-container" id="messages">
+        <div class="message bot">
+          <div class="message-content">
+            Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?
+          </div>
+          <span class="time">12:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="chatbot-footer">
+      <form id="chatbot-form">
+        <div class="input-group">
+          <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn..." required>
+          <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </form>
+      <div class="powered-by">Powered by JanyPet</div>
+    </div>
+  </div>
+  <button class="chatbot-toggle">
+    <i class="fas fa-comments"></i>
+  </button>
+  <!-- End Chatbot Widget -->
+
+  <!-- Toast container for notifications -->
+  <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+
+  <!-- JavaScript Libraries -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Contact Javascript File -->
+  <script src="mail/jqBootstrapValidation.min.js"></script>
+  <script src="mail/contact.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/auth_service.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/category-service.js"></script>
+  <script src="js/product-service.js"></script>
+  <script src="js/toast-manager.js"></script>
+  <script src="js/product-detail-dynamic.js"></script>
+  <script src="js/product-detail-enhancements.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/enhanced-ux.js"></script>
+
+  <!-- Custom Product Detail JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add event listener for quantity buttonsn 
+      const quantityInput = document.getElementById('quantity');
+      const decreaseBtn = document.getElementById('decrease-quantity');
+      const increaseBtn = document.getElementById('increase-quantity');
+      
+      decreaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+      });
+      
+      increaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+      });
+      
+      // Add to cart button
+      const addToCartBtn = document.getElementById('add-to-cart-btn');
+      addToCartBtn.addEventListener('click', function() {
+        const productId = new URLSearchParams(window.location.search).get('productId');
+        const productName = document.getElementById('product-title').textContent;
+        const productPrice = document.getElementById('product-price-top').textContent
+          .replace('₫', '').replace(/\./g, '').trim();
+        const quantity = parseInt(quantityInput.value);
+        const imageUrl = document.getElementById('product-main-image').src;
+        
+        if (window.addToCart) {
+          window.addToCart(productId, productName, productPrice, imageUrl, quantity);
+          
+          if (window.ToastService) {
+            window.ToastService.showToast('Thành công', `Đã thêm ${quantity} sản phẩm vào giỏ hàng`, 'success');
+          }
+        }
+      });
+      
+      // Buy now button
+      const buyNowBtn = document.getElementById('buy-now-btn');
+      buyNowBtn.addEventListener('click', function() {
+        const productId = new URLSearchParams(window.location.search).get('productId');
+        const productName = document.getElementById('product-title').textContent;
+        const productPrice = document.getElementById('product-price-top').textContent
+          .replace('₫', '').replace(/\./g, '').trim();
+        const quantity = parseInt(quantityInput.value);
+        const imageUrl = document.getElementById('product-main-image').src;
+        
+        if (window.addToCart) {
+          window.addToCart(productId, productName, productPrice, imageUrl, quantity);
+          window.location.href = 'checkout.html';
+        }
+      });
+      
+      // Add to wishlist button
+      const addToWishlistBtn = document.getElementById('add-to-wishlist-btn');
+      addToWishlistBtn.addEventListener('click', function() {
+        const productId = new URLSearchParams(window.location.search).get('productId');
+        const productName = document.getElementById('product-title').textContent;
+        
+        // Check if we have a wishlist function
+        if (window.addToWishlist) {
+          window.addToWishlist(productId, productName);
+        } else {
+          // Simple wishlist notification if no function exists
+          if (window.ToastService) {
+            window.ToastService.showToast('Thông báo', `Đã thêm "${productName}" vào danh sách yêu thích`, 'info');
+          }
+        }
+        
+        // Toggle heart icon
+        const heartIcon = addToWishlistBtn.querySelector('i');
+        if (heartIcon.classList.contains('far')) {
+          heartIcon.classList.replace('far', 'fas');
+          addToWishlistBtn.classList.add('active');
+        } else {
+          heartIcon.classList.replace('fas', 'far');
+          addToWishlistBtn.classList.remove('active');
+        }
+      });
+      
+      // Review star rating system
+      const ratingStars = document.querySelectorAll('.rating-star');
+      const reviewRatingInput = document.getElementById('reviewRating');
+      
+      ratingStars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+          const rating = parseInt(this.dataset.rating);
+          
+          // Reset all stars
+          ratingStars.forEach(s => s.className = 'far fa-star rating-star');
+          
+          // Fill stars up to current
+          for (let i = 0; i < rating; i++) {
+            ratingStars[i].className = 'fas fa-star rating-star text-warning';
+          }
+        });
+        
+        star.addEventListener('mouseout', function() {
+          const currentRating = parseInt(reviewRatingInput.value);
+          
+          // Reset all stars
+          ratingStars.forEach(s => s.className = 'far fa-star rating-star');
+          
+          // Fill stars based on current rating
+          for (let i = 0; i < currentRating; i++) {
+            ratingStars[i].className = 'fas fa-star rating-star text-warning';
+          }
+        });
+        
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.dataset.rating);
+          reviewRatingInput.value = rating;
+          
+          // Update UI
+          ratingStars.forEach((s, index) => {
+            s.className = index < rating 
+              ? 'fas fa-star rating-star text-warning' 
+              : 'far fa-star rating-star';
+          });
+        });
+      });
+      
+      // Review form submission
+      const reviewForm = document.getElementById('review-form');
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const rating = parseInt(reviewRatingInput.value);
+          const title = document.getElementById('reviewTitle').value;
+          const content = document.getElementById('reviewContent').value;
+          
+          if (rating === 0) {
+            if (window.ToastService) {
+              window.ToastService.showToast('Lỗi', 'Vui lòng chọn số sao đánh giá', 'danger');
+            }
+            return;
+          }
+          
+          if (!title || !content) {
+            if (window.ToastService) {
+              window.ToastService.showToast('Lỗi', 'Vui lòng điền đầy đủ thông tin đánh giá', 'danger');
+            }
+            return;
+          }
+          
+          // In a real app, you would send this data to your server
+          // For now, just show a success message
+          if (window.ToastService) {
+            window.ToastService.showToast('Thành công', 'Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn đang được xử lý.', 'success');
+          }
+          
+          // Clear form
+          reviewForm.reset();
+          reviewRatingInput.value = 0;
+          ratingStars.forEach(s => s.className = 'far fa-star rating-star');
+        });
+      }
+      
+      // Product image zoom button
+      const zoomBtn = document.querySelector('.zoom-btn');
+      if (zoomBtn) {
+        zoomBtn.addEventListener('click', function() {
+          const productImage = document.getElementById('product-main-image');
+          if (productImage) {
+            // Create modal with zoomed image
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'imageZoomModal';
+            modal.tabIndex = '-1';
+            modal.setAttribute('aria-hidden', 'true');
+            
+            modal.innerHTML = `
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-transparent border-0">
+                  <div class="modal-header border-0 p-2">
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-center p-0">
+                    <img src="${productImage.src}" class="img-fluid" style="max-height: 85vh;">
+                  </div>
+                </div>
+              </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            const zoomModal = new bootstrap.Modal(document.getElementById('imageZoomModal'));
+            zoomModal.show();
+            
+            document.getElementById('imageZoomModal').addEventListener('hidden.bs.modal', function() {
+              document.body.removeChild(modal);
+            });
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

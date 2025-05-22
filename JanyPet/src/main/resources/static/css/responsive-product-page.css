@@ -1,0 +1,316 @@
+/* 
+ * Enhanced responsive styles for product pages
+ * This file improves mobile experience for product detail pages and quick view modal
+ */
+
+/* Common mobile optimizations */
+@media (max-width: 767px) {
+  /* Product gallery adjustments */
+  .product-large-slider .swiper-slide img {
+    max-height: 300px;
+  }
+  
+  .product-thumbnail-slider {
+    margin-top: 0.5rem;
+  }
+  
+  .product-thumbnail-slider .swiper-slide {
+    height: 60px;
+  }
+  
+  /* Quantity selector adjustments */
+  .product-quantity .btn-group {
+    width: 100%;
+  }
+  
+  /* Tab layout for mobile */
+  .element-tab .nav-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+  
+  .element-tab .nav-pills .nav-link {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Related products */
+  #related-products-slider .swiper-slide {
+    height: auto;
+  }
+  
+  /* Quick view modal optimizations */
+  .quickview-modal .modal-body {
+    padding: 0.75rem;
+  }
+  
+  .quickview-modal .product-gallery img {
+    max-height: 220px;
+  }
+  
+  .quickview-modal .product-title {
+    font-size: 1.1rem;
+  }
+  
+  .quickview-modal .product-price {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .quickview-modal .product-description {
+    max-height: 80px;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+  
+  .quickview-modal .quantity-selector {
+    flex-wrap: wrap;
+  }
+  
+  .quickview-modal .quantity-input {
+    width: 40px;
+  }
+  
+  .quickview-modal .quantity-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Small devices (landscape phones) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .product-large-slider .swiper-slide img {
+    max-height: 350px;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 360px) {
+  .product-large-slider .swiper-slide img {
+    max-height: 250px;
+  }
+  
+  .product-thumbnail-slider .swiper-slide {
+    height: 50px;
+  }
+  
+  .quickview-modal .modal-content {
+    border-radius: 0.75rem;
+  }
+  
+  .quickview-modal .product-gallery img {
+    max-height: 180px;
+  }
+}
+
+/* Optimize images for better performance */
+.product-large-slider img,
+.product-thumbnail-slider img,
+.quickview-modal .product-gallery img {
+  will-change: transform;
+}
+
+/* Lazy loading helper classes */
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* Touch optimized buttons */
+@media (max-width: 991px) {
+  .product-action-btn,
+  .quantity-btn,
+  .btn-add-to-cart,
+  .btn-add-to-wishlist {
+    min-height: 44px; /* Apple recommended touch target size */
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Responsive styling for product pages */
+
+/* Product detail page */
+@media (max-width: 991.98px) {
+    .product-main-title {
+        font-size: 1.7rem;
+    }
+    
+    .product-info-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .product-main-title {
+        font-size: 1.5rem;
+    }
+    
+    .product-price {
+        font-size: 1.3rem;
+    }
+    
+    .product-short-description {
+        font-size: 0.9rem;
+    }
+    
+    .quantity-input {
+        width: 40px;
+    }
+    
+    .product-info-tabs .nav-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Stack tab panels on mobile */
+    #productDetailTabContent > .tab-pane {
+        display: block !important;
+        opacity: 1;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    #productDetailTabContent > .tab-pane:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    /* Hide tab navigation on mobile, display tab titles instead */
+    #productDetailTabs {
+        display: none;
+    }
+    
+    .tab-panel-heading {
+        display: block !important;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--bs-primary);
+    }
+    
+    /* Adjust table for mobile */
+    .table-responsive table {
+        min-width: 500px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .product-gallery img {
+        max-height: 300px;
+    }
+    
+    .product-main-title {
+        font-size: 1.3rem;
+    }
+    
+    .product-price {
+        font-size: 1.2rem;
+    }
+    
+    .meta-product {
+        font-size: 0.85rem;
+    }
+    
+    /* Stack buttons on mobile */
+    .product-actions .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-actions .d-flex {
+        flex-direction: column;
+    }
+    
+    /* Make quick view button full width on mobile */
+    .quickview-modal .modal-dialog {
+        margin: 0.5rem;
+    }
+}
+
+/* Product cards in grid */
+@media (max-width: 767.98px) {
+    .product-cards-container .col-md-6 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    .product-card .card-body {
+        padding: 0.75rem;
+    }
+    
+    .product-card .card-title {
+        font-size: 0.9rem;
+    }
+    
+    .product-card .product-img {
+        height: 160px;
+    }
+    
+    .product-overlay button {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Category section responsiveness */
+@media (max-width: 575.98px) {
+    .snap-x {
+        padding-bottom: 1rem;
+    }
+    
+    .category-item {
+        width: 180px !important;
+    }
+    
+    .category-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Swiper controls for product sliders */
+@media (max-width: 575.98px) {
+    .product-large-slider .swiper-button-next,
+    .product-large-slider .swiper-button-prev {
+        width: 30px;
+        height: 30px;
+        --swiper-navigation-size: 15px;
+    }
+    
+    .product-thumbnail-slider {
+        display: none;
+    }
+}
+
+/* Prevent image overflow on smaller devices */
+.product-info img,
+.tab-pane img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Related products section */
+@media (max-width: 767.98px) {
+    #related-products-container .col-lg-3 {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Custom responsive grid breakpoint for 5 columns */
+@media (min-width: 992px) {
+    .col-lg-1-5 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
