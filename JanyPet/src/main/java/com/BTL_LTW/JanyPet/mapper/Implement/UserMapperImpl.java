@@ -21,6 +21,7 @@ public class UserMapperImpl implements UserMapper {
         if (entity == null) return null;
 
         return new UserResponse(
+                entity.getId(),
                 entity.getUsername(),
                 entity.getRole(),
                 entity.getEmail(),

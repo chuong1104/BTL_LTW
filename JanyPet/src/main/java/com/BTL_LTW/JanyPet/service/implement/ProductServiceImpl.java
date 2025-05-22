@@ -4,9 +4,11 @@ import com.BTL_LTW.JanyPet.dto.request.ProductCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.CategoryResponse;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
+import com.BTL_LTW.JanyPet.entity.Category;
 import com.BTL_LTW.JanyPet.entity.Product;
+import com.BTL_LTW.JanyPet.repository.CategoryRepository;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
-
+import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
         Product product = new Product();
@@ -49,7 +57,34 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setImage(request.getImage());
+        // Handle Category
+        if (request.getCategoryId() != null && !request.getCategoryId().isEmpty()) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
+            product.setCategory(category);
+        }
+
+
+        // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
+        if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
+            // Trường hợp 1: Có file được upload
+            String fileName = null;
+            try {
+                fileName = fileStorageService.storeFile(request.getImageFile());
+                product.setImage(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store image file: " + e.getMessage());
+            }
+        } else if (request.getImagePath() != null && !request.getImagePath().isEmpty()) {
+            // Trường hợp 2: Có đường dẫn ảnh
+            // Nếu đường dẫn bắt đầu bằng "/uploads/", chỉ lấy tên file
+            String imagePath = request.getImagePath();
+            if (imagePath.startsWith("/uploads/")) {
+                imagePath = imagePath.substring("/uploads/".length());
+            }
+            product.setImage(imagePath);
+        }
+
         product = productRepository.save(product);
         return mapToResponse(product);
     }
@@ -57,8 +92,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(String id, ProductUpdateRequest request) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isEmpty()){
-            // Tùy vào cách xử lý lỗi của bạn, có thể ném exception
+        if (optionalProduct.isEmpty()) {
             throw new RuntimeException("Không tìm thấy sản phẩm với id: " + id);
         }
 
@@ -70,13 +104,52 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-
         Product product = optionalProduct.get();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
-        product.setImage(request.getImage());
+
+         // Handle Category Update
+         if (request.getCategoryId() != null && !request.getCategoryId().isEmpty()) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
+            product.setCategory(category);
+        } else {
+            product.setCategory(null); // Allow unsetting category
+        }
+
+
+        // Xử lý trường hợp upload file mới
+        MultipartFile imageFile = request.getImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // Xóa ảnh cũ nếu tồn tại
+            if (product.getImage() != null && !product.getImage().isEmpty()) {
+                try {
+                    fileStorageService.deleteFile(product.getImage());
+                } catch (Exception e) {
+                    // Log lỗi nếu cần, nhưng không làm gián đoạn quá trình
+                    System.err.println("Failed to delete old image: " + e.getMessage());
+                }
+            }
+
+            String fileName = null;
+            try {
+                fileName = fileStorageService.storeFile(imageFile);
+                product.setImage(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store updated image file: " + e.getMessage());
+            }
+        } 
+        // Xử lý trường hợp chỉ có đường dẫn ảnh
+        else if (request.getImagePath() != null && !request.getImagePath().isEmpty()) {
+            String imagePath = request.getImagePath();
+            if (imagePath.startsWith("/uploads/")) {
+                imagePath = imagePath.substring("/uploads/".length());
+            }
+            product.setImage(imagePath);
+        }
+
         product = productRepository.save(product);
         return mapToResponse(product);
     }

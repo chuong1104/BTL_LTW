@@ -1,30 +1,19 @@
-// src/main/java/com/BTL_LTW/JanyPet/dto/request/PetUpdateRequest.java
 package com.BTL_LTW.JanyPet.dto.request;
 
 import java.time.LocalDate;
 
 public class PetUpdateRequest {
-
     private String name;
-
     private String species;
-
     private String breed;
-
     private LocalDate birthDate;
-
     private String gender;
-
     private Double weight;
-
     private Boolean vaccinated;
-
     private String healthNotes;
+    private String ownerId;
 
-    private Long ownerId;
-
-    // --- getters & setters ---
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -89,11 +78,11 @@ public class PetUpdateRequest {
         this.healthNotes = healthNotes;
     }
 
-    public Long getOwnerId() {
+    public String getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(Long ownerId) {
+    public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
 }

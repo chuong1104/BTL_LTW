@@ -1,75 +1,79 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
 import com.BTL_LTW.JanyPet.common.BookingStatus;
-import jakarta.validation.constraints.NotNull;
+import jdk.jshell.Snippet;
+import org.hibernate.engine.spi.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 public class BookingCreationRequest {
-
-    @NotNull(message = "User ID is required")
     private String userId;
-
-    @NotNull(message = "Pet ID is required")
     private String petId;
-
-    @NotNull(message = "At least one service is required")
     private List<String> serviceIds;
-
-    @NotNull(message = "Booking date is required")
+    private String staffId;
     private LocalDate bookingDate;
-
-    @NotNull(message = "Start time is required")
     private LocalTime startTime;
-
-    private BookingStatus status = BookingStatus.PENDING;
-
+    private LocalTime endTime;
+    private BookingStatus status;
     private String notes;
 
-    private String assignedStaffId;  // có thể null nếu chưa phân công
-
-    // --- getters & setters ---
-
-    public @NotNull(message = "User ID is required") String getUserId() {
+    // Getters and Setters
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(@NotNull(message = "User ID is required") String userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public @NotNull(message = "Pet ID is required") String getPetId() {
+    public String getPetId() {
         return petId;
     }
 
-    public void setPetId(@NotNull(message = "Pet ID is required") String petId) {
+    public void setPetId(String petId) {
         this.petId = petId;
     }
 
-    public @NotNull(message = "At least one service is required") List<String> getServiceIds() {
+    public List<String> getServiceIds() {
         return serviceIds;
     }
 
-    public void setServiceIds(@NotNull(message = "At least one service is required") List<String> serviceIds) {
+    public void setServiceIds(List<String> serviceIds) {
         this.serviceIds = serviceIds;
     }
 
-    public @NotNull(message = "Booking date is required") LocalDate getBookingDate() {
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(@NotNull(message = "Booking date is required") LocalDate bookingDate) {
+    public void setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
     }
 
-    public @NotNull(message = "Start time is required") LocalTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(@NotNull(message = "Start time is required") LocalTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public BookingStatus getStatus() {
@@ -86,13 +90,5 @@ public class BookingCreationRequest {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public String getAssignedStaffId() {
-        return assignedStaffId;
-    }
-
-    public void setAssignedStaffId(String assignedStaffId) {
-        this.assignedStaffId = assignedStaffId;
     }
 }

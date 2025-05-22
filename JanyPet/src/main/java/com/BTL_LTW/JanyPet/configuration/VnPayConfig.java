@@ -1,9 +1,9 @@
-// src/main/java/com/BTL_LTW/JanyPet/config/VnPayConfig.java
 package com.BTL_LTW.JanyPet.configuration;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 @Configuration
 public class VnPayConfig {
 
@@ -42,16 +42,20 @@ public class VnPayConfig {
     public String getTmnCode() {
         return tmnCode;
     }
-
-    public String getvnpReturnUrl() {
-        return vnpReturnUrl;
+    
+    public String getHashSecret() {
+        return hashSecret;
     }
-
-    public String getvnpTmnCode() {
-        return vnpTmnCode;
+    
+    public String getPaymentUrl() {
+        return paymentUrl;
     }
-
-    public String getvnpHashSecret() {
-        return vnpHashSecret;
+    
+    public String getReturnUrl() {
+        return returnUrl;
+    }
+    
+    public String getIpnUrl() {
+        return ipnUrl;
     }
 }

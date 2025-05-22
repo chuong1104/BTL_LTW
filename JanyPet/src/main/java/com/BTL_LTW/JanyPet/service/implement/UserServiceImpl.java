@@ -153,21 +153,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveRefreshToken(String userId, String refreshToken) {
+    public void saveRefreshToken(String userId, String refreshToken, Long tokenExpiry) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+            .orElseThrow(() -> new RuntimeException("User not found"));
         user.setRefreshToken(refreshToken);
-        user.setTokenExpiry(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000));
+        user.setTokenExpiry(tokenExpiry);
         userRepository.save(user);
     }
 
     @Override
     public void clearRefreshToken(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+            .orElseThrow(() -> new RuntimeException("User not found"));
         user.setRefreshToken(null);
         user.setTokenExpiry(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public User findByRefreshToken(String refreshToken) {
+        return userRepository.findByRefreshToken(refreshToken)
+            .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
     }
 
     @Override
@@ -176,5 +182,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
         user.setLocked(locked);
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean existsAdminUser() {
+        return false;
     }
 }

@@ -1,5 +1,8 @@
 ﻿server:
   port: 8080
+  servlet:
+    context-path: /
+
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3307/janypet"
@@ -12,19 +15,47 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  web:
+    resources:
+      static-locations: classpath:/static/,file:${file.upload-dir}/
+      add-mappings: true
+  mvc:
+    static-path-pattern: /**
+
+logging:
+  level:
+    com.BTL_LTW.JanyPet.configuration: DEBUG
+    org.springframework.web: INFO
+
 file:
-  upload-dir: ./uploads
+  # Nếu bạn chạy trên Windows, giữ nguyên D:/…; nếu trên Linux/Mac, có thể chuyển thành ./uploads
+  upload-dir: D:/BTL_LTW/uploads
+
 app:
+  base-url: http://localhost:8080
   jwtSecret: uHqYj4Pk3mZqKmJ9Y2Ey2K8MdGnM9N9uRPv4RYjUDe4GHZ3xJv1pUlWHez2WUkcFZyrK52xVbbFwCWXEtZxpWg==
   jwtExpirationMs: 86400000
   jwtRefreshExpirationMs: 604800000
+
 vnpay:
-  payUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  returnUrl: https://your-domain.com/api/payment/return
-  tmnCode: YOUR_VNP_TMN_CODE
-  hashSecret: YOUR_VNP_HASH_SECRET
+  paymentUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  returnUrl: ${app.base-url}/api/vnpay/payment_return
+  ipnUrl: ${app.base-url}/api/vnpay/ipn
+  tmnCode: CBV4016A
+  hashSecret: 3RJVZXLUE88KVIC143SMRKGCSXYNASBJ
+
+gemini:
+  api:
+    key: AIzaSyDVTYAeK0qvg_uC5n0XosEOYfdPFuVyx1I  # Note: In production, use environment variables
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+  timeout: 30000  # Timeout in milliseconds
+
+
+

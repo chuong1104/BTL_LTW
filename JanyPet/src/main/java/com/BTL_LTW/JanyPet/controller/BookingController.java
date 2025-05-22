@@ -2,12 +2,15 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.BookingCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.BookingUpdateRequest;
+
 import com.BTL_LTW.JanyPet.dto.response.BookingResponse;
-import com.BTL_LTW.JanyPet.service.BookingService;
+import com.BTL_LTW.JanyPet.service.Interface.BookingService;
 import com.BTL_LTW.JanyPet.service.implement.BookingServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -56,5 +59,19 @@ public class BookingController {
     public ResponseEntity<Void> delete(@PathVariable("id") String id) {
         bookingService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BookingResponse>> getBookingsByUserId(@PathVariable("userId") String userId) {
+        List<BookingResponse> list = bookingService.getBookingsByUserId(userId);
+        return ResponseEntity.ok(list);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<BookingResponse> updateBookingStatus(
+            @PathVariable("id") String id,
+            @Valid @RequestBody BookingUpdateRequest request) {
+        BookingResponse updatedBooking = bookingService.updateStatus(id, request);
+        return ResponseEntity.ok(updatedBooking);
     }
 }

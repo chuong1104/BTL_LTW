@@ -1,5 +1,8 @@
 package com.BTL_LTW.JanyPet.dto.request;
 
+import jakarta.persistence.Transient;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 
 public class ProductCreationRequest {
@@ -7,7 +10,22 @@ public class ProductCreationRequest {
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private String image;
+    @Transient
+    private MultipartFile imageFile;
+    
+    private String imagePath;
+    private String categoryId; 
+
+    public ProductCreationRequest() {
+    }
+
+    public ProductCreationRequest(String name, String description, BigDecimal price, Integer stock, MultipartFile imageFile) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.imageFile = imageFile;
+    }
 
     // Getters and Setters
     public String getName() {
@@ -16,6 +34,13 @@ public class ProductCreationRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getCategoryId() { // Added
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) { // Added
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {
@@ -42,11 +67,19 @@ public class ProductCreationRequest {
         this.stock = stock;
     }
 
-    public String getImage() {
-        return image;
+    public MultipartFile getImageFile() {
+        return imageFile;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+    
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

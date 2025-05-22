@@ -32,7 +32,7 @@ public class User extends BaseEntity<String> implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Role role;  // Lưu ADMIN, EMPLOYEE, CUSTOMER
 
     @Column(name = "phone_number", nullable = false, unique = true, length = 15)
     private String phoneNumber;
@@ -41,6 +41,17 @@ public class User extends BaseEntity<String> implements UserDetails {
     private Boolean isVerified = false;
 
     private boolean isDeleted;
+    private Boolean active;
+
+    @Override
+    public Boolean getActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
     @Column(name = "refresh_token")
     private String refreshToken;
@@ -98,10 +109,10 @@ public class User extends BaseEntity<String> implements UserDetails {
         this.role = role;
     }
 
-//    @Override
-//    public String getUsername() {
-//        return username;
-//    }
+    public String getAuthority() {
+        return role != null ? role.getAuthority() : null; // Trả về ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_CUSTOMER
+    }
+
     @Override
     public String getUsername() {
         // For authentication purposes, we need to return the identifier that was used for login

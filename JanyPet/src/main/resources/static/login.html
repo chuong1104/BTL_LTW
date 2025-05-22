@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập & Đăng ký</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(120deg, #e0c3fc, #8ec5fc);
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .form-header {
+        background: linear-gradient(to right, #4776e6, #8e54e9);
+        padding: 30px 20px;
+        text-align: center;
+        color: white;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .form-header h2 {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .form-header p {
+        opacity: 0.8;
+        font-size: 14px;
+      }
+
+      .form-content {
+        padding: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .form-group input:focus {
+        border-color: #8e54e9;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(142, 84, 233, 0.1);
+      }
+
+      .form-group i {
+        position: absolute;
+        right: 15px;
+        top: 37px;
+        color: #999;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(to right, #4776e6, #8e54e9);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background: linear-gradient(to right, #3a66d6, #7e44d9);
+        box-shadow: 0 5px 15px rgba(142, 84, 233, 0.3);
+      }
+
+      .social-login {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        gap: 15px;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid #e0e0e0;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .social-btn.facebook {
+        color: #3b5998;
+      }
+
+      .social-btn.google {
+        color: #db4437;
+      }
+
+      .social-btn.apple {
+        color: #000;
+      }
+
+      .form-divider {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .form-divider span {
+        flex: 1;
+        height: 1px;
+        background: #e0e0e0;
+      }
+
+      .form-divider p {
+        margin: 0 15px;
+        color: #777;
+        font-size: 14px;
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .form-footer a {
+        color: #8e54e9;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .form-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        position: relative;
+      }
+
+      .alert-success {
+        background-color: #4caf50;
+      }
+
+      .alert-danger {
+        background-color: #f44336;
+      }
+
+      .alert .close-btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: white;
+        opacity: 0.7;
+        cursor: pointer;
+      }
+
+      .alert .close-btn:hover {
+        opacity: 1;
+      }
+
+      .captcha-container {
+        margin-bottom: 20px;
+      }
+
+      .captcha-box {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .captcha-image {
+        background: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 5px;
+        color: #333;
+        user-select: none;
+        flex: 1;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .captcha-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(0, 0, 0, 0.05) 10px,
+          rgba(0, 0, 0, 0.05) 20px
+        );
+        z-index: 1;
+      }
+
+      .captcha-image span {
+        position: relative;
+        z-index: 2;
+      }
+
+      .refresh-captcha {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
+        margin-left: 10px;
+        cursor: pointer;
+        color: #555;
+      }
+
+      .refresh-captcha:hover {
+        background: #e9e9e9;
+      }
+
+      .password-toggle {
+        cursor: pointer;
+      }
+
+      .forgot-password {
+        text-align: right;
+        margin-top: -15px;
+        margin-bottom: 15px;
+      }
+
+      .forgot-password a {
+        color: #8e54e9;
+        font-size: 13px;
+        text-decoration: none;
+      }
+
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .remember-me input {
+        margin-right: 8px;
+      }
+
+      .remember-me label {
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+      }
+
+      .forms-container {
+        position: relative;
+        transition: height 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-active {
+        animation: fadeIn 0.5s forwards;
+      }
+
+      .password-strength {
+        height: 5px;
+        margin-top: 8px;
+        border-radius: 3px;
+        background: #e0e0e0;
+        overflow: hidden;
+      }
+
+      .password-strength-meter {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s, background 0.3s;
+      }
+
+      .password-strength-text {
+        font-size: 12px;
+        margin-top: 5px;
+        color: #777;
+      }
+
+      .weak {
+        background: #f44336;
+        width: 25%;
+      }
+      .medium {
+        background: #ffc107;
+        width: 50%;
+      }
+      .strong {
+        background: #4caf50;
+        width: 100%;
+      }
+
+      body.not-authenticated .auth-only {
+        display: none !important;
+      }
+
+      body.authenticated .non-auth-only {
+        display: none !important;
+      }
+
+      body:not(.is-admin) .admin-only {
+        display: none !important;
+      }
+
+      /* Prevent flickering during page load */
+      .auth-only,
+      .non-auth-only,
+      .admin-only {
+        transition: opacity 0.3s ease;
+      }
+
+      /* Add a class to the logout button */
+      .logout-btn {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="forms-container" id="formsContainer">
+        <!-- Login Form -->
+        <form id="loginForm" class="form-active" method="post">
+          <div class="form-header">
+            <h2>Chào mừng trở lại</h2>
+            <p>Đăng nhập để tiếp tục</p>
+          </div>
+          <div class="form-content">
+            <div id="loginAlert" class="alert hide"></div>
+
+            <div class="social-login">
+              <button type="button" class="social-btn facebook">
+                <i class="fab fa-facebook-f"></i>
+              </button>
+              <button type="button" class="social-btn google">
+                <i class="fab fa-google"></i>
+              </button>
+              <button type="button" class="social-btn apple">
+                <i class="fab fa-apple"></i>
+              </button>
+            </div>
+
+            <div class="form-divider">
+              <span></span>
+              <p>hoặc</p>
+              <span></span>
+            </div>
+
+            <div class="form-group">
+              <label>Số điện thoại hoặc email</label>
+              <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                placeholder="Nhập số điện thoại hoặc email"
+                
+                title="Vui lòng nhập số điện thoại (10 số) hoặc email hợp lệ"
+                required 
+              />
+              <i class="fas fa-user"></i>
+            </div>
+
+            <div class="form-group">
+              <label>Mật khẩu</label>
+              <input type="password" id="password" name="password" required />
+              <i
+                class="fas fa-eye password-toggle"
+                onclick="togglePassword(this)"
+              ></i>
+            </div>
+
+            <div class="forgot-password">
+              <a href="#" onclick="showForgotPassword()">Quên mật khẩu?</a>
+            </div>
+
+            <div class="remember-me">
+              <input type="checkbox" id="rememberMe" />
+              <label for="rememberMe">Ghi nhớ đăng nhập</label>
+            </div>
+
+            <div class="captcha-container">
+              <label>Xác thực không phải người máy</label>
+              <div class="captcha-box">
+                <div class="captcha-image">
+                  <span id="captchaText"></span>
+                </div>
+                <button
+                  type="button"
+                  class="refresh-captcha"
+                  onclick="generateCaptcha()"
+                >
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  name="captcha"
+                  placeholder="Nhập mã xác thực"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn">Đăng nhập</button>
+
+            <div class="form-footer">
+              <p>
+                Chưa có tài khoản?
+                <a href="#" onclick="toggleForms('register')">Đăng ký ngay</a>
+              </p>
+            </div>
+          </div>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="hide">
+          <div class="form-header">
+            <h2>Tạo tài khoản mới</h2>
+            <p>Đăng ký tài khoản để tiếp tục</p>
+          </div>
+          <div class="form-content">
+            <div id="registerAlert" class="alert hide"></div>
+
+            <div class="form-group">
+              <label>Họ và tên</label>
+              <input type="text" name="userName" required />
+              <i class="fas fa-user"></i>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+              <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" name="phoneNumber" required />
+              <i class="fas fa-phone"></i>
+            </div>
+
+            <div class="form-group">
+              <label>Mật khẩu</label>
+              <input
+                type="password"
+                name="password"
+                id="registerPassword"
+                required
+                onkeyup="checkPasswordStrength()"
+              />
+              <i
+                class="fas fa-eye password-toggle"
+                onclick="togglePassword(this)"
+              ></i>
+              <div class="password-strength">
+                <div
+                  class="password-strength-meter"
+                  id="passwordStrengthMeter"
+                ></div>
+              </div>
+              <div
+                class="password-strength-text"
+                id="passwordStrengthText"
+              ></div>
+            </div>
+
+            <div class="form-group">
+              <label>Xác nhận mật khẩu</label>
+              <input type="password" name="confirmPassword" required />
+              <i
+                class="fas fa-eye password-toggle"
+                onclick="togglePassword(this)"
+              ></i>
+            </div>
+
+            <div class="captcha-container">
+              <label>Xác thực không phải người máy</label>
+              <div class="captcha-box">
+                <div class="captcha-image">
+                  <span id="registerCaptchaText"></span>
+                </div>
+                <button
+                  type="button"
+                  class="refresh-captcha"
+                  onclick="generateCaptcha('register')"
+                >
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  name="captcha"
+                  placeholder="Nhập mã xác thực"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn">Đăng ký</button>
+
+            <div class="form-footer">
+              <p>
+                Đã có tài khoản?
+                <a href="#" onclick="toggleForms('login')">Đăng nhập</a>
+              </p>
+            </div>
+          </div>
+        </form>
+
+        <!-- Forgot Password Form -->
+        <form id="forgotPasswordForm" class="hide">
+          <div class="form-header">
+            <h2>Quên mật khẩu</h2>
+            <p>Nhập email hoặc số điện thoại để lấy lại mật khẩu</p>
+          </div>
+          <div class="form-content">
+            <div id="forgotPasswordAlert" class="alert hide"></div>
+
+            <div class="form-group">
+              <label>Email hoặc số điện thoại</label>
+              <input type="text" name="emailOrPhone" required />
+              <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="captcha-container">
+              <label>Xác thực không phải người máy</label>
+              <div class="captcha-box">
+                <div class="captcha-image">
+                  <span id="forgotPasswordCaptchaText"></span>
+                </div>
+                <button
+                  type="button"
+                  class="refresh-captcha"
+                  onclick="generateCaptcha('forgotPassword')"
+                >
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  name="captcha"
+                  placeholder="Nhập mã xác thực"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn">Gửi yêu cầu</button>
+
+            <div class="form-footer">
+              <p>
+                Quay lại
+                <a href="#" onclick="toggleForms('login')">Đăng nhập</a>
+              </p>
+            </div>
+          </div>
+        </form>
+
+        <!-- Reset Password Form (Hidden initially, shown after verification) -->
+        <form id="resetPasswordForm" class="hide">
+          <div class="form-header">
+            <h2>Đặt lại mật khẩu</h2>
+            <p>Nhập mật khẩu mới của bạn</p>
+          </div>
+          <div class="form-content">
+            <div id="resetPasswordAlert" class="alert hide"></div>
+
+            <div class="form-group">
+              <label>Mật khẩu mới</label>
+              <input
+                type="password"
+                name="newPassword"
+                id="newPassword"
+                required
+                onkeyup="checkNewPasswordStrength()"
+              />
+              <i
+                class="fas fa-eye password-toggle"
+                onclick="togglePassword(this)"
+              ></i>
+              <div class="password-strength">
+                <div
+                  class="password-strength-meter"
+                  id="newPasswordStrengthMeter"
+                ></div>
+              </div>
+              <div
+                class="password-strength-text"
+                id="newPasswordStrengthText"
+              ></div>
+            </div>
+
+            <div class="form-group">
+              <label>Xác nhận mật khẩu mới</label>
+              <input type="password" name="confirmNewPassword" required />
+              <i
+                class="fas fa-eye password-toggle"
+                onclick="togglePassword(this)"
+              ></i>
+            </div>
+
+            <button type="submit" class="btn">Cập nhật mật khẩu</button>
+
+            <div class="form-footer">
+              <p>
+                Quay lại
+                <a href="#" onclick="toggleForms('login')">Đăng nhập</a>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="js/auth_service.js"></script>
+    <script src="js/login-script.js"></script>
+  </body>
+</html>

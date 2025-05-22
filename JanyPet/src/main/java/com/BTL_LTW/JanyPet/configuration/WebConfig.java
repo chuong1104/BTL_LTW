@@ -1,9 +1,14 @@
 package com.BTL_LTW.JanyPet.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 
 @Configuration
@@ -18,6 +23,16 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
     private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
     
     @Value("${file.upload-dir}")
@@ -29,6 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
             Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(uploadPath);
             
+
             // Check if directory exists and has read/write permissions
             File dir = uploadPath.toFile();
             if (!dir.exists()) {
@@ -38,6 +54,13 @@ public class WebConfig implements WebMvcConfigurer {
                 logger.error("Upload directory is not readable: {}", uploadPath);
             }
             if (!dir.canWrite()) {
+
+            // Kiểm tra quyền đọc/ghi
+            if (!Files.isReadable(uploadPath)) {
+                logger.error("Upload directory is not readable: {}", uploadPath);
+            }
+            if (!Files.isWritable(uploadPath)) {
+
                 logger.error("Upload directory is not writable: {}", uploadPath);
             }
             
@@ -51,8 +74,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                // Use allowedOriginPatterns instead of allowedOrigins
-                .allowedOriginPatterns( "http://127.0.0.1:5500")
+                .allowedOrigins("http://localhost:8080", "http://127.0.0.1:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("Authorization")
@@ -72,17 +94,21 @@ public class WebConfig implements WebMvcConfigurer {
             
             registry.addResourceHandler("/uploads/**")
                     .addResourceLocations(location)
+
                     .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS)
                             .cachePublic())
                     .resourceChain(true);
                     
             // Log the actual directory to help with troubleshooting
             logger.info("Uploads will be served from: {} (points to {})", "/uploads/**", location);
-                    
+
+                    .setCachePeriod(3600)
+                    .resourceChain(true);
         } catch (Exception e) {
             logger.error("Error configuring resource handler", e);
             throw new RuntimeException("Error configuring resource handler", e);
         }
+
 
         // Static resources with proper caching
         registry.addResourceHandler("/images/**")
@@ -94,6 +120,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/favicon.ico")
                 .addResourceLocations("classpath:/static/favicon.ico");
                 
+
         registry.addResourceHandler("/chatbot-widget")
                 .addResourceLocations("classpath:/static/chatbot-widget.html");
                 
@@ -101,3 +128,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/");
     }
 }
+

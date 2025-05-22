@@ -5,8 +5,10 @@ import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,29 +19,47 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Tạo mới sản phẩm
+    // Tạo mới sản phẩm - hỗ trợ cả form data và JSON
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductCreationRequest request) {
+    public ResponseEntity<ProductResponse> createProduct(
+            @RequestBody ProductCreationRequest request) {
+        ProductResponse response = productService.createProduct(request);
+        return ResponseEntity.ok(response);
+    }
+    
+    // Tạo mới sản phẩm với upload ảnh qua form data
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> createProductWithFormData(
+            @ModelAttribute ProductCreationRequest request) {
         ProductResponse response = productService.createProduct(request);
         return ResponseEntity.ok(response);
     }
 
-    // Cập nhật sản phẩm theo id
+    // Cập nhật sản phẩm theo id với JSON
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable String id,
-                                                         @RequestBody ProductUpdateRequest request) {
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable String id,
+            @RequestBody ProductUpdateRequest request) {
+        ProductResponse response = productService.updateProduct(id, request);
+        return ResponseEntity.ok(response);
+    }
+    
+    // Cập nhật sản phẩm theo id với form data và file upload
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> updateProductWithFormData(
+            @PathVariable String id,
+            @ModelAttribute ProductUpdateRequest request) {
         ProductResponse response = productService.updateProduct(id, request);
         return ResponseEntity.ok(response);
     }
 
-    // Lấy thông tin sản phẩm theo id
+    // Các endpoint khác không thay đổi
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable String id) {
         ProductResponse response = productService.getProductById(id);
         return ResponseEntity.ok(response);
     }
 
-    // Lấy danh sách tất cả sản phẩm
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         // For USER views, calls the modified productService.getAllProducts()

@@ -1,5 +1,6 @@
 package com.BTL_LTW.JanyPet.repository;
 
+import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,20 @@ public interface UserRepository extends JpaRepository<User, String> {
     void softDeleteUser(String id);
 
     Optional<User> findByRefreshToken(String refreshToken);
+
+    long countByRole(String customer);
+
+    List<User> findByRole(String role);
+
+    //List<User> findByRoleAndVerifiedAndActive(Role role, Boolean verified, Boolean active);
+
+    //List<User> findByRoleAndVerified(Role role, Boolean verified);
+
+    List<User> findByRoleAndActive(Role role, Boolean active);
+
+   // List<User> findByVerifiedAndActive(Boolean verified, Boolean active);
+
+    //List<User> findByVerified(Boolean verified);
+
+    List<User> findByActive(Boolean active);
 }

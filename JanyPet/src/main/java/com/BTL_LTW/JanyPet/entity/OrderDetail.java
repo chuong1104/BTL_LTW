@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 @Table(name = "order_details")
 public class OrderDetail extends BaseEntity<String> {
 
-
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -18,6 +16,19 @@ public class OrderDetail extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    // Lưu trữ thông tin sản phẩm tại thời điểm đặt hàng
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "product_image")
+    private String productImage;
+
+    @Column(name = "product_color")
+    private String productColor;
+
+    @Column(name = "product_size")
+    private String productSize;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -43,6 +54,42 @@ public class OrderDetail extends BaseEntity<String> {
 
     public void setProduct(Product product) {
         this.product = product;
+        if (product != null) {
+            this.productName = product.getName();
+            this.productImage = product.getImage();
+        }
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public String getProductColor() {
+        return productColor;
+    }
+
+    public void setProductColor(String productColor) {
+        this.productColor = productColor;
+    }
+
+    public String getProductSize() {
+        return productSize;
+    }
+
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
     }
 
     public Integer getQuantity() {

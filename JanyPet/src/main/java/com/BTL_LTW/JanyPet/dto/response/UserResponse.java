@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class UserResponse {
+
+    private String id;
     private String username;
     private Role role;
     private String email;
@@ -18,8 +20,9 @@ public class UserResponse {
     private Timestamp updatedAt; // Ngày cập nhật
 
     // Constructor đã cập nhật, thêm cả createdAt và updatedAt nếu có
-    public UserResponse(String username, Role role, String email, Gender gender, String address,
+    public UserResponse(String id,String username, Role role, String email, Gender gender, String address,
                         String phoneNumber, boolean verified, Timestamp createdAt, Timestamp updatedAt) {
+        this.id= id;
         this.username = username;
         this.role = role;
         this.email = email;
@@ -30,14 +33,15 @@ public class UserResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+    // Getters and setters
 
-    // Nếu không có thông tin createdAt/updatedAt trong constructor, vẫn có setter:
-    public UserResponse(String username, Role role, String email, Gender gender, String address,
-                        String phoneNumber, boolean verified) {
-        this(username, role, email, gender, address, phoneNumber, verified, null, null);
+    public String getId() {
+        return id;
     }
 
-    // Getters and setters
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

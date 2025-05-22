@@ -1,18 +1,15 @@
 package com.BTL_LTW.JanyPet.security;
 
-import com.BTL_LTW.JanyPet.dto.response.JwtResponse;
 import com.BTL_LTW.JanyPet.entity.User;
 import com.BTL_LTW.JanyPet.repository.UserRepository;
+import com.BTL_LTW.JanyPet.service.Interface.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -28,6 +25,9 @@ public class JwtService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService; // Add UserService dependency
 
     public String generateToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
@@ -71,7 +71,7 @@ public class JwtService {
         return false;
     }
 
-    public JwtResponse refreshToken(String refreshToken) {
+    public String refreshToken(String refreshToken) {
         if (!validateToken(refreshToken)) {
             throw new RuntimeException("Refresh token không hợp lệ hoặc đã hết hạn");
         }
@@ -85,11 +85,11 @@ public class JwtService {
             throw new RuntimeException("Refresh token không khớp");
         }
 
-
         // Kiểm tra thời gian hết hạn của refresh token
         if (user.getTokenExpiry() < System.currentTimeMillis()) {
             throw new RuntimeException("Refresh token đã hết hạn");
         }
+
         // Tạo token mới
         String newToken = Jwts.builder()
                 .setSubject(user.getId())
@@ -98,28 +98,17 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
 
-        // Tạo refresh token mới
-        String newRefreshToken = generateRefreshToken(user);
+        return newToken;
+    }
 
-        // Lưu refresh token mới vào database
-        user.setRefreshToken(newRefreshToken);
-        user.setTokenExpiry(System.currentTimeMillis() + jwtRefreshExpirationMs);
-        userRepository.save(user);
+    public Claims extractClaim(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
-        // Lấy danh sách quyền
-        List<String> roles = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        // Trả về thông tin đăng nhập mới
-        return new JwtResponse(
-                newToken,
-                newRefreshToken,
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                roles
-        );
+    public Date getExpirationFromToken(String token) {
+        return extractClaim(token).getExpiration();
     }
 }

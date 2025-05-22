@@ -46,6 +46,10 @@ public class PetResponse {
         this.updatedAt = updatedAt;
     }
 
+    public PetResponse() {
+
+    }
+
     public String getId() {
         return id;
     }
@@ -62,6 +66,7 @@ public class PetResponse {
         this.name = name;
     }
 
+    // Corrected getter for species
     public String getSpecies() {
         return species;
     }

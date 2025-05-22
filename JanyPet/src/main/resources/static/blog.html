@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>JanyPet - Tin tức thú cưng và dịch vụ chăm sóc</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="author" content="JanyPet">
+  <meta name="keywords" content="thú cưng, pet shop, cửa hàng thú cưng, chó, mèo, tin tức thú cưng">
+  <meta name="description" content="JanyPet - Tin tức thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico">
+  
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" />
+</head>
+
+<body>
+
+  <header class="auto-hide-header">
+  <div class="container py-2">
+    <div class="row py-3 align-items-center">
+      <!-- Logo -->
+      <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
+        <div class="main-logo">
+          <a href="index.html">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
+          </a>
+        </div>
+      </div>
+
+      <!-- Search bar - visible on large screens -->
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="search-bar border rounded-pill px-3 border-primary-subtle">
+          <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
+            <input type="text" class="form-control border-0 bg-transparent py-2"
+              placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." />
+            <button type="submit" class="btn btn-link p-0 text-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Auth and user actions -->
+      <div class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center">
+        <div class="auth-container ms-auto">
+          <!-- Login/Register buttons -->
+          <div class="auth-buttons">
+            <a href="login.html" class="btn btn-outline-primary rounded-pill">
+              <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập/Đăng ký
+            </a>
+          </div>
+
+          <!-- User info when logged in -->
+          <div class="user-info d-flex align-items-center" style="display: none;">
+            <div class="d-flex">
+              <a href="account.html" class="btn btn-outline-secondary rounded-pill btn-sm account-link">
+                    <i class="fas fa-user-circle me-1"></i> Tài khoản
+                 </a>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart and wishlist icons -->
+        <div class="ms-3 d-flex">
+          <a href="wishlist.html" class="mx-2 position-relative text-dark">
+            <i class="fas fa-heart fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <a href="cart.html" class="mx-2 position-relative text-dark">
+            <i class="fas fa-shopping-cart fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </header>
+
+  <!-- Navigation menu -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+    <div class="container">
+      <!-- Mobile toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Search bar - visible on mobile only -->
+      <div class="d-block d-lg-none ms-2 me-auto">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#searchModal" class="btn btn-outline-primary rounded-circle">
+          <i class="fas fa-search"></i>
+        </a>
+      </div>
+
+      <!-- Main navigation -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="index.html">Trang chủ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Thức ăn</a></li>
+              <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
+              <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
+              <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-medium" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Modal for mobile -->
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="searchModalLabel">Tìm kiếm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="banner" class="py-3" style="background: linear-gradient(135deg, #f9f3ec 0%, #fff8f0 100%);">
+    <div class="container">
+      <div class="hero-content py-5 my-3">
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">Tin tức thú cưng</span>
+        <h2 class="display-4 fw-bold mb-4">Blog</h2>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tin tức</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <div class="my-5 py-5">
+    <div class="container">
+      <div class="row entry-container">
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">20</h3>
+            <p class="secondary-font fs-6 m-0">Th2</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog1.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">10 lý do để giúp đỡ động vật</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Giúp đỡ động vật không chỉ là hành động nhân đạo mà còn giúp cân bằng hệ sinh thái và tạo nên một xã hội văn minh hơn.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">21</h3>
+            <p class="secondary-font fs-6 m-0">Th2</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog2.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Làm thế nào để biết thú cưng của bạn đang đói</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Nhận biết các dấu hiệu khi thú cưng đói giúp bạn chăm sóc chúng tốt hơn và đảm bảo chế độ dinh dưỡng phù hợp.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">22</h3>
+            <p class="secondary-font fs-6 m-0">Th2</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog3.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Ngôi nhà tốt nhất cho thú cưng của bạn</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Tạo một không gian sống thoải mái và an toàn cho thú cưng là điều quan trọng giúp chúng có sức khỏe tốt và hạnh phúc.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">25</h3>
+            <p class="secondary-font fs-6 m-0">Th2</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog1.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Những bệnh thường gặp ở chó và cách phòng ngừa</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Tìm hiểu về các bệnh phổ biến ở chó và biện pháp phòng ngừa hiệu quả để giữ cho thú cưng của bạn luôn khỏe mạnh.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">28</h3>
+            <p class="secondary-font fs-6 m-0">Th2</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog2.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Làm thế nào để huấn luyện mèo đi vệ sinh đúng chỗ</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Hướng dẫn chi tiết về cách huấn luyện mèo sử dụng hộp vệ sinh, một kỹ năng cơ bản giúp việc nuôi mèo trong nhà trở nên dễ dàng.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entry-item col-md-4 my-4">
+          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
+            <h3 class="secondary-font text-primary m-0">01</h3>
+            <p class="secondary-font fs-6 m-0">Th3</p>
+          </div>
+          <div class="card position-relative">
+            <a href="single-post.html"><img src="images/blog3.jpg" class="img-fluid rounded-4" alt="image"></a>
+            <div class="card-body p-0">
+              <a href="single-post.html">
+                <h3 class="card-title pt-4 pb-3 m-0">Chế độ dinh dưỡng cân bằng cho thú cưng</h3>
+              </a>
+              <div class="card-text">
+                <p class="blog-paragraph fs-6">Tìm hiểu về nhu cầu dinh dưỡng của thú cưng và cách xây dựng chế độ ăn uống cân bằng để duy trì sức khỏe tối ưu cho chúng.</p>
+                <a href="single-post.html" class="blog-read">Xem thêm</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="navigation paging-navigation text-center mt-5" role="navigation">
+        <div class="pagination loop-pagination d-flex justify-content-center align-items-center">
+          <a href="#" class="pagination-arrow d-flex align-items-center mx-3">
+            <i class="fas fa-chevron-left fs-4"></i>
+          </a>
+          <span aria-current="page" class="page-numbers mt-2 fs-5 mx-3 current">1</span>
+          <a class="page-numbers mt-2 fs-5 mx-3" href="#">2</a>
+          <a class="page-numbers mt-2 fs-5 mx-3" href="#">3</a>
+          <a href="#" class="pagination-arrow d-flex align-items-center mx-3">
+            <i class="fas fa-chevron-right fs-4"></i>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <footer id="footer" class="bg-light pt-5 mt-5">
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- About Company -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-about">
+            <img src="images/logo.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
+            <p class="mb-4">JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam.</p>
+            <div class="social-links">
+              <div class="d-flex gap-3">
+                <a href="#" class="social-link" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link" aria-label="Youtube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Quick Links -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-menu">
+            <h4 class="mb-4">Liên kết nhanh</h4>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="index.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Trang chủ</a></li>
+              <li class="mb-2"><a href="about.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Giới thiệu</a></li>
+              <li class="mb-2"><a href="shop.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Sản phẩm</a></li>
+              <li class="mb-2"><a href="service.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Dịch vụ</a></li>
+              <li class="mb-2"><a href="blog.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Tin tức</a></li>
+              <li class="mb-2"><a href="contact.html" class="footer-link"><i class="fas fa-angle-right me-2"></i>Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-contact">
+            <h4 class="mb-4">Thông tin liên hệ</h4>
+            <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>
+            <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
+            <p class="mb-3"><i class="fas fa-envelope me-3"></i>info@janypet.com</p>
+            <p class="mb-3"><i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
+          </div>
+        </div>
+  
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6">
+          <div>
+            <h4 class="mb-4">Nhận thông tin</h4>
+            <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyPet.</p>
+            <div class="input-group mb-3">
+              <input type="email" class="form-control rounded-start-pill" placeholder="Email của bạn">
+              <button class="btn btn-primary rounded-end-pill" type="button">Đăng ký</button>
+            </div>
+            <div class="mt-4">
+              <img src="images/payment-methods.png" alt="Payment Methods" class="img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="py-3 border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 JanyPet. Tất cả quyền được bảo lưu.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#" class="text-decoration-none me-3">Điều khoản sử dụng</a>
+            <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" id="back-to-top" class="btn btn-lg rounded-circle position-fixed" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <!-- Toast container for notifications -->
+  <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+
+  <!-- JavaScript Libraries -->
+  <script src="js/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  
+  <!-- Custom scripts -->
+  <script src="js/toast-manager.js"></script>
+  <script src="js/auth_service.js"></script>
+  <script src="js/cart.js"></script>
+  
+  <script src="js/responsive-elements.js"></script>
+</body>
+
+</html>
