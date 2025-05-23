@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             messagesContainer.innerHTML = '';
-            addMessageToUI("Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?", "bot");
+            addMessageToUI("Xin chào! Tôi là trợ lý ảo của JanyFlower. Tôi có thể giúp gì cho bạn về các sản phẩm hoa và dịch vụ cắm hoa?", "bot");
         });
     }
 

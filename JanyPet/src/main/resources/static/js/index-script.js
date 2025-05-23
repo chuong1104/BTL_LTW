@@ -103,7 +103,6 @@ async function loadPopularCategories() {
                                 <i class="${iconClass} fa-2x text-primary"></i>
                             </div>
                             <h3 class="card-title h5">${category.name}</h3>
-                            <p class="text-muted small mb-0">${category.description || 'Browse our selection'}</p>
                         </div>
                     </div>
                 </a>
@@ -218,20 +217,11 @@ async function loadProductsByCategory() {
  */
 async function fetchProductsByCategory(categoryId) {
     try {
-        // Use product service to get products
-        const allProducts = await ProductService.getAllProducts();
-        
-        // Make sure categoryId is treated as number for comparison if needed
-        const catId = Number(categoryId);
-        
-        // Filter by category ID
-        return allProducts.filter(product => 
-            Number(product.categoryId) === catId || product.categoryId === categoryId
-        );
-        
+        // Use the dedicated function for fetching by category
+        return await ProductService.getProductsByCategory(categoryId);
     } catch (error) {
         console.error(`Error fetching products for category ${categoryId}:`, error);
-        return [];
+        return []; // Return empty array if failed
     }
 }
 
@@ -252,7 +242,6 @@ function createCategorySection(category, products) {
         <div class="row mb-4 align-items-center">
             <div class="col-md-8">
                 <h2 class="section-title display-6 fw-bold mb-0">${category.name}</h2>
-                <p class="text-muted mb-0">${category.description || `Browse our ${category.name.toLowerCase()} collection`}</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <a href="shop.html?cat=${category.id}" class="btn btn-outline-primary rounded-pill">

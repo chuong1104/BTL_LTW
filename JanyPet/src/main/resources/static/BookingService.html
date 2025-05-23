@@ -193,25 +193,14 @@
           <li class="nav-item">
             <a class="nav-link" href="index.html">Trang chủ</a>
           </li>
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
-               aria-expanded="false">Thú cưng</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Chó cảnh</a></li>
-              <li><a class="dropdown-item" href="#">Mèo cảnh</a></li>
-              <li><a class="dropdown-item" href="#">Thú cưng khác</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="shop.html">Tất cả thú cưng</a></li>
-            </ul>
-          </li> -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">Sản phẩm</a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Thức ăn</a></li>
-              <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
-              <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
-              <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
+              <li><a class="dropdown-item" href="#">Bó hoa tươi</a></li>
+              <li><a class="dropdown-item" href="#">Lẵng hoa</a></li>
+              <li><a class="dropdown-item" href="#">Hộp hoa</a></li>
+              <li><a class="dropdown-item" href="#">Giỏ hoa</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
             </ul>
@@ -261,7 +250,8 @@
     <section class="py-5 bg-light-primary">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">            <h2 class="display-4 fw-normal">Dịch Vụ Hoa Tươi</h2>
+          <div class="col-md-6">
+            <h2 class="display-4 fw-normal">Dịch Vụ Hoa Tươi</h2>
             <p class="lead">
               Thiết kế và trang trí hoa tươi chất lượng cao cho mọi dịp đặc biệt
             </p>
@@ -287,7 +277,8 @@
     <section class="py-5">
       <div class="container">
         <div class="row">
-          <div class="col-12 text-center mb-5">            <h2 class="display-5">Đặt Trước Hoa Tươi</h2>
+          <div class="col-12 text-center mb-5">
+            <h2 class="display-5">Đặt Trước Hoa Tươi</h2>
             <p class="lead">
               Chọn dịch vụ thiết kế và trang trí hoa tươi chất lượng cao cho dịp đặc biệt của bạn
             </p>
@@ -338,7 +329,7 @@
                 <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
                   <h3 class="mb-4 fw-bold"><span class="step-number-content">1</span>Chọn Dịch Vụ</h3>
                   <p class="text-muted mb-4">
-                    Chọn một hoặc nhiều dịch vụ cho thú cưng của bạn
+                    Chọn một hoặc nhiều dịch vụ cho đơn hàng hoa của bạn
                   </p>
                   <div class="row" id="services-container">
                     <!-- Services will be loaded dynamically -->
@@ -360,22 +351,21 @@
                   </div>
                 </div>
 
-                <!-- Step 2: Choose Pet -->
+                <!-- Step 2: Choose Flower Type -->
                 <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
-                    <!-- Corrected class for step number consistency -->
                     <h3 class="mb-4 fw-bold"><span class="step-number-content">2</span>Chọn Kiểu Hoa</h3>
                     <div class="row mb-3" id="pet-selection-container">
-                        <!-- Pet cards will be loaded here by JavaScript -->
+                        <!-- Flower type cards will be loaded here by JavaScript -->
                         <div class="col-12 text-center py-3">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">Đang tải danh sách thú cưng...</p>
+                            <p class="mt-2">Đang tải danh sách mẫu hoa...</p>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <button class="btn btn-outline-primary" id="add-new-pet-btn" type="button">
-                            <i class="fas fa-plus me-2"></i>Thêm thú cưng mới
+                            <i class="fas fa-plus me-2"></i>Thêm mẫu hoa mới
                         </button>
                         <button class="btn btn-sm btn-outline-secondary" id="refresh-pets-btn" type="button">
                             <i class="fas fa-sync-alt"></i> Tải lại danh sách
@@ -393,9 +383,9 @@
 
                 <!-- Step 3: Select Date & Time -->
                 <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
-                  <h3 class="mb-4 fw-bold"><span class="step-number-content">3</span>Chọn Thời Gian Hẹn</h3>
+                  <h3 class="mb-4 fw-bold"><span class="step-number-content">3</span>Chọn Thời Gian Giao Hoa</h3>
                   <p class="text-muted mb-4">
-                    Chọn ngày và giờ phù hợp cho cuộc hẹn
+                    Chọn ngày và giờ phù hợp để chúng tôi giao hoa cho bạn hoặc người nhận
                   </p>
 
                   <div class="row">
@@ -428,7 +418,7 @@
                         ></span>
                         <select class="form-select" id="booking-time" required>
                           <option value="" selected disabled>
-                            Chọn khung giờ
+                            Chọn khung giờ giao hàng
                           </option>
                           <option value="08:00:00">08:00</option>
                           <option value="09:00:00">09:00</option>
@@ -460,7 +450,7 @@
                       class="form-control"
                       id="booking-notes"
                       rows="3"
-                      placeholder="Yêu cầu đặc biệt hoặc ghi chú cho đơn hàng của bạn"
+                      placeholder="Yêu cầu đặc biệt hoặc thông điệp bạn muốn gửi kèm với hoa"
                     ></textarea>
                   </div>
 
@@ -486,7 +476,7 @@
                   <h3 class="mb-4 fw-bold"><span class="step-number-content">4</span>Xác Nhận Thông Tin</h3>
                   <div class="card shadow-sm mb-4">
                       <div class="card-header bg-light">
-                          <h5 class="mb-0">Chi tiết đặt lịch</h5>
+                          <h5 class="mb-0">Chi tiết đặt hoa</h5>
                       </div>
                       <ul class="list-group list-group-flush">
                           <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -497,18 +487,19 @@
                               <span>Dịch vụ đã chọn:</span>
                               <strong id="summary-services">N/A</strong>
                           </li>
-                          <li class="list-group-item d-flex justify-content-between align-items-center">                              <span>Kiểu hoa:</span>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                              <span>Kiểu hoa:</span>
                               <strong id="summary-pet">N/A</strong>
                           </li>
                           <li class="list-group-item d-flex justify-content-between align-items-center">
-                              <span>Ngày hẹn:</span>
+                              <span>Ngày giao:</span>
                               <strong id="summary-date">N/A</strong>
                           </li>
                           <li class="list-group-item d-flex justify-content-between align-items-center">
-                              <span>Giờ hẹn:</span>
+                              <span>Giờ giao:</span>
                               <strong id="summary-time">N/A</strong>
                           </li>
-                          <li class="list-group-item d-flex justify-content-between align-items-center"> <!-- Changed structure for notes -->
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
                               <span>Ghi chú:</span>
                               <strong id="summary-notes">Không có</strong>
                           </li>
@@ -525,7 +516,7 @@
                           <i class="fas fa-arrow-left me-1"></i> Quay lại
                       </button>
                       <button class="btn btn-success btn-lg" id="confirm-booking-btn" type="button" disabled>
-                          <i class="fas fa-calendar-check me-2"></i> Xác nhận và Đặt lịch
+                          <i class="fas fa-calendar-check me-2"></i> Xác nhận và Đặt hoa
                       </button>
                   </div>
                 </div>
@@ -547,7 +538,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="myBookingsModalLabel">My Bookings</h5>
+            <h5 class="modal-title" id="myBookingsModalLabel">Lịch sử đặt hoa</h5>
             <button
               type="button"
               class="btn-close"
@@ -560,19 +551,19 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Booking ID</th>
-                    <th>Hoa</th>
-                    <th>Services</th>
-                    <th>Date & Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Kiểu hoa</th>
+                    <th>Dịch vụ</th>
+                    <th>Ngày & Giờ</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody id="bookings-table-body">
                   <!-- Bookings will be loaded here dynamically -->
                   <tr>
                     <td colspan="6" class="text-center">
-                      Loading your bookings...
+                      Đang tải lịch sử đơn hàng...
                     </td>
                   </tr>
                 </tbody>
@@ -585,14 +576,14 @@
               class="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              Close
+              Đóng
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Add New Pet Modal -->
+    <!-- Add New Flower Type Modal -->
     <div
       class="modal fade"
       id="addPetModal"
@@ -607,7 +598,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="add-pet-form">              <div class="mb-3">
+            <form id="add-pet-form">
+              <div class="mb-3">
                 <label for="new-pet-name" class="form-label">Tên hoa <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="new-pet-name" required>
               </div>
@@ -636,7 +628,8 @@
               <!-- Add more fields if your PetCreationRequest needs them -->
             </form>
           </div>
-          <div class="modal-footer">            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
             <button type="button" class="btn btn-primary" id="save-pet-btn">Lưu kiểu hoa</button>
           </div>
         </div>
@@ -655,7 +648,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="termsModalLabel">
-              Terms and Conditions
+              Điều khoản và Điều kiện
             </h5>
             <button
               type="button"
@@ -664,7 +657,8 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">            <h6>Điều khoản đặt hoa</h6>
+          <div class="modal-body">
+            <h6>Điều khoản đặt hoa</h6>
             <p>
               Khi đặt hàng tại cửa hàng hoa của chúng tôi, bạn đồng ý với các điều khoản sau:
             </p>
@@ -693,7 +687,7 @@
               class="btn btn-primary"
               data-bs-dismiss="modal"
             >
-              I Understand
+              Tôi đồng ý
             </button>
           </div>
         </div>
@@ -712,7 +706,7 @@
         <div class="modal-content">
           <div class="modal-header bg-success text-white py-3">
             <h5 class="modal-title" id="bookingDetailModalLabel">
-              Booking Successful!
+              Đặt hoa thành công!
             </h5>
             <button
               type="button"
@@ -731,12 +725,14 @@
                   ></iconify-icon>
                 </div>
               </div>
-              <div class="col-md-9">                <h4 class="mb-2 fw-bold">Cảm ơn bạn đã đặt hàng!</h4>
+              <div class="col-md-9">
+                <h4 class="mb-2 fw-bold">Cảm ơn bạn đã đặt hàng!</h4>
                 <p class="mb-0 lead">
                   Đơn đặt hoa của bạn đã được xác nhận thành công.
                 </p>
               </div>
-            </div>            <div class="alert alert-info mb-4">
+            </div>
+            <div class="alert alert-info mb-4">
               <strong>Mã đơn hàng:</strong>
               <span id="bd-booking-id" class="fw-bold"></span>
             </div>
@@ -747,7 +743,7 @@
                 <tbody>
                   <tr>
                     <th scope="row" width="30%">
-                      <i class="fas fa-user me-2"></i> Customer
+                      <i class="fas fa-user me-2"></i> Khách hàng
                     </th>
                     <td id="bd-customer"></td>
                   </tr>
@@ -758,43 +754,44 @@
                     <td id="bd-email"></td>
                   </tr>
                   <tr>
-                    <th scope="row"><i class="fas fa-phone me-2"></i> Phone</th>
+                    <th scope="row"><i class="fas fa-phone me-2"></i> Điện thoại</th>
                     <td id="bd-phone"></td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      <i class="fas fa-map-marker-alt me-2"></i> Address
+                      <i class="fas fa-map-marker-alt me-2"></i> Địa chỉ
                     </th>
                     <td id="bd-address"></td>
                   </tr>
-                  <tr>                    <th scope="row"><i class="fas fa-flower-daffodil me-2"></i> Hoa</th>
+                  <tr>
+                    <th scope="row"><i class="fas fa-flower-daffodil me-2"></i> Hoa</th>
                     <td id="bd-pet"></td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      <i class="fas fa-concierge-bell me-2"></i> Service
+                      <i class="fas fa-concierge-bell me-2"></i> Dịch vụ
                     </th>
                     <td id="bd-service"></td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      <i class="fas fa-calendar-alt me-2"></i> Date
+                      <i class="fas fa-calendar-alt me-2"></i> Ngày
                     </th>
                     <td id="bd-date"></td>
                   </tr>
                   <tr>
-                    <th scope="row"><i class="fas fa-clock me-2"></i> Time</th>
+                    <th scope="row"><i class="fas fa-clock me-2"></i> Giờ</th>
                     <td id="bd-time"></td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      <i class="fas fa-clipboard-list me-2"></i> Notes
+                      <i class="fas fa-clipboard-list me-2"></i> Ghi chú
                     </th>
                     <td id="bd-notes"></td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      <i class="fas fa-info-circle me-2"></i> Status
+                      <i class="fas fa-info-circle me-2"></i> Trạng thái
                     </th>
                     <td id="bd-status"></td>
                   </tr>
@@ -808,10 +805,10 @@
               class="btn btn-outline-secondary"
               data-bs-dismiss="modal"
             >
-              Close
+              Đóng
             </button>
             <button type="button" class="btn btn-primary" id="go-to-bookings">
-              <i class="fas fa-history me-1"></i> View Booking History
+              <i class="fas fa-history me-1"></i> Xem lịch sử đặt hoa
             </button>
           </div>
         </div>
@@ -824,7 +821,8 @@
         <div class="row g-4">
           <!-- About Company -->
           <div class="col-lg-3 col-md-6">
-            <div class="footer-about">              <img src="images/logo.png" alt="JanyFlower" class="img-fluid mb-4" style="max-height: 60px;">
+            <div class="footer-about">
+              <img src="images/logo.png" alt="JanyFlower" class="img-fluid mb-4" style="max-height: 60px;">
               <p class="mb-4">JanyFlower - Cửa hàng hoa tươi và dịch vụ thiết kế, trang trí hoa uy tín, chất lượng hàng đầu Việt Nam.</p>
               <div class="social-links">
                 <div class="d-flex gap-3">
@@ -860,7 +858,8 @@
           <div class="col-lg-3 col-md-6">
             <div class="footer-contact">
               <h4 class="mb-4">Thông tin liên hệ</h4>
-              <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>              <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
+              <p class="mb-3"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận XYZ, Hà Nội</p>
+              <p class="mb-3"><i class="fas fa-phone-alt me-3"></i>+84 123 456 789</p>
               <p class="mb-3"><i class="fas fa-envelope me-3"></i>info@janyflower.com</p>
               <p class="mb-3"><i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
             </div>
@@ -870,7 +869,7 @@
           <div class="col-lg-3 col-md-6">
             <div>
               <h4 class="mb-4">Nhận thông tin</h4>
-              <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyPet.</p>
+              <p>Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ JanyFlower.</p>
               <div class="input-group mb-3">
                 <input type="email" class="form-control rounded-start-pill" placeholder="Email của bạn">
                 <button class="btn btn-primary rounded-end-pill" type="button">Đăng ký</button>

@@ -5,14 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc1bef31-5bd1-4b6d-bc85-18d982054035" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/VnPayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/VnPayConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/configuration/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/dto/response/ProductResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/repository/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/implement/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/GeminiApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/java/com/BTL_LTW/JanyPet/service/GeminiApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/BookingService.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/BookingService.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/chatbot-widget.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/chatbot-widget.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/chatbot.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/chatbot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/index-script.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/index-script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-service.js" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/js/product-service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JanyPet/src/main/resources/static/service.html" beforeDir="false" afterPath="$PROJECT_DIR$/JanyPet/src/main/resources/static/service.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +63,7 @@
     &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Web_ban_hoa&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/BTL_LTW_BanHoa&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -138,7 +140,9 @@
       <workItem from="1747742841008" duration="2899000" />
       <workItem from="1747757294455" duration="1140000" />
       <workItem from="1747884705861" duration="10323000" />
-      <workItem from="1747949643817" duration="1264000" />
+      <workItem from="1747949643817" duration="2343000" />
+      <workItem from="1747954313899" duration="5782000" />
+      <workItem from="1747968177088" duration="1974000" />
     </task>
     <servers />
   </component>

@@ -74,6 +74,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getAllProductsForAdmin(); // Changed this line
         return ResponseEntity.ok(products);
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {

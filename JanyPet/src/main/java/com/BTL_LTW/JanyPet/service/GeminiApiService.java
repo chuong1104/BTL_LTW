@@ -2,7 +2,7 @@ package com.BTL_LTW.JanyPet.service;
 
 import com.BTL_LTW.JanyPet.dto.gemini.*;
 import com.BTL_LTW.JanyPet.entity.Product;
-import com.BTL_LTW.JanyPet.entity.Service; // Assuming this is your Service entity
+import com.BTL_LTW.JanyPet.entity.Service; 
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
 import com.BTL_LTW.JanyPet.repository.ServiceRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,7 @@ import java.util.regex.Matcher; // Added
 import java.util.regex.Pattern; // Added
 import java.util.stream.Collectors; // Added
 
-@org.springframework.stereotype.Service // Ensure this annotation is present
+@org.springframework.stereotype.Service
 public class GeminiApiService {
 
     private static final Logger LOGGER = Logger.getLogger(GeminiApiService.class.getName());
@@ -38,14 +38,14 @@ public class GeminiApiService {
     private final ProductRepository productRepository; // Added
     private final ServiceRepository serviceRepository; // Added
 
-    // Updated SYSTEM_PROMPT to be a template
+    // Updated SYSTEM_PROMPT to be a template for flower shop
     private static final String SYSTEM_PROMPT_TEMPLATE =
-            "Bạn là một trợ lý ảo của JanyPet, một cửa hàng chuyên về sản phẩm và dịch vụ cho thú cưng. " +
+            "Bạn là một trợ lý ảo của JanyFlower, một cửa hàng chuyên về hoa tươi và dịch vụ thiết kế hoa. " +
             "Nhiệm vụ của bạn là trả lời các câu hỏi của khách hàng một cách thân thiện và hữu ích. " +
             "Hãy ưu tiên sử dụng thông tin từ cơ sở dữ liệu được cung cấp dưới đây để trả lời. " +
-            "Nếu thông tin không đủ hoặc không có, hãy trả lời dựa trên kiến thức chung về JanyPet. " +
-            "Luôn giữ thái độ chuyên nghiệp và tập trung vào chủ đề thú cưng, sản phẩm và dịch vụ của JanyPet. " +
-            "Nếu câu hỏi không liên quan, hãy lịch sự từ chối và gợi ý hỏi về JanyPet.\n" +
+            "Nếu thông tin không đủ hoặc không có, hãy trả lời dựa trên kiến thức chung về JanyFlower. " +
+            "Luôn giữ thái độ chuyên nghiệp và tập trung vào các loại hoa, sản phẩm và dịch vụ hoa của JanyFlower. " +
+            "Nếu câu hỏi không liên quan, hãy lịch sự từ chối và gợi ý hỏi về JanyFlower.\n" +
             "Dưới đây là một số thông tin từ cơ sở dữ liệu của chúng tôi có thể liên quan đến câu hỏi của người dùng:\n%s";
 
     // Constructor updated
@@ -57,7 +57,7 @@ public class GeminiApiService {
         this.serviceRepository = serviceRepository;
     }
 
-    // Helper method to extract a simple keyword (can be improved)
+    // Helper method to extract a simple keyword (updated for flower shop)
     private String extractSearchKeyword(String userMessage, String[] triggerWords) {
         String lowerUserMessage = userMessage.toLowerCase();
         for (String trigger : triggerWords) {
@@ -81,14 +81,13 @@ public class GeminiApiService {
                 .orElse(null);
     }
 
-
-    // New method to get context from database
+    // New method to get context from database (updated for flower shop)
     private String getDatabaseContext(String userMessage) {
         StringBuilder contextBuilder = new StringBuilder();
         String userMessageLower = userMessage.toLowerCase();
 
-        String[] productTriggers = {"sản phẩm", "product", "thức ăn", "đồ chơi", "quần áo", "vật phẩm", "pate", "hạt", "cát vệ sinh"};
-        String[] serviceTriggers = {"dịch vụ", "service", "spa", "grooming", "tắm", "cắt tỉa", "khám bệnh", "đặt lịch", "trông giữ", "khách sạn thú cưng"};
+        String[] productTriggers = {"hoa", "flower", "bó hoa", "lẵng hoa", "hộp hoa", "giỏ hoa", "cây cảnh", "hồng", "tulip", "lily", "cẩm tú cầu", "hướng dương"};
+        String[] serviceTriggers = {"dịch vụ", "service", "thiết kế", "trang trí", "cắm hoa", "giao hoa", "hoa sự kiện", "hoa cưới", "hoa sinh nhật", "hoa chia buồn"};
 
         boolean askedAboutProduct = Arrays.stream(productTriggers).anyMatch(userMessageLower::contains);
         boolean askedAboutService = Arrays.stream(serviceTriggers).anyMatch(userMessageLower::contains);
@@ -106,7 +105,7 @@ public class GeminiApiService {
         if (productKeyword != null) {
             List<Product> products = productRepository.searchProductsByKeyword(productKeyword);
             if (!products.isEmpty()) {
-                contextBuilder.append("Thông tin sản phẩm liên quan đến '").append(productKeyword).append("':\n");
+                contextBuilder.append("Thông tin sản phẩm hoa liên quan đến '").append(productKeyword).append("':\n");
                 products.stream().limit(3).forEach(p -> // Limit to 3 products
                         contextBuilder.append(String.format("- Tên: %s. Giá: %s VND. Mô tả ngắn: %s\n",
                                 p.getName(),
@@ -117,7 +116,7 @@ public class GeminiApiService {
         } else if (askedAboutProduct) { // General product query
             List<Product> products = productRepository.findTop5ByIsActiveTrueOrderByCreatedAtDesc();
             if (!products.isEmpty()) {
-                contextBuilder.append("Một số sản phẩm nổi bật tại JanyPet:\n");
+                contextBuilder.append("Một số sản phẩm hoa nổi bật tại JanyFlower:\n");
                 products.stream().limit(2).forEach(p ->
                         contextBuilder.append(String.format("- %s: %s VND\n", p.getName(), p.getPrice().toBigInteger()))
                 );
@@ -125,19 +124,19 @@ public class GeminiApiService {
         }
 
         if (serviceKeyword != null) {
-            List<Service> services = serviceRepository.searchServicesByKeyword(serviceKeyword); // Assuming Service entity has getName() and getDescription()
+            List<Service> services = serviceRepository.searchServicesByKeyword(serviceKeyword);
             if (!services.isEmpty()) {
-                contextBuilder.append("Thông tin dịch vụ liên quan đến '").append(serviceKeyword).append("':\n");
+                contextBuilder.append("Thông tin dịch vụ hoa liên quan đến '").append(serviceKeyword).append("':\n");
                 services.stream().limit(3).forEach(s ->
                         contextBuilder.append(String.format("- Tên: %s. Mô tả: %s\n",
-                                s.getName(), // Assuming Service entity has getName()
-                                s.getDescription() != null ? s.getDescription().substring(0, Math.min(s.getDescription().length(), 70)) + "..." : "Chưa có mô tả chi tiết")) // Assuming Service entity has getDescription()
+                                s.getName(),
+                                s.getDescription() != null ? s.getDescription().substring(0, Math.min(s.getDescription().length(), 70)) + "..." : "Chưa có mô tả chi tiết"))
                 );
             }
         } else if (askedAboutService) { // General service query
             List<Service> services = serviceRepository.findTop5ByOrderByCreatedAtDesc();
             if (!services.isEmpty()) {
-                contextBuilder.append("Một số dịch vụ nổi bật tại JanyPet:\n");
+                contextBuilder.append("Một số dịch vụ hoa nổi bật tại JanyFlower:\n");
                 services.stream().limit(2).forEach(s ->
                         contextBuilder.append(String.format("- %s\n", s.getName()))
                 );
@@ -145,7 +144,7 @@ public class GeminiApiService {
         }
 
         if (contextBuilder.length() == 0) {
-            return "Không có thông tin cụ thể nào từ cơ sở dữ liệu cho truy vấn này. Hãy trả lời dựa trên kiến thức chung về JanyPet.";
+            return "Không có thông tin cụ thể nào từ cơ sở dữ liệu cho truy vấn này. Hãy trả lời dựa trên kiến thức chung về JanyFlower - cửa hàng hoa tươi và dịch vụ cắm hoa.";
         }
         return contextBuilder.toString();
     }
@@ -215,22 +214,72 @@ public class GeminiApiService {
             return "Xin lỗi, tôi không nhận được phản hồi hợp lệ từ AI.";
         }
 
-        GeminiCandidate firstCandidate = geminiResponse.getCandidates().get(0);
-        if (firstCandidate.getContent() == null || firstCandidate.getContent().getParts() == null || firstCandidate.getContent().getParts().isEmpty()) {
-            LOGGER.warning("Gemini candidate content or parts are null/empty.");
-            return "Xin lỗi, nội dung phản hồi từ AI không đầy đủ.";
-        }
+        try {
+            GeminiCandidate firstCandidate = geminiResponse.getCandidates().get(0);
+            if (firstCandidate.getContent() == null || firstCandidate.getContent().getParts() == null || firstCandidate.getContent().getParts().isEmpty()) {
+                LOGGER.warning("Gemini candidate content or parts are null/empty.");
+                return "Xin lỗi, nội dung phản hồi từ AI không đầy đủ.";
+            }
 
-        String rawText = firstCandidate.getContent().getParts().get(0).getText();
-        return formatResponseAsHtml(rawText);
+            String rawText = firstCandidate.getContent().getParts().get(0).getText();
+            return formatResponseAsHtml(rawText);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Error processing Gemini response: " + e.getMessage(), e);
+            return "Đã có lỗi xảy ra khi xử lý phản hồi. Vui lòng thử lại sau.";
+        }
     }
 
     private String formatResponseAsHtml(String text) {
         if (text == null) return "";
-        String htmlText = text
-                .replace("\n", "<br>")
-                .replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>")
-                .replaceAll("\\*(.*?)\\*", "<em>$1</em>");
-        return htmlText;
+        
+        // Sanitize input to prevent HTML/script injection
+        text = text.replace("<", "&lt;").replace(">", "&gt;");
+        
+        // Handle code blocks first (```code```
+        StringBuilder result = new StringBuilder();
+        Pattern codeBlockPattern = Pattern.compile("```([\\s\\S]*?)```");
+        Matcher codeBlockMatcher = codeBlockPattern.matcher(text);
+        
+        int lastEnd = 0;
+        while (codeBlockMatcher.find()) {
+            // Add text before code block
+            result.append(formatInlineMarkdown(text.substring(lastEnd, codeBlockMatcher.start())));
+            
+            // Format code block
+            String codeContent = codeBlockMatcher.group(1).trim();
+            result.append("<div class=\"code-block\"><pre><code>")
+                  .append(codeContent)
+                  .append("</code></pre></div>");
+            
+            lastEnd = codeBlockMatcher.end();
+        }
+        
+        // Add remaining text
+        if (lastEnd < text.length()) {
+            result.append(formatInlineMarkdown(text.substring(lastEnd)));
+        }
+        
+        return result.toString();
+    }
+    
+    private String formatInlineMarkdown(String text) {
+        // Convert newlines to HTML line breaks
+        String formatted = text.replace("\n\n", "<br><br>").replace("\n", "<br>");
+        
+        // Format headers
+        formatted = formatted.replaceAll("(?m)^# (.*?)$", "<h2>$1</h2>");
+        formatted = formatted.replaceAll("(?m)^## (.*?)$", "<h3>$1</h3>");
+        formatted = formatted.replaceAll("(?m)^### (.*?)$", "<h4>$1</h4>");
+        
+        // Format lists
+        formatted = formatted.replaceAll("(?m)^- (.*?)$", "<li>$1</li>");
+        formatted = formatted.replaceAll("(?m)^\\d+\\. (.*?)$", "<li>$1</li>");
+        formatted = formatted.replaceAll("(<li>.*?</li>)+", "<ul>$0</ul>");
+        
+        // Format bold and italic text
+        formatted = formatted.replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>");
+        formatted = formatted.replaceAll("\\*(.*?)\\*", "<em>$1</em>");
+        
+        return formatted;
     }
 }
