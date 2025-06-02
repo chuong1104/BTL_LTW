@@ -39,7 +39,7 @@ file:
   upload-dir: D:/BTL_LTW/uploads
 
 app:
-  base-url: http://localhost:8080
+  base-url: https://nguyendangcong.onrender.com
   jwtSecret: uHqYj4Pk3mZqKmJ9Y2Ey2K8MdGnM9N9uRPv4RYjUDe4GHZ3xJv1pUlWHez2WUkcFZyrK52xVbbFwCWXEtZxpWg==
   jwtExpirationMs: 86400000
   jwtRefreshExpirationMs: 604800000

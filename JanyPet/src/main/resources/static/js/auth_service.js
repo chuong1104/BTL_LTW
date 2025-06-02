@@ -4,7 +4,7 @@
  */
 
 // Configuration
-const API_URL = "http://localhost:8080/api" // Update with your API URL
+const API_URL = "nguyendangcong.onrender.com/api" // Update with your API URL
 const TOKEN_NAME = "token"
 const DEBUG = true
 
