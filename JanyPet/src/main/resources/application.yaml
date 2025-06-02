@@ -2,10 +2,12 @@
   port: 8080
   servlet:
     context-path: /
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
 
 spring:
   datasource:
-    url: "jdbc:mysql://root:ZcHQRsqfyHqLqPHTTjGPMaUJbkKOMUrV@turntable.proxy.rlwy.net:15877/railway"
+    url: "jdbc:mysql://root:ZcHQRsqfyHqLqPHTTjGPMaUJbkKOMUrV@turntable.proxy.rlwy.net:15877/railway?serverTimezone=Asia/Ho_Chi_Minh"
     username: root
     password: ZcHQRsqfyHqLqPHTTjGPMaUJbkKOMUrV
     driver-class-name: com.mysql.cj.jdbc.Driver

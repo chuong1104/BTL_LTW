@@ -6,7 +6,9 @@ let formSubmitHandler = null
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-
+  // Set API base URL for admin services
+  window.API_BASE_URL = "https://nguyendangcong.onrender.com/api";
+  
   while (!window.authServiceAdmin) {
     await new Promise(resolve => setTimeout(resolve, 100));
   }

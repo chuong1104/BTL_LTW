@@ -171,17 +171,17 @@ const ProductService = {
    * @returns {string} URL hình ảnh hoàn chỉnh
    */
   getImageUrl: function(imageUrl) {
-      if (!imageUrl) {
-        return '/images/logo.png'; // Ảnh mặc định nếu không có URL
-      }
+    if (!imageUrl) {
+        return 'images/placeholder.jpg'; // Remove leading slash
+    }
 
-      // Trả về URL đầy đủ nếu đã là URL hoàn chỉnh
-      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    // Trả về URL đầy đủ nếu đã là URL hoàn chỉnh
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
         return imageUrl;
-      }
+    }
 
-      // Xử lý đường dẫn ảnh từ server
-      return `${imageUrl}`;
+    // Remove any leading slash to ensure relative path from current location
+    return imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
   }
 };
 

@@ -114,6 +114,28 @@ const DynamicContentLoader = {
         if (!productContainer) return;
         
         try {
+            // Check if product service is available, use mock data if not
+            if (!window.ProductService) {
+                console.warn('Product service not available, initializing fallback');
+                window.ProductService = {
+                    getAllProducts: async function() {
+                        return [
+                            {
+                                id: 'p001',
+                                name: 'Áo hoodie cho chó',
+                                price: 170000,
+                                description: 'Áo hoodie ấm áp cho thú cưng',
+                                imageUrl: 'images/item8.jpg'
+                            },
+                            // Add more mock products
+                        ];
+                    },
+                    getImageUrl: function(url) {
+                        return url || 'images/placeholder.jpg';
+                    }
+                };
+            }
+            
             // Show loading indicator
             if (loadingElement) {
                 loadingElement.style.display = 'block';

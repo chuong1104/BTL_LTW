@@ -328,7 +328,13 @@ async function loadServices() {
 
   try {
     if (!window.apiService || typeof window.apiService.getServices !== 'function') {
-      throw new Error('apiService or getServices function is not available.');
+      console.error("API Service not available. Attempting direct fetch.");
+      // Fallback to direct API call if service isn't available
+      const response = await fetch('https://nguyendangcong.onrender.com/api/services');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     }
     const services = await window.apiService.getServices(); 
     allServices = services; // Lưu lại để dùng sau nếu cần

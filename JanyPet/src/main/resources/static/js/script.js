@@ -379,6 +379,9 @@ function setupEventListeners() {
 // Thay thế hàm renderProducts hiện tại
 async function renderProducts() {
   try {
+    // Set the base API URL
+    const API_BASE = "https://nguyendangcong.onrender.com/api";
+    
     // Lấy sản phẩm từ API
     products = await productService.getAllProducts()
 

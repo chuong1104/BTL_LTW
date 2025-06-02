@@ -182,4 +182,27 @@ function handleHeaderScroll() {
         }
     `;
     document.head.appendChild(style);
+    
+    /**
+     * Add image error handling to all images
+     */
+    function addImageErrorHandling() {
+        // Add error handler to all images
+        document.querySelectorAll('img').forEach(img => {
+            if (!img.hasAttribute('data-error-handled')) {
+                img.setAttribute('data-error-handled', 'true');
+                img.onerror = function() {
+                    // Replace with placeholder if image fails to load
+                    this.src = 'images/placeholder.jpg';
+                    this.onerror = null; // Prevent infinite loops if placeholder also fails
+                };
+            }
+        });
+    }
+
+    // Run on DOMContentLoaded and after dynamic content updates
+    document.addEventListener('DOMContentLoaded', addImageErrorHandling);
+
+    // Set interval to catch dynamically added images
+    setInterval(addImageErrorHandling, 2000);
 });

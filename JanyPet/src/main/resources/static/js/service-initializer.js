@@ -17,6 +17,11 @@
                 getProductById: async function(id) {
                     console.log('Using fallback ProductService');
                     return null; 
+                },
+                getImageUrl: function(imageUrl) {
+                    if (!imageUrl) return 'images/placeholder.jpg';
+                    if (imageUrl.startsWith('http')) return imageUrl;
+                    return imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
                 }
             };
         }
