@@ -36,7 +36,7 @@ logging:
 
 file:
   # Nếu bạn chạy trên Windows, giữ nguyên D:/…; nếu trên Linux/Mac, có thể chuyển thành ./uploads
-  upload-dir: D:/BTL_LTW/uploads
+  upload-dir: ./uploads
 
 app:
   base-url: https://nguyendangcong.onrender.com
