@@ -101,7 +101,9 @@ public class SecurityConfig {
                                 "/api/users/register-admin",
                                 "/api/users/init-admin",
                                 "/api/**",
-                                "/api/admin/**"
+                                "/api/admin/**",
+                                "/api/ping"
+
                         ).permitAll()
                         .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
                         .requestMatchers("/api/users/**").hasAnyRole(
