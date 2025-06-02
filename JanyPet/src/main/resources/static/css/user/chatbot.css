@@ -1,9 +1,10 @@
+/* chatbot.css */
 :root {
-    --text-color: #333333;
-    --light-text: #757575;
-    --background: #FFFFFF;
-    --border-radius: 12px;
-    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --text-color: var(--dark-color);
+  --light-text: var(--light-dark-color);
+  --background: var(--light-color);
+  --border-radius: var(--border-radius);
+  --box-shadow: var(--box-shadow);
 } 
 
 /* Chatbot Container */

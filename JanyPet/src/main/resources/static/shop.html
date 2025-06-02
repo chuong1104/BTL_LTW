@@ -28,6 +28,18 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
+
+    <!-- Core CSS files - proper order is important -->
+    <link rel="stylesheet" href="css/user/variables.css" />
+    <link rel="stylesheet" href="css/user/typography.css" />
+    <link rel="stylesheet" href="css/user/utilities.css" />
+    <link rel="stylesheet" href="css/user/components.css" />
+    <link rel="stylesheet" href="css/user/buttons.css" />
+    <link rel="stylesheet" href="css/user/header.css" />
+    <link rel="stylesheet" href="css/user/footer.css" />
+    <link rel="stylesheet" href="css/user/toast.css" />
+
+    <!-- External libraries -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
@@ -40,19 +52,147 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
-    <link rel="stylesheet" type="text/css" href="css/vendor.css" />
+    <link rel="stylesheet" type="text/css" href="css/user/vendor.css" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" /> -->
-    <link rel="stylesheet" href="css/chatbot.css">
+
+    <!-- Page-specific CSS (add as needed) -->
+    <!-- Account page -->
+    <link rel="stylesheet" href="css/user/account.css" />
+    <!-- Booking page -->
+    <link rel="stylesheet" href="css/user/booking.css" />
+
+    <!-- Responsive styles (always last) -->
+    <link rel="stylesheet" href="css/user/responsive.css" />
+
+    <!-- Chatbot styles (if used) -->
+    <link rel="stylesheet" href="css/user/chatbot.css" />
+
+    <!-- Custom styles for shop page -->
+    <style>
+      /* Enhanced product card styling */
+      .product-card {
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px 12px 0 0;
+      }
+
+      .product-image-container img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .product-card:hover .product-image-container img {
+        transform: scale(1.05);
+      }
+
+      .product-actions {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        display: flex;
+        gap: 10px;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 12px;
+        border-radius: 50px;
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 5;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-card:hover .product-actions {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .action-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .action-button:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+      }
+
+      .product-info {
+        padding: 1.25rem;
+        text-align: center;
+      }
+
+      .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark-color);
+      }
+
+      .product-price {
+        font-weight: 600;
+        font-size: 1.15rem;
+        color: var(--primary-color);
+      }
+
+      /* Improve product grid layout */
+      @media (min-width: 768px) {
+        .product-grid .col-md-4 {
+          padding: 0 15px;
+        }
+      }
+
+      /* Discount badge */
+      .discount-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: var(--warning-color);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        z-index: 3;
+      }
+
+      /* Rating stars */
+      .rating {
+        color: #ffd700;
+        margin-bottom: 0.5rem;
+      }
+    </style>
   </head>
 
   <body>
@@ -75,25 +215,38 @@
           </div>
 
           <!-- Search bar - visible on large screens -->
-          <div class="col-lg-5 d-none d-lg-block position-relative"> 
-          <div class="search-bar border rounded-pill px-3 border-primary-subtle">
-            <form id="search-form-header" class="text-center d-flex align-items-center" action="shop.html" method="GET">
-              <input type="text" name="keyword" id="searchInputHeader" class="form-control border-0 bg-transparent py-2"
-                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..." autocomplete="off" /> 
+          <div class="col-lg-5 d-none d-lg-block position-relative">
+            <!-- Header search form -->
+            <form
+              id="search-form-header"
+              class="text-center d-flex align-items-center"
+              action="shop.html"
+              method="GET"
+            >
+              <input
+                type="text"
+                name="keyword"
+                id="searchInputHeader"
+                class="form-control border-0 bg-transparent py-2"
+                placeholder="Tìm kiếm thú cưng, sản phẩm và dịch vụ..."
+                autocomplete="off"
+              />
               <button type="submit" class="btn btn-link p-0 text-primary">
                 <i class="fas fa-search"></i>
               </button>
             </form>
+            <div
+              id="searchSuggestionsHeader"
+              class="search-suggestions-container"
+            ></div>
           </div>
-          <div id="searchSuggestionsHeader" class="search-suggestions-container"></div>
-        </div>
 
           <!-- Auth and user actions -->
           <div
             class="col-lg-4 col-md-8 col-sm-6 d-flex justify-content-end align-items-center"
           >
             <div class="auth-container ms-auto">
-              <!-- Login/Register buttons -->
+              <!-- Login/Register buttons (shown when not authenticated) -->
               <div class="auth-buttons">
                 <a
                   href="login.html"
@@ -103,14 +256,62 @@
                 </a>
               </div>
 
-              <!-- User info when logged in -->
+              <!-- User info (shown when authenticated) -->
               <div class="user-info d-flex align-items-center">
-                
-                <div class="d-flex">
-                  <a href="account.html" class="btn btn-outline-secondary rounded-pill btn-sm account-link">
-                    <i class="fas fa-user-circle me-1"></i> Tài khoản
-                 </a>
-                 
+                <div class="dropdown">
+                  <button
+                    class="btn btn-outline-secondary rounded-pill dropdown-toggle"
+                    type="button"
+                    id="userMenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-user-circle me-1"></i>
+                    <span class="username-text">Tài khoản</span>
+                  </button>
+                  <ul
+                    class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="userMenuButton"
+                  >
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="account.html"
+                        ><i class="fas fa-user me-2"></i> Thông tin tài khoản</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="account.html?tab=orders"
+                        ><i class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="account.html?tab=pets"
+                        ><i class="fas fa-paw me-2"></i> Thú cưng của tôi</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="wishlist.html"
+                        ><i class="fas fa-heart me-2"></i> Danh sách yêu thích</a
+                      >
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item logout-link"
+                        href="#"
+                        ><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a
+                      >
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -120,14 +321,14 @@
               <a href="wishlist.html" class="mx-2 position-relative text-dark">
                 <i class="fas fa-heart fs-5"></i>
                 <span
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count"
                   >0</span
                 >
               </a>
               <a href="cart.html" class="mx-2 position-relative text-dark">
                 <i class="fas fa-shopping-cart fs-5"></i>
                 <span
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary cart-count"
                   >0</span
                 >
               </a>
@@ -166,66 +367,43 @@
             <i class="fas fa-search"></i>
           </a>
         </div>
-          
+
         <!-- Main navigation -->
         <div class="collapse navbar-collapse" id="navbarMain">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="index.html">Trang chủ</a>
-            </li>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active fw-medium" href="index.html">Trang chủ</a>
+          </li>
+      
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Sản phẩm</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Thức ăn</a></li>
+              <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
+              <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
+              <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="shop.html">Tất cả sản phẩm</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-medium" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">Dịch vụ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="service.html">Tất cả dịch vụ</a></li>
+              <li><a class="dropdown-item" href="BookingService.html">Đặt lịch</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="blog.html">Tin tức</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
+          </li>
         
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle active fw-medium"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                >Sản phẩm</a
-              >
-              <ul class="dropdown-menu">
-                <!-- <li><a class="dropdown-item" href="#">Thức ăn</a></li>
-                <li><a class="dropdown-item" href="#">Phụ kiện</a></li>
-                <li><a class="dropdown-item" href="#">Đồ chơi</a></li>
-                <li><a class="dropdown-item" href="#">Quần áo thú cưng</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li> -->
-                  <a class="dropdown-item active" href="shop.html"
-                    >Tất cả sản phẩm</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle fw-medium"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                >Dịch vụ</a
-              >
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="service.html"
-                    >Tất cả dịch vụ</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="BookingService.html"
-                    >Đặt lịch</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="blog.html">Tin tức</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-medium" href="contact.html">Liên hệ</a>
-            </li>
-          </ul>
-        </div>
+        </ul>
+      </div>
       </div>
     </nav>
 
@@ -249,18 +427,25 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="search-form-modal" action="shop.html" method="GET">
               <div class="input-group">
                 <input
                   type="text"
+                  name="keyword"
+                  id="searchInputModal"
                   class="form-control"
                   placeholder="Tìm kiếm sản phẩm..."
+                  autocomplete="off"
                 />
-                <button class="btn btn-primary" type="button">
+                <button class="btn btn-primary" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
             </form>
+            <div
+              id="searchSuggestionsModal"
+              class="search-suggestions-container mt-2"
+            ></div>
           </div>
         </div>
       </div>
@@ -269,146 +454,218 @@
     <!-- Breadcrumb -->
     <section id="banner" class="py-3" style="background: #f9f3ec">
       <div class="container">
-        <div class="hero-content py-5 my-3">
-          <h2 class="display-1 mt-3 mb-0">Shop</h2>
-          <nav class="breadcrumb">
-            <a class="breadcrumb-item nav-link" href="index.html">Home</a>
-            <a class="breadcrumb-item nav-link" href="shop.html">Shop</a>
-            <span class="breadcrumb-item active" aria-current="page">Shop</span>
+        <div class="hero-content py-4 my-2">
+          <h1 class="display-5 fw-bold mb-3">Cửa hàng thú cưng</h1>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item">
+                <a href="index.html">Trang chủ</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Cửa hàng
+              </li>
+            </ol>
           </nav>
         </div>
       </div>
     </section>
 
-    <div class="shopify-grid">
-      <div class="container py-5 my-5">
+    <!-- Shop Section -->
+    <div class="shop-container">
+      <div class="container py-5">
         <div class="row flex-md-row-reverse g-md-5 mb-5">
-          <main class="col-md-9">
+          <!-- Products -->
+          <div class="col-lg-9">
+            <!-- Shop header with filter controls -->
             <div
-              class="filter-shop d-md-flex justify-content-between align-items-center"
+              class="d-flex flex-wrap justify-content-between align-items-center mb-4"
             >
-              <div class="showing-product">
-                <p class="m-0">Showing 1–9 of 55 results</p>
-              </div>
-              <div class="sort-by">
-                <select class="filter-categories border-0 m-0">
-                  <option value="">Default sorting</option>
-                  <option value="">Name (A - Z)</option>
-                  <option value="">Name (Z - A)</option>
-                  <option value="">Price (Low-High)</option>
-                  <option value="">Price (High-Low)</option>
-                  <option value="">Rating (Highest)</option>
-                  <option value="">Rating (Lowest)</option>
-                  <option value="">Model (A - Z)</option>
-                  <option value="">Model (Z - A)</option>
+              <p class="mb-0" id="product-count">
+                Hiển thị 1–9 của 24 sản phẩm
+              </p>
+              <div class="d-flex align-items-center">
+                <label for="sortBy" class="me-2 mb-0">Sắp xếp theo:</label>
+                <select
+                  class="form-select filter-categories w-auto"
+                  name="sortBy"
+                  id="sortBy"
+                >
+                  <option value="default">Mặc định</option>
+                  <option value="price_asc">Giá: Thấp đến cao</option>
+                  <option value="price_desc">Giá: Cao đến thấp</option>
+                  <option value="name_asc">Tên: A-Z</option>
+                  <option value="name_desc">Tên: Z-A</option>
                 </select>
               </div>
             </div>
 
-            <!-- Replace the static product grid with this -->
-            <div class="product-grid row" id="product-container">
-              <!-- Products will be loaded dynamically -->
-              <div class="col-12 text-center py-5" id="products-loading">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-2">Đang tải sản phẩm...</p>
+            <!-- Loading indicator -->
+            <div id="products-loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
               </div>
+              <p class="mt-2">Đang tải sản phẩm...</p>
             </div>
 
-            <!-- Replace the static pagination with this -->
-            <nav class="navigation paging-navigation text-center mt-5" role="navigation">
-              <div id="pagination-container" class="pagination loop-pagination d-flex justify-content-center align-items-center">
-                <!-- Pagination will be generated dynamically -->
-                <div class="spinner-border spinner-border-sm text-primary mx-2" role="status" id="pagination-loading">
-                  <span class="visually-hidden">Loading...</span>
+            <!-- Product grid -->
+            <div id="product-container" class="row product-grid g-4">
+              <!-- Products will be inserted here dynamically -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-5">
+              <div id="pagination-loading" style="display: none">
+                <div
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                >
+                  <span class="visually-hidden">Đang tải...</span>
                 </div>
               </div>
-            </nav>
-          </main>
-          <aside class="col-md-3 mt-5">
-            <div class="sidebar">
-              <div class="widget-menu">
-                <div class="widget-search-bar" style="position: relative;"> <!-- Add position: relative here -->
-                  <div class="search-bar border rounded-2 border-dark-subtle pe-3">
-                    <!-- Updated search form for sidebar -->
-                    <form id="search-form-sidebar" class="text-center d-flex align-items-center" action="shop.html" method="GET">
-                      <input type="text" name="keyword" id="searchInputSidebar" class="form-control border-0 bg-transparent py-2" placeholder="Tìm kiếm sản phẩm..." autocomplete="off" />
-                      <button type="submit" class="btn btn-link p-0 text-secondary"> <!-- Using a button for consistency -->
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </form>
-                  </div>
-                  <!-- Container for search suggestions in sidebar -->
-                  <div id="searchSuggestionsSidebar" class="search-suggestions-container"></div>
+              <div
+                id="pagination-container"
+                class="d-flex align-items-center"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Sidebar/Filters -->
+          <aside class="col-lg-3">
+            <div class="filter-sidebar p-4 bg-white rounded-3 shadow-sm mb-4">
+              <!-- Sidebar search -->
+              <div class="widget-search mb-4">
+                <h4 class="widget-title">Tìm kiếm</h4>
+                <div class="search-bar border rounded-pill px-3">
+                  <form
+                    id="search-form-sidebar"
+                    class="d-flex align-items-center"
+                    action="shop.html"
+                    method="GET"
+                  >
+                    <input
+                      type="text"
+                      name="keyword"
+                      id="searchInputSidebar"
+                      class="form-control border-0 py-2"
+                      placeholder="Tìm kiếm sản phẩm..."
+                      autocomplete="off"
+                    />
+                    <button
+                      type="submit"
+                      class="btn btn-link p-0 text-secondary"
+                    >
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </form>
                 </div>
+                <!-- Container for search suggestions in sidebar -->
+                <div
+                  id="searchSuggestionsSidebar"
+                  class="search-suggestions-container"
+                ></div>
               </div>
-              <!-- Replace the static category sidebar with this -->
-              <div class="widget-product-categories pt-5">
+
+              <!-- Categories -->
+              <div class="widget-product-categories pt-3">
                 <h4 class="widget-title">Danh mục sản phẩm</h4>
-                <ul class="product-categories sidebar-list list-unstyled" id="category-list">
-                  <li class="cat-item">
-                    <a href="shop.html">Tất cả</a>
-                  </li>
-                  <!-- Categories will be loaded dynamically -->
-                  <li class="cat-item" id="categories-loading">
-                    <span class="nav-link">
-                      <div class="spinner-border spinner-border-sm text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                <ul
+                  class="product-categories sidebar-list list-unstyled"
+                  id="category-list"
+                >
+                  <!-- Loading indicator for categories -->
+                  <li id="categories-loading">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="spinner-border spinner-border-sm text-primary me-2"
+                        role="status"
+                      >
+                        <span class="visually-hidden">Đang tải...</span>
                       </div>
-                      Loading...
-                    </span>
+                      <span>Đang tải danh mục...</span>
+                    </div>
                   </li>
+                  <!-- Categories will be inserted here dynamically -->
                 </ul>
               </div>
+
+              <!-- Tags -->
               <div class="widget-product-tags pt-3">
                 <h4 class="widget-title">Thẻ</h4>
-                <ul class="product-tags sidebar-list list-unstyled">
-                  <li class="tags-item">
-                    <a href="shop.html?tag=pets" class="nav-link">Thú cưng</a>
+                <ul
+                  class="product-tags sidebar-list list-unstyled d-flex flex-wrap gap-2"
+                >
+                  <li>
+                    <a
+                      href="?tag=dog"
+                      class="badge bg-light text-dark py-2 px-3 text-decoration-none"
+                      >Chó</a
+                    >
                   </li>
-                  <li class="tags-item">
-                    <a href="shop.html?tag=clothes" class="nav-link">Quần áo</a>
+                  <li>
+                    <a
+                      href="?tag=cat"
+                      class="badge bg-light text-dark py-2 px-3 text-decoration-none"
+                      >Mèo</a
+                    >
                   </li>
-                  <li class="tags-item">
-                    <a href="shop.html?tag=foods" class="nav-link">Thức ăn</a>
+                  <li>
+                    <a
+                      href="?tag=food"
+                      class="badge bg-light text-dark py-2 px-3 text-decoration-none"
+                      >Thức ăn</a
+                    >
                   </li>
-                  <li class="tags-item">
-                    <a href="shop.html?tag=toys" class="nav-link">Đồ chơi</a>
+                  <li>
+                    <a
+                      href="?tag=toy"
+                      class="badge bg-light text-dark py-2 px-3 text-decoration-none"
+                      >Đồ chơi</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="?tag=care"
+                      class="badge bg-light text-dark py-2 px-3 text-decoration-none"
+                      >Chăm sóc</a
+                    >
                   </li>
                 </ul>
               </div>
-              <div class="widget-product-brands pt-3">
-                <h4 class="widget-title">Thương hiệu</h4>
-                <ul class="product-tags sidebar-list list-unstyled">
-                  <li class="tags-item">
-                    <a href="#" class="nav-link">Denim</a>
-                  </li>
-                  <li class="tags-item">
-                    <a href="#" class="nav-link">Puma</a>
-                  </li>
-                  <li class="tags-item">
-                    <a href="#" class="nav-link">Klaws</a>
-                  </li>
-                </ul>
-              </div>
+
+              <!-- Price filter -->
               <div class="widget-price-filter pt-3">
-                <h4 class="widget-titlewidget-title">Lọc theo giá</h4>
-                <ul class="product-tags sidebar-list list-unstyled">
+                <h4 class="widget-title">Giá</h4>
+                <ul class="tags-list product-tags sidebar-list list-unstyled">
                   <li class="tags-item">
-                    <a href="#" class="nav-link">Dưới 100.000₫</a>
+                    <a href="?min=0&max=100000" class="text-decoration-none"
+                      >Dưới 100.000₫</a
+                    >
                   </li>
                   <li class="tags-item">
-                    <a href="#" class="nav-link">100.000₫ - 200.000₫</a>
+                    <a
+                      href="?min=100000&max=300000"
+                      class="text-decoration-none"
+                      >100.000₫ - 300.000₫</a
+                    >
                   </li>
                   <li class="tags-item">
-                    <a href="#" class="nav-link">200.000₫ - 300.000₫</a>
+                    <a
+                      href="?min=300000&max=500000"
+                      class="text-decoration-none"
+                      >300.000₫ - 500.000₫</a
+                    >
                   </li>
                   <li class="tags-item">
-                    <a href="#" class="nav-link">300.000₫ - 400.000₫</a>
+                    <a
+                      href="?min=500000&max=1000000"
+                      class="text-decoration-none"
+                      >500.000₫ - 1.000.000₫</a
+                    >
                   </li>
                   <li class="tags-item">
-                    <a href="#" class="nav-link">Trên 400.000₫</a>
+                    <a href="?min=1000000" class="text-decoration-none"
+                      >Trên 1.000.000₫</a
+                    >
                   </li>
                 </ul>
               </div>
@@ -421,64 +678,118 @@
     <!-- Replace the static service section with this -->
     <section id="service" class="mt-5 pt-2">
       <div class="container py-5 my-5">
-        <div class="row g-md-5 pt-4">
-          <div class="col-md-3 my-3">
-            <div class="card shadow-sm border-0 h-100">
-              <div class="p-4">
-                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
-                  <i class="fas fa-truck text-primary fs-4"></i>
+        <div class="row">
+          <div
+            class="section-header d-md-flex justify-content-between align-items-center mb-3"
+          >
+            <h2 class="display-6 text-start mb-0">Dịch vụ thú cưng</h2>
+            <a
+              href="BookingService.html"
+              class="btn btn-outline-secondary mt-3 mt-md-0"
+              >Xem tất cả</a
+            >
+          </div>
+        </div>
+        <div class="row g-4 mt-2">
+          <div class="col-md-3 col-sm-6">
+            <div class="card h-100 text-center">
+              <div class="service-img-container">
+                <img
+                  src="images/services/grooming.jpg"
+                  alt="Dịch vụ tắm và vệ sinh"
+                  class="card-img-top"
+                />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div
+                  class="mb-3 mt-3 mx-auto service-icon-wrapper bg-light rounded-circle p-3"
+                >
+                  <i class="fas fa-bath text-primary fs-3"></i>
                 </div>
-                <h3 class="card-title py-2 m-0 fs-5">Miễn phí vận chuyển</h3>
-                <div class="card-text">
-                  <p class="blog-paragraph fs-6 text-muted">
-                    Miễn phí giao hàng với đơn hàng trên 500.000đ tại Hà Nội và TP. HCM
-                  </p>
-                </div>
+                <h5 class="card-title">Tắm & Vệ sinh</h5>
+                <p class="card-text flex-grow-1">
+                  Dịch vụ tắm, vệ sinh và chăm sóc lông cho thú cưng của bạn.
+                </p>
+                <a href="BookingService.html" class="btn btn-primary mt-3"
+                  >Đặt lịch</a
+                >
               </div>
             </div>
           </div>
-          <div class="col-md-3 my-3">
-            <div class="card shadow-sm border-0 h-100">
-              <div class="p-4">
-                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
-                  <i class="fas fa-shield-alt text-primary fs-4"></i>
+          <div class="col-md-3 col-sm-6">
+            <div class="card h-100 text-center">
+              <div class="service-img-container">
+                <img
+                  src="images/services/veterinary.jpg"
+                  alt="Dịch vụ thú y"
+                  class="card-img-top"
+                />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div
+                  class="mb-3 mt-3 mx-auto service-icon-wrapper bg-light rounded-circle p-3"
+                >
+                  <i class="fas fa-stethoscope text-primary fs-3"></i>
                 </div>
-                <h3 class="card-title py-2 m-0 fs-5">Thanh toán an toàn</h3>
-                <div class="card-text">
-                  <p class="blog-paragraph fs-6 text-muted">
-                    Hỗ trợ nhiều phương thức thanh toán an toàn và bảo mật
-                  </p>
-                </div>
+                <h5 class="card-title">Dịch vụ thú y</h5>
+                <p class="card-text flex-grow-1">
+                  Khám bệnh, chẩn đoán và điều trị bởi đội ngũ bác sĩ chuyên
+                  nghiệp.
+                </p>
+                <a href="BookingService.html" class="btn btn-primary mt-3"
+                  >Đặt lịch</a
+                >
               </div>
             </div>
           </div>
-          <div class="col-md-3 my-3">
-            <div class="card shadow-sm border-0 h-100">
-              <div class="p-4">
-                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
-                  <i class="fas fa-tag text-primary fs-4"></i>
+          <div class="col-md-3 col-sm-6">
+            <div class="card h-100 text-center">
+              <div class="service-img-container">
+                <img
+                  src="images/services/training.jpg"
+                  alt="Huấn luyện thú cưng"
+                  class="card-img-top"
+                />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div
+                  class="mb-3 mt-3 mx-auto service-icon-wrapper bg-light rounded-circle p-3"
+                >
+                  <i class="fas fa-graduation-cap text-primary fs-3"></i>
                 </div>
-                <h3 class="card-title py-2 m-0 fs-5">Khuyến mãi hàng ngày</h3>
-                <div class="card-text">
-                  <p class="blog-paragraph fs-6 text-muted">
-                    Theo dõi website để nhận được các ưu đãi đặc biệt hàng ngày
-                  </p>
-                </div>
+                <h5 class="card-title">Huấn luyện</h5>
+                <p class="card-text flex-grow-1">
+                  Các khóa huấn luyện cơ bản và nâng cao cho thú cưng của bạn.
+                </p>
+                <a href="BookingService.html" class="btn btn-primary mt-3"
+                  >Đặt lịch</a
+                >
               </div>
             </div>
           </div>
-          <div class="col-md-3 my-3">
-            <div class="card shadow-sm border-0 h-100">
-              <div class="p-4">
-                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
-                  <i class="fas fa-medal text-primary fs-4"></i>
+          <div class="col-md-3 col-sm-6">
+            <div class="card h-100 text-center">
+              <div class="service-img-container">
+                <img
+                  src="images/services/pet-hotel.jpg"
+                  alt="Khách sạn thú cưng"
+                  class="card-img-top"
+                />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div
+                  class="mb-3 mt-3 mx-auto service-icon-wrapper bg-light rounded-circle p-3"
+                >
+                  <i class="fas fa-home text-primary fs-3"></i>
                 </div>
-                <h3 class="card-title py-2 m-0 fs-5">Đảm bảo chất lượng</h3>
-                <div class="card-text">
-                  <p class="blog-paragraph fs-6 text-muted">
-                    Cam kết sản phẩm chính hãng, chất lượng cao cho thú cưng của bạn
-                  </p>
-                </div>
+                <h5 class="card-title">Khách sạn thú cưng</h5>
+                <p class="card-text flex-grow-1">
+                  Dịch vụ trông giữ thú cưng với không gian thoải mái và an
+                  toàn.
+                </p>
+                <a href="BookingService.html" class="btn btn-primary mt-3"
+                  >Đặt lịch</a
+                >
               </div>
             </div>
           </div>
@@ -488,89 +799,18 @@
 
     <section id="insta" class="my-3">
       <div class="row g-0 py-5">
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-          </div>
-          <a href="#">
-            <img
-              src="images/insta1.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
+        <div class="section-header mb-5 text-center">
+          <h2 class="display-6">Theo dõi chúng tôi trên Instagram</h2>
+          <p>@janypet</p>
         </div>
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+        <div id="instagram-loading" class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Đang tải...</span>
           </div>
-          <a href="#">
-            <img
-              src="images/insta2.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
+          <p>Đang tải ảnh Instagram...</p>
         </div>
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-          </div>
-          <a href="#">
-            <img
-              src="images/insta3.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
-        </div>
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-          </div>
-          <a href="#">
-            <img
-              src="images/insta4.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
-        </div>
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-          </div>
-          <a href="#">
-            <img
-              src="images/insta5.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
-        </div>
-        <div class="col instagram-item text-center position-relative">
-          <div
-            class="icon-overlay d-flex justify-content-center position-absolute"
-          >
-            <iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
-          </div>
-          <a href="#">
-            <img
-              src="images/insta6.jpg"
-              alt="insta-img"
-              class="img-fluid rounded-3"
-            />
-          </a>
+        <div id="instagram-container" class="row g-0">
+          <!-- Instagram images will be loaded here -->
         </div>
       </div>
     </section>
@@ -578,122 +818,105 @@
     <footer id="footer" class="bg-light pt-5 mt-5">
       <div class="container py-5">
         <div class="row g-4">
-          <!-- About Company -->
+          <!-- About -->
           <div class="col-lg-3 col-md-6">
-            <div class="footer-about">
-              <img
-                src="images/logo.png"
-                alt="JanyPet"
-                class="img-fluid mb-4"
-                style="max-height: 60px"
-              />
-              <p class="mb-4">
-                JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất
-                lượng hàng đầu Việt Nam.
-              </p>
-              <div class="social-links">
-                <div class="d-flex gap-3">
-                  <a href="#" class="social-link" aria-label="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" class="social-link" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                  </a>
-                  <a href="#" class="social-link" aria-label="Twitter">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                  <a href="#" class="social-link" aria-label="Youtube">
-                    <i class="fab fa-youtube"></i>
-                  </a>
-                </div>
-              </div>
+            <h5 class="mb-4">Về JanyPet</h5>
+            <p>
+              JanyPet là cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất
+              lượng hàng đầu với đầy đủ sản phẩm và dịch vụ dành cho thú cưng
+              của bạn.
+            </p>
+            <div class="social-links mt-4 d-flex gap-3">
+              <a href="#" class="text-secondary"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-secondary"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-secondary"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-secondary"
+                ><i class="fab fa-youtube"></i
+              ></a>
             </div>
           </div>
 
-          <!-- Quick Links -->
+          <!-- Quick links -->
           <div class="col-lg-3 col-md-6">
-            <div class="footer-menu">
-              <h4 class="mb-4">Liên kết nhanh</h4>
-              <ul class="list-unstyled">
-                <li class="mb-2">
-                  <a href="index.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Trang chủ</a
-                  >
-                </li>
-                <li class="mb-2">
-                  <a href="about.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Giới thiệu</a
-                  >
-                </li>
-                <li class="mb-2">
-                  <a href="shop.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Sản phẩm</a
-                  >
-                </li>
-                <li class="mb-2">
-                  <a href="service.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Dịch vụ</a
-                  >
-                </li>
-                <li class="mb-2">
-                  <a href="blog.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Tin tức</a
-                  >
-                </li>
-                <li class="mb-2">
-                  <a href="contact.html" class="footer-link"
-                    ><i class="fas fa-angle-right me-2"></i>Liên hệ</a
-                  >
-                </li>
-              </ul>
-            </div>
+            <h5 class="mb-4">Liên kết nhanh</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="shop.html" class="text-decoration-none text-secondary"
+                  >Cửa hàng</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="BookingService.html"
+                  class="text-decoration-none text-secondary"
+                  >Đặt lịch dịch vụ</a
+                >
+              </li>
+              <li class="mb-2">
+                <a href="blog.html" class="text-decoration-none text-secondary"
+                  >Blog</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="contact.html"
+                  class="text-decoration-none text-secondary"
+                  >Liên hệ</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="account.html"
+                  class="text-decoration-none text-secondary"
+                  >Tài khoản</a
+                >
+              </li>
+            </ul>
           </div>
 
-          <!-- Contact Info -->
+          <!-- Contact -->
           <div class="col-lg-3 col-md-6">
-            <div class="footer-contact">
-              <h4 class="mb-4">Thông tin liên hệ</h4>
-              <p class="mb-3">
-                <i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, Quận
-                XYZ, Hà Nội
-              </p>
-              <p class="mb-3">
-                <i class="fas fa-phone-alt me-3"></i>+84 123 456 789
-              </p>
-              <p class="mb-3">
-                <i class="fas fa-envelope me-3"></i>info@janypet.com
-              </p>
-              <p class="mb-3">
-                <i class="fas fa-clock me-3"></i>Thứ 2 - Chủ nhật: 8:00 - 20:00
-              </p>
-            </div>
+            <h5 class="mb-4">Thông tin liên hệ</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <i class="fas fa-map-marker-alt me-2"></i> 123 Đường Láng, Đống
+                Đa, Hà Nội
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-phone-alt me-2"></i> (024) 3999 8888
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-envelope me-2"></i> contact@janypet.vn
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-clock me-2"></i> Thứ 2 - CN: 8:00 - 20:00
+              </li>
+            </ul>
           </div>
 
           <!-- Newsletter -->
           <div class="col-lg-3 col-md-6">
-            <div>
-              <h4 class="mb-4">Nhận thông tin</h4>
-              <p>
-                Đăng ký nhận thông tin khuyến mãi và cập nhật mới nhất từ
-                JanyPet.
-              </p>
-              <div class="input-group mb-3">
-                <input
-                  type="email"
-                  class="form-control rounded-start-pill"
-                  placeholder="Email của bạn"
-                />
-                <button class="btn btn-primary rounded-end-pill" type="button">
-                  Đăng ký
-                </button>
-              </div>
-              <div class="mt-4">
-                <img
-                  src="images/payment-methods.png"
-                  alt="Payment Methods"
-                  class="img-fluid"
-                />
-              </div>
+            <h5 class="mb-4">Đăng ký nhận tin</h5>
+            <p>
+              Đăng ký để nhận thông tin mới nhất về sản phẩm và ưu đãi đặc biệt
+              từ JanyPet.
+            </p>
+            <div class="input-group mb-3">
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email của bạn"
+                aria-label="Email của bạn"
+              />
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-paper-plane"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -701,22 +924,39 @@
 
       <div class="py-3 border-top">
         <div class="container">
-          <div class="row">
-            <div class="col-md-6 text-center text-md-start">
-              <p class="mb-0">
-                &copy; 2025 JanyPet. Tất cả quyền được bảo lưu.
-              </p>
+          <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+              <p class="mb-0">&copy; 2023 JanyPet. Đã đăng ký bản quyền.</p>
             </div>
             <div class="col-md-6 text-center text-md-end">
-              <a href="#" class="text-decoration-none me-3"
-                >Điều khoản sử dụng</a
-              >
-              <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+              <img
+                src="images/payments.png"
+                alt="Payment methods"
+                class="img-fluid"
+                style="max-height: 24px"
+              />
             </div>
           </div>
         </div>
       </div>
     </footer>
+
+    <!-- Back to top button -->
+    <a
+      href="#"
+      id="back-to-top"
+      class="btn btn-primary btn-lg rounded-circle position-fixed bottom-0 end-0 m-4"
+      style="display: none; z-index: 1050"
+    >
+      <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Toast container for notifications -->
+    <div
+      id="toast-container"
+      class="position-fixed bottom-0 end-0 p-3"
+      style="z-index: 1060"
+    ></div>
 
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
@@ -735,79 +975,248 @@
     <script src="js/script.js"></script>
     <script src="js/cart.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <script src ="js/search-suggestions.js"></script>
+    <script src="js/search-suggestions.js"></script>
+
+    <!-- Custom script for product rendering -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const params = new URLSearchParams(window.location.search);
-        const filterCat = params.get("cat");
-        const filterTag = params.get("tag");
-        const products = document.querySelectorAll(".product-grid .col-md-4");
+        // Override the renderProducts method to use the new hover effect design
+        if (window.ShopHandler) {
+          const originalRenderProducts = ShopHandler.renderProducts;
+          ShopHandler.renderProducts = function (products, container) {
+            if (!products || !container) return;
 
-        products.forEach((product) => {
-          const card = product.querySelector(".card");
-          let cat = card.getAttribute("data-category");
-          let tags = card.getAttribute("data-tags");
-          let show = true;
+            // Clear container first
+            container.innerHTML = "";
 
-          if (filterCat && cat) {
-            show = cat.toLowerCase() === filterCat.toLowerCase();
-          }
-          if (filterTag && tags) {
-            show = tags.toLowerCase().includes(filterTag.toLowerCase());
-          }
-          product.style.display = show ? "" : "none";
-        });
+            products.forEach((product) => {
+              const productEl = document.createElement("div");
+              productEl.className = "col-lg-4 col-md-6";
+
+              // Calculate discount percentage if there's a sale price
+              let discountBadge = "";
+              if (product.salePrice && product.price > product.salePrice) {
+                const discount = Math.round(
+                  ((product.price - product.salePrice) / product.price) * 100
+                );
+                discountBadge = `<span class="discount-badge">-${discount}%</span>`;
+              }
+
+              // Format the price display
+              const price = this.formatCurrency(product.price);
+              const salePrice = product.salePrice
+                ? this.formatCurrency(product.salePrice)
+                : null;
+              const priceDisplay = salePrice
+                ? `<span class="product-price">${salePrice} <del class="text-muted ms-2 small">${price}</del></span>`
+                : `<span class="product-price">${price}</span>`;
+
+              // Build the rating display if available
+              let ratingDisplay = "";
+              if (product.rating) {
+                ratingDisplay = '<div class="rating">';
+                for (let i = 0; i < 5; i++) {
+                  if (i < Math.floor(product.rating)) {
+                    ratingDisplay += '<i class="fas fa-star"></i>';
+                  } else if (i < product.rating) {
+                    ratingDisplay += '<i class="fas fa-star-half-alt"></i>';
+                  } else {
+                    ratingDisplay += '<i class="far fa-star"></i>';
+                  }
+                }
+                ratingDisplay += "</div>";
+              }
+
+              productEl.innerHTML = `
+                <div class="product-card">
+                  <div class="product-image-container">
+                    ${discountBadge}
+                    <a href="single-product.html?id=${product.id}">
+                      <img src="${
+                        product.imageUrl || "images/placeholder.jpg"
+                      }" alt="${product.name}" class="card-img-top">
+                    </a>
+                    <div class="product-actions">
+                      <button class="action-button add-to-cart" data-id="${
+                        product.id
+                      }" title="Thêm vào giỏ hàng">
+                        <i class="fas fa-shopping-cart"></i>
+                      </button>
+                      <button class="action-button add-to-wishlist" data-id="${
+                        product.id
+                      }" title="Thêm vào danh sách yêu thích">
+                        <i class="fas fa-heart"></i>
+                      </button>
+                      <button class="action-button quick-view" data-id="${
+                        product.id
+                      }" title="Xem nhanh">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="product-info">
+                    <h3 class="product-title">
+                      <a href="single-product.html?id=${
+                        product.id
+                      }" class="text-decoration-none">${product.name}</a>
+                    </h3>
+                    ${ratingDisplay}
+                    ${priceDisplay}
+                  </div>
+                </div>
+              `;
+
+              container.appendChild(productEl);
+            });
+
+            // Add event listeners for the action buttons
+            this.setupActionButtons();
+          };
+
+          // Add new method to handle action button clicks
+          ShopHandler.setupActionButtons = function () {
+            // Add to cart buttons
+            document.querySelectorAll(".add-to-cart").forEach((button) => {
+              button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                if (window.addToCart && productId) {
+                  window.addToCart(productId, 1);
+                }
+              });
+            });
+
+            // Add to wishlist buttons
+            document.querySelectorAll(".add-to-wishlist").forEach((button) => {
+              button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                // Check if product is already in wishlist
+                const wishlist = JSON.parse(
+                  localStorage.getItem("wishlist") || "[]"
+                );
+                const existingItemIndex = wishlist.findIndex(
+                  (item) => item.id === productId
+                );
+
+                if (existingItemIndex >= 0) {
+                  // Show message that item is already in wishlist
+                  if (window.toastManager) {
+                    window.toastManager.showToast(
+                      "Sản phẩm đã có trong danh sách yêu thích",
+                      "info"
+                    );
+                  } else {
+                    alert("Sản phẩm đã có trong danh sách yêu thích");
+                  }
+                } else {
+                  // Add to wishlist
+                  fetch(`/api/products/${productId}`)
+                    .then((response) => response.json())
+                    .then((product) => {
+                      wishlist.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        imageUrl: product.imageUrl,
+                        inStock: product.inStock,
+                      });
+                      localStorage.setItem(
+                        "wishlist",
+                        JSON.stringify(wishlist)
+                      );
+
+                      // Update wishlist count badge
+                      document
+                        .querySelectorAll(".wishlist-count")
+                        .forEach((el) => {
+                          el.textContent = wishlist.length;
+                        });
+
+                      // Show success toast
+                      if (window.toastManager) {
+                        window.toastManager.showToast(
+                          "Đã thêm sản phẩm vào danh sách yêu thích",
+                          "success"
+                        );
+                      } else {
+                        alert("Đã thêm sản phẩm vào danh sách yêu thích");
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error adding to wishlist:", error);
+                      if (window.toastManager) {
+                        window.toastManager.showToast(
+                          "Có lỗi xảy ra khi thêm vào danh sách yêu thích",
+                          "error"
+                        );
+                      } else {
+                        alert("Có lỗi xảy ra khi thêm vào danh sách yêu thích");
+                      }
+                    });
+                }
+              });
+            });
+
+            // Quick view buttons
+            document.querySelectorAll(".quick-view").forEach((button) => {
+              button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                // Implement quick view functionality
+                console.log("Quick view for product:", productId);
+                // For now, redirect to the product page
+                window.location.href = `single-product.html?id=${productId}`;
+              });
+            });
+          };
+        }
       });
     </script>
 
     <!-- Chatbot Widget -->
     <div class="chatbot-container">
-        <div class="chatbot-header">
-            <div class="chatbot-title">
-                <img src="images/logo.png" alt="JanyPet Logo" class="chatbot-logo">
-                <span>JanyPet Hỗ trợ</span>
-            </div>
-            <div class="chatbot-actions">
-                <button class="minimize-btn"><i class="fas fa-minus"></i></button>
-                <button class="clear-btn" title="Xóa cuộc trò chuyện"><i class="fas fa-trash"></i></button>
-                <button class="close-btn"><i class="fas fa-times"></i></button>
-            </div>
+      <div class="chatbot-header">
+        <div class="chatbot-title">
+          <img
+            src="images/chatbot-icon.png"
+            alt="Chatbot"
+            class="chatbot-logo"
+          />
+          <span>JanyPet Assistant</span>
         </div>
-        <div class="chatbot-body">
-            <div class="messages-container" id="messages">
-                <div class="message bot">
-                    <div class="message-content">
-                        Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn về các sản phẩm và dịch vụ dành cho thú cưng?
-                    </div>
-                    <span class="time">12:00</span>
-                </div>
+        <div class="chatbot-actions">
+          <button class="minimize-btn"><i class="fas fa-minus"></i></button>
+          <button class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="chatbot-body">
+        <div class="messages-container" id="messages">
+          <div class="message bot">
+            <div class="message-content">
+              Xin chào! Tôi là trợ lý ảo của JanyPet. Tôi có thể giúp gì cho bạn
+              về các sản phẩm và dịch vụ dành cho thú cưng?
             </div>
+            <span class="time">12:00</span>
+          </div>
         </div>
-        <div class="chatbot-footer">
-            <form id="chatbot-form">
-                <div class="input-group">
-                    <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn..." required>
-                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </form>
-            <div class="powered-by">Powered by JanyPet</div>
-        </div>
+      </div>
+      <div class="chatbot-footer">
+        <form id="chatbot-form">
+          <div class="input-group">
+            <input
+              type="text"
+              id="user-input"
+              placeholder="Nhập tin nhắn của bạn..."
+              required
+            />
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </form>
+        <div class="powered-by">Powered by JanyPet AI</div>
+      </div>
     </div>
     <button class="chatbot-toggle">
-        <i class="fas fa-comments"></i>
+      <i class="fas fa-comments"></i>
     </button>
     <script src="js/chatbot.js"></script>
     <!-- End Chatbot Widget -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // ShopHandler initialization is called in the shop.js file
-        console.log('Shop page ready');
-        
-        // Chatbot initialization
-        if (typeof initializeChatbot === 'function') {
-          initializeChatbot();
-        }
-      });
-    </script>
   </body>
 </html>

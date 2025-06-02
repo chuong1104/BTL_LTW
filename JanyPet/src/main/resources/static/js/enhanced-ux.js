@@ -255,84 +255,36 @@ function initFilterButtons() {
 }
 
 // Initialize toast notifications
-// function initToastNotifications() {
-//     // Create toast container if it doesn't exist
-//     if (!document.getElementById('toast-container')) {
-//         const toastContainer = document.createElement('div');
-//         toastContainer.id = 'toast-container';
-//         toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
-//         toastContainer.style.zIndex = '1050';
-//         document.body.appendChild(toastContainer);
-//     }
-// }
-
-// Show toast notification
-// function showToast(message, type = 'success') {
-//     const toastContainer = document.getElementById('toast-container');
+function initToastNotifications() {
+    console.log('Toast notifications initialized');
     
-//     // Create toast element
-//     const toast = document.createElement('div');
-//     toast.className = 'toast';
-//     toast.setAttribute('role', 'alert');
-//     toast.setAttribute('aria-live', 'assertive');
-//     toast.setAttribute('aria-atomic', 'true');
-    
-//     // Set toast header class based on type
-//     let headerClass = '';
-//     let iconClass = '';
-    
-//     switch(type) {
-//         case 'success':
-//             headerClass = 'bg-success';
-//             iconClass = 'fas fa-check-circle';
-//             break;
-//         case 'info':
-//             headerClass = 'bg-info';
-//             iconClass = 'fas fa-info-circle';
-//             break;
-//         case 'warning':
-//             headerClass = 'bg-warning';
-//             iconClass = 'fas fa-exclamation-triangle';
-//             break;
-//         case 'error':
-//             headerClass = 'bg-danger';
-//             iconClass = 'fas fa-exclamation-circle';
-//             break;
-//         default:
-//             headerClass = 'bg-success';
-//             iconClass = 'fas fa-check-circle';
-//     }
-    
-//     // Set toast content
-//     toast.innerHTML = `
-//         <div class="toast-header ${headerClass} text-white">
-//             <i class="${iconClass} me-2"></i>
-//             <strong class="me-auto">Thông báo</strong>
-//             <small>Vừa xong</small>
-//             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-//         </div>
-//         <div class="toast-body">
-//             ${message}
-//         </div>
-//     `;
-    
-//     // Add toast to container
-//     toastContainer.appendChild(toast);
-    
-//     // Initialize Bootstrap toast
-//     const bsToast = new bootstrap.Toast(toast, {
-//         autohide: true,
-//         delay: 3000
-//     });
-    
-//     // Show toast
-//     bsToast.show();
-    
-//     // Remove toast after it's hidden
-//     toast.addEventListener('hidden.bs.toast', function() {
-//         this.remove();
-//     });
-// }
+    // Basic toast functionality
+    window.showToast = function(message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) return;
+        
+        const toast = document.createElement('div');
+        toast.className = `toast show bg-${type === 'error' ? 'danger' : 'success'} text-white`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="toast-body">
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 300);
+        }, 3000);
+    };
+}
 
 // Initialize header scroll effect
 function initHeaderScrollEffect() {

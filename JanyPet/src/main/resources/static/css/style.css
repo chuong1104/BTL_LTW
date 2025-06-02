@@ -322,7 +322,7 @@ header.auto-hide-header {
 }
 
 .main-logo img {
-  max-height: 60px; /* Consistent logo height */
+  max-height: 75px; /* Consistent logo height */
   transition: max-height 0.3s ease;
 }
 

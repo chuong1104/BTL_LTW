@@ -88,4 +88,11 @@ public class ProductController {
         ProductResponse restoredProduct = productService.restoreProduct(id);
         return ResponseEntity.ok(restoredProduct);
     }
+
+    // Add this new endpoint for product search
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
+        List<ProductResponse> products = productService.searchProductsByName(keyword);
+        return ResponseEntity.ok(products);
+    }
 }

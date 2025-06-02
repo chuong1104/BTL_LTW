@@ -1,0 +1,88 @@
+/* ==== Toast Notifications ==== */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1060;
+}
+
+.toast {
+  max-width: 350px;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Toast colors */
+.toast-success {
+  background-color: #e7f0ec;
+  border-left: 4px solid var(--primary-color);
+}
+
+.toast-success .toast-icon {
+  background-color: rgba(74, 124, 89, 0.3);
+  color: var(--primary-color);
+}
+
+.toast-error {
+  background-color: #f0e7e7;
+  border-left: 4px solid var(--danger-color);
+}
+
+.toast-info {
+  background-color: #e9e5df;
+  border-left: 4px solid var(--accent-color);
+}
+
+.toast-warning {
+  background-color: #f2ede3;
+  border-left: 4px solid var(--warning-color);
+}
+
+/* Toast icons */
+.toast-success .toast-icon {
+  background-color: rgba(74, 124, 89, 0.25);
+  color: var(--primary-hover);
+}
+
+.toast-error .toast-icon {
+  background-color: rgba(168, 62, 81, 0.25);
+  color: var(--danger-hover);
+}
+
+.toast-info .toast-icon {
+  background-color: rgba(201, 178, 143, 0.25);
+  color: #a19285;
+}
+
+.toast-warning .toast-icon {
+  background-color: rgba(217, 180, 74, 0.25);
+  color: #beab96;
+}
+
+/* Progress bar */
+.toast-success .toast-progress-bar {
+  background-color: var(--primary-hover);
+}
+
+.toast-error .toast-progress-bar {
+  background-color: var(--danger-hover);
+}
+
+.toast-info .toast-progress-bar {
+  background-color: #a19285;
+}
+
+.toast-warning .toast-progress-bar {
+  background-color: #beab96;
+}

@@ -19,18 +19,39 @@
   <link rel="stylesheet" type="text/css" href="css/normalize.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+  <!-- Core CSS files - proper order is important -->
+  <link rel="stylesheet" href="css/user/variables.css" />
+  <link rel="stylesheet" href="css/user/typography.css" />
+  <link rel="stylesheet" href="css/user/utilities.css" />
+  <link rel="stylesheet" href="css/user/components.css" />
+  <link rel="stylesheet" href="css/user/buttons.css" />
+  <link rel="stylesheet" href="css/user/header.css" />
+  <link rel="stylesheet" href="css/user/footer.css" />
+  <link rel="stylesheet" href="css/user/toast.css" />
+
+  <!-- External libraries -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-  <link rel="stylesheet" type="text/css" href="css/vendor.css" />
-  
+  <link rel="stylesheet" type="text/css" href="css/user/vendor.css" />
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
-  <!-- Custom CSS - Luôn đặt cuối cùng để override các style khác -->
-  <link rel="stylesheet" type="text/css" href="css/style.css" />
-  <!-- <link rel="stylesheet" type="text/css" href="css/custom-responsive.css" /> -->
+
+  <!-- Page-specific CSS (add as needed) -->
+  <!-- Account page -->
+  <link rel="stylesheet" href="css/user/account.css" />
+  <!-- Booking page -->
+  <link rel="stylesheet" href="css/user/booking.css" />
+
+  <!-- Responsive styles (always last) -->
+  <link rel="stylesheet" href="css/user/responsive.css" />
+
+  <!-- Chatbot styles (if used) -->
+  <link rel="stylesheet" href="css/user/chatbot.css" />
 
   <!-- Custom CSS cho trang giỏ hàng -->
   <style>

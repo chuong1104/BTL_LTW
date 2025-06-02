@@ -72,37 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // GỌI API BACKEND
-                const response = await fetch(BACKEND_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: userMessage, // Chỉ gửi tin nhắn người dùng
-                    }),
-                });
+                const response = await sendWithRetry(userMessage);
 
                 removeTypingIndicator();
 
-                if (!response.ok) {
-                    let errorMessage = 'Lỗi kết nối với máy chủ hỗ trợ.';
-                    try {
-                        const errorData = await response.json();
-                        // Ưu tiên message từ backend nếu có, nếu không thì dùng statusText
-                        errorMessage = errorData.botResponse || errorData.message || `Lỗi ${response.status}: ${response.statusText}`;
-                    } catch (parseError) {
-                        // Nếu không parse được JSON lỗi, dùng statusText
-                         errorMessage = `Lỗi ${response.status}: ${response.statusText || 'Không thể xử lý phản hồi lỗi từ máy chủ.'}`;
-                    }
-                    console.error('Backend API Error:', response.status, errorMessage);
-                    addMessageToUI(errorMessage, 'bot', true);
-                    return;
-                }
-
-                const data = await response.json();
-                
-                if (data && data.botResponse) {
-                    addMessageToUI(data.botResponse, 'bot');
+                if (response && response.botResponse) {
+                    addMessageToUI(response.botResponse, 'bot');
                 } else {
                     addMessageToUI('Xin lỗi, tôi không nhận được phản hồi phù hợp từ máy chủ.', 'bot', true);
                 }
@@ -166,4 +141,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Lời chào ban đầu được giữ lại từ HTML trong file chatbot-widget.html
+
+    async function sendWithRetry(message, maxRetries = 3, delay = 2000) {
+        let attempts = 0;
+        
+        while (attempts < maxRetries) {
+            try {
+                const response = await fetch(BACKEND_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+                
+                if (response.ok) {
+                    return await response.json();
+                }
+                
+                // If 503 error, wait and retry
+                if (response.status === 503) {
+                    attempts++;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
+                }
+                
+                // Other error
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            } catch (error) {
+                if (attempts >= maxRetries) throw error;
+                attempts++;
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+        
+        throw new Error("Maximum retry attempts reached");
+    }
 });

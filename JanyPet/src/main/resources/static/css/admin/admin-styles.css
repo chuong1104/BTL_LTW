@@ -1,0 +1,341 @@
+/* Modern Admin Interface Styles */
+
+/* Base Variables */
+:root {
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --primary-color: #3b7ddd;
+  --danger-color: #dc3545;
+  --shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+  --radius: 8px;
+  --transition: all 0.2s ease-in-out;
+  --sidebar-width: 250px;
+  --sidebar-collapsed: 70px;
+}
+
+/* Typography improvements */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+
+/* Card redesign */
+.card, .widget, .data-container {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  transition: var(--transition);
+  background-color: var(--card-bg);
+  margin-bottom: 1.5rem;
+}
+
+.card:hover, .widget:hover {
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+}
+
+/* Enhanced modals */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.enhanced-modal .modal-content {
+  background-color: var(--card-bg);
+  margin: 2rem auto;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 800px;
+  animation: modalFadeIn 0.3s;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-modal .modal-content.small {
+  max-width: 500px;
+}
+
+.enhanced-modal .modal-content.large {
+  max-width: 1000px;
+}
+
+.fade-in {
+  animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Detail view styling */
+.detail-view {
+  padding: 0;
+}
+
+.detail-view .detail-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-view .detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-view h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.detail-view .property-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-view .property-item {
+  margin-bottom: 1rem;
+}
+
+.detail-view .property-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+.detail-view .property-value {
+  font-size: 0.9375rem;
+}
+
+.detail-view .full-width {
+  grid-column: 1 / -1;
+}
+
+/* Tables in detail views */
+.detail-view table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+}
+
+.detail-view table th {
+  background-color: rgba(0,0,0,0.02);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.detail-view table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.detail-view table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: uppercase;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.status-badge::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-badge.active::before,
+.status-badge.success::before,
+.status-badge.completed::before,
+.status-badge.confirmed::before,
+.status-badge.paid::before {
+  background-color: #28a745;
+}
+
+.status-badge.pending::before,
+.status-badge.warning::before,
+.status-badge.scheduled::before {
+  background-color: #ffc107;
+}
+
+.status-badge.inactive::before,
+.status-badge.danger::before,
+.status-badge.cancelled::before,
+.status-badge.failed::before {
+  background-color: #dc3545;
+}
+
+.status-badge.info::before,
+.status-badge.processing::before,
+.status-badge.shipping::before {
+  background-color: #17a2b8;
+}
+
+/* Modal footer */
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Close button */
+.modal .close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  margin: -0.25rem;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.modal .close:hover {
+  color: var(--text-color);
+  background-color: rgba(0,0,0,0.05);
+}
+
+/* Card improvements */
+.data-table {
+  width: 100%;
+  margin: 0;
+}
+
+.data-table th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  background-color: rgba(0,0,0,0.02);
+}
+
+.data-table tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+/* Image previews */
+.image-preview-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.image-preview-container img {
+  max-height: 200px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.image-preview-container .image-preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.image-preview-container:hover .image-preview-overlay {
+  opacity: 1;
+}
+
+.image-preview-container .image-preview-button {
+  background-color: white;
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

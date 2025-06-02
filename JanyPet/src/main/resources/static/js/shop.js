@@ -231,16 +231,46 @@ const ShopHandler = {
             
             // Remove loading indicator
             if (loadingElement) {
-                loadingElement.remove();
+                loadingElement.style.display = 'none';
             }
+            
+            // Clear the category list
+            categoryList.innerHTML = '';
+            
+            // Add "All" category at the top
+            const allItem = document.createElement('li');
+            allItem.className = 'cat-item';
+            const allLink = document.createElement('a');
+            allLink.href = 'shop.html';
+            allLink.className = !this.state.filter.category ? 'nav-link active' : 'nav-link';
+            allLink.textContent = 'Tất cả sản phẩm';
+            
+            // Add click event for "All" category
+            allLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                this.state.filter.category = null;
+                this.state.currentPage = 1;
+                
+                // Update URL
+                const url = new URL(window.location);
+                url.searchParams.delete('cat');
+                url.searchParams.delete('page');
+                window.history.pushState({}, '', url);
+                
+                // Update active class
+                document.querySelectorAll('#category-list .nav-link').forEach(link => 
+                    link.classList.remove('active'));
+                allLink.classList.add('active');
+                
+                // Reload products
+                await this.loadProducts();
+            });
+            
+            allItem.appendChild(allLink);
+            categoryList.appendChild(allItem);
             
             // Render categories
             if (categories && categories.length > 0) {
-                // Keep the "All" category at the top
-                const allItem = categoryList.querySelector('.cat-item');
-                categoryList.innerHTML = '';
-                categoryList.appendChild(allItem);
-                
                 // Add categories
                 categories.forEach(category => {
                     const li = document.createElement('li');
@@ -275,11 +305,6 @@ const ShopHandler = {
                     li.appendChild(a);
                     categoryList.appendChild(li);
                 });
-                
-                // Highlight "All" if no category selected
-                if (!this.state.filter.category) {
-                    allItem.querySelector('a').classList.add('active');
-                }
             }
         } catch (error) {
             console.error('Error loading categories:', error);
@@ -302,42 +327,86 @@ const ShopHandler = {
         const loadingElement = document.getElementById('products-loading');
         const paginationContainer = document.getElementById('pagination-container');
         const paginationLoading = document.getElementById('pagination-loading');
+        const productCountElement = document.getElementById('product-count');
         
         if (!productContainer) return;
         
         try {
             // Show loading indicators
-            if (loadingElement) {
-                loadingElement.style.display = 'block';
-            }
-            if (paginationLoading) {
-                paginationLoading.style.display = 'inline-block';
-            }
-            
-            // Update product count info
-            document.querySelector('.showing-product p').textContent = 'Loading products...';
+            if (loadingElement) loadingElement.style.display = 'block';
+            if (paginationLoading) paginationLoading.style.display = 'inline-block';
+            if (productCountElement) productCountElement.textContent = 'Loading products...';
             
             // Get products from API
             let products = [];
-            if (window.ShopProductService) {
-                // Use appropriate method based on filters
-                if (this.state.filter.category) {
-                    products = await window.ShopProductService.getProductsByCategory(this.state.filter.category);
-                } else if (this.state.filter.search) {
-                    products = await window.ShopProductService.searchProducts(this.state.filter.search);
+            
+            try {
+                if (window.ShopProductService) {
+                    // Use appropriate method based on filters
+                    if (this.state.filter.category) {
+                        products = await window.ShopProductService.getProductsByCategory(this.state.filter.category);
+                        console.log('Loaded products by category:', this.state.filter.category, products);
+                    } else if (this.state.filter.search) {
+                        products = await window.ShopProductService.searchProducts(this.state.filter.search);
+                        console.log('Loaded products by search:', this.state.filter.search, products);
+                    } else {
+                        products = await window.ShopProductService.getAllProducts();
+                        console.log('Loaded all products:', products);
+                    }
                 } else {
-                    products = await window.ShopProductService.getAllProducts();
+                    console.warn('ShopProductService not available, trying to use fallback');
+                    products = [];
+                    
+                    // Try to get mock data for development
+                    try {
+                        const mockResponse = await fetch('data/mock-products.json');
+                        if (mockResponse.ok) {
+                            products = await mockResponse.json();
+                            console.log('Loaded mock products:', products);
+                        }
+                    } catch (mockError) {
+                        console.error('Could not load mock data:', mockError);
+                    }
                 }
-            } else if (window.apiService) {
-                // Fallback to general API
-                const params = {};
-                if (this.state.filter.category) params.category = this.state.filter.category;
-                if (this.state.filter.tag) params.tag = this.state.filter.tag;
-                if (this.state.filter.search) params.search = this.state.filter.search;
-                products = await window.apiService.getProducts(params);
-            } else {
-                console.error('No product service available');
-                throw new Error('Product service not available');
+            } catch (apiError) {
+                console.error('API error:', apiError);
+                products = [];  // Fallback to empty array
+            }
+            
+            // Hide loading indicators
+            if (loadingElement) loadingElement.style.display = 'none';
+            
+            // Check if we got any products
+            if (!products || products.length === 0) {
+                if (this.state.filter.category) {
+                    productContainer.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-exclamation-circle text-warning fa-3x mb-3"></i>
+                            <h4>Không thể tải sản phẩm</h4>
+                            <p class="text-muted">Không thể tải sản phẩm cho danh mục này. Vui lòng thử lại sau.</p>
+                            <button class="btn btn-outline-primary mt-3" onclick="window.location.href='shop.html'">
+                                <i class="fas fa-arrow-left me-2"></i> Xem tất cả sản phẩm
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    productContainer.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h4>Không tìm thấy sản phẩm</h4>
+                            <p class="text-muted">Không có sản phẩm nào phù hợp với tiêu chí tìm kiếm.</p>
+                        </div>
+                    `;
+                }
+                
+                // Update product count
+                if (productCountElement) productCountElement.textContent = 'Không có sản phẩm';
+                
+                // Hide pagination
+                if (paginationContainer) paginationContainer.innerHTML = '';
+                if (paginationLoading) paginationLoading.style.display = 'none';
+                
+                return;
             }
             
             // Apply additional filters client-side
@@ -361,31 +430,13 @@ const ShopHandler = {
             const productsToShow = products.slice(startIndex, endIndex);
             
             // Update product count info
-            document.querySelector('.showing-product p').textContent = 
-                `Showing ${startIndex + 1}–${Math.min(endIndex, totalItems)} of ${totalItems} results`;
-            
-            // Hide loading indicator
-            if (loadingElement) {
-                loadingElement.style.display = 'none';
+            if (productCountElement) {
+                productCountElement.textContent = 
+                    `Hiển thị ${startIndex + 1}–${Math.min(endIndex, totalItems)} của ${totalItems} sản phẩm`;
             }
             
-            // Clear container
-            productContainer.innerHTML = '';
-            
-            // If no products, show message
-            if (!productsToShow || productsToShow.length === 0) {
-                productContainer.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                        <h4>Không tìm thấy sản phẩm</h4>
-                        <p class="text-muted">Không có sản phẩm nào phù hợp với tiêu chí tìm kiếm.</p>
-                        <a href="shop.html" class="btn btn-outline-primary mt-3">Xem tất cả sản phẩm</a>
-                    </div>
-                `;
-            } else {
-                // Render products
-                this.renderProducts(productsToShow, productContainer);
-            }
+            // Render products
+            this.renderProducts(productsToShow, productContainer);
             
             // Update pagination
             this.updatePagination(paginationContainer, paginationLoading);
@@ -401,7 +452,7 @@ const ShopHandler = {
                             <i class="fas fa-exclamation-circle me-2"></i>
                             Không thể tải sản phẩm. Vui lòng thử lại sau.
                         </div>
-                        <button class="btn btn-outline-primary" onclick="ShopHandler.loadProducts()">
+                        <button class="btn btn-outline-primary" onclick="location.reload()">
                             <i class="fas fa-sync-alt me-1"></i> Thử lại
                         </button>
                     </div>
@@ -410,6 +461,9 @@ const ShopHandler = {
             
             if (paginationLoading) {
                 paginationLoading.style.display = 'none';
+            }
+            
+            if (paginationContainer) {
                 paginationContainer.innerHTML = '';
             }
         }
@@ -470,50 +524,208 @@ const ShopHandler = {
      * Render products to container
      */
     renderProducts: function(products, container) {
+        if (!products || !container) return;
+        
+        // Clear container first
+        container.innerHTML = '';
+        
         products.forEach(product => {
-            const productCol = document.createElement('div');
-            productCol.className = 'col-md-4 my-4';
-            productCol.dataset.productId = product.id;
+            const productEl = document.createElement('div');
+            productEl.className = 'col-lg-4 col-md-6 col-sm-6';
+            productEl.dataset.productId = product.id;
             
-            // Create rating stars
-            const ratingStars = Array(5).fill('').map((_, i) => 
-                `<iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>`
-            ).join('');
+            // Calculate discount percentage if there's a sale price
+            let discountBadge = '';
+            if (product.salePrice && product.price > product.salePrice) {
+                const discount = Math.round(((product.price - product.salePrice) / product.price) * 100);
+                discountBadge = `<span class="discount-badge">-${discount}%</span>`;
+            }
             
-            // Format price
-            const formattedPrice = this.formatCurrency(product.price);
+            // Format the price display
+            const price = this.formatCurrency(product.price);
+            const salePrice = product.salePrice ? this.formatCurrency(product.salePrice) : null;
+            const priceDisplay = salePrice ? 
+                `<span class="product-price">${salePrice} <del class="text-muted ms-2 small">${price}</del></span>` :
+                `<span class="product-price">${price}</span>`;
             
-            productCol.innerHTML = `
-                <div class="card position-relative" data-category="${product.categoryId || ''}" data-tags="${product.tags || ''}">
-                    <a href="single-product.html?id=${product.id}">
-                        <img src="${product.imageUrl || 'images/placeholder.jpg'}" class="img-fluid rounded-4" alt="${product.name}">
-                    </a>
-                    <div class="card-body p-0">
+            // Build the rating display if available
+            let ratingDisplay = '';
+            if (product.rating) {
+                ratingDisplay = '<div class="rating">';
+                for (let i = 0; i < 5; i++) {
+                    if (i < Math.floor(product.rating)) {
+                        ratingDisplay += '<i class="fas fa-star"></i>';
+                    } else if (i < product.rating) {
+                        ratingDisplay += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        ratingDisplay += '<i class="far fa-star"></i>';
+                    }
+                }
+                ratingDisplay += '</div>';
+            }
+            
+            productEl.innerHTML = `
+                <div class="product-card">
+                    <div class="product-image-container">
+                        ${discountBadge}
                         <a href="single-product.html?id=${product.id}">
-                            <h3 class="card-title pt-4 m-0">${product.name}</h3>
+                            <img src="${product.imageUrl || 'images/placeholder.jpg'}" alt="${product.name}" class="card-img-top">
                         </a>
-                        <div class="card-text">
-                            <span class="rating secondary-font">
-                                ${ratingStars}
-                                ${product.rating || '5.0'}
-                            </span>
-                            <h3 class="secondary-font text-primary">${formattedPrice}</h3>
-                            <div class="d-flex flex-wrap mt-3">
-                                <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3"
-                                   onclick="addToCart('${product.id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || 'images/placeholder.jpg'}', 1); return false;">
-                                    <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                                </a>
-                                <a href="#" class="btn-wishlist px-4 pt-3" 
-                                   onclick="addToWishlist('${product.id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl || 'images/placeholder.jpg'}'); return false;">
-                                    <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                                </a>
-                            </div>
+                        <div class="product-actions">
+                            <button class="action-button add-to-cart" data-id="${product.id}" title="Thêm vào giỏ hàng">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                            <button class="action-button add-to-wishlist" data-id="${product.id}" title="Thêm vào danh sách yêu thích">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="action-button quick-view" data-id="${product.id}" title="Xem nhanh">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">
+                            <a href="single-product.html?id=${product.id}" class="text-decoration-none">${product.name}</a>
+                        </h3>
+                        ${ratingDisplay}
+                        ${priceDisplay}
                     </div>
                 </div>
             `;
             
-            container.appendChild(productCol);
+            container.appendChild(productEl);
+        });
+        
+        // Add event listeners for the action buttons
+        this.setupActionButtons();
+    },
+
+    /**
+     * Set up action buttons for products
+     */
+    setupActionButtons: function() {
+        // Add to cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                if (window.addToCart && productId) {
+                    // Use existing addToCart function if available
+                    window.addToCart(productId, 1);
+                } else {
+                    // Fallback implementation using productId
+                    fetch(`/api/products/${productId}`)
+                        .then(response => response.json())
+                        .then(product => {
+                            // Get or initialize cart
+                            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                            
+                            // Check if product is already in cart
+                            const existingItem = cart.find(item => item.id === productId);
+                            if (existingItem) {
+                                existingItem.quantity += 1;
+                            } else {
+                                // Add new item
+                                cart.push({
+                                    id: product.id,
+                                    name: product.name,
+                                    price: product.price,
+                                    imageUrl: product.imageUrl || 'images/placeholder.jpg',
+                                    quantity: 1
+                                });
+                            }
+                            
+                            // Save cart and update UI
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            
+                            // Show success message
+                            if (window.showToast) {
+                                window.showToast('Đã thêm sản phẩm vào giỏ hàng', 'success');
+                            } else {
+                                alert('Đã thêm sản phẩm vào giỏ hàng');
+                            }
+                            
+                            // Update cart count badge if exists
+                            const cartCountBadges = document.querySelectorAll('.cart-count');
+                            if (cartCountBadges) {
+                                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                                cartCountBadges.forEach(badge => {
+                                    badge.textContent = totalItems;
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error adding to cart:', error);
+                            if (window.showToast) {
+                                window.showToast('Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+                            } else {
+                                alert('Có lỗi xảy ra khi thêm vào giỏ hàng');
+                            }
+                        });
+                }
+            });
+        });
+        
+        // Add to wishlist buttons
+        document.querySelectorAll('.add-to-wishlist').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                
+                // Check if product is already in wishlist
+                const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                const existingItemIndex = wishlist.findIndex(item => item.id === productId);
+                
+                if (existingItemIndex >= 0) {
+                    // Show message that item is already in wishlist
+                    if (window.showToast) {
+                        window.showToast('Sản phẩm đã có trong danh sách yêu thích', 'info');
+                    } else {
+                        alert('Sản phẩm đã có trong danh sách yêu thích');
+                    }
+                } else {
+                    // Add to wishlist
+                    fetch(`/api/products/${productId}`)
+                        .then(response => response.json())
+                        .then(product => {
+                            wishlist.push({
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                imageUrl: product.imageUrl || 'images/placeholder.jpg',
+                                inStock: product.inStock
+                            });
+                            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                            
+                            // Update wishlist count badge
+                            document.querySelectorAll('.wishlist-count').forEach(el => {
+                                el.textContent = wishlist.length;
+                            });
+                            
+                            // Show success toast
+                            if (window.showToast) {
+                                window.showToast('Đã thêm sản phẩm vào danh sách yêu thích', 'success');
+                            } else {
+                                alert('Đã thêm sản phẩm vào danh sách yêu thích');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error adding to wishlist:', error);
+                            if (window.showToast) {
+                                window.showToast('Có lỗi xảy ra khi thêm vào danh sách yêu thích', 'error');
+                            } else {
+                                alert('Có lỗi xảy ra khi thêm vào danh sách yêu thích');
+                            }
+                        });
+                }
+            });
+        });
+        
+        // Quick view buttons
+        document.querySelectorAll('.quick-view').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                // Redirect to product detail page for now
+                window.location.href = `single-product.html?id=${productId}`;
+            });
         });
     },
     

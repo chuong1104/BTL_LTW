@@ -1,0 +1,56 @@
+/* ==== Responsive Adjustments ==== */
+@media screen and (max-width: 991px) {
+  /* Section headers */
+  .section-header h2 {
+    font-size: 1.75rem !important;
+  }
+
+  /* Offcanvas menu */
+  .offcanvas-body .nav-item {
+    font-weight: 600;
+    border-bottom: 1px solid #d1d1d1;
+  }
+
+  .offcanvas-body .filter-categories {
+    width: 100%;
+    margin-bottom: 20px !important;
+    border: 1px solid #d1d1d1 !important;
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  /* Dropdown toggle */
+  .dropdown-toggle::after {
+    position: absolute;
+    right: 0;
+    top: 21px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  /* Banner content */
+  .banner-content {
+    text-align: center;
+  }
+
+  .banner-content .content-wrapper {
+    padding: 2rem 1rem !important;
+  }
+
+  .banner-title {
+    font-size: 1.5rem !important;
+  }
+
+  /* Auth container */
+  .auth-container {
+    margin-top: 10px;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  /* Logo size */
+  .main-logo img {
+    max-height: 45px !important;
+  }
+}

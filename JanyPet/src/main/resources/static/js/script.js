@@ -677,128 +677,52 @@ function updateNavigationButtons() {
   }
 }
 
-function showToast(message, type = "success") {
-  const toast = document.getElementById("toast");
-  if (!toast) {
-    console.warn("Toast element not found");
-    return;
-  }
+// Add this function anywhere appropriate in your script.js file
 
-  const toastContent = toast.querySelector(".toast-content i");
-  const toastMessage = toast.querySelector(".toast-message");
-  const toastProgress = toast.querySelector(".toast-progress");
-
-  if (!toastContent || !toastMessage || !toastProgress) {
-    console.warn("Toast child elements not found"); 
-    return;
-  }
-
-  // Set icon and color based on type
-  if (type === "success") {
-    toastContent.className = "fas fa-check-circle"
-    toastContent.style.color = "var(--success-color)"
-    toastProgress.style.backgroundColor = "var(--success-color)"
-  } else if (type === "error") {
-    toastContent.className = "fas fa-times-circle"
-    toastContent.style.color = "var(--danger-color)"
-    toastProgress.style.backgroundColor = "var(--danger-color)"
-  }
-
-  // Set message
-  toastMessage.textContent = message
-
-  // Show toast
-  toast.style.display = "block"
-
-  // Hide after 3 seconds
-  setTimeout(() => {
-    toast.style.display = "none"
-  }, 3000)
-}
-
-function simulateAIGeneration(prompt) {
-  // Show loading state
-  generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...'
-  generateBtn.disabled = true
-
-  // Simulate API delay
-  setTimeout(() => {
-    // Generate description based on product category
-    const category = productCategoryInput.value.toLowerCase()
-    let generatedText = ""
-
-    if (category.includes("food")) {
-      generatedText = productTemplates.food
-    } else if (category.includes("toy")) {
-      generatedText = productTemplates.toy
-    } else if (category.includes("accessories")) {
-      generatedText = productTemplates.accessory
-    } else if (category.includes("medicine")) {
-      generatedText = productTemplates.medicine
-    } else {
-      // Default template
-      generatedText = `<h2>${productNameInput.value || "Product"}</h2>
-<p>${prompt}</p>
-<h3>Features:</h3>
-<ul>
-    <li>High-quality materials</li>
-    <li>Durable and long-lasting</li>
-    <li>Perfect for all pets</li>
-    <li>Easy to use and maintain</li>
-</ul>
-<p>This product is designed to enhance your pet's life and provide convenience for pet owners.</p>`
-    }
-
-    // Show result
-    document.querySelector(".generated-text").innerHTML = generatedText
-    aiResult.style.display = "block"
-
-    // Reset button
-    generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Description'
-    generateBtn.disabled = false
-  }, 1500)
-}
-
-function handleImageUpload(files) {
-  if (!files || files.length === 0) return
-
-  // Clear existing previews
-  imagePreviewContainer.innerHTML = ""
-
-  // Create preview for each file
-  Array.from(files).forEach((file, index) => {
-    const reader = new FileReader()
-
-    reader.onload = (e) => {
-      const preview = document.createElement("div")
-      preview.className = "image-preview"
-      preview.innerHTML = `
-                <img src="${e.target.result}" alt="Product Image">
-                <button class="remove-image"><i class="fas fa-times"></i></button>
-                ${index === 0 ? '<span class="main-image">Main</span>' : ""}
-            `
-
-      // Add remove button functionality
-      preview.querySelector(".remove-image").addEventListener("click", () => {
-        preview.remove()
-
-        // Update main image tag if needed
-        if (index === 0 && imagePreviewContainer.children.length > 0) {
-          const firstPreview = imagePreviewContainer.children[0]
-          if (!firstPreview.querySelector(".main-image")) {
-            const mainTag = document.createElement("span")
-            mainTag.className = "main-image"
-            mainTag.textContent = "Main"
-            firstPreview.appendChild(mainTag)
-          }
+/**
+ * Show toast notification
+ * @param {string} message - Message to display
+ * @param {string} type - Type of toast (success, error, info, warning)
+ */
+window.showToast = function(message, type = 'success') {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} show`;
+    
+    // Set icon based on type
+    let icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    if (type === 'info') icon = 'info-circle';
+    if (type === 'warning') icon = 'exclamation-triangle';
+    
+    toast.innerHTML = `
+        <div class="toast-header">
+            <i class="fas fa-${icon} me-2 toast-icon"></i>
+            <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+            <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">${message}</div>
+        <div class="toast-progress-bar"></div>
+    `;
+    
+    // Add to container
+    toastContainer.appendChild(toast);
+    
+    // Close button functionality
+    toast.querySelector('.btn-close').addEventListener('click', () => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+    });
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 500);
         }
-      })
-
-      imagePreviewContainer.appendChild(preview)
-    }
-
-    reader.readAsDataURL(file)
-  })
+    }, 5000);
 }
 
 // Responsive initialization for mobile
@@ -1428,7 +1352,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (product) {
         document.getElementById("product-id").value = product.id
         document.getElementById("product-name").value = product.name
-        document.getElementById("product-category").value = product.category
         document.getElementById("product-price").value = product.price
         document.getElementById("product-stock").value = product.stock
         document.getElementById("product-sku").value = product.sku
@@ -1542,6 +1465,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (activeOption === "template") {
       const templateText = document.querySelector("#template-preview .template-text").innerHTML
       content = templateText || "<p>No template selected</p>"
+    } else if (activeOption === "import") {
+      const importedText = document.getElementById("imported-description").innerHTML
+      content = importedText || "<p>No description imported from file or URL</p>"
     }
 
     document.getElementById("preview-content").innerHTML = content

@@ -1,168 +1,166 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInputHeader = document.getElementById('searchInputHeader');
-    const suggestionsContainerHeader = document.getElementById('searchSuggestionsHeader');
-    const searchFormHeader = document.getElementById('search-form-header');
-
-    const searchInputModal = document.getElementById('searchInputModal');
-    const suggestionsContainerModal = document.getElementById('searchSuggestionsModal');
-    const searchFormModal = document.getElementById('search-form-modal');
-    const searchModalElement = document.getElementById('searchModal');
-
-    // Add elements for sidebar search
-    const searchInputSidebar = document.getElementById('searchInputSidebar');
-    const suggestionsContainerSidebar = document.getElementById('searchSuggestionsSidebar');
-    const searchFormSidebar = document.getElementById('search-form-sidebar');
-
-
-    const debounce = (func, delay) => {
-        let timeoutId;
-        return (...args) => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                func.apply(this, args);
-            }, delay);
-        };
-    };
-
-    async function fetchAndDisplaySuggestions(searchTerm, container, baseUrl) {
-        if (searchTerm.length < 2) { // Minimum characters to trigger search
-            hideSuggestions(container);
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/products/search?name=${encodeURIComponent(searchTerm)}`);
-            if (!response.ok) {
-                if (response.status === 204) { // No content
-                    hideSuggestions(container);
-                    return;
-                }
-                throw new Error(`Network response was not ok: ${response.statusText}`);
+/**
+ * Search Suggestions Component
+ * Provides real-time search suggestions as users type in search inputs
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all search input elements
+    const searchInputs = [
+        document.getElementById('searchInputHeader'),
+        document.getElementById('searchInputSidebar'),
+        document.getElementById('searchInputModal')
+    ].filter(input => input !== null);
+    
+    // Get all search suggestion containers
+    const suggestionsContainers = [
+        document.getElementById('searchSuggestionsHeader'),
+        document.getElementById('searchSuggestionsSidebar'),
+        document.getElementById('searchSuggestionsModal')
+    ].filter(container => container !== null);
+    
+    // Setup search functionality for each input
+    searchInputs.forEach((input, index) => {
+        let debounceTimer;
+        
+        input.addEventListener('input', function() {
+            const keyword = this.value.trim();
+            const suggestionsContainer = suggestionsContainers[index];
+            
+            clearTimeout(debounceTimer);
+            
+            // Clear suggestions if input is empty
+            if (keyword.length === 0) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                return;
             }
-            const products = await response.json();
-            displaySuggestions(products, container, baseUrl);
-        } catch (error) {
-            console.error('Failed to fetch search suggestions:', error);
-            hideSuggestions(container);
-        }
-    }
-
-    function displaySuggestions(products, container, baseUrl) {
-        if (!container) return; // Add a guard clause
-        container.innerHTML = ''; // Clear previous suggestions
-        if (!products || products.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-
-        products.slice(0, 5).forEach(product => { // Show max 5 suggestions
-            const suggestionItem = document.createElement('div');
-            suggestionItem.classList.add('suggestion-item');
-
-            const link = document.createElement('a');
-            link.href = `${baseUrl}?keyword=${encodeURIComponent(product.name)}`;
-
-            let content = '';
-            if (product.imageUrl) {
-                let fullImageUrl = product.imageUrl;
-                if (!product.imageUrl.startsWith('http') && !product.imageUrl.startsWith('/')) {
-                    fullImageUrl = `/uploads/${product.imageUrl}`;
-                }
-                content += `<img src="${fullImageUrl}" alt="${product.name}" style="width:30px; height:30px; margin-right:8px; vertical-align:middle; object-fit:cover;">`;
-            }
-            content += product.name;
-            link.innerHTML = content;
-
-            suggestionItem.appendChild(link);
-            container.appendChild(suggestionItem);
+            
+            // Debounce to avoid excessive API calls
+            debounceTimer = setTimeout(async () => {
+                await fetchAndDisplaySuggestions(keyword, suggestionsContainer);
+            }, 300);
         });
-        container.style.display = 'block';
-    }
-
-    function hideSuggestions(container) {
-        if (container) {
-            container.innerHTML = '';
-            container.style.display = 'none';
-        }
-    }
-
-    const debouncedFetchHeader = debounce(fetchAndDisplaySuggestions, 300);
-    const debouncedFetchModal = debounce(fetchAndDisplaySuggestions, 300);
-    // Add debounced function for sidebar
-    const debouncedFetchSidebar = debounce(fetchAndDisplaySuggestions, 300);
-
-
-    function setupSearchListener(searchInput, suggestionsContainer, form, debouncedFetchFunction) {
-        if (!searchInput || !suggestionsContainer) return;
-
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.trim();
-            debouncedFetchFunction(searchTerm, suggestionsContainer, 'shop.html');
-        });
-
-        searchInput.addEventListener('focus', (e) => {
-            const searchTerm = e.target.value.trim();
-            if (searchTerm.length >= 2) {
-                 debouncedFetchFunction(searchTerm, suggestionsContainer, 'shop.html');
-            }
-        });
-
-        if (form) {
-            form.addEventListener('submit', () => {
-                hideSuggestions(suggestionsContainer);
-            });
-        }
-    }
-
-    // Setup for header search
-    if (searchInputHeader && suggestionsContainerHeader) {
-        setupSearchListener(searchInputHeader, suggestionsContainerHeader, searchFormHeader, debouncedFetchHeader);
-    }
-
-    // Setup for modal search
-    if (searchInputModal && suggestionsContainerModal) {
-        setupSearchListener(searchInputModal, suggestionsContainerModal, searchFormModal, debouncedFetchModal);
-    }
-
-    // Setup for sidebar search
-    if (searchInputSidebar && suggestionsContainerSidebar) {
-        setupSearchListener(searchInputSidebar, suggestionsContainerSidebar, searchFormSidebar, debouncedFetchSidebar);
-    }
-
-
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', (e) => {
-        if (suggestionsContainerHeader && !suggestionsContainerHeader.contains(e.target) && searchInputHeader && !searchInputHeader.contains(e.target)) {
-            hideSuggestions(suggestionsContainerHeader);
-        }
-        // For modal
-        if (searchModalElement && searchModalElement.classList.contains('show')) {
-             if (suggestionsContainerModal && !suggestionsContainerModal.contains(e.target) && searchInputModal && !searchInputModal.contains(e.target)) {
-                const modalBody = searchModalElement.querySelector('.modal-body');
-                if (modalBody && modalBody.contains(e.target) && !e.target.closest('.suggestion-item')) {
-                    hideSuggestions(suggestionsContainerModal);
-                } else if (!modalBody || !modalBody.contains(e.target)) {
-                     hideSuggestions(suggestionsContainerModal);
-                }
-            }
-        }
-        // For sidebar
-        if (suggestionsContainerSidebar && !suggestionsContainerSidebar.contains(e.target) && searchInputSidebar && !searchInputSidebar.contains(e.target)) {
-            // Check if the click is inside the sidebar but not on the input or suggestions
-            const sidebar = searchInputSidebar.closest('.sidebar'); // Find the parent sidebar
-            if (sidebar && sidebar.contains(e.target) && !e.target.closest('.suggestion-item')) {
-                 hideSuggestions(suggestionsContainerSidebar);
-            } else if (!sidebar || !sidebar.contains(e.target)) {
-                // Click is outside the sidebar entirely
-                 hideSuggestions(suggestionsContainerSidebar);
-            }
-        }
     });
     
-    if (searchModalElement) {
-        searchModalElement.addEventListener('hidden.bs.modal', () => {
-            hideSuggestions(suggestionsContainerModal);
-            if (searchInputModal) searchInputModal.value = '';
-        });
+    // Fetch and display search suggestions
+    async function fetchAndDisplaySuggestions(keyword, container) {
+        if (!keyword || !container) return;
+        
+        // Show loading indicator
+        container.innerHTML = '<div class="p-2 text-center"><div class="spinner-border spinner-border-sm" role="status"></div></div>';
+        container.style.display = 'block';
+        
+        try {
+            // Check if ShopProductService exists and has searchProducts method
+            if (!window.ShopProductService || typeof window.ShopProductService.searchProducts !== 'function') {
+                throw new Error('Search service not available');
+            }
+            
+            // Get search results - the function now handles its own errors
+            const results = await window.ShopProductService.searchProducts(keyword);
+            
+            // Display results even if empty
+            displaySuggestions(results, container, keyword);
+        } catch (error) {
+            console.error('Failed to fetch search suggestions:', error);
+            
+            // Show error message in suggestions container
+            container.innerHTML = `
+                <div class="p-3 text-center">
+                    <p class="text-danger mb-0">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Không thể tải kết quả tìm kiếm
+                    </p>
+                </div>
+            `;
+        }
     }
+    
+    // Display search suggestions in container
+    function displaySuggestions(results, container, keyword) {
+        // Clear container
+        container.innerHTML = '';
+        
+        // If no results, show message
+        if (!results || results.length === 0) {
+            container.innerHTML = `
+                <div class="p-3 text-center">
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-search me-1"></i>
+                        Không tìm thấy sản phẩm nào cho "${keyword}"
+                    </p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Create suggestion items
+        const suggestionsList = document.createElement('div');
+        suggestionsList.className = 'search-suggestions-list';
+        
+        // Limit to 5 results
+        results.slice(0, 5).forEach(product => {
+            const item = document.createElement('a');
+            item.href = `single-product.html?id=${product.id}`;
+            item.className = 'search-suggestion-item';
+            
+            item.innerHTML = `
+                <div class="d-flex align-items-center p-2">
+                    <div class="flex-shrink-0">
+                        <img src="${product.imageUrl || 'images/placeholder.jpg'}" alt="${product.name}" 
+                            class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">${highlightKeyword(product.name, keyword)}</h6>
+                        <p class="text-primary mb-0">${formatCurrency(product.price)}</p>
+                    </div>
+                </div>
+            `;
+            suggestionsList.appendChild(item);
+        });
+        
+        // Add view all results link if there are more than 5 results
+        if (results.length > 5) {
+            const viewAllLink = document.createElement('a');
+            viewAllLink.href = `shop.html?keyword=${encodeURIComponent(keyword)}`;
+            viewAllLink.className = 'search-view-all';
+            viewAllLink.innerHTML = `
+                <div class="d-flex justify-content-center p-2 border-top">
+                    <p class="mb-0">
+                        <i class="fas fa-search me-1"></i>
+                        Xem tất cả ${results.length} kết quả
+                    </p>
+                </div>
+            `;
+            suggestionsList.appendChild(viewAllLink);
+        }
+        
+        container.appendChild(suggestionsList);
+        container.style.display = 'block';
+    }
+    
+    // Helper function to highlight keyword in text
+    function highlightKeyword(text, keyword) {
+        if (!keyword) return text;
+        
+        const regex = new RegExp(`(${keyword})`, 'gi');
+        return text.replace(regex, '<strong class="highlight">$1</strong>');
+    }
+    
+    // Helper function to format currency
+    function formatCurrency(price) {
+        return new Intl.NumberFormat('vi-VN', { 
+            style: 'currency', 
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(price);
+    }
+    
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(event) {
+        suggestionsContainers.forEach(container => {
+            if (container && !container.contains(event.target)) {
+                container.style.display = 'none';
+            }
+        });
+    });
 });

@@ -1,0 +1,62 @@
+/* ==== Booking Service Styles ==== */
+.booking-steps-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.booking-steps-nav .nav-item {
+  width: 100%;
+  list-style: none;
+}
+
+.booking-steps-nav .nav-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  font-weight: 600;
+  color: var(--light-dark-color);
+  background-color: #e9ecef;
+  border: 1px solid #dee2e6;
+  border-radius: 50rem;
+  text-align: left;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.booking-steps-nav .nav-link:hover {
+  background-color: #dee2e6;
+  border-color: var(--light-dark-color);
+}
+
+.booking-steps-nav .nav-link.active {
+  background-color: var(--warning-color);
+  color: var(--dark-color);
+  border-color: var(--warning-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-steps-nav .nav-link .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9em;
+  line-height: calc(28px - 2px);
+  border: 1px solid var(--light-dark-color);
+  color: var(--light-dark-color);
+  background-color: var(--bs-white, #fff);
+  margin-right: 12px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.booking-steps-nav .nav-link.active .step-number {
+  background-color: var(--dark-color);
+  color: var(--warning-color);
+  border-color: var(--dark-color);
+}
