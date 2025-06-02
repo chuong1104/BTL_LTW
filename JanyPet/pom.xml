@@ -32,6 +32,7 @@
 	<name>JanyPet</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
+	<packaging>war</packaging>
 	<licenses>
 		<license/>
 	</licenses>
