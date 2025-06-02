@@ -10,7 +10,10 @@ public interface ProductService {
     ProductResponse createProduct(ProductCreationRequest request);
     ProductResponse updateProduct(String id, ProductUpdateRequest request);
     ProductResponse getProductById(String id);
-    List<ProductResponse> getAllProducts();
-    void deleteProduct(String id);
-    List<ProductResponse> searchProductsByName(String name);
+    List<ProductResponse> getAllProducts(); // Now returns only active products
+    void deleteProduct(String id); // Hard delete (kept for backward compatibility)
+    void softDeleteProduct(String id); // New soft delete method
+    ProductResponse restoreProduct(String id); // Method to restore soft-deleted product
+    List<ProductResponse> searchProductsByName(String name); // Will now return only active products
+    List<ProductResponse> getAllProductsIncludingInactive(); // New method for admin
 }

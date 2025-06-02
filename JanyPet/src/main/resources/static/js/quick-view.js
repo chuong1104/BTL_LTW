@@ -2,144 +2,178 @@
  * Quick View functionality for product preview
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Mảng dữ liệu sản phẩm mẫu (trong thực tế, dữ liệu này sẽ đến từ backend)
-    const sampleProducts = {
-        '1': {
-            title: 'Áo hoodie cho thú cưng',
-            price: '180.000₫',
-            description: 'Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ. Phù hợp cho mùa thu và đông, bảo vệ thú cưng của bạn khỏi thời tiết lạnh.',
-            image: 'images/item5.jpg'
-        },
-        '2': {
-            title: 'Đồ chơi cho mèo',
-            price: '120.000₫',
-            description: 'Đồ chơi tương tác giúp mèo vận động và giải trí. Được làm từ chất liệu an toàn, không độc hại cho thú cưng.',
-            image: 'images/item6.jpg'
-        },
-        '3': {
-            title: 'Thức ăn hạt cho chó',
-            price: '250.000₫',
-            description: 'Thức ăn hạt cao cấp cho chó với thành phần dinh dưỡng đầy đủ, giúp thú cưng phát triển khỏe mạnh.',
-            image: 'images/item7.jpg'
-        },
-        '4': {
-            title: 'Dây dắt thú cưng',
-            price: '150.000₫',
-            description: 'Dây dắt chất lượng cao, chắc chắn và thoải mái cho cả người dùng và thú cưng khi đi dạo.',
-            image: 'images/item8.jpg'
-        }
-    };
-
-    // Xử lý sự kiện click cho nút Quick View
+    // Setup quick view modal functionality
     document.querySelectorAll('.btn-quickview').forEach(button => {
-        button.addEventListener('click', function(event) {
+        button.addEventListener('click', async function(event) {
             event.preventDefault();
             
-            // Lấy ID sản phẩm từ thuộc tính data
+            // Get product ID from button
             const productId = this.getAttribute('data-product-id');
+            if (!productId) {
+                console.error('No product ID provided for quick view');
+                return;
+            }
             
-            // Lấy thông tin sản phẩm từ dữ liệu mẫu
-            const product = sampleProducts[productId] || {
-                title: 'Sản phẩm cho thú cưng',
-                price: '199.000₫',
-                description: 'Thông tin chi tiết về sản phẩm sẽ được cập nhật sau.',
-                image: 'images/item5.jpg'
-            };
-            
-            // Cập nhật dữ liệu vào modal
-            document.getElementById('quickview-product-title').textContent = product.title;
-            document.getElementById('quickview-product-price').textContent = product.price;
-            document.getElementById('quickview-product-description').textContent = product.description;
-            document.getElementById('quickview-product-image').src = product.image;
-            
-            // Cập nhật ID sản phẩm cho nút thêm vào giỏ hàng và yêu thích
-            document.querySelector('.add-to-cart-btn').setAttribute('data-product-id', productId);
-            document.querySelector('.wishlist-btn').setAttribute('data-product-id', productId);
-            
-            // Hiển thị modal
-            const quickViewModal = new bootstrap.Modal(document.getElementById('quickViewModal'));
-            quickViewModal.show();
+            try {
+                // Show loading state in modal
+                const modalTitle = document.getElementById('quickview-product-title');
+                const modalPrice = document.getElementById('quickview-product-price');
+                const modalDescription = document.getElementById('quickview-product-description');
+                const modalImage = document.getElementById('quickview-product-image');
+                const addToCartBtn = document.querySelector('.add-to-cart-btn');
+                const wishlistBtn = document.querySelector('.wishlist-btn');
+                
+                // Show loading state
+                modalTitle.textContent = 'Loading...';
+                modalPrice.textContent = '';
+                modalDescription.textContent = 'Loading product details...';
+                modalImage.src = '/images/placeholder.jpg';
+                
+                // Fetch product data from API
+                let product;
+                if (window.ShopProductService && typeof window.ShopProductService.getProductById === 'function') {
+                    product = await window.ShopProductService.getProductById(productId);
+                } else if (window.apiService && typeof window.apiService.getProduct === 'function') {
+                    product = await window.apiService.getProduct(productId);
+                } else {
+                    throw new Error('Product service not available');
+                }
+                
+                // Update modal with product data
+                modalTitle.textContent = product.name;
+                modalPrice.textContent = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(product.price);
+                
+                modalDescription.textContent = product.description ? 
+                    // Strip HTML if description contains HTML
+                    product.description.replace(/<[^>]*>?/gm, '') : 
+                    'No description available.';
+                
+                modalImage.src = product.imageUrl || '/images/placeholder.jpg';
+                
+                // Update buttons with product ID
+                addToCartBtn.setAttribute('data-product-id', productId);
+                addToCartBtn.onclick = function() {
+                    addToCart(
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.imageUrl || '/images/placeholder.jpg',
+                        parseInt(document.getElementById('product-quantity').value)
+                    );
+                    
+                    // Close modal after adding to cart
+                    const quickViewModal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
+                    quickViewModal.hide();
+                    
+                    return false;
+                };
+                
+                wishlistBtn.setAttribute('data-product-id', productId);
+                wishlistBtn.onclick = function() {
+                    addToWishlist(
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.imageUrl || '/images/placeholder.jpg'
+                    );
+                    return false;
+                };
+            } catch (error) {
+                console.error('Error loading product for quick view:', error);
+                
+                // Show error in modal
+                document.getElementById('quickview-product-title').textContent = 'Error';
+                document.getElementById('quickview-product-price').textContent = '';
+                document.getElementById('quickview-product-description').textContent = 
+                    'Could not load product details. Please try again later.';
+            }
         });
     });
     
-    // Xử lý nút tăng/giảm số lượng
-    document.querySelector('.quantity-btn.plus').addEventListener('click', function() {
+    // Quantity buttons functionality
+    document.querySelector('.quantity-btn.plus')?.addEventListener('click', function() {
         const input = document.getElementById('product-quantity');
         const currentValue = parseInt(input.value);
-        input.value = Math.min(currentValue + 1, parseInt(input.max || 10));
+        if (currentValue < 10) { // Max quantity
+            input.value = currentValue + 1;
+        }
     });
     
-    document.querySelector('.quantity-btn.minus').addEventListener('click', function() {
+    document.querySelector('.quantity-btn.minus')?.addEventListener('click', function() {
         const input = document.getElementById('product-quantity');
         const currentValue = parseInt(input.value);
-        input.value = Math.max(currentValue - 1, parseInt(input.min || 1));
+        if (currentValue > 1) { // Min quantity is 1
+            input.value = currentValue - 1;
+        }
     });
     
-    // Xử lý nút thêm vào giỏ hàng trong modal
-    document.querySelector('.add-to-cart-btn').addEventListener('click', function() {
-        const productId = this.getAttribute('data-product-id');
-        const quantity = document.getElementById('product-quantity').value;
-        
-        // Thực hiện thêm vào giỏ hàng
-        console.log(`Đã thêm sản phẩm ID ${productId}, số lượng ${quantity} vào giỏ hàng`);
-        
-        // Đóng modal
-        const quickViewModal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
-        quickViewModal.hide();
-    });
-    
-    // Thay đổi cách hiển thị các nút Add to Cart
+    // Update product cards to show quick view buttons
     function updateProductCards() {
-        // Sửa lại cấu trúc sản phẩm để thêm vùng chứa các nút hành động
-        document.querySelectorAll('.card.position-relative').forEach((card, index) => {
-            // Kiểm tra xem đã có container cho các nút chưa
-            if (!card.querySelector('.product-actions')) {
-                // Lấy ID sản phẩm (hoặc dùng index nếu không có)
-                const productId = index + 1;
-                
-                // Tạo container cho các nút
-                const actionsContainer = document.createElement('div');
-                actionsContainer.className = 'product-actions';
-                
-                // Lấy nút Add to Cart và Wishlist hiện tại
-                const addToCartBtn = card.querySelector('.btn-cart');
-                const wishlistBtn = card.querySelector('.btn-wishlist');
-                
-                // Xóa class và style không cần thiết từ nút hiện tại
+        document.querySelectorAll('.card.position-relative').forEach(card => {
+            // Skip if already processed
+            if (card.querySelector('.product-actions')) return;
+            
+            // Find product ID (if it exists in a link or data attribute)
+            let productId = '';
+            const productLink = card.querySelector('a[href^="single-product.html"]');
+            if (productLink) {
+                const url = new URL(productLink.href, window.location.origin);
+                productId = url.searchParams.get('id');
+            }
+            
+            if (!productId) {
+                // Try to find product ID in other ways
+                const addToCartBtn = card.querySelector('.btn-cart, button[onclick*="addToCart"]');
                 if (addToCartBtn) {
-                    addToCartBtn.className = 'btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center';
-                    addToCartBtn.setAttribute('data-product-id', productId);
-                    addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i>';
-                    actionsContainer.appendChild(addToCartBtn);
+                    const onclickAttr = addToCartBtn.getAttribute('onclick');
+                    if (onclickAttr) {
+                        const match = onclickAttr.match(/addToCart\(['"]([^'"]+)['"]/);
+                        if (match && match[1]) {
+                            productId = match[1];
+                        }
+                    }
+                }
+            }
+            
+            if (!productId) return; // Skip if no product ID found
+            
+            // Create quick view button if it doesn't exist
+            if (!card.querySelector('.btn-quickview')) {
+                // Create product actions container if it doesn't exist
+                let actionsContainer = card.querySelector('.product-actions');
+                if (!actionsContainer) {
+                    actionsContainer = document.createElement('div');
+                    actionsContainer.className = 'product-actions position-absolute start-50 bottom-0 translate-middle-x mb-3 d-flex gap-2';
+                    
+                    // Find image container or create one
+                    const imgContainer = card.querySelector('.img-hover-zoom') || card.querySelector('a') || card;
+                    imgContainer.style.position = 'relative';
+                    imgContainer.appendChild(actionsContainer);
                 }
                 
-                if (wishlistBtn) {
-                    wishlistBtn.className = 'btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center';
-                    wishlistBtn.innerHTML = '<i class="fas fa-heart"></i>';
-                    actionsContainer.appendChild(wishlistBtn);
-                }
-                
-                // Tạo nút Quick View
-                const quickViewBtn = document.createElement('a');
-                quickViewBtn.href = '#';
-                quickViewBtn.className = 'btn-quickview rounded-circle btn-outline-secondary d-inline-flex align-items-center justify-content-center';
+                // Create quick view button
+                const quickViewBtn = document.createElement('button');
+                quickViewBtn.className = 'btn-quickview rounded-circle btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center';
                 quickViewBtn.setAttribute('data-bs-toggle', 'modal');
                 quickViewBtn.setAttribute('data-bs-target', '#quickViewModal');
                 quickViewBtn.setAttribute('data-product-id', productId);
                 quickViewBtn.innerHTML = '<i class="fas fa-eye"></i>';
                 
                 actionsContainer.appendChild(quickViewBtn);
-                
-                // Thêm container vào card
-                const imgContainer = card.querySelector('a') || card;
-                imgContainer.classList.add('image-container');
-                imgContainer.appendChild(actionsContainer);
             }
         });
     }
     
-    // Chạy hàm cập nhật sản phẩm
+    // Call updateProductCards on page load
     updateProductCards();
     
+    // Call it again after a delay to catch dynamically loaded products
+    setTimeout(updateProductCards, 2000);
     
+    // And again periodically to catch any new products loaded via AJAX
+    setInterval(updateProductCards, 5000);
 });

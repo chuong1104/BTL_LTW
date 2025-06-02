@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PetCare Admin Dashboard</title>
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/admin-styles.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -94,7 +95,7 @@
         </nav>
         <div class="sidebar-footer">
           <div class="user-info">
-            <img src="/images/logo.png" alt="Admin" class="avatar" />
+            <img src="/images/logo4.png" alt="Admin" class="avatar" />
             <div class="user-details">
               <h4>PetShop Admin</h4>
               <p>Administrator</p>
@@ -139,11 +140,11 @@
           <div class="stats-cards">
             <div class="stat-card">
               <div class="stat-card-content">
-                <h3>Total Products</h3>
-                <p class="stat-number">248</p>
-                <p class="stat-info">
-                  <i class="fas fa-arrow-up"></i> 15% from last month
+                <h3>Sản phẩm</h3>
+                <p class="stat-number">
+                  <i class="fas fa-spinner fa-spin"></i>
                 </p>
+                <p class="stat-info">Sản phẩm đang hoạt động</p>
               </div>
               <div class="stat-card-icon products-icon">
                 <i class="fas fa-box"></i>
@@ -151,11 +152,11 @@
             </div>
             <div class="stat-card">
               <div class="stat-card-content">
-                <h3>Appointments</h3>
-                <p class="stat-number">32</p>
-                <p class="stat-info">
-                  <i class="fas fa-arrow-up"></i> 8% from last month
+                <h3>Lịch hẹn</h3>
+                <p class="stat-number">
+                  <i class="fas fa-spinner fa-spin"></i>
                 </p>
+                <p class="stat-info">Lịch hẹn đang chờ</p>
               </div>
               <div class="stat-card-icon appointments-icon">
                 <i class="fas fa-calendar-check"></i>
@@ -163,11 +164,11 @@
             </div>
             <div class="stat-card">
               <div class="stat-card-content">
-                <h3>Total Orders</h3>
-                <p class="stat-number">156</p>
-                <p class="stat-info">
-                  <i class="fas fa-arrow-down"></i> 3% from last month
+                <h3>Đơn hàng</h3>
+                <p class="stat-number">
+                  <i class="fas fa-spinner fa-spin"></i>
                 </p>
+                <p class="stat-info">Đơn hàng đang xử lý</p>
               </div>
               <div class="stat-card-icon orders-icon">
                 <i class="fas fa-shopping-cart"></i>
@@ -175,11 +176,11 @@
             </div>
             <div class="stat-card">
               <div class="stat-card-content">
-                <h3>Revenue</h3>
-                <p class="stat-number">$12,846</p>
-                <p class="stat-info">
-                  <i class="fas fa-arrow-up"></i> 12% from last month
+                <h3>Doanh thu</h3>
+                <p class="stat-number">
+                  <i class="fas fa-spinner fa-spin"></i>
                 </p>
+                <p class="stat-info">Tổng doanh thu từ đơn hàng</p>
               </div>
               <div class="stat-card-icon revenue-icon">
                 <i class="fas fa-dollar-sign"></i>
@@ -190,48 +191,25 @@
           <div class="dashboard-widgets">
             <div class="widget recent-appointments">
               <div class="widget-header">
-                <h3>Recent Appointments</h3>
-                <a href="#" class="view-all">View All</a>
+                <h3>Lịch hẹn gần nhất</h3>
+                <a href="#" class="view-all" onclick="document.querySelector('[data-section=appointments-section]').click(); return false;">Xem tất cả</a>
               </div>
               <div class="widget-content">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>Customer</th>
-                      <th>Pet</th>
-                      <th>Service</th>
-                      <th>Date & Time</th>
-                      <th>Status</th>
+                      <th>Khách hàng</th>
+                      <th>Thú cưng</th>
+                      <th>Dịch vụ</th>
+                      <th>Ngày & Giờ</th>
+                      <th>Trạng thái</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>John Smith</td>
-                      <td>Max (Dog)</td>
-                      <td>Grooming</td>
-                      <td>Today, 10:00 AM</td>
-                      <td><span class="status-scheduled">Scheduled</span></td>
-                    </tr>
-                    <tr>
-                      <td>Sarah Johnson</td>
-                      <td>Luna (Cat)</td>
-                      <td>Vaccination</td>
-                      <td>Today, 2:30 PM</td>
-                      <td><span class="status-confirmed">Confirmed</span></td>
-                    </tr>
-                    <tr>
-                      <td>Michael Davis</td>
-                      <td>Rocky (Dog)</td>
-                      <td>Checkup</td>
-                      <td>Tomorrow, 9:15 AM</td>
-                      <td><span class="status-pending">Pending</span></td>
-                    </tr>
-                    <tr>
-                      <td>Emily Wilson</td>
-                      <td>Coco (Rabbit)</td>
-                      <td>Nail Trimming</td>
-                      <td>Tomorrow, 11:00 AM</td>
-                      <td><span class="status-scheduled">Scheduled</span></td>
+                      <td colspan="5" class="text-center">
+                        <i class="fas fa-spinner fa-spin me-2"></i> Đang tải lịch hẹn...
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -240,48 +218,25 @@
 
             <div class="widget recent-orders">
               <div class="widget-header">
-                <h3>Recent Orders</h3>
-                <a href="#" class="view-all">View All</a>
+                <h3>Đơn hàng gần nhất</h3>
+                <a href="#" class="view-all" onclick="document.querySelector('[data-section=orders-section]').click(); return false;">Xem tất cả</a>
               </div>
               <div class="widget-content">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>Order ID</th>
-                      <th>Customer</th>
-                      <th>Items</th>
-                      <th>Total</th>
-                      <th>Status</th>
+                      <th>Mã đơn hàng</th>
+                      <th>Khách hàng</th>
+                      <th>Sản phẩm</th>
+                      <th>Tổng tiền</th>
+                      <th>Trạng thái</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>#ORD-7829</td>
-                      <td>Robert Brown</td>
-                      <td>3 items</td>
-                      <td>$58.25</td>
-                      <td><span class="status-completed">Delivered</span></td>
-                    </tr>
-                    <tr>
-                      <td>#ORD-7830</td>
-                      <td>Lisa Anderson</td>
-                      <td>2 items</td>
-                      <td>$124.99</td>
-                      <td><span class="status-processing">Processing</span></td>
-                    </tr>
-                    <tr>
-                      <td>#ORD-7831</td>
-                      <td>Thomas Clark</td>
-                      <td>5 items</td>
-                      <td>$93.85</td>
-                      <td><span class="status-shipping">Shipping</span></td>
-                    </tr>
-                    <tr>
-                      <td>#ORD-7832</td>
-                      <td>Jennifer Martinez</td>
-                      <td>1 item</td>
-                      <td>$32.50</td>
-                      <td><span class="status-processing">Processing</span></td>
+                      <td colspan="5" class="text-center">
+                        <i class="fas fa-spinner fa-spin me-2"></i> Đang tải đơn hàng...
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -1609,9 +1564,9 @@ United States</textarea
     <script src="js/order-history.js"></script>
     <script src="js/category-service.js"></script>
     <script src="js/product-service.js"></script>
-    <!-- Add this with the other service scripts -->
     <script src="js/shop-product-service.js"></script>
-
+    <!-- Add modal handlers before other UI components -->
+    <script src="js/modal-handlers.js"></script>
 
     <!-- Feature handlers -->
     <script src="js/service-handlers.js"></script>
@@ -1621,6 +1576,8 @@ United States</textarea
     <script src="js/order-handlers.js"></script>
     <script src="js/report-handlers.js"></script>
     <script src="js/settings-handlers.js"></script>
+    <script src="js/enhanced-detail-views.js"></script>
+    <script src="js/dashboard-handler.js"></script>
 
     <!-- Main admin script - load last -->
     <script src="js/admin-script.js"></script>
@@ -1648,11 +1605,16 @@ United States</textarea
               [{ color: [] }, { background: [] }],
               [{ align: [] }],
               ["link", "image"],
-                ["clean"],
+              ["clean"],
             ],
           },
           placeholder: "Enter product description...",
         });
+
+        // Initialize dashboard
+        if (window.DashboardHandler) {
+          DashboardHandler.initialize();
+        }
 
         // Initialize handlers
         if (window.ProductHandlers) {

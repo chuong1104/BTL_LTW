@@ -11,6 +11,7 @@ public class ProductResponse {
     private String imageUrl; // Trả về URL đầy đủ để hiển thị trên giao diện
     private String categoryId;   // Added
     private String categoryName;
+    private Boolean isActive; // Added
 
     public String getId() {
         return id;
@@ -74,5 +75,13 @@ public class ProductResponse {
 
     public void setCategoryName(String categoryName) { // Added
         this.categoryName = categoryName;
+    }
+    
+    public Boolean getIsActive() { // Added
+        return isActive;
+    }
+    
+    public void setIsActive(Boolean isActive) { // Added
+        this.isActive = isActive;
     }
 }

@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check if on admin page and appointment section exists
   if (document.getElementById('appointments-section')) {
     console.log('Appointments section found');
-    setupAppointmentHandlers();
+    // Replace the undefined function with our actual initialization
+    if (typeof window.BookingHandlers?.initializeBookingEvents === 'function') {
+      window.BookingHandlers.initializeBookingEvents();
+    }
     loadAllBookings();
   }
   

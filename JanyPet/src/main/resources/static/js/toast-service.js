@@ -1,154 +1,164 @@
 /**
- * Toast Notification Service
- * Provides a centralized way to display toast notifications
+ * Toast Service - Provides toast notification functionality across the application
  */
+window.toastService = (function() {
+    // Container for toast notifications
+    let container = null;
 
-// Create the toast service as a global object
-window.toastService = (() => {
-    // Toast container element
-    const toastElement = document.getElementById('toast');
-    const toastContent = document.querySelector('#toast .toast-content');
-    const toastMessage = document.querySelector('#toast .toast-message');
-    const toastProgress = document.querySelector('#toast .toast-progress');
-    
-    // Default settings
-    const defaults = {
-        duration: 3000, // Duration in ms
-        showProgress: true,
-        autoClose: true,
+    // Toast configuration options
+    const defaultOptions = {
+        duration: 5000,    // 5 seconds
+        position: 'bottom-right'
     };
-    
-    // Toast states
-    let activeTimeout = null;
-    let isVisible = false;
-    
-    // Show a toast notification
-    const showToast = (message, type = 'success', options = {}) => {
-        // Combine default options with provided options
-        const settings = { ...defaults, ...options };
+
+    /**
+     * Initialize toast container
+     */
+    const initContainer = () => {
+        // Check if container already exists
+        container = document.getElementById('toast-container');
         
-        // Clear any existing timeout
-        if (activeTimeout) {
-            clearTimeout(activeTimeout);
-        }
-        
-        // Set the message
-        if (toastMessage) {
-            toastMessage.textContent = message;
-        }
-        
-        // Reset classes
-        if (toastElement) {
-            toastElement.className = 'toast';
-            
-            // Add the type class
-            toastElement.classList.add(`toast-${type}`);
-            
-            // Change the icon based on type
-            const icon = toastContent.querySelector('i');
-            if (icon) {
-                icon.className = ''; // Clear existing classes
-                
-                // Set appropriate icon class based on type
-                switch (type) {
-                    case 'success':
-                        icon.className = 'fas fa-check-circle';
-                        break;
-                    case 'error':
-                        icon.className = 'fas fa-exclamation-circle';
-                        break;
-                    case 'warning':
-                        icon.className = 'fas fa-exclamation-triangle';
-                        break;
-                    case 'info':
-                        icon.className = 'fas fa-info-circle';
-                        break;
-                    default:
-                        icon.className = 'fas fa-check-circle';
-                }
-            }
-            
-            // Show the toast
-            toastElement.classList.add('show');
-            isVisible = true;
-            
-            // Setup progress bar if enabled
-            if (settings.showProgress && toastProgress) {
-                // Reset the animation
-                toastProgress.style.animation = 'none';
-                void toastProgress.offsetWidth; // Trigger reflow
-                toastProgress.style.animation = `progress ${settings.duration / 1000}s linear forwards`;
-            }
-            
-            // Auto-close if enabled
-            if (settings.autoClose) {
-                activeTimeout = setTimeout(() => {
-                    hideToast();
-                }, settings.duration);
-            }
-        } else {
-            // Fallback if toast element doesn't exist
-            console.log(`Toast Notification (${type}): ${message}`);
+        // If not, create a new one
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '1050';
+            document.body.appendChild(container);
         }
     };
-    
-    // Hide the toast notification
-    const hideToast = () => {
-        if (toastElement && isVisible) {
-            toastElement.classList.remove('show');
-            isVisible = false;
-            
-            if (activeTimeout) {
-                clearTimeout(activeTimeout);
-                activeTimeout = null;
-            }
+
+    /**
+     * Create and show a toast notification
+     * @param {string} message - Toast message
+     * @param {string} type - Toast type (success, error, warning, info)
+     * @param {Object} options - Additional options
+     */
+    const showToast = (message, type = 'info', options = {}) => {
+        initContainer();
+        
+        const settings = { ...defaultOptions, ...options };
+        
+        // Create toast element
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast align-items-center border-0 ${getToastClass(type)}`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        
+        // Create toast content
+        const flexContainer = document.createElement('div');
+        flexContainer.className = 'd-flex';
+        
+        const toastBody = document.createElement('div');
+        toastBody.className = 'toast-body d-flex align-items-center';
+        
+        // Add icon based on type
+        const icon = document.createElement('i');
+        icon.className = getToastIconClass(type);
+        icon.style.marginRight = '10px';
+        
+        toastBody.appendChild(icon);
+        toastBody.appendChild(document.createTextNode(message));
+        flexContainer.appendChild(toastBody);
+        
+        // Add close button
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'btn-close btn-close-white me-2 m-auto';
+        closeButton.setAttribute('data-bs-dismiss', 'toast');
+        closeButton.setAttribute('aria-label', 'Close');
+        flexContainer.appendChild(closeButton);
+        
+        toastEl.appendChild(flexContainer);
+        
+        // Append toast to container
+        container.appendChild(toastEl);
+        
+        // Initialize Bootstrap toast
+        const toast = new bootstrap.Toast(toastEl, {
+            delay: settings.duration,
+            autohide: true
+        });
+        
+        // Show toast
+        toast.show();
+        
+        // Remove toast element after it's hidden
+        toastEl.addEventListener('hidden.bs.toast', () => {
+            container.removeChild(toastEl);
+        });
+    };
+
+    /**
+     * Get toast CSS class based on type
+     * @param {string} type - Toast type
+     * @returns {string} CSS class
+     */
+    const getToastClass = (type) => {
+        switch (type.toLowerCase()) {
+            case 'success': return 'text-white bg-success';
+            case 'error': return 'text-white bg-danger';
+            case 'warning': return 'text-dark bg-warning';
+            case 'info': return 'text-white bg-info';
+            default: return 'text-white bg-primary';
         }
     };
-    
-    // Convenience methods for different types of toasts
+
+    /**
+     * Get toast icon class based on type
+     * @param {string} type - Toast type
+     * @returns {string} Icon class
+     */
+    const getToastIconClass = (type) => {
+        switch (type.toLowerCase()) {
+            case 'success': return 'fas fa-check-circle';
+            case 'error': return 'fas fa-exclamation-circle';
+            case 'warning': return 'fas fa-exclamation-triangle';
+            case 'info': return 'fas fa-info-circle';
+            default: return 'fas fa-info-circle';
+        }
+    };
+
+    /**
+     * Show a success toast
+     * @param {string} message - Toast message
+     * @param {Object} options - Additional options
+     */
     const showSuccessToast = (message, options = {}) => {
         showToast(message, 'success', options);
     };
-    
+
+    /**
+     * Show an error toast
+     * @param {string} message - Toast message
+     * @param {Object} options - Additional options
+     */
     const showErrorToast = (message, options = {}) => {
         showToast(message, 'error', options);
     };
-    
+
+    /**
+     * Show a warning toast
+     * @param {string} message - Toast message
+     * @param {Object} options - Additional options
+     */
     const showWarningToast = (message, options = {}) => {
         showToast(message, 'warning', options);
     };
-    
+
+    /**
+     * Show an info toast
+     * @param {string} message - Toast message
+     * @param {Object} options - Additional options
+     */
     const showInfoToast = (message, options = {}) => {
         showToast(message, 'info', options);
     };
-    
-    // Initialize event listeners
-    const init = () => {
-        // Close button functionality
-        const closeButton = document.querySelector('#toast .close');
-        if (closeButton) {
-            closeButton.addEventListener('click', hideToast);
-        }
-        
-        // Click anywhere on the toast to dismiss
-        if (toastElement) {
-            toastElement.addEventListener('click', () => {
-                hideToast();
-            });
-        }
-    };
-    
-    // Initialize when the DOM is loaded
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-    
+
     // Public API
     return {
         showToast,
-        hideToast,
         showSuccessToast,
         showErrorToast,
         showWarningToast,

@@ -136,30 +136,68 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(String id) {
-        Product product = productRepository.findById(id)
+        // Modified to only retrieve active products
+        Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với id: " + id));
         return mapToResponse(product);
     }
 
     @Override
     public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
+        // Only return active products for normal users
+        return productRepository.findByIsActiveTrue().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void deleteProduct(String id) {
+        // Hard delete (retained for backward compatibility)
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Product not found with id: " + id);
         }
-        // Consider deleting image file if necessary
         productRepository.deleteById(id);
+    }
+    
+    @Override
+    public void softDeleteProduct(String id) {
+        // Implement soft delete by setting isActive to false
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found with id: " + id);
+        }
+        
+        Product product = optionalProduct.get();
+        product.setActive(false); // Set isActive to false
+        productRepository.save(product);
+    }
+    
+    @Override
+    public ProductResponse restoreProduct(String id) {
+        // Restore a soft-deleted product by setting isActive to true
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found with id: " + id);
+        }
+        
+        Product product = optionalProduct.get();
+        product.setActive(true); // Set isActive to true
+        product = productRepository.save(product);
+        return mapToResponse(product);
     }
 
     @Override
-    public List<ProductResponse> searchProductsByName(String name) { // Add this method
-        return productRepository.findByNameContainingIgnoreCase(name).stream()
+    public List<ProductResponse> searchProductsByName(String name) {
+        // Modified to only retrieve active products
+        return productRepository.findByNameContainingIgnoreCaseAndIsActiveTrue(name).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<ProductResponse> getAllProductsIncludingInactive() {
+        // Return all products including inactive ones (for admin use)
+        return productRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -171,6 +209,7 @@ public class ProductServiceImpl implements ProductService {
         response.setDescription(product.getDescription());
         response.setPrice(product.getPrice());
         response.setStock(product.getStock());
+        response.setIsActive(product.getActive()); // Include active status in response
 
         // Construct full image URL if imageUrl is just a filename
         String imageUrl = product.getImage();

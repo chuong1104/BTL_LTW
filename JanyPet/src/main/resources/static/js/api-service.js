@@ -1,5 +1,3 @@
-
-
 // Create the API service as a global object
 window.apiService = {
     API_BASE_URL: '/api',
@@ -356,6 +354,39 @@ window.apiService = {
 
     countOrdersByStatus: function(status) {
         return this.get(`/orders/count/status/${status}`);
+    },
+
+    // Product API methods
+    getProducts: function() {
+        return this.get('/products');
+    },
+
+    getProductById: function(id) {
+        return this.get(`/products/${id}`);
+    },
+
+    getActiveProducts: function() {
+        return this.get('/products');
+    },
+
+    getAllProductsIncludingInactive: function() {
+        return this.get('/products/all');
+    },
+
+    createProduct: function(productData) {
+        return this.post('/products', productData);
+    },
+
+    updateProduct: function(id, productData) {
+        return this.put(`/products/${id}`, productData);
+    },
+
+    softDeleteProduct: function(id) {
+        return this.delete(`/products/${id}`);
+    },
+
+    restoreProduct: function(id) {
+        return this.post(`/products/${id}/restore`, {});
     }
 };
 

@@ -305,594 +305,24 @@
               </div>
             </div>
 
-            <div class="product-grid row">
-              <!-- Product Block 1 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="dogs"
-                  data-tags="pets,clothes"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item7.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Áo hoodie cho chó"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Áo hoodie cho chó</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">180.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p001', 'Áo hoodie cho chó', 180000, 'images/item7.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+            <!-- Replace the static product grid with this -->
+            <div class="product-grid row" id="product-container">
+              <!-- Products will be loaded dynamically -->
+              <div class="col-12 text-center py-5" id="products-loading">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
-              </div>
-              <!-- Product Block 2 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="cats"
-                  data-tags="pets"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item10.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Đệm nằm cho mèo"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Đệm nằm cho mèo</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">220.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p002', 'Đệm nằm cho mèo', 220000, 'images/item10.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 3 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="dogs"
-                  data-tags="pets,clothes"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item5.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Vòng cổ cho chó"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Vòng cổ cho chó</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">150.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p003', 'Vòng cổ cho chó', 150000, 'images/item5.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 4 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="cats"
-                  data-tags="pets"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item8.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Đồ chơi chuột cho mèo"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Đồ chơi chuột cho mèo</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">65.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p004', 'Đồ chơi chuột cho mèo', 65000, 'images/item8.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 5 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="food"
-                  data-tags="foods"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item13.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Thức ăn hạt cho chó"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Thức ăn hạt cho chó</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">285.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p005', 'Thức ăn hạt cho chó', 285000, 'images/item13.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 6 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="food"
-                  data-tags="foods"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item14.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Thức ăn cho mèo"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Thức ăn cho mèo</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">245.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p006', 'Thức ăn cho mèo', 245000, 'images/item14.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 7 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="toys"
-                  data-tags="toys"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item9.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Đồ chơi gặm cho chó"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Đồ chơi gặm cho chó</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">120.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p007', 'Đồ chơi gặm cho chó', 120000, 'images/item9.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 8 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="dogs"
-                  data-tags="pets"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item16.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Lồng vận chuyển thú cưng"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Lồng vận chuyển thú cưng</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">350.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p008', 'Lồng vận chuyển thú cưng', 350000, 'images/item16.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Product Block 9 -->
-              <div class="col-md-4 my-4">
-                <div
-                  class="card position-relative"
-                  data-category="dogs"
-                  data-tags="pets,clothes"
-                >
-                  <a href="single-product.html"
-                    ><img
-                      src="images/item2.jpg"
-                      class="img-fluid rounded-4"
-                      alt="Bát ăn thông minh"
-                  /></a>
-                  <div class="card-body p-0">
-                    <a href="single-product.html">
-                      <h3 class="card-title pt-4 m-0">Bát ăn thông minh</h3>
-                    </a>
-                    <div class="card-text">
-                      <span class="rating secondary-font">
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        <iconify-icon
-                          icon="clarity:star-solid"
-                          class="text-primary"
-                        ></iconify-icon>
-                        5.0
-                      </span>
-                      <h3 class="secondary-font text-primary">195.000₫</h3>
-                      <div class="d-flex flex-wrap mt-3">
-                        <a
-                          href="#"
-                          class="btn-cart me-3 px-4 pt-3 pb-3"
-                          onclick="addToCart('p009', 'Bát ăn thông minh', 195000, 'images/item2.jpg', 1); return false;"
-                        >
-                          <h5 class="text-uppercase m-0">Thêm vào giỏ hàng</h5>
-                        </a>
-                        <a href="wishlist.html" class="btn-wishlist px-4 pt-3">
-                          <iconify-icon
-                            icon="fluent:heart-28-filled"
-                            class="fs-5"
-                          ></iconify-icon>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <p class="mt-2">Đang tải sản phẩm...</p>
               </div>
             </div>
 
-            <nav
-              class="navigation paging-navigation text-center mt-5"
-              role="navigation"
-            >
-              <div
-                class="pagination loop-pagination d-flex justify-content-center align-items-center"
-              >
-                <a
-                  href="shop.html?page=prev"
-                  class="pagination-arrow d-flex align-items-center mx-3"
-                >
-                  <iconify-icon
-                    icon="ic:baseline-keyboard-arrow-left"
-                    class="pagination-arrow fs-1"
-                  ></iconify-icon>
-                </a>
-                <span
-                  aria-current="page"
-                  class="page-numbers mt-2 fs-3 mx-3 current"
-                  >1</span
-                >
-                <a class="page-numbers mt-2 fs-3 mx-3" href="shop.html?page=2"
-                  >2</a
-                >
-                <a class="page-numbers mt-2 fs-3 mx-3" href="shop.html?page=3"
-                  >3</a
-                >
-                <a
-                  href="shop.html?page=next"
-                  class="pagination-arrow d-flex align-items-center mx-3"
-                >
-                  <iconify-icon
-                    icon="ic:baseline-keyboard-arrow-right"
-                    class="pagination-arrow fs-1"
-                  ></iconify-icon>
-                </a>
+            <!-- Replace the static pagination with this -->
+            <nav class="navigation paging-navigation text-center mt-5" role="navigation">
+              <div id="pagination-container" class="pagination loop-pagination d-flex justify-content-center align-items-center">
+                <!-- Pagination will be generated dynamically -->
+                <div class="spinner-border spinner-border-sm text-primary mx-2" role="status" id="pagination-loading">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
             </nav>
           </main>
@@ -913,23 +343,21 @@
                   <div id="searchSuggestionsSidebar" class="search-suggestions-container"></div>
                 </div>
               </div>
+              <!-- Replace the static category sidebar with this -->
               <div class="widget-product-categories pt-5">
                 <h4 class="widget-title">Danh mục sản phẩm</h4>
-                <ul class="product-categories sidebar-list list-unstyled">
+                <ul class="product-categories sidebar-list list-unstyled" id="category-list">
                   <li class="cat-item">
                     <a href="shop.html">Tất cả</a>
                   </li>
-                  <li class="cat-item">
-                    <a href="shop.html?cat=dogs" class="nav-link">Cho chó</a>
-                  </li>
-                  <li class="cat-item">
-                    <a href="shop.html?cat=food" class="nav-link">Thức ăn</a>
-                  </li>
-                  <li class="cat-item">
-                    <a href="shop.html?cat=cats" class="nav-link">Cho mèo</a>
-                  </li>
-                  <li class="cat-item">
-                    <a href="shop.html?cat=birds" class="nav-link">Cho chim</a>
+                  <!-- Categories will be loaded dynamically -->
+                  <li class="cat-item" id="categories-loading">
+                    <span class="nav-link">
+                      <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      Loading...
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -990,70 +418,67 @@
       </div>
     </div>
 
+    <!-- Replace the static service section with this -->
     <section id="service" class="mt-5 pt-2">
       <div class="container py-5 my-5">
         <div class="row g-md-5 pt-4">
           <div class="col-md-3 my-3">
-            <div class="card">
-              <div>
-                <iconify-icon
-                  class="service-icon text-primary"
-                  icon="la:shopping-cart"
-                ></iconify-icon>
-              </div>
-              <h3 class="card-title py-2 m-0">Free Delivery</h3>
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">
-                  Lorem ipsum dolor sit amet, consectetur adipi elit.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 my-3">
-            <div class="card">
-              <div>
-                <iconify-icon
-                  class="service-icon text-primary"
-                  icon="la:user-check"
-                ></iconify-icon>
-              </div>
-              <h3 class="card-title py-2 m-0">100% secure payment</h3>
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">
-                  Lorem ipsum dolor sit amet, consectetur adipi elit.
-                </p>
+            <div class="card shadow-sm border-0 h-100">
+              <div class="p-4">
+                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
+                  <i class="fas fa-truck text-primary fs-4"></i>
+                </div>
+                <h3 class="card-title py-2 m-0 fs-5">Miễn phí vận chuyển</h3>
+                <div class="card-text">
+                  <p class="blog-paragraph fs-6 text-muted">
+                    Miễn phí giao hàng với đơn hàng trên 500.000đ tại Hà Nội và TP. HCM
+                  </p>
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md-3 my-3">
-            <div class="card">
-              <div>
-                <iconify-icon
-                  class="service-icon text-primary"
-                  icon="la:tag"
-                ></iconify-icon>
-              </div>
-              <h3 class="card-title py-2 m-0">Daily Offer</h3>
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">
-                  Lorem ipsum dolor sit amet, consectetur adipi elit.
-                </p>
+            <div class="card shadow-sm border-0 h-100">
+              <div class="p-4">
+                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
+                  <i class="fas fa-shield-alt text-primary fs-4"></i>
+                </div>
+                <h3 class="card-title py-2 m-0 fs-5">Thanh toán an toàn</h3>
+                <div class="card-text">
+                  <p class="blog-paragraph fs-6 text-muted">
+                    Hỗ trợ nhiều phương thức thanh toán an toàn và bảo mật
+                  </p>
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md-3 my-3">
-            <div class="card">
-              <div>
-                <iconify-icon
-                  class="service-icon text-primary"
-                  icon="la:award"
-                ></iconify-icon>
+            <div class="card shadow-sm border-0 h-100">
+              <div class="p-4">
+                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
+                  <i class="fas fa-tag text-primary fs-4"></i>
+                </div>
+                <h3 class="card-title py-2 m-0 fs-5">Khuyến mãi hàng ngày</h3>
+                <div class="card-text">
+                  <p class="blog-paragraph fs-6 text-muted">
+                    Theo dõi website để nhận được các ưu đãi đặc biệt hàng ngày
+                  </p>
+                </div>
               </div>
-              <h3 class="card-title py-2 m-0">Quality guarantee</h3>
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">
-                  Lorem ipsum dolor sit amet, consectetur adipi elit.
-                </p>
+            </div>
+          </div>
+          <div class="col-md-3 my-3">
+            <div class="card shadow-sm border-0 h-100">
+              <div class="p-4">
+                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 60px; height: 60px">
+                  <i class="fas fa-medal text-primary fs-4"></i>
+                </div>
+                <h3 class="card-title py-2 m-0 fs-5">Đảm bảo chất lượng</h3>
+                <div class="card-text">
+                  <p class="blog-paragraph fs-6 text-muted">
+                    Cam kết sản phẩm chính hãng, chất lượng cao cho thú cưng của bạn
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1373,5 +798,16 @@
     </button>
     <script src="js/chatbot.js"></script>
     <!-- End Chatbot Widget -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // ShopHandler initialization is called in the shop.js file
+        console.log('Shop page ready');
+        
+        // Chatbot initialization
+        if (typeof initializeChatbot === 'function') {
+          initializeChatbot();
+        }
+      });
+    </script>
   </body>
 </html>

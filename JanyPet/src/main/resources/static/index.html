@@ -44,7 +44,7 @@
         <div class="col-lg-3 col-md-4 col-sm-6 text-center text-sm-start">
           <div class="main-logo">
             <a href="index.html">
-              <img src="images/logo.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
+              <img src="images/logo4.png" alt="JanyPet" class="img-fluid" style="max-height: 60px;">
             </a>
           </div>
         </div>
@@ -236,254 +236,47 @@
       </div>
     </div>
     
+    <!-- Dynamic categories will be loaded here -->
     <div class="row g-4">
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-utensils category-icon"></i>
-            </div>
-            <h5 class="m-0">Thức ăn</h5>
-          </a>
+      <!-- Categories will load here -->
+      <div class="col-12 text-center py-4" id="categories-loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      </div>
-      
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-dove category-icon"></i>
-            </div>
-            <h5 class="m-0">Trang phục</h5>
-          </a>
-        </div>
-      </div>
-      
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-dog category-icon"></i>
-            </div>
-            <h5 class="m-0">Đồ chơi</h5>
-          </a>
-        </div>
-      </div>
-      
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-fish category-icon"></i>
-            </div>
-            <h5 class="m-0">Chó</h5>
-          </a>
-        </div>
-      </div>
-      
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-cat category-icon"></i>
-            </div>
-            <h5 class="m-0">Mèo</h5>
-          </a>
-        </div>
-      </div>
-      
-      <div class="col-lg-2 col-md-4 col-6">
-        <div class="categories-card hover-effect">
-          <a href="#" class="categories-item text-center d-block p-3 rounded-4 bg-white shadow-sm">
-            <div class="icon-wrapper mb-3">
-              <i class="fas fa-cut category-icon"></i>
-            </div>
-            <h5 class="m-0">Grooming</h5>
-          </a>
-        </div>
+        <p class="mt-2">Đang tải danh mục...</p>
       </div>
     </div>
   </div>
 </section>
 <section id="bestselling" class="my-5 overflow-hidden">
   <div class="container py-5 mb-5">
-
     <div class="section-header d-md-flex justify-content-between align-items-center mb-3">
       <h2 class="display-3 fw-normal">Best selling products</h2>
       <div>
-        <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+        <a href="shop.html" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
           shop now
           <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
             <use xlink:href="#arrow-right"></use>
-          </svg></a>
+          </svg>
+        </a>
       </div>
     </div>
 
-    <div class=" swiper bestselling-swiper">
+    <div class="swiper bestselling-swiper">
       <div class="swiper-wrapper">
-
-        <div class="swiper-slide">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item5.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                  5.0
-                <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                <h3 class="secondary-font text-primary">$18.00</h3>
-
-                <div class="d-flex flex-wrap mt-3">
-                  <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
-                     onclick="addToCart('p001', 'Grey hoodie', 18.00, 'images/item5.jpg', 1); return false;">
-                    <i class="fas fa-shopping-cart"></i>
-                  </a>
-                  <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                    <i class="fas fa-heart"></i>
-                  </a>
-                </div>
-
-
-              </div>
-
-            </div>
+        <!-- Dynamic products will be loaded here -->
+        <div class="swiper-slide text-center py-5" id="bestselling-loading">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
+          <p class="mt-2">Đang tải sản phẩm...</p>
         </div>
-        <div class="swiper-slide">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item6.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
-                       onclick="addToCart('p002', 'Grey hoodie', 18.00, 'images/item6.jpg', 1); return false;">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            Sale
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item7.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" 
-                       onclick="addToCart('p003', 'Grey hoodie', 18.00, 'images/item7.jpg', 1); return false;">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item8.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
       </div>
+      
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev text-primary"></div>
+      <div class="swiper-button-next text-primary"></div>
     </div>
-    <!-- / category-carousel -->
-
-
   </div>
 </section>
 <section id="clothing" class="my-5 overflow-hidden">
@@ -492,574 +285,67 @@
       <div class="section-header d-md-flex justify-content-between align-items-center mb-3">
         <h2 class="display-3 fw-normal">Pet Clothing</h2>
         <div>
-          <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+          <a href="shop.html?category=clothing" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
             shop now
             <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
               <use xlink:href="#arrow-right"></use>
-            </svg></a>
+            </svg>
+          </a>
         </div>
       </div>
 
       <div class="products-carousel swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 pt-1 bg-light">
-              New
+          <!-- Dynamic products will be loaded here -->
+          <div class="swiper-slide text-center py-5" id="clothing-loading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item2.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  </span>
-                  5.0
-
-                    <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                    <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                    <div class="d-flex flex-wrap mt-3">
-                      <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                        <i class="fas fa-shopping-cart"></i>
-                      </a>
-                      <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                        <i class="fas fa-heart"></i>
-                      </a>
-                    </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 pt-1 bg-light">
-              -10%
-            </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item3.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  </span>
-                  5.0
-
-                    <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                    <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                    <div class="d-flex flex-wrap mt-3">
-                      <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                        <i class="fas fa-shopping-cart"></i>
-                      </a>
-                      <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                        <i class="fas fa-heart"></i>
-                      </a>
-                    </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item4.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  </span>
-                  5.0
-
-                    <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                    <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                    <div class="d-flex flex-wrap mt-3">
-                      <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                        <i class="fas fa-shopping-cart"></i>
-                      </a>
-                      <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                        <i class="fas fa-heart"></i>
-                      </a>
-                    </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item7.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  </span>
-                  5.0
-
-                    <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                    <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                    <div class="d-flex flex-wrap mt-3">
-                      <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                        <i class="fas fa-shopping-cart"></i>
-                      </a>
-                      <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                        <i class="fas fa-heart"></i>
-                      </a>
-                    </div>
-
-
-                </div>
-
-              </div>
-            </div>
+            <p class="mt-2">Đang tải sản phẩm...</p>
           </div>
         </div>
-
+        
+        <div class="swiper-pagination"></div>
       </div>
     </div>
-    <!-- / products-carousel -->
+</section>
+<section id="foodies" class="my-5">
+  <div class="container my-5 py-5">
 
+    <div class="section-header d-md-flex justify-content-between align-items-center">
+      <h2 class="display-3 fw-normal">Pet Foodies</h2>
+      <div class="mb-4 mb-md-0">
+        <!-- Category filters will be loaded dynamically here -->
+        <p class="m-0">
+          <button class="filter-button me-4 active" data-filter="*">ALL</button>
+          <span id="category-filters-loading">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </span>
+        </p>
+      </div>
+      <div>
+        <a href="shop.html" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+          shop now
+          <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+            <use xlink:href="#arrow-right"></use>
+          </svg>
+        </a>
+      </div>
+    </div>
 
+    <div class="isotope-container row">
+      <!-- Dynamic products will be loaded here -->
+      <div class="col-12 text-center py-5" id="foodies-loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Đang tải sản phẩm...</p>
+      </div>
+    </div>
   </div>
 </section>
-
-  
-  <section id="foodies" class="my-5">
-    <div class="container my-5 py-5">
-
-      <div class="section-header d-md-flex justify-content-between align-items-center">
-        <h2 class="display-3 fw-normal">Pet Foodies</h2>
-        <div class="mb-4 mb-md-0">
-          <p class="m-0">
-            <button class="filter-button me-4  active" data-filter="*">ALL</button>
-            <button class="filter-button me-4 " data-filter=".cat">CAT</button>
-            <button class="filter-button me-4 " data-filter=".dog">DOG</button>
-            <button class="filter-button me-4 " data-filter=".bird">BIRD</button>
-          </p>
-        </div>
-        <div>
-          <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-            shop now
-            <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
-              <use xlink:href="#arrow-right"></use>
-            </svg></a>
-        </div>
-      </div>
-
-      <div class="isotope-container row">
-
-        <div class="item cat col-md-4 col-lg-3 my-4">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item9.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item dog col-md-4 col-lg-3 my-4">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item10.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item dog col-md-4 col-lg-3 my-4">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item11.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item cat col-md-4 col-lg-3 my-4">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            Sold
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item12.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-    
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item bird col-md-4 col-lg-3 my-4">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item13.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item bird col-md-4 col-lg-3 my-4">
-          <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div> -->
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item14.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item dog col-md-4 col-lg-3 my-4">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            Sale
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item15.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item dog col-md-4 col-lg-3 my-4">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            Sale
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item15.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="item cat col-md-4 col-lg-3 my-4">
-          <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-            New
-          </div>
-          <div class="card position-relative">
-            <a href="single-product.html"><img src="images/item16.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-product.html">
-                <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-              </a>
-
-              <div class="card-text">
-                <span class="rating secondary-font">
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                  <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                </span>
-                5.0
-
-                  <p class="product-desc">Áo hoodie cho thú cưng với chất liệu mềm mại, giữ ấm tốt cho mèo và chó cỡ nhỏ.</p>
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-  
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-2 rounded-circle btn-outline-primary d-inline-flex align-items-center justify-content-center" data-product-id="1">
-                      <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a href="#" class="btn-wishlist me-2 rounded-circle btn-outline-danger d-inline-flex align-items-center justify-content-center">
-                      <i class="fas fa-heart"></i>
-                    </a>
-                  </div>
-
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-
-
-    </div>
-  </section>
-
-<!-- Pet Services Section -->
 <section id="pet-services" class="py-5 bg-light">
   <div class="container py-4">
     <!-- Section Header -->
@@ -1191,7 +477,7 @@
         <h2 class="display-5 fw-bold mb-4">Khách hàng nói gì về <span class="text-primary">dịch vụ của chúng tôi</span></h2>
         <p class="lead mb-4">Chúng tôi tự hào mang đến trải nghiệm dịch vụ tốt nhất cho thú cưng của bạn với đội ngũ chuyên nghiệp, tận tâm và yêu thương động vật.</p>
         <div class="d-flex align-items-center mb-3">
-          <div class="rating me-3">
+          <div class="rating me-2">
             <i class="fas fa-star text-warning"></i>
             <i class="fas fa-star text-warning"></i>
             <i class="fas fa-star text-warning"></i>
@@ -1366,75 +652,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 my-4 my-md-0">
-          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
-            <h3 class="secondary-font text-primary m-0">20</h3>
-            <p class="secondary-font fs-6 m-0">Feb</p>
-  
+        <!-- Blog posts will be loaded dynamically -->
+        <div class="col-12 text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
-          <div class="card position-relative">
-            <a href="single-post.html"><img src="images/blog1.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-post.html">
-                <h3 class="card-title pt-4 pb-3 m-0">10 Reasons to be helpful towards any animals</h3>
-              </a>
-  
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
-                  our greatest
-                  achievements, and the best hope for a sustainable future.</p>
-                <a href="single-post.html" class="blog-read">read more</a>
-              </div>
-  
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 my-4 my-md-0">
-          <div class="z-1 position-absolute rounded-3 m-2 px-3 pt-1 bg-light">
-            <h3 class="secondary-font text-primary m-0">21</h3>
-            <p class="secondary-font fs-6 m-0">Feb</p>
-  
-          </div>
-          <div class="card position-relative">
-            <a href="single-post.html"><img src="images/blog2.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-post.html">
-                <h3 class="card-title pt-4 pb-3 m-0">How to know your pet is hungry</h3>
-              </a>
-  
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
-                  our greatest
-                  achievements, and the best hope for a sustainable future.</p>
-                <a href="single-post.html" class="blog-read">read more</a>
-              </div>
-  
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 my-4 my-md-0">
-          <div class="z-1 position-absolute rounded-3 m-2px-3 pt-1 bg-light">
-            <h3 class="secondary-font text-primary m-0">22</h3>
-            <p class="secondary-font fs-6 m-0">Feb</p>
-  
-           
-          </div>
-          <div class="card position-relative">
-            <a href="single-post.html"><img src="images/blog3.jpg" class="img-fluid rounded-4" alt="image"></a>
-            <div class="card-body p-0">
-              <a href="single-post.html">
-                <h3 class="card-title pt-4 pb-3 m-0">Best home for your pets</h3>
-              </a>
-  
-              <div class="card-text">
-                <p class="blog-paragraph fs-6">At the core of our practice is the idea that cities are the incubators of
-                  our greatest
-                  achievements, and the best hope for a sustainable future.</p>
-                <a href="single-post.html" class="blog-read">read more</a>
-              </div>
-  
-            </div>
-          </div>
+          <p class="mt-2">Đang tải bài viết...</p>
         </div>
       </div>
     </div>
@@ -1551,7 +774,7 @@
         <!-- About Company -->
         <div class="col-lg-3 col-md-6">
           <div class="footer-about">
-            <img src="images/logo.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
+            <img src="images/logo4.png" alt="JanyPet" class="img-fluid mb-4" style="max-height: 60px;">
             <p class="mb-4">JanyPet - Cửa hàng thú cưng và dịch vụ chăm sóc uy tín, chất lượng hàng đầu Việt Nam.</p>
             <div class="social-links">
               <div class="d-flex gap-3">
@@ -1685,15 +908,15 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div>ceholder="Nhập tin nhắn của bạn..." required>
+    </div>utton type="submit"><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
   <!-- Chatbot Widget -->
     <div class="chatbot-container">
         <div class="chatbot-header">
             <div class="chatbot-title">
-                <img src="images/logo.png" alt="JanyPet Logo" class="chatbot-logo">
+                <img src="images/logo4.png" alt="JanyPet Logo" class="chatbot-logo">
                 <span>JanyPet Hỗ trợ</span>
             </div>
             <div class="chatbot-actions">
@@ -1725,9 +948,7 @@
     <button class="chatbot-toggle">
         <i class="fas fa-comments"></i>
     </button>
-    <!-- End Chatbot Widget -->
-<!-- Toast container for notifications -->
-<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+<!-- End Chatbot Widget -->
 
 <!-- JavaScript Libraries - Thứ tự: jQuery -> Bootstrap -> các thư viện bổ sung -> script tùy chỉnh -->
 
@@ -1748,12 +969,23 @@
 <!-- Custom scripts - Luôn đặt sau các library và trước enhanced-ux -->
 <script src="js/auth_service.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/shop-product-service.js"></script> <!-- Add our new service -->
 <script src="js/index-script.js"></script>
 <script src="js/responsive-elements.js"></script>
 <script src="js/quick-view.js"></script>
 <script src="js/search-suggestions.js"></script>
 <script src="js/chatbot.js"></script>
 
+<!-- Dynamic content loader - loads real data from APIs -->
+<script src="js/dynamic-content-loader.js"></script>
+
+<!-- Initialize the page -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // This is called by the dynamic-content-loader.js
+    console.log('Page initialized with dynamic content loading');
+  });
+</script>
 
 <!-- Enhanced UX JavaScript - luôn đặt cuối cùng vì nó phụ thuộc vào tất cả các script khác -->
 <script src="js/enhanced-ux.js"></script>
@@ -1762,20 +994,24 @@
   // Loading spinner
   window.addEventListener('load', function() {
     const loadingSpinner = document.getElementById('loading-spinner');
-    loadingSpinner.style.opacity = '0';
-    loadingSpinner.style.transition = 'opacity 0.5s';
-    setTimeout(() => {
-      loadingSpinner.style.display = 'none';
-    }, 500);
+    if (loadingSpinner) {
+      loadingSpinner.style.opacity = '0';
+      loadingSpinner.style.transition = 'opacity 0.5s';
+      setTimeout(() => {
+        loadingSpinner.style.display = 'none';
+      }, 500);
+    }
   });
 
   // Back to top button
   window.addEventListener('scroll', function() {
     const backToTopButton = document.getElementById('back-to-top');
-    if (window.pageYOffset > 300) {
-      backToTopButton.classList.remove('d-none');
-    } else {
-      backToTopButton.classList.add('d-none');
+    if (backToTopButton) {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.remove('d-none');
+      } else {
+        backToTopButton.classList.add('d-none');
+      }
     }
   });
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
@@ -60,24 +61,31 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    // Endpoint to get active products only - standard product listing
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllActiveProducts() {
         List<ProductResponse> list = productService.getAllProducts();
         return ResponseEntity.ok(list);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+    
+    // Specific endpoint to get ALL products including inactive (for admin)
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponse>> getAllProductsAdmin() {
+        List<ProductResponse> products = productService.getAllProductsIncludingInactive();
+        return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String name) {
-        List<ProductResponse> products = productService.searchProductsByName(name);
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(products);
+    // Modify the delete endpoint to perform soft delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> softDeleteProduct(@PathVariable String id) {
+        productService.softDeleteProduct(id);
+        return ResponseEntity.ok(Map.of("message", "Product successfully deactivated"));
+    }
+    
+    // Add endpoint to restore a soft-deleted product
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<ProductResponse> restoreProduct(@PathVariable String id) {
+        ProductResponse restoredProduct = productService.restoreProduct(id);
+        return ResponseEntity.ok(restoredProduct);
     }
 }

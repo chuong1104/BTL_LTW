@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "products")
 public class Product extends BaseEntity<String> {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
@@ -84,4 +85,7 @@ public class Product extends BaseEntity<String> {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+    // NOTE: isActive field is inherited from BaseEntity
+    // getActive() and setActive() methods are already defined in BaseEntity
 }

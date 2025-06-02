@@ -201,7 +201,7 @@ function initializeResponsiveBehavior() {
  */
 async function initializeProductSection() {
   try {
-    if (window.ProductHandlers && typeof window.ProductHandler, s.initializeProductEvents === 'function') {
+    if (window.ProductHandlers && typeof window.ProductHandlers.initializeProductEvents === 'function') {
       console.log('Initializing product events using window.ProductHandlers...');
       window.ProductHandlers.initializeProductEvents();
     } else {

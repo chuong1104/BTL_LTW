@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }, 800);
 
+  // Initialize ShopProductService to load dynamic content
+  if (window.ShopProductService) {
+    window.ShopProductService.initializeHomepage();
+  }
+
   // Initialize header scroll effect
   const header = document.querySelector('.main-header');
   if (header) {
