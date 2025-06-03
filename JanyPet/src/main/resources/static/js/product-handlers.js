@@ -995,3 +995,28 @@ if (!window.ProductService.permanentlyDeleteProduct) {
         });
     };
 }
+
+// New code change: Add getImageUrl function to ProductService
+if (!window.ProductService.getImageUrl) {
+    window.ProductService.getImageUrl = function(imageUrl) {
+        if (!imageUrl) return '/images/no-image.png';
+        
+        // Replace localhost path with the new domain
+        if (imageUrl.includes('localhost:8080/uploads/')) {
+            return imageUrl.replace('localhost:8080/uploads/', 'https://nguyendangcong.onrender.com/uploads/');
+        }
+        
+        // Handle relative paths that might start with /uploads/
+        if (imageUrl.startsWith('/uploads/')) {
+            return `https://nguyendangcong.onrender.com${imageUrl}`;
+        }
+        
+        // If it's already using the new domain or is an external URL, return as is
+        if (imageUrl.includes('nguyendangcong.onrender.com') || imageUrl.startsWith('http')) {
+            return imageUrl;
+        }
+        
+        // Default case: assume it's a relative path that needs the full URL
+        return `https://nguyendangcong.onrender.com${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    };
+}
