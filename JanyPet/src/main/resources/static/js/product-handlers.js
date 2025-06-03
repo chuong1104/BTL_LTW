@@ -17,12 +17,21 @@ const ProductHandlers = {
         // Các sự kiện cho modal thêm/sửa sản phẩm
         const addProductBtn = document.getElementById('add-product-btn');
         if (addProductBtn) {
-            addProductBtn.addEventListener('click', () => this.openProductModal());
+            // Remove existing listeners first to prevent duplicates
+            addProductBtn.replaceWith(addProductBtn.cloneNode(true));
+            const newAddBtn = document.getElementById('add-product-btn');
+            newAddBtn.addEventListener('click', () => this.openProductModal());
         }
         
         const saveProductBtn = document.getElementById('save-product-btn');
         if (saveProductBtn) {
-            saveProductBtn.addEventListener('click', () => this.saveProduct());
+            // Remove existing listeners first to prevent duplicates
+            saveProductBtn.replaceWith(saveProductBtn.cloneNode(true));
+            const newSaveBtn = document.getElementById('save-product-btn');
+            newSaveBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent form submission
+                this.saveProduct();
+            });
         }
         
         const cancelBtn = document.getElementById('cancel-btn');
@@ -464,7 +473,18 @@ const ProductHandlers = {
     /**
      * Lưu sản phẩm (thêm mới hoặc cập nhật)
      */
+    // Add flag to prevent duplicate submissions
+    isSavingProduct: false,
+
     saveProduct: async function() {
+        // Prevent multiple submissions
+        if (this.isSavingProduct) {
+            console.log('Save operation already in progress');
+            return;
+        }
+        
+        this.isSavingProduct = true;
+        
         try {
             const form = document.getElementById('product-form');
             const productIdInput = document.getElementById('product-id');
@@ -472,7 +492,7 @@ const ProductHandlers = {
             const productPriceInput = document.getElementById('product-price');
             const productStockInput = document.getElementById('product-stock');
             const productCategorySelect = document.getElementById('product-category-modal');
-            const productImageInput = document.getElementById('product-image'); // Get the file input
+            const productImageInput = document.getElementById('product-image');
             
             if (!form || !productNameInput || !productPriceInput || !productStockInput || !productCategorySelect) {
                 throw new Error('Required form elements not found');
@@ -543,6 +563,9 @@ const ProductHandlers = {
         } catch (error) {
             console.error('Error saving product:', error);
             window.ToastService?.error(`Error saving product: ${error.message || 'Please try again.'}`);
+        } finally {
+            // Always reset the saving flag when done
+            this.isSavingProduct = false;
         }
     },
     

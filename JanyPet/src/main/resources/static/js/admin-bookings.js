@@ -168,6 +168,12 @@ async function loadAllBookings() {
       search: searchTerm
     };
     
+    // Check if service exists first
+    if (!window.BookingService || typeof window.BookingService.getAllBookings !== 'function') {
+      console.error("BookingService not properly initialized");
+      return;
+    }
+    
     // Fetch bookings using BookingAPI
     const bookings = await window.BookingAPI.getAllBookings(filters);
     
