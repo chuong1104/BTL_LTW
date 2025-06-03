@@ -16,4 +16,6 @@ public interface ProductService {
     ProductResponse restoreProduct(String id); // Method to restore soft-deleted product
     List<ProductResponse> searchProductsByName(String name); // Will now return only active products
     List<ProductResponse> getAllProductsIncludingInactive(); // New method for admin
+
+    void permanentlyDeleteProduct(String id);
 }

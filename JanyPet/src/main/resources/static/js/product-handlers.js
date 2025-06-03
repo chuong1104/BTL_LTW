@@ -181,6 +181,30 @@ const ProductHandlers = {
               ? '<span class="status-badge active">Active</span>'
               : '<span class="status-badge inactive">Inactive</span>';
             
+            const actions = `
+                <div class="actions">
+                  <button class="btn btn-sm btn-link view-product" title="View Details" data-id="${product.id}">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-link edit-product" title="Edit Product" data-id="${product.id}">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  ${product.isActive 
+                    ? `<button class="btn btn-sm btn-link delete-product" title="Deactivate Product" data-id="${product.id}">
+                        <i class="fas fa-ban"></i>
+                      </button>` 
+                    : `<button class="btn btn-sm btn-link restore-product" title="Restore Product" data-id="${product.id}">
+                        <i class="fas fa-undo-alt"></i>
+                      </button>`
+                  }
+                  ${!product.isActive ? 
+                    `<button class="permanent-delete-product btn btn-sm btn-outline-danger ms-1" 
+                       data-product-id="${product.id}" title="Permanently Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>` : ''}
+                </div>
+            `;
+            
             row.innerHTML = `
               <td><input type="checkbox" class="product-checkbox" value="${product.id}"></td>
               <td class="image-cell">
@@ -202,22 +226,7 @@ const ProductHandlers = {
               <td>${product.stock}</td>
               <td>${statusBadge}</td>
               <td>
-                <div class="actions">
-                  <button class="btn btn-sm btn-link view-product" title="View Details" data-id="${product.id}">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-link edit-product" title="Edit Product" data-id="${product.id}">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  ${product.isActive 
-                    ? `<button class="btn btn-sm btn-link delete-product" title="Deactivate Product" data-id="${product.id}">
-                        <i class="fas fa-ban"></i>
-                      </button>` 
-                    : `<button class="btn btn-sm btn-link restore-product" title="Restore Product" data-id="${product.id}">
-                        <i class="fas fa-undo-alt"></i>
-                      </button>`
-                  }
-                </div>
+                ${actions}
               </td>
             `;
             
@@ -330,6 +339,18 @@ const ProductHandlers = {
             button.addEventListener('click', (e) => {
                 const productId = e.currentTarget.getAttribute('data-id');
                 this.restoreProduct(productId);
+            });
+        });
+        
+        // Add permanent delete buttons for inactive products
+        const permanentDeleteButtons = document.querySelectorAll('.permanent-delete-product');
+        permanentDeleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const productId = button.getAttribute('data-product-id');
+                if (productId) {
+                    this.openPermanentDeleteModal(productId);
+                }
             });
         });
     },
@@ -557,7 +578,7 @@ const ProductHandlers = {
             window.ToastService?.success(`Product ${productId ? 'updated' : 'created'} successfully!`);
             
             // Notify the shop to update product display
-            if (window.ShopProductService) {
+            if (window.ShopProductService && typeof window.ShopProductService.notifyProductChange === 'function') {
                 window.ShopProductService.notifyProductChange();
             }
         } catch (error) {
@@ -846,7 +867,131 @@ const ProductHandlers = {
         maximumFractionDigits: 0
       }).format(amount);
     },
+
+    /**
+     * Mở modal xác nhận xóa vĩnh viễn sản phẩm
+     * @param {string} productId - ID của sản phẩm cần xóa vĩnh viễn
+     */
+    openPermanentDeleteModal: function(productId) {
+        const product = this.productData.find(p => p.id === productId);
+        if (!product) return;
+        
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('permanent-delete-modal');
+        if (!modal) {
+            const modalHtml = `
+            <div id="permanent-delete-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Permanently Delete Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Warning:</strong> This action cannot be undone!
+                        </div>
+                        <p>Are you sure you want to permanently delete the product: <strong id="permanent-delete-product-name"></strong>?</p>
+                        <p>This will remove the product completely from the database.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="permanent-delete-cancel-btn">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirm-permanent-delete-btn">
+                            <i class="fas fa-trash-alt me-1"></i> Permanently Delete
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            modal = document.getElementById('permanent-delete-modal');
+            
+            // Add event listeners to the new modal
+            document.getElementById('permanent-delete-cancel-btn').addEventListener('click', 
+                () => this.closePermanentDeleteModal());
+            
+            document.getElementById('confirm-permanent-delete-btn').addEventListener('click', 
+                () => this.permanentlyDeleteProduct());
+                
+            modal.querySelector('.close').addEventListener('click', 
+                () => this.closePermanentDeleteModal());
+        }
+        
+        // Set the product to delete
+        document.getElementById('permanent-delete-product-name').textContent = product.name;
+        document.getElementById('confirm-permanent-delete-btn').dataset.productId = productId;
+        
+        // Show the modal
+        modal.style.display = 'block';
+    },
+
+    /**
+     * Đóng modal xác nhận xóa vĩnh viễn sản phẩm
+     */
+    closePermanentDeleteModal: function() {
+        const modal = document.getElementById('permanent-delete-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    },
+
+    /**
+     * Xóa vĩnh viễn một sản phẩm
+     */
+    permanentlyDeleteProduct: async function() {
+        const productId = document.getElementById('confirm-permanent-delete-btn').dataset.productId;
+        if (!productId) return;
+        
+        try {
+            await window.ProductService.permanentlyDeleteProduct(productId);
+            this.closePermanentDeleteModal();
+            this.loadProducts(); // Refresh the product list
+            
+            if (window.ToastService?.success) {
+                window.ToastService.success('Product permanently deleted successfully');
+            } else {
+                alert('Product permanently deleted successfully');
+            }
+            
+            // Notify shop if needed
+            if (window.ShopProductService?.notifyProductChange) {
+                window.ShopProductService.notifyProductChange();
+            }
+        } catch (error) {
+            console.error('Error permanently deleting product:', error);
+            if (window.ToastService?.error) {
+                window.ToastService.error(`Error deleting product: ${error.message}`);
+            } else {
+                alert(`Error deleting product: ${error.message || 'Unknown error'}`);
+            }
+        }
+    }
 };
 
 // Add this line at the end of the file to ensure it's globally available
 window.ProductHandlers = ProductHandlers;
+
+// Add this to the API service if it doesn't exist already
+if (!window.ProductService) {
+    window.ProductService = {};
+}
+if (!window.ProductService.permanentlyDeleteProduct) {
+    window.ProductService.permanentlyDeleteProduct = function(productId) {
+        return fetch(`/api/products/${productId}/permanent`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Failed to permanently delete product');
+                });
+            }
+            return response.json();
+        });
+    };
+}

@@ -2,11 +2,16 @@ package com.BTL_LTW.JanyPet.controller;
 
 import com.BTL_LTW.JanyPet.dto.request.ProductCreationRequest;
 import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
+import com.BTL_LTW.JanyPet.dto.response.MessageResponse;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
+import com.BTL_LTW.JanyPet.exception.ResourceNotFoundException;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +32,7 @@ public class ProductController {
         ProductResponse response = productService.createProduct(request);
         return ResponseEntity.ok(response);
     }
-    
+
     // Tạo mới sản phẩm với upload ảnh qua form data
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponse> createProductWithFormData(
@@ -44,7 +49,7 @@ public class ProductController {
         ProductResponse response = productService.updateProduct(id, request);
         return ResponseEntity.ok(response);
     }
-    
+
     // Cập nhật sản phẩm theo id với form data và file upload
     @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductResponse> updateProductWithFormData(
@@ -67,7 +72,7 @@ public class ProductController {
         List<ProductResponse> list = productService.getAllProducts();
         return ResponseEntity.ok(list);
     }
-    
+
     // Specific endpoint to get ALL products including inactive (for admin)
     @GetMapping("/all")
     public ResponseEntity<List<ProductResponse>> getAllProductsAdmin() {
@@ -81,7 +86,7 @@ public class ProductController {
         productService.softDeleteProduct(id);
         return ResponseEntity.ok(Map.of("message", "Product successfully deactivated"));
     }
-    
+
     // Add endpoint to restore a soft-deleted product
     @PostMapping("/{id}/restore")
     public ResponseEntity<ProductResponse> restoreProduct(@PathVariable String id) {
@@ -94,5 +99,28 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
         List<ProductResponse> products = productService.searchProductsByName(keyword);
         return ResponseEntity.ok(products);
+    }
+
+    @DeleteMapping("/{id}/permanent")
+   
+    public ResponseEntity<?> permanentlyDeleteProduct(@PathVariable String id) {
+        try {
+            // Log the request for debugging
+            System.out.println("Processing permanent delete request for product ID: " + id);
+            
+            productService.permanentlyDeleteProduct(id);
+            return ResponseEntity.ok(new MessageResponse("Product permanently deleted successfully"));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse(e.getMessage()));
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new MessageResponse("Access denied: " + e.getMessage()));
+        } catch (Exception e) {
+            // Log the full stack trace for debugging
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("Failed to delete product permanently: " + e.getMessage()));
+        }
     }
 }

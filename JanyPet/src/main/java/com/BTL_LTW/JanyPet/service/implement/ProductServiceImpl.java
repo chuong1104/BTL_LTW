@@ -5,10 +5,14 @@ import com.BTL_LTW.JanyPet.dto.request.ProductUpdateRequest;
 import com.BTL_LTW.JanyPet.dto.response.ProductResponse;
 import com.BTL_LTW.JanyPet.entity.Category;
 import com.BTL_LTW.JanyPet.entity.Product;
+import com.BTL_LTW.JanyPet.exception.ResourceNotFoundException;
 import com.BTL_LTW.JanyPet.repository.CategoryRepository;
 import com.BTL_LTW.JanyPet.repository.ProductRepository;
 import com.BTL_LTW.JanyPet.service.Interface.FileStorageService;
 import com.BTL_LTW.JanyPet.service.Interface.ProductService;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -200,6 +204,34 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void permanentlyDeleteProduct(String id) {
+        // Add logging to help debug
+        System.out.println("Starting permanent deletion for product: " + id);
+        
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+        
+        try {
+            // Delete product from database
+            productRepository.deleteById(id);
+            System.out.println("Product deleted from database successfully");
+            
+            // If product has an image, delete it
+            if (product.getImage() != null && !product.getImage().isEmpty()) {
+                // Logic to delete file - may need to adapt based on your fileStorageService
+                String filename = product.getImage().substring(product.getImage().lastIndexOf("/") + 1);
+                System.out.println("Attempting to delete file: " + filename);
+                // Comment this out if you don't have a fileStorageService
+                // fileStorageService.deleteFile(filename);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to permanently delete product: " + e.getMessage(), e);
+        }
     }
 
     private ProductResponse mapToResponse(Product product) {
