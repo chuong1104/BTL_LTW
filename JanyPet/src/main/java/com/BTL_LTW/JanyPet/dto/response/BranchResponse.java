@@ -5,13 +5,14 @@ import java.sql.Timestamp;
 public class BranchResponse {
     private String id;
     private String name;
+    private String branchSourceId;
     private String address;
     private String district;
     private String city;
     private String phoneNumber;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
+
     // Getters and Setters
     public String getId() {
         return id;
@@ -27,6 +28,14 @@ public class BranchResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBranchSourceId() {
+        return branchSourceId;
+    }
+
+    public void setBranchSourceId(String branchSourceId) {
+        this.branchSourceId = branchSourceId;
     }
 
     public String getAddress() {

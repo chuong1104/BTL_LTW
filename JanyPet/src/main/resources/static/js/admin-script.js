@@ -196,8 +196,7 @@ function handleMobileNavigation() {
 /**
  * Load section data
  */
-function loadSectionData(sectionId) {
-  try {
+function loadSectionData(sectionId) {  try {
     switch (sectionId) {
       case "dashboard-section":
         window.DashboardHandlers?.loadDashboard();
@@ -205,11 +204,21 @@ function loadSectionData(sectionId) {
       case "products-section":
         window.ProductHandlers?.loadProducts();
         break;
+      case "staff-section":
+        window.StaffHandlers?.loadStaffData();
+        break;
       case "orders-section":
         window.OrderHandlers?.loadOrders();
-        break;
-      case "inventory-section":
+        break;      case "inventory-section":
         window.InventoryHandlers?.loadInventoryData();
+        break;      case "branches-section":
+        console.log('Loading branches section...');
+        if (window.BranchManager) {
+          console.log('BranchManager found, calling loadBranches...');
+          window.BranchManager.loadBranches();
+        } else {
+          console.error('BranchManager not found!');
+        }
         break;
       // Add other sections as needed
       default:

@@ -9,24 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "branches")
+@Table(name = "branch")
 public class Branch extends BaseEntity<String> {
-    
     @Column(name = "branch_name", nullable = false, length = 100)
     private String name;
-    
+
+    @Column(name = "branch_source_id")
+    private String branchSourceId; // Hash string cho ETL
+
     @Column(name = "address", length = 255)
     private String address;
-    
+
     @Column(name = "district", length = 50)
     private String district;
-    
+
     @Column(name = "city", length = 50)
     private String city;
-    
+
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
-    
+
     @OneToMany(mappedBy = "branch")
     private List<Inventory> inventories = new ArrayList<>();
 
@@ -37,6 +39,14 @@ public class Branch extends BaseEntity<String> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBranchSourceId() {
+        return branchSourceId;
+    }
+
+    public void setBranchSourceId(String branchSourceId) {
+        this.branchSourceId = branchSourceId;
     }
 
     public String getAddress() {

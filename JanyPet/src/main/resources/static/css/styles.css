@@ -1442,3 +1442,177 @@ body:not(.is-admin) .admin-only {
   margin-right: 4px;
   font-size: 10px;
 }
+
+/* Branch Management Styles */
+.search-box {
+  position: relative;
+  flex: 2;
+  min-width: 300px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 25px;
+  background-color: var(--card-bg);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(71, 118, 230, 0.1), 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.search-box i {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.search-box input:focus + i {
+  color: var(--primary-color);
+}
+
+/* Branch Modal Custom Styling */
+#branch-modal .modal-content {
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  margin: 2% auto;
+}
+
+#branch-modal .form-group {
+  margin-bottom: 20px;
+}
+
+#branch-modal .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+#branch-modal .form-group input,
+#branch-modal .form-group select,
+#branch-modal .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+#branch-modal .form-group input:focus,
+#branch-modal .form-group select:focus,
+#branch-modal .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(71, 118, 230, 0.1);
+  transform: translateY(-1px);
+}
+
+#branch-modal .form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+#branch-modal .form-actions button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+#branch-modal .primary-btn {
+  background: linear-gradient(135deg, var(--primary-color), #5a67d8);
+  color: white;
+  box-shadow: 0 4px 8px rgba(71, 118, 230, 0.3);
+}
+
+#branch-modal .primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(71, 118, 230, 0.4);
+}
+
+#branch-modal .secondary-btn {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+}
+
+#branch-modal .secondary-btn:hover {
+  background: var(--border-color);
+  transform: translateY(-1px);
+}
+
+/* Branch table responsive improvements */
+.branches-section .table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.branches-section .data-table th {
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 16px 12px;
+}
+
+.branches-section .data-table td {
+  padding: 16px 12px;
+  vertical-align: middle;
+}
+
+/* Status badges for branches */
+.status.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.status.inactive {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}

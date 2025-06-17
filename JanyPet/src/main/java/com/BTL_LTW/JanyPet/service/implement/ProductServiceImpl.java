@@ -25,9 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private FileStorageService fileStorageService;
-    
+
     @Autowired
-    private InventoryService inventoryService; 
+    private InventoryService inventoryService;
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setPurchasePrice(request.getPurchasePrice());
-        product.setCategory(request.getCategory()); 
+        product.setCategory(request.getCategory());
 
         // Xử lý 2 trường hợp: upload file hoặc chỉ có đường dẫn ảnh
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
@@ -105,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to store updated image file: " + e.getMessage());
             }
-        } 
+        }
         // Xử lý trường hợp chỉ có đường dẫn ảnh
         else if (request.getImagePath() != null && !request.getImagePath().isEmpty()) {
             String imagePath = request.getImagePath();
@@ -131,13 +131,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllProducts() {
         List<Product> productList = productRepository.findAll();
-        productList.forEach(product -> 
-            product.setStock(inventoryService.calculateTotalStock(product.getId()))
-        );
-    
+        productList.forEach(product -> product.setStock(inventoryService.calculateTotalStock(product.getId())));
+
         return productList.stream()
-            .map(this::mapToResponse)
-            .collect(Collectors.toList());
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByCategory(String category) {
+        List<Product> productList = productRepository.findByCategory(category);
+        productList.forEach(product -> product.setStock(inventoryService.calculateTotalStock(product.getId())));
+
+        return productList.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -165,17 +173,18 @@ public class ProductServiceImpl implements ProductService {
         response.setPurchasePrice(product.getPurchasePrice());
         response.setStock(product.getStock());
         response.setCategory(product.getCategory());
-        
+
         // Chuyển tên file thành URL đầy đủ
         if (product.getImage() != null && !product.getImage().isEmpty()) {
             // Nếu image không bắt đầu bằng http hoặc https, thì thêm tiền tố /uploads/
             String imageUrl = product.getImage();
-            if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && !imageUrl.startsWith("/uploads/")) {
+            if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")
+                    && !imageUrl.startsWith("/uploads/")) {
                 imageUrl = "/uploads/" + imageUrl;
             }
             response.setImageUrl(imageUrl);
         }
-        
+
         return response;
     }
 

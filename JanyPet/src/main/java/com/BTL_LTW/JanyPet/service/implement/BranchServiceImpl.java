@@ -19,9 +19,21 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public List<BranchResponse> getAllBranches() {
-        return branchRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        try {
+            System.out.println("BranchService: Getting all branches from repository...");
+            List<Branch> branches = branchRepository.findAll();
+            System.out.println("BranchService: Found " + branches.size() + " branches in DB");
+
+            List<BranchResponse> responses = branches.stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
+            System.out.println("BranchService: Mapped to " + responses.size() + " responses");
+            return responses;
+        } catch (Exception e) {
+            System.err.println("BranchService error: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
@@ -43,7 +55,7 @@ public class BranchServiceImpl implements BranchService {
     public BranchResponse updateBranch(String id, BranchRequest request) {
         Branch branch = branchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Branch not found with id: " + id));
-        
+
         mapFromRequest(branch, request);
         Branch updatedBranch = branchRepository.save(branch);
         return mapToResponse(updatedBranch);
@@ -61,6 +73,7 @@ public class BranchServiceImpl implements BranchService {
         BranchResponse response = new BranchResponse();
         response.setId(branch.getId());
         response.setName(branch.getName());
+        response.setBranchSourceId(branch.getBranchSourceId());
         response.setAddress(branch.getAddress());
         response.setDistrict(branch.getDistrict());
         response.setCity(branch.getCity());
@@ -72,6 +85,7 @@ public class BranchServiceImpl implements BranchService {
 
     private void mapFromRequest(Branch branch, BranchRequest request) {
         branch.setName(request.getName());
+        branch.setBranchSourceId(request.getBranchSourceId());
         branch.setAddress(request.getAddress());
         branch.setDistrict(request.getDistrict());
         branch.setCity(request.getCity());

@@ -33,11 +33,80 @@
     .non-auth-only,
     .admin-only {
       transition: opacity 0.3s ease;
-    }
-
-    /* Add a class to the logout button */
+    }    /* Add a class to the logout button */
     .logout-btn {
       transition: all 0.3s ease;
+    }
+
+    /* Order Modal Styles */
+    .form-section {
+      margin-bottom: 25px;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .form-section h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .product-search .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .product-search .input-group select,
+    .product-search .input-group input {
+      flex: 1;
+    }
+
+    .product-search .input-group input[type="number"] {
+      max-width: 80px;
+    }
+
+    .order-items {
+      margin-top: 15px;
+    }
+
+    .order-summary {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 5px 0;
+    }
+
+    .summary-row.total {
+      border-top: 2px solid #007bff;
+      margin-top: 10px;
+      padding-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #007bff;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 5px;
+    }
+
+    .input-group input {
+      flex: 1;
+    }
+
+    .input-group button {
+      flex-shrink: 0;
     }
 
   </style>
@@ -53,43 +122,42 @@
       </button>
     </div>
     <nav class="menu">
-      <ul>
-        <li class="menu-item active" data-section="dashboard-section">
+      <ul>        <li class="menu-item active" data-section="dashboard-section">
           <a href="#"
           ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
           >
         </li>
-        <li class="menu-item" data-section="products-section">
-          <a href="#"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
-        </li>
-        <li class="menu-item" data-section="categories-section">
-          <a href="#"><i class="fas fa-tags"></i><span>Danh mục hàng</span></a>
-        </li>
-        <li class="menu-item" data-section="inventory-section">
-          <a href="#"
-          ><i class="fas fa-warehouse"></i><span>Kho hàng</span></a
-          >
+        <li class="menu-item" data-section="branches-section">
+          <a href="#"><i class="fas fa-building"></i><span>Chi nhánh</span></a>
         </li>
         <li class="menu-item" data-section="staff-section">
           <a href="#"
           ><i class="fas fa-user-tie"></i><span>Nhân viên</span></a
           >
         </li>
-        <li class="menu-item" data-section="orders-section">
+        <li class="menu-item" data-section="categories-section">
+          <a href="#"><i class="fas fa-tags"></i><span>Danh mục hàng</span></a>
+        </li>
+        <li class="menu-item" data-section="products-section">
+          <a href="#"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
+        </li>        
+        <li class="menu-item" data-section="inventory-section">
           <a href="#"
-          ><i class="fas fa-shopping-cart"></i><span>Hoá đơn</span></a
+          ><i class="fas fa-warehouse"></i><span>Kho hàng</span></a
           >
         </li>
         <li class="menu-item" data-section="customers-section">
           <a href="#"><i class="fas fa-users"></i><span>Khách hàng</span></a>
         </li>
+        <li class="menu-item" data-section="orders-section">
+          <a href="#"
+          ><i class="fas fa-shopping-cart"></i><span>Hoá đơn</span></a
+          >
+        </li>
         <li class="menu-item" data-section="reports-section">
           <a href="#"
           ><i class="fas fa-chart-bar"></i><span>Báo cáo</span></a
           >
-        </li>
-        <li class="menu-item" data-section="settings-section">
-          <a href="#"><i class="fas fa-cog"></i><span>Cài đặt</span></a>
         </li>
       </ul>
     </nav>
@@ -315,8 +383,138 @@
         </tbody>
       </table>
       
-          </div>
+          </div>        </div>
+      </div>
+    </div>
+
+    <!-- Branches Section -->
+    <div class="content-section" id="branches-section">
+      <div class="section-header">
+        <h1>Quản lý chi nhánh</h1>
+        <button class="primary-btn" id="add-branch-btn">
+          <i class="fas fa-plus"></i> Thêm chi nhánh mới
+        </button>
+      </div>
+
+      <div class="filters">
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="branch-search" 
+            placeholder="Tìm kiếm chi nhánh..." 
+          />
+          <i class="fas fa-search"></i>
         </div>
+        <div class="filter-group">
+          <label>Trạng thái</label>
+          <select id="branch-status-filter">
+            <option value="">Tất cả trạng thái</option>
+            <option value="active">Hoạt động</option>
+            <option value="inactive">Tạm dừng</option>
+          </select>
+        </div>
+      </div>      <div class="table-container">
+        <table class="data-table">          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên chi nhánh</th>
+              <th>Địa chỉ</th>
+              <th>Quận/Huyện</th>
+              <th>Thành phố</th>
+              <th>Số điện thoại</th>
+              <th>Email</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="branches-table-body">
+            <!-- Chi nhánh sẽ được load bằng JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Branch Modal -->
+    <div id="branch-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="branch-modal-title">Thêm chi nhánh mới</h2>
+          <span class="close">&times;</span>
+        </div>
+        <form id="branch-form">
+          <div class="form-group">
+            <label for="branch-name">Tên chi nhánh *</label>
+            <input 
+              type="text" 
+              id="branch-name" 
+              name="name" 
+              required 
+              placeholder="Nhập tên chi nhánh"
+            />
+          </div>          <div class="form-group">
+            <label for="branch-address">Địa chỉ *</label>
+            <input 
+              type="text" 
+              id="branch-address" 
+              name="address" 
+              required 
+              placeholder="Nhập địa chỉ chi nhánh"
+            />
+          </div>
+          <div class="form-group">
+            <label for="branch-district">Quận/Huyện *</label>
+            <input 
+              type="text" 
+              id="branch-district" 
+              name="district" 
+              required 
+              placeholder="Nhập quận/huyện"
+            />
+          </div>
+          <div class="form-group">
+            <label for="branch-city">Thành phố *</label>
+            <input 
+              type="text" 
+              id="branch-city" 
+              name="city" 
+              required 
+              placeholder="Nhập thành phố"
+            />
+          </div>
+          <div class="form-group">
+            <label for="branch-phone">Số điện thoại</label>
+            <input 
+              type="tel" 
+              id="branch-phone" 
+              name="phone" 
+              placeholder="Nhập số điện thoại"
+            />
+          </div>
+          <div class="form-group">
+            <label for="branch-email">Email</label>
+            <input 
+              type="email" 
+              id="branch-email" 
+              name="email" 
+              placeholder="Nhập email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="branch-status">Trạng thái</label>
+            <select id="branch-status" name="status">
+              <option value="active">Hoạt động</option>
+              <option value="inactive">Tạm dừng</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="cancel-branch-btn">
+              Hủy
+            </button>
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-save"></i> Lưu
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -329,15 +527,10 @@
         </button>
       </div>
 
-      <div class="filters">
-        <div class="filter-group">
+      <div class="filters">        <div class="filter-group">
           <label>Danh mục hàng</label>
           <select id="filter-category">
             <option value="">Tất cả danh mục</option>
-            <option value="Pet Food">Pet Food</option>
-            <option value="Toys">Toys</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Medicine">Medicine</option>
           </select>
         </div>
         <div class="filter-group">
@@ -575,28 +768,26 @@
     </div>
 
     <!-- Other sections would go here -->
-    <!--Inventory Section-->
-    <div class="content-section" id="inventory-section">
+    <!--Inventory Section-->    <div class="content-section" id="inventory-section">
       <div class="section-header">
         <h1>Quản lý kho hàng</h1>
         <div>
           <button class="secondary-btn" id="export-inventory-btn">
             <i class="fas fa-file-export"></i> Xuất báo cáo
           </button>
-          <button class="primary-btn" id="inventory-history-btn">
+          <button class="secondary-btn" id="inventory-history-btn">
             <i class="fas fa-history"></i> Lịch sử nhập xuất
+          </button>
+          <button class="primary-btn" id="add-inventory-movement-btn">
+            <i class="fas fa-plus"></i> Thêm nhập/xuất hàng hóa
           </button>
         </div>
       </div>
 
-      <div class="filters">
-        <div class="filter-group">
+      <div class="filters">        <div class="filter-group">
           <label>Chi nhánh</label>
-          <select id="history-branch">
+          <select id="filter-branch">
             <option value="">Tất cả chi nhánh</option>
-            <option value="1">PetShop Hà Đông</option>
-            <option value="2">PetShop Thanh Xuân</option>
-            <option value="3">PetShop Cầu Giấy</option>
           </select>
         </div>
         <div class="filter-group">
@@ -606,7 +797,6 @@
             <option value="Pet Food">Pet Food</option>
             <option value="Toys">Toys</option>
             <option value="Accessories">Accessories</option>
-            <option value="Medicine">Medicine</option>
           </select>
         </div>
         <div class="filter-group">
@@ -618,83 +808,25 @@
             <option value="out-of-stock">Hết hàng</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label>Sắp xếp theo</label>
-          <select id="sort-by">
-            <option value="name-asc">Tên (A-Z)</option>
-            <option value="name-desc">Tên (Z-A)</option>
-            <option value="price-asc">Giá (Thấp đến cao)</option>
-            <option value="price-desc">Giá (Cao xuống thấp)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="data-container">
+      </div>      <div class="data-container">
         <table class="data-table" id="inventory-table">
           <thead>
             <tr>
+              <th><input type="checkbox" id="select-all-inventory" /></th>
+              <th>ID</th>
+              <th>Loại giao dịch</th>
+              <th>Ngày giao dịch</th>
+              <th>Số lượng</th>
               <th>Chi nhánh</th>
-              <th>ID sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Số lượng hiện có</th>
-              <th>Trạng thái</th>
+              <th>Sản phẩm</th>
+              <th>Ghi chú</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
+            <!-- Dữ liệu sẽ được load từ backend -->
             <tr>
-              <td>Chi nhánh PetShop Hà Đông</td>
-              <td>P001</td>
-              <td>Premium Dog Food</td>
-              <td>45</td>
-              <td><span class="status active">Còn hàng</span></td>
-              <td class="actions">
-                <button class="icon-btn import-btn" data-product-id="P001" data-product-name="Premium Dog Food">
-                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
-                </button>
-                <button class="icon-btn export-btn" data-product-id="P001" data-product-name="Premium Dog Food">
-                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
-                </button>
-                <button class="icon-btn adjust-btn" data-product-id="P001">
-                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Chi nhánh PetShop Thanh Xuân</td>
-              <td>P002</td>
-              <td>Cat Play Tower</td>
-              <td>12</td>
-              <td><span class="status pending">Sắp hết</span></td>
-              <td class="actions">
-                <button class="icon-btn import-btn" data-product-id="P002" data-product-name="Cat Play Tower">
-                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
-                </button>
-                <button class="icon-btn export-btn" data-product-id="P002" data-product-name="Cat Play Tower">
-                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
-                </button>
-                <button class="icon-btn adjust-btn" data-product-id="P002">
-                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Chi nhánh Cầu Giấy</td>
-              <td>P003</td>
-              <td>Dog Collar - Medium</td>
-              <td>0</td>
-              <td><span class="status inactive">Hết hàng</span></td>
-              <td class="actions">
-                <button class="icon-btn import-btn" data-product-id="P003" data-product-name="Dog Collar - Medium">
-                  <i class="fas fa-arrow-down" title="Nhập kho"></i>
-                </button>
-                <button class="icon-btn export-btn" data-product-id="P003" data-product-name="Dog Collar - Medium" disabled>
-                  <i class="fas fa-arrow-up" title="Xuất kho"></i>
-                </button>
-                <button class="icon-btn adjust-btn" data-product-id="P003">
-                  <i class="fas fa-balance-scale" title="Điều chỉnh"></i>
-                </button>
-              </td>
+              <td colspan="9" style="text-align: center;">Đang tải dữ liệu...</td>
             </tr>
           </tbody>
         </table>
@@ -713,75 +845,74 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-    </div>
-
-    <!-- Inventory Movement Modal -->
+    </div>    <!-- Inventory Movement Modal -->
     <div class="modal" id="inventory-movement-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 id="inventory-movement-title">Nhập kho</h2>
+          <h2 id="inventory-movement-title">Thêm nhập/xuất hàng hóa</h2>
           <span class="close">&times;</span>
         </div>
         <div class="modal-body">
           <form id="inventory-movement-form">
-            <input type="hidden" id="movement-type" value="import">
+            <input type="hidden" id="movement-id" />
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="movement-type">Loại giao dịch *</label>
+                <select id="movement-type" required>
+                  <option value="">Chọn loại giao dịch</option>
+                  <option value="IMPORT">Nhập kho</option>
+                  <option value="EXPORT">Xuất kho</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="movement-date">Ngày giao dịch *</label>
+                <input type="date" id="movement-date" required>
+              </div>
+            </div>
             
             <div class="form-group">
-              <label for="movement-branch">Chi nhánh*</label>
-              <select id="movement-branch">
-                <option value="bc194cfd-c8a2-4083-a71d-20e04c5a6049">PetShop Hà Đông</option>
-                <option value="0c55d3ff-b015-4e5c-a666-8e0febf826af">PetShop Thanh Xuân</option>
-                <option value="7922c7bf-6fb9-40d6-876a-89ab6c5bf9fb">PetShop Cầu Giấy</option>
+              <label for="movement-branch">Chi nhánh *</label>
+              <select id="movement-branch" required>
+                <option value="">Chọn chi nhánh</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="movement-category">Danh mục sản phẩm *</label>
+              <select id="movement-category" required>
+                <option value="">Chọn danh mục</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="movement-product">Sản phẩm *</label>
+              <select id="movement-product" required disabled>
+                <option value="">Chọn sản phẩm</option>
               </select>
             </div>
             
             <div class="form-row">
               <div class="form-group">
-                <label for="product-id-search">Mã sản phẩm*</label>
-                <div class="search-input-group">
-                  <input type="text" id="product-id-search" required>
-                  <button type="button" id="search-product-btn" class="search-btn">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
+                <label for="current-quantity">Số lượng hiện tại:</label>
+                <input type="text" id="current-quantity" readonly>
+              </div>
+              <div class="form-group">
+                <label for="movement-quantity">Số lượng <span id="movement-label">nhập/xuất</span> *</label>
+                <input type="number" id="movement-quantity" min="1" required>
               </div>
             </div>
             
-            <div id="product-details">
-              <div class="form-group">
-                <label>Tên sản phẩm:</label>
-                <span id="movement-product-name"></span>
-              </div>
-              
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="current-quantity">Số lượng hiện tại:</label>
-                  <input type="text" id="current-quantity" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="movement-quantity">Số lượng <span id="movement-label">nhập</span>*</label>
-                  <input type="number" id="movement-quantity" min="1" required>
-                </div>
-              </div>
-              
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="movement-date">Ngày thực hiện*</label>
-                  <input type="date" id="movement-date" required>
-                </div>
-              </div>
-              
-              <div id="supplier-group" class="form-group">
-                <label for="movement-notes">Nhà cung cấp/Ghi chú</label>
-                <textarea id="movement-notes"></textarea>
-              </div>
+            <div class="form-group">
+              <label for="movement-notes">Ghi chú</label>
+              <textarea id="movement-notes" rows="3" placeholder="Nhập ghi chú về giao dịch (tùy chọn)"></textarea>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="secondary-btn" id="cancel-movement-btn">Hủy</button>
           <button type="button" class="primary-btn" id="save-movement-btn">
-            <i class="fas fa-save"></i> Lưu thay đổi
+            <i class="fas fa-save"></i> Lưu giao dịch
           </button>
         </div>
       </div>
@@ -889,14 +1020,10 @@
             <option value="Bác sĩ">Bác sĩ</option>
             <option value="Y tá">Y tá</option>
           </select>
-        </div>
-        <div class="filter-group">
+        </div>        <div class="filter-group">
           <label>Cửa hàng</label>
-          <select id="filter-branch">
+          <select id="filter-staff-branch">
             <option value="">Tất cả cửa hàng</option>
-            <option value="1">Chi nhánh Hà Đông</option>
-            <option value="2">Chi nhánh Thanh Xuân</option>
-            <option value="3">Chi nhánh Cầu Giấy</option>
           </select>
         </div>
         <div class="filter-group">
@@ -1086,14 +1213,10 @@
                 </select>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group">
+            <div class="form-row">              <div class="form-group">
                 <label for="staff-branch">Cửa hàng làm việc *</label>
                 <select id="staff-branch" required>
                   <option value="">Chọn cửa hàng</option>
-                  <option value="1">Chi nhánh Hà Đông</option>
-                  <option value="2">Chi nhánh Thanh Xuân</option>
-                  <option value="3">Chi nhánh Cầu Giấy</option>
                 </select>
               </div>
               <div class="form-group">
@@ -1134,9 +1257,6 @@
           <label>Chi nhánh</label>
           <select id="filter-branch">
             <option value="">Tất cả chi nhánh</option>
-            <option value="1">PetShop Hà Đông</option>
-            <option value="2">PetShop Thanh Xuân</option>
-            <option value="3">PetShop Cầu Giấy</option>
           </select>
         </div>
         <div class="filter-group">
@@ -1286,6 +1406,134 @@
           </button>
           <button class="btn-primary" id="update-status-btn">
             <i class="fas fa-edit"></i> Cập nhật trạng thái
+          </button>
+        </div>
+      </div>    </div>
+
+    <!-- Create New Order Modal -->
+    <div class="modal" id="create-order-modal">
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h2 id="order-modal-title">Tạo hóa đơn mới</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="order-form">
+            <input type="hidden" id="order-id">
+              <div class="form-row">
+              <div class="form-group">
+                <label for="order-channel">Kênh bán *</label>
+                <select id="order-channel" required>
+                  <option value="">Chọn kênh bán</option>
+                  <option value="OFFLINE">Tại quầy</option>
+                  <option value="ONLINE">Online</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="order-branch">Chi nhánh *</label>
+                <select id="order-branch" required>
+                  <option value="">Chọn chi nhánh</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="order-employee">Nhân viên bán hàng *</label>
+                <select id="order-employee" required>
+                  <option value="">Chọn nhân viên</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">              <div class="form-group">
+                <label for="order-customer-phone">Số điện thoại khách hàng</label>
+                <div class="input-group">
+                  <input type="tel" id="order-customer-phone" placeholder="Nhập số điện thoại">
+                  <button type="button" id="search-customer-btn" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> Tìm
+                  </button>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="customer-name">Tên khách hàng</label>
+                <input type="text" id="customer-name" placeholder="Tên khách hàng">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Sản phẩm</h3>
+              <div class="product-search">
+                <div class="form-group">
+                  <label for="product-search">Tìm sản phẩm</label>
+                  <div class="input-group">                    <select id="order-product-category">
+                      <option value="">Chọn danh mục</option>
+                    </select>
+                    <select id="order-product-select" disabled>
+                      <option value="">Chọn sản phẩm</option>
+                    </select>
+                    <input type="number" id="product-quantity" min="1" value="1" placeholder="SL">                    <button type="button" id="add-product-to-order-btn" class="btn btn-primary">
+                      <i class="fas fa-plus"></i> Thêm
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="order-items">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Sản phẩm</th>
+                      <th>Đơn giá</th>
+                      <th>Số lượng</th>
+                      <th>Thành tiền</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="order-items-list">
+                    <tr>
+                      <td colspan="5" class="text-center">Chưa có sản phẩm nào</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>            <div class="form-section">
+              <h3>Thanh toán</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="discount-percent">Giảm giá (%)</label>
+                  <input type="number" id="discount-percent" min="0" max="100" value="0">
+                </div>
+              </div>
+
+              <div class="order-summary">
+                <div class="summary-row">
+                  <span>Tạm tính:</span>
+                  <span id="subtotal">0 ₫</span>
+                </div>
+                <div class="summary-row">
+                  <span>Giảm giá:</span>
+                  <span id="discount-amount">0 ₫</span>
+                </div>
+                <div class="summary-row total">
+                  <span>Tổng cộng:</span>
+                  <span id="total-amount">0 ₫</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="order-notes">Ghi chú</label>
+              <textarea id="order-notes" rows="3" placeholder="Ghi chú đơn hàng (tùy chọn)"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-order-btn">Hủy</button>
+          <button type="submit" form="order-form" class="btn btn-primary" id="save-order-btn">
+            <i class="fas fa-save"></i> Lưu hóa đơn
           </button>
         </div>
       </div>
@@ -1841,260 +2089,6 @@
       </div>
     </div>
 
-    <!-- Settings Section -->
-    <div class="content-section" id="settings-section">
-      <div class="section-header">
-        <h1>Settings</h1>
-        <button class="primary-btn" id="save-settings-btn">
-          <i class="fas fa-save"></i> Save Changes
-        </button>
-      </div>
-
-      <div class="settings-container">
-        <div class="settings-sidebar">
-          <ul class="settings-menu">
-            <li class="settings-menu-item active" data-settings="general">
-              <i class="fas fa-cog"></i> General
-            </li>
-            <li class="settings-menu-item" data-settings="store">
-              <i class="fas fa-store"></i> Store
-            </li>
-            <li class="settings-menu-item" data-settings="users">
-              <i class="fas fa-users-cog"></i> Users & Permissions
-            </li>
-            <li class="settings-menu-item" data-settings="payment">
-              <i class="fas fa-credit-card"></i> Payment Methods
-            </li>
-            <li class="settings-menu-item" data-settings="shipping">
-              <i class="fas fa-shipping-fast"></i> Shipping
-            </li>
-            <li class="settings-menu-item" data-settings="tax">
-              <i class="fas fa-file-invoice-dollar"></i> Tax
-            </li>
-            <li class="settings-menu-item" data-settings="email">
-              <i class="fas fa-envelope"></i> Email Templates
-            </li>
-            <li class="settings-menu-item" data-settings="notifications">
-              <i class="fas fa-bell"></i> Notifications
-            </li>
-            <li class="settings-menu-item" data-settings="integrations">
-              <i class="fas fa-plug"></i> Integrations
-            </li>
-            <li class="settings-menu-item" data-settings="backup">
-              <i class="fas fa-database"></i> Backup & Export
-            </li>
-          </ul>
-        </div>
-
-        <div class="settings-content">
-          <!-- General Settings -->
-          <div class="settings-panel active" id="general-settings">
-            <h2>General Settings</h2>
-
-            <div class="settings-card">
-              <h3>Store Information</h3>
-              <div class="form-group">
-                <label for="store-name">Store Name</label>
-                <input type="text" id="store-name" value="PetCare Store" />
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="store-email">Email Address</label>
-                  <input
-                          type="email"
-                          id="store-email"
-                          value="contact@petcarestore.com"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="store-phone">Phone Number</label>
-                  <input
-                          type="tel"
-                          id="store-phone"
-                          value="(555) 123-4567"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="store-address">Address</label>
-                <textarea id="store-address">
-123 Pet Street
-Anytown, ST 12345
-United States</textarea
-                >
-              </div>
-            </div>
-
-            <div class="settings-card">
-              <h3>Regional Settings</h3>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="store-country">Country</label>
-                  <select id="store-country">
-                    <option value="US" selected>United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="AU">Australia</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="store-timezone">Timezone</label>
-                  <select id="store-timezone">
-                    <option value="Pacific/Honolulu">
-                      Hawaii (GMT-10:00)
-                    </option>
-                    <option value="America/Anchorage">
-                      Alaska (GMT-09:00)
-                    </option>
-                    <option value="America/Los_Angeles">
-                      Pacific Time (GMT-08:00)
-                    </option>
-                    <option value="America/Denver">
-                      Mountain Time (GMT-07:00)
-                    </option>
-                    <option value="America/Chicago">
-                      Central Time (GMT-06:00)
-                    </option>
-                    <option value="America/New_York" selected>
-                      Eastern Time (GMT-05:00)
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="store-currency">Currency</label>
-                  <select id="store-currency">
-                    <option value="USD" selected>US Dollar ($)</option>
-                    <option value="EUR">Euro (€)</option>
-                    <option value="GBP">British Pound (£)</option>
-                    <option value="CAD">Canadian Dollar (C$)</option>
-                    <option value="AUD">Australian Dollar (A$)</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="date-format">Date Format</label>
-                  <select id="date-format">
-                    <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
-                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-card">
-              <h3>System Settings</h3>
-              <div class="form-group">
-                <label>Theme</label>
-                <div class="theme-options">
-                  <div class="theme-option active">
-                    <div class="theme-preview light-theme"></div>
-                    <span>Light</span>
-                  </div>
-                  <div class="theme-option">
-                    <div class="theme-preview dark-theme"></div>
-                    <span>Dark</span>
-                  </div>
-                  <div class="theme-option">
-                    <div class="theme-preview blue-theme"></div>
-                    <span>Blue</span>
-                  </div>
-                  <div class="theme-option">
-                    <div class="theme-preview green-theme"></div>
-                    <span>Green</span>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>System Preferences</label>
-                <div class="checkbox-group">
-                  <div>
-                    <input type="checkbox" id="auto-refresh" checked />
-                    <label for="auto-refresh"
-                    >Enable auto-refresh for dashboard</label
-                    >
-                  </div>
-                  <div>
-                    <input
-                            type="checkbox"
-                            id="email-notifications"
-                            checked
-                    />
-                    <label for="email-notifications"
-                    >Receive email notifications</label
-                    >
-                  </div>
-                  <div>
-                    <input
-                            type="checkbox"
-                            id="browser-notifications"
-                            checked
-                    />
-                    <label for="browser-notifications"
-                    >Enable browser notifications</label
-                    >
-                  </div>
-                  <div>
-                    <input type="checkbox" id="sound-alerts" />
-                    <label for="sound-alerts">Enable sound alerts</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Other Settings Panels -->
-          <div class="settings-panel" id="store-settings">
-            <h2>Store Settings</h2>
-            <p>Store configuration settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="users-settings">
-            <h2>Users & Permissions</h2>
-            <p>User management and permission settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="payment-settings">
-            <h2>Payment Methods</h2>
-            <p>Payment gateway and method settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="shipping-settings">
-            <h2>Shipping</h2>
-            <p>Shipping configuration and rates will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="tax-settings">
-            <h2>Tax</h2>
-            <p>Tax rates and settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="email-settings">
-            <h2>Email Templates</h2>
-            <p>Email template configuration will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="notifications-settings">
-            <h2>Notifications</h2>
-            <p>Notification settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="integrations-settings">
-            <h2>Integrations</h2>
-            <p>Third-party integration settings will appear here.</p>
-          </div>
-
-          <div class="settings-panel" id="backup-settings">
-            <h2>Backup & Export</h2>
-            <p>Data backup and export options will appear here.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" class="modal">
   <div class="modal-content">
@@ -2157,6 +2151,7 @@ United States</textarea
 <script src="js/modal-handlers.js"></script>
 <script src="js/form-handlers.js"></script>
 <script type="module" src="js/product-handlers.js"></script>
+<script src="js/admin-branches.js"></script>
 <script src="js/order-handlers.js"></script>
 <script src="js/report-handlers.js"></script>
 <script src="js/settings-handlers.js"></script>
@@ -2193,11 +2188,12 @@ United States</textarea
         ]
       },
       placeholder: 'Enter product description...'
-    });
-
-    // Initialize handlers
+    });    // Initialize handlers
     if (window.ProductHandlers) {
       ProductHandlers.initializeProductEvents();
+    }
+    if (window.BranchHandlers) {
+      BranchHandlers.initializeBranchEvents();
     }
     if (window.CategoryHandlers) {
       CategoryHandlers.initializeCategoryEvents();

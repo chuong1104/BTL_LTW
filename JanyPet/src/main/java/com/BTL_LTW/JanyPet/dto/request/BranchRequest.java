@@ -2,11 +2,12 @@ package com.BTL_LTW.JanyPet.dto.request;
 
 public class BranchRequest {
     private String name;
+    private String branchSourceId;
     private String address;
     private String district;
     private String city;
     private String phoneNumber;
-    
+
     // Getters and Setters
     public String getName() {
         return name;
@@ -14,6 +15,14 @@ public class BranchRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBranchSourceId() {
+        return branchSourceId;
+    }
+
+    public void setBranchSourceId(String branchSourceId) {
+        this.branchSourceId = branchSourceId;
     }
 
     public String getAddress() {

@@ -539,27 +539,63 @@ const CustomerHandlers = {
     document.getElementById("detail-booking-count").textContent = customer.bookingCount || 0;
     document.getElementById("detail-total-spent").textContent = this.formatCurrency(customer.totalSpent);
   },
-  
   // Save customer (create or update)
   async saveCustomer() {
     try {
-      // Get form data
-      const customerId = document.getElementById("customer-id").value;
-      const fullName = document.getElementById("customer-fullname").value;
-      const gender = document.getElementById("customer-gender").value;
-      const age = document.getElementById("customer-age").value;
-      const birthDate = document.getElementById("customer-birthdate").value;
-      const email = document.getElementById("customer-email").value;
-      const phoneNumber = document.getElementById("customer-phone").value;
-      const address = document.getElementById("customer-address").value;
-      const city = document.getElementById("customer-city").value;
-      const postalCode = document.getElementById("customer-postal-code").value;
-      const customerType = document.getElementById("customer-type").value;
+      // Get form elements first
+      const fullNameEl = document.getElementById("customer-fullname");
+      const emailEl = document.getElementById("customer-email");
+      const phoneEl = document.getElementById("customer-phone");
       
-      // Validation
-      if (!fullName || !email || !phoneNumber) {
+      // Check if elements exist
+      if (!fullNameEl || !emailEl || !phoneEl) {
+        console.error('Missing form elements:');
+        console.error('fullNameEl:', !!fullNameEl);
+        console.error('emailEl:', !!emailEl);
+        console.error('phoneEl:', !!phoneEl);
+        
         if (window.ToastService) {
-          window.ToastService.error("Please fill in all required fields");
+          window.ToastService.error("Form elements not found");
+        }
+        return;
+      }
+      
+      // Get form data
+      const customerId = document.getElementById("customer-id")?.value || '';
+      const fullName = fullNameEl.value.trim();
+      const gender = document.getElementById("customer-gender")?.value || '';
+      const age = document.getElementById("customer-age")?.value || '';
+      const birthDate = document.getElementById("customer-birthdate")?.value || '';
+      const email = emailEl.value.trim();
+      const phoneNumber = phoneEl.value.trim();
+      const address = document.getElementById("customer-address")?.value || '';
+      const city = document.getElementById("customer-city")?.value || '';
+      const postalCode = document.getElementById("customer-postal-code")?.value || '';
+      const customerType = document.getElementById("customer-type")?.value || 'NEW';
+      
+      // Debug logging
+      console.log('Form values (after trim):');
+      console.log('fullName:', `"${fullName}"`);
+      console.log('email:', `"${email}"`);
+      console.log('phoneNumber:', `"${phoneNumber}"`);
+        // Validation
+      if (!fullName || !email || !phoneNumber) {
+        console.error('Validation failed:');
+        console.error('fullName:', !!fullName, `"${fullName}"`);
+        console.error('email:', !!email, `"${email}"`);
+        console.error('phoneNumber:', !!phoneNumber, `"${phoneNumber}"`);
+        
+        if (window.ToastService) {
+          window.ToastService.error("Vui lòng điền đầy đủ các trường bắt buộc (Họ tên, Email, Số điện thoại)");
+        }
+        return;
+      }
+      
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        if (window.ToastService) {
+          window.ToastService.error("Vui lòng nhập email đúng định dạng");
         }
         return;
       }

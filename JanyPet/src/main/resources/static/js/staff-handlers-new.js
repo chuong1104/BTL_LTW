@@ -76,37 +76,9 @@ const StaffService = {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return await response.json();
+            return true;
         } catch (error) {
             console.error(`Error deleting staff with id ${id}:`, error);
-            throw error;
-        }
-    },
-    
-    // Get staff by department
-    getStaffByDepartment: async function(department) {
-        try {
-            const response = await fetch(`/api/staffs/department/${encodeURIComponent(department)}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error(`Error fetching staff by department ${department}:`, error);
-            throw error;
-        }
-    },
-    
-    // Get staff by job title
-    getStaffByJobTitle: async function(jobTitle) {
-        try {
-            const response = await fetch(`/api/staffs/job-title/${encodeURIComponent(jobTitle)}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error(`Error fetching staff by job title ${jobTitle}:`, error);
             throw error;
         }
     },
@@ -172,7 +144,7 @@ const StaffHandlers = {
         }
         
         // Branch filter
-        const branchFilter = document.getElementById('filter-branch');
+        const branchFilter = document.getElementById('filter-staff-branch');
         if (branchFilter) {
             branchFilter.addEventListener('change', this.handleBranchFilter.bind(this));
         }
@@ -188,39 +160,90 @@ const StaffHandlers = {
             this.loadStaffData();
         }
         
-        // Add event listener to menu item for staff section
-        const staffMenuItem = document.querySelector('.menu-item[data-section="staff-section"]');
-        if (staffMenuItem) {
-            staffMenuItem.addEventListener('click', this.loadStaffData.bind(this));
+        // Load branches for filters and form
+        this.loadBranchesForFilter();
+        this.loadBranchesForForm();
+    },
+    
+    // Load branches for filter dropdown
+    loadBranchesForFilter: async function() {
+        try {
+            const response = await fetch('/api/branches');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const branches = await response.json();
+            this.populateBranchFilter(branches);
+        } catch (error) {
+            console.error('Failed to load branches for filter:', error);
         }
     },
-      // Load all staff data
+    
+    // Populate branch filter dropdown
+    populateBranchFilter: function(branches) {
+        const branchFilter = document.getElementById('filter-staff-branch');
+        if (!branchFilter) return;
+        
+        // Clear existing options except the first one
+        branchFilter.innerHTML = '<option value="">Tất cả cửa hàng</option>';
+        
+        // Add branch options
+        branches.forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch.name; // Use name for filtering
+            option.textContent = branch.name;
+            branchFilter.appendChild(option);
+        });
+    },
+    
+    // Load branches for add/edit staff modal
+    loadBranchesForForm: async function() {
+        try {
+            const response = await fetch('/api/branches');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const branches = await response.json();
+            this.populateBranchForm(branches);
+        } catch (error) {
+            console.error('Failed to load branches for form:', error);
+        }
+    },
+    
+    // Populate branch select in form
+    populateBranchForm: function(branches) {
+        const branchSelect = document.getElementById('staff-branch');
+        if (!branchSelect) return;
+        
+        // Clear existing options except placeholder
+        branchSelect.innerHTML = '<option value="">Chọn cửa hàng</option>';
+        
+        // Add branch options
+        branches.forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch.id; // Use ID for form submission
+            option.textContent = branch.name;
+            branchSelect.appendChild(option);
+        });
+    },
+    
+    // Load all staff data
     loadStaffData: async function() {
-        console.log('Loading staff data...');
         try {
             const staffList = await StaffService.getAllStaff();
-            console.log('Loaded staff list:', staffList);
             this.renderStaffTable(staffList);
         } catch (error) {
             console.error('Failed to load staff data:', error);
             window.toastService?.showError('Failed to load staff data');
         }
     },
-      // Render staff table
+    
+    // Render staff table
     renderStaffTable: function(staffList) {
-        console.log('Rendering staff table with data:', staffList);
         const tableBody = document.querySelector('#staff-table tbody');
-        if (!tableBody) {
-            console.error('Staff table body not found!');
-            return;
-        }
+        if (!tableBody) return;
         
         tableBody.innerHTML = '';
-        
-        if (!staffList || staffList.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Không có nhân viên nào</td></tr>';
-            return;
-        }
         
         staffList.forEach(staff => {
             const row = document.createElement('tr');
@@ -272,30 +295,23 @@ const StaffHandlers = {
             });
         });
     },
-      // Show add staff modal
+    
+    // Show add staff modal
     showAddStaffModal: function() {
+        this.loadBranchesForForm(); // Load branches when opening modal
         const modal = document.getElementById('staff-modal');
         const modalTitle = document.getElementById('staff-modal-title');
-        const staffForm = document.getElementById('staff-form');
+        const form = document.getElementById('staff-form');
         
-        // Clear form
-        staffForm.reset();
-        document.getElementById('staff-id').value = '';
-        
-        // Set modal title
-        modalTitle.textContent = 'Thêm nhân viên mới';
-        
-        // Load branches for dropdown
-        this.loadBranchesForForm();
-        
-        // Show modal
-        modal.style.display = 'block';
+        if (modalTitle) modalTitle.textContent = 'Thêm nhân viên mới';
+        if (form) form.reset();
+        if (modal) modal.style.display = 'block';
     },
     
     // Hide staff modal
     hideStaffModal: function() {
         const modal = document.getElementById('staff-modal');
-        modal.style.display = 'none';
+        if (modal) modal.style.display = 'none';
     },
     
     // Handle staff form submission
@@ -304,54 +320,37 @@ const StaffHandlers = {
         this.handleStaffSave();
     },
     
-    // Handle save staff
+    // Handle staff save
     handleStaffSave: async function() {
-        // Get form data
-        const staffId = document.getElementById('staff-id').value;
-        const fullName = document.getElementById('staff-name').value;
-        const email = document.getElementById('staff-email').value;
-        const phoneNumber = document.getElementById('staff-phone').value;
-        const department = document.getElementById('staff-department').value;
-        const jobTitle = document.getElementById('staff-job-title').value;
-        const branchSelect = document.getElementById('staff-branch');
-        const branchId = branchSelect.value;
-        const branchName = branchSelect.options[branchSelect.selectedIndex].text;
-        const status = document.getElementById('staff-status').value;
+        const form = document.getElementById('staff-form');
+        if (!form) return;
         
-        // Validate required fields
-        if (!fullName || !email || !department || !jobTitle || !branchId) {
-            window.toastService?.showError('Vui lòng điền đầy đủ thông tin bắt buộc');
-            return;
-        }
+        const formData = new FormData(form);
+        const staffData = {
+            fullName: formData.get('staff-name'),
+            email: formData.get('staff-email'),
+            phoneNumber: formData.get('staff-phone'),
+            department: formData.get('staff-department'),
+            jobTitle: formData.get('staff-position'),
+            branchId: formData.get('staff-branch'),
+            active: formData.get('staff-status') === 'active'
+        };
         
         try {
-            const staffData = {
-                fullName,
-                email,
-                phoneNumber,
-                department,
-                jobTitle,
-                branchId,
-                branchName,
-                active: status === 'active'
-            };
-            
+            const staffId = formData.get('staff-id');
             if (staffId) {
-                // Update existing staff
                 await StaffService.updateStaff(staffId, staffData);
                 window.toastService?.showSuccess('Cập nhật nhân viên thành công');
             } else {
-                // Create new staff
                 await StaffService.createStaff(staffData);
                 window.toastService?.showSuccess('Thêm nhân viên thành công');
             }
             
-            // Hide modal and reload data
             this.hideStaffModal();
             this.loadStaffData();
         } catch (error) {
             console.error('Error saving staff:', error);
-            window.toastService?.showError(error.message || 'Lỗi khi lưu thông tin nhân viên');
+            window.toastService?.showError('Lỗi khi lưu thông tin nhân viên');
         }
     },
     
@@ -359,31 +358,42 @@ const StaffHandlers = {
     editStaff: async function(staffId) {
         try {
             const staff = await StaffService.getStaffById(staffId);
-            
-            // Fill form with staff data
-            document.getElementById('staff-id').value = staff.id;
-            document.getElementById('staff-name').value = staff.fullName;
-            document.getElementById('staff-email').value = staff.email;
-            document.getElementById('staff-phone').value = staff.phoneNumber || '';
-            document.getElementById('staff-department').value = staff.department;
-            document.getElementById('staff-job-title').value = staff.jobTitle;
-            document.getElementById('staff-branch').value = staff.branchId;
-            document.getElementById('staff-status').value = staff.active ? 'active' : 'inactive';
-            
-            // Update modal title
-            document.getElementById('staff-modal-title').textContent = 'Chỉnh sửa nhân viên';
-            
-            // Show modal
-            document.getElementById('staff-modal').style.display = 'block';
+            this.populateStaffForm(staff);
+            this.showEditStaffModal();
         } catch (error) {
-            console.error('Error fetching staff for edit:', error);
-            window.toastService?.showError('Lỗi khi lấy thông tin nhân viên');
+            console.error('Error loading staff for edit:', error);
+            window.toastService?.showError('Lỗi khi tải thông tin nhân viên');
         }
+    },
+    
+    // Show edit staff modal
+    showEditStaffModal: function() {
+        this.loadBranchesForForm(); // Load branches when opening modal
+        const modal = document.getElementById('staff-modal');
+        const modalTitle = document.getElementById('staff-modal-title');
+        
+        if (modalTitle) modalTitle.textContent = 'Chỉnh sửa nhân viên';
+        if (modal) modal.style.display = 'block';
+    },
+    
+    // Populate staff form with data
+    populateStaffForm: function(staff) {
+        const form = document.getElementById('staff-form');
+        if (!form) return;
+        
+        form.querySelector('#staff-id').value = staff.id || '';
+        form.querySelector('#staff-name').value = staff.fullName || '';
+        form.querySelector('#staff-email').value = staff.email || '';
+        form.querySelector('#staff-phone').value = staff.phoneNumber || '';
+        form.querySelector('#staff-department').value = staff.department || '';
+        form.querySelector('#staff-position').value = staff.jobTitle || '';
+        form.querySelector('#staff-branch').value = staff.branchId || '';
+        form.querySelector('#staff-status').value = staff.active ? 'active' : 'inactive';
     },
     
     // Confirm delete staff
     confirmDeleteStaff: function(staffId) {
-        if (confirm('Bạn có chắc chắn muốn xóa nhân viên này? Hành động này không thể hoàn tác.')) {
+        if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
             this.deleteStaff(staffId);
         }
     },
@@ -396,56 +406,30 @@ const StaffHandlers = {
             this.loadStaffData();
         } catch (error) {
             console.error('Error deleting staff:', error);
-            window.toastService?.showError(error.message || 'Lỗi khi xóa nhân viên');
+            window.toastService?.showError('Lỗi khi xóa nhân viên');
         }
     },
     
     // Handle department filter
-    handleDepartmentFilter: async function(event) {
-        const department = event.target.value;
-        
-        try {
-            let staffList;
-            if (department) {
-                staffList = await StaffService.getStaffByDepartment(department);
-            } else {
-                staffList = await StaffService.getAllStaff();
-            }
-            
-            this.renderStaffTable(staffList);
-        } catch (error) {
-            console.error('Error filtering staff by department:', error);
-            window.toastService?.showError('Lỗi khi lọc nhân viên theo bộ phận');
-        }
+    handleDepartmentFilter: function(event) {
+        // Implement department filtering if needed
     },
     
     // Handle position filter
-    handlePositionFilter: async function(event) {
-        const jobTitle = event.target.value;
-        
-        try {
-            let staffList;
-            if (jobTitle) {
-                staffList = await StaffService.getStaffByJobTitle(jobTitle);
-            } else {
-                staffList = await StaffService.getAllStaff();
-            }
-            
-            this.renderStaffTable(staffList);
-        } catch (error) {
-            console.error('Error filtering staff by job title:', error);
-            window.toastService?.showError('Lỗi khi lọc nhân viên theo vị trí');
-        }
+    handlePositionFilter: function(event) {
+        // Implement position filtering if needed
     },
     
     // Handle branch filter
     handleBranchFilter: async function(event) {
-        const branchId = event.target.value;
+        const branchName = event.target.value;
         
         try {
             let staffList;
-            if (branchId) {
-                staffList = await StaffService.getStaffByBranch(branchId);
+            if (branchName) {
+                // Filter by branch name (since we're using branch name as value)
+                const allStaff = await StaffService.getAllStaff();
+                staffList = allStaff.filter(staff => staff.branchName === branchName);
             } else {
                 staffList = await StaffService.getAllStaff();
             }
@@ -463,11 +447,11 @@ const StaffHandlers = {
         const tableRows = document.querySelectorAll('#staff-table tbody tr');
         
         tableRows.forEach(row => {
-            const fullName = row.cells[2].textContent.toLowerCase();
-            const email = row.cells[3].textContent.toLowerCase();
-            const phone = row.cells[4].textContent.toLowerCase();
+            const name = row.cells[2]?.textContent?.toLowerCase() || '';
+            const email = row.cells[3]?.textContent?.toLowerCase() || '';
+            const phone = row.cells[4]?.textContent?.toLowerCase() || '';
             
-            if (fullName.includes(searchTerm) || 
+            if (name.includes(searchTerm) || 
                 email.includes(searchTerm) || 
                 phone.includes(searchTerm)) {
                 row.style.display = '';
@@ -475,45 +459,7 @@ const StaffHandlers = {
                 row.style.display = 'none';
             }
         });
-    },
-
-    // Load branches for form dropdown
-    loadBranchesForForm: async function() {
-        try {
-            console.log('Loading branches for form...');
-            const response = await fetch('/api/branches');
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const branches = await response.json();
-            console.log('Loaded branches:', branches);
-            this.populateBranchDropdown(branches);
-        } catch (error) {
-            console.error('Failed to load branches for form:', error);
-        }
-    },
-
-    // Populate branch dropdown in form
-    populateBranchDropdown: function(branches) {
-        const branchSelect = document.getElementById('staff-branch');
-        if (!branchSelect) {
-            console.error('Branch select element not found!');
-            return;
-        }
-        
-        // Clear existing options except placeholder
-        branchSelect.innerHTML = '<option value="">Chọn cửa hàng</option>';
-        
-        // Add branch options
-        branches.forEach(branch => {
-            const option = document.createElement('option');
-            option.value = branch.id; // Use ID for form submission
-            option.textContent = branch.name;
-            branchSelect.appendChild(option);
-        });
-        
-        console.log('Populated branch dropdown with', branches.length, 'branches');
-    },
+    }
 };
 
 // Initialize when DOM is ready

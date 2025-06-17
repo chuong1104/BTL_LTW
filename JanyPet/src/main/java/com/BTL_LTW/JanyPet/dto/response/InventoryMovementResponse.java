@@ -1,5 +1,6 @@
 package com.BTL_LTW.JanyPet.dto.response;
 
+import com.BTL_LTW.JanyPet.entity.InventoryMovement;
 import java.time.LocalDate;
 import java.sql.Timestamp;
 
@@ -9,13 +10,15 @@ public class InventoryMovementResponse {
     private String branchName;
     private String productId;
     private String productName;
-    private String movementType;
+    private String categoryId;
+    private String categoryName;
+    private InventoryMovement.MovementType movementType;
     private Integer quantity;
     private Integer balanceQuantity;
     private LocalDate movementDate;
     private String notes;
     private Timestamp createdAt;
-    
+
     // Getters and Setters
     public String getId() {
         return id;
@@ -57,11 +60,27 @@ public class InventoryMovementResponse {
         this.productName = productName;
     }
 
-    public String getMovementType() {
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public InventoryMovement.MovementType getMovementType() {
         return movementType;
     }
 
-    public void setMovementType(String movementType) {
+    public void setMovementType(InventoryMovement.MovementType movementType) {
         this.movementType = movementType;
     }
 

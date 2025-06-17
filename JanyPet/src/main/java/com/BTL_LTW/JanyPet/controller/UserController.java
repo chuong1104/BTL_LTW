@@ -27,7 +27,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -35,11 +34,12 @@ public class UserController {
 
     // Tạo mới người dùng - chỉ admin mới có quyền
     @PostMapping
-    //@PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserCreationRequest request) {
         // Hàm createUser đã được mã hóa password trong mapper, tránh double encoding
         User user = userService.createUser(request);
-        // Sau khi tạo, trả về DTO từ user vừa tạo dựa trên ID (nếu cần lấy thêm thông tin từ DB)
+        // Sau khi tạo, trả về DTO từ user vừa tạo dựa trên ID (nếu cần lấy thêm thông
+        // tin từ DB)
         UserResponse response = userService.getUserById(user.getId());
         return ResponseEntity.ok(response);
     }
@@ -76,7 +76,8 @@ public class UserController {
     // Cập nhật thông tin người dùng
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") String id,
+            @RequestBody UserUpdateRequest request) {
         UserResponse response = userService.updateUser(id, request);
         return ResponseEntity.ok(response);
     }
@@ -104,35 +105,45 @@ public class UserController {
         // Kiểm tra xem đã có admin chưa
         if (userService.existsAdminUser()) {
             return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(new MessageResponse("Admin user already exists"));
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new MessageResponse("Admin user already exists"));
         }
-        
+
         request.setRole(Role.ADMIN);
         User admin = userService.createUser(request);
         UserResponse response = userService.getUserById(admin.getId());
         return ResponseEntity.ok(response);
     }
 
-     // Endpoint để khởi tạo admin đầu tiên
-     @PostMapping("/init-admin")
-     public ResponseEntity<?> initializeAdmin() {
-         if (userService.existsAdminUser()) {
-             return ResponseEntity
-                 .status(HttpStatus.FORBIDDEN)
-                 .body(new MessageResponse("Admin user already exists"));
-         }
+    // Endpoint để khởi tạo admin đầu tiên
+    @PostMapping("/init-admin")
+    public ResponseEntity<?> initializeAdmin() {
+        if (userService.existsAdminUser()) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new MessageResponse("Admin user already exists"));
+        }
 
-         UserCreationRequest defaultAdmin = new UserCreationRequest();
-         defaultAdmin.setUsername("admin");
-         defaultAdmin.setEmail("chuongdo2811@example.com");
-         defaultAdmin.setPassword("admin123");
-         defaultAdmin.setGender(Gender.FEMALE);
-         defaultAdmin.setAddress("BacNinh");
-         defaultAdmin.setPhoneNumber("0398467238");
-         defaultAdmin.setRole(Role.ADMIN);
-        
-         User admin = userService.createUser(defaultAdmin);
-         return ResponseEntity.ok(new MessageResponse("Default admin created successfully"));
-     }
+        UserCreationRequest defaultAdmin = new UserCreationRequest();
+        defaultAdmin.setUsername("admin");
+        defaultAdmin.setEmail("chuongdo2811@example.com");
+        defaultAdmin.setPassword("admin123");
+        defaultAdmin.setGender(Gender.FEMALE);
+        defaultAdmin.setAddress("BacNinh");
+        defaultAdmin.setPhoneNumber("0398467238");
+        defaultAdmin.setRole(Role.ADMIN);
+        User admin = userService.createUser(defaultAdmin);
+        return ResponseEntity.ok(new MessageResponse("Default admin created successfully"));
+    }
+
+    // Public endpoint to get employees for order creation
+    @GetMapping("/employees")
+    public ResponseEntity<List<UserResponse>> getEmployees() {
+        List<UserResponse> users = userService.getUsers();
+        // Filter only employees and admins
+        List<UserResponse> employees = users.stream()
+                .filter(user -> "ADMIN".equals(user.getRole()) || "EMPLOYEE".equals(user.getRole()))
+                .toList();
+        return ResponseEntity.ok(employees);
+    }
 }

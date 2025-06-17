@@ -23,8 +23,17 @@ public class BranchController {
     private BranchRepository branchRepository;
 
     @GetMapping
-    public List<Branch> getAllBranches() {
-        return branchRepository.findAll();
+    public ResponseEntity<List<BranchResponse>> getAllBranches() {
+        try {
+            System.out.println("Getting all branches...");
+            List<BranchResponse> branches = branchService.getAllBranches();
+            System.out.println("Found " + branches.size() + " branches");
+            return ResponseEntity.ok(branches);
+        } catch (Exception e) {
+            System.err.println("Error getting branches: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -51,5 +60,27 @@ public class BranchController {
     public ResponseEntity<Void> deleteBranch(@PathVariable String id) {
         branchService.deleteBranch(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Test endpoint để debug
+    @GetMapping("/test")
+    public ResponseEntity<String> testBranches() {
+        try {
+            System.out.println("Testing branch repository...");
+            List<Branch> branches = branchRepository.findAll();
+            System.out.println("Repository returned: " + branches.size() + " branches");
+
+            StringBuilder result = new StringBuilder("Found " + branches.size() + " branches:\n");
+            for (Branch branch : branches) {
+                result.append("- ID: ").append(branch.getId())
+                        .append(", Name: ").append(branch.getName())
+                        .append(", City: ").append(branch.getCity())
+                        .append("\n");
+            }
+
+            return ResponseEntity.ok(result.toString());
+        } catch (Exception e) {
+            return ResponseEntity.ok("Error: " + e.getMessage());
+        }
     }
 }
