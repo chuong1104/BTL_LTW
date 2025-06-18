@@ -1028,11 +1028,10 @@ const OrderHandlers = {
         
         // Map channel to enum value
         const channelValue = document.getElementById('order-channel').value;
-        const salesChannel = channelValue === 'online' ? 'ONLINE' : 'OFFLINE';
-          return {
+        const salesChannel = channelValue === 'online' ? 'ONLINE' : 'OFFLINE';          return {
             customerId: null, // For guest customers
             branchId: document.getElementById('order-branch').value,
-            employeeId: document.getElementById('order-employee').value,
+            employeeId: document.getElementById('order-employee').value || null, // Allow null for no employee selected
             employeeName: null, // Can be added later if needed
             employeeCode: null, // Can be added later if needed
             salesChannel: salesChannel,
@@ -1050,10 +1049,7 @@ const OrderHandlers = {
             return false;
         }
         
-        if (!orderData.employeeId) {
-            alert('Vui lòng chọn nhân viên bán hàng');
-            return false;
-        }
+        // Note: Employee is now optional
         
         if (orderData.items.length === 0) {
             alert('Vui lòng thêm ít nhất một sản phẩm');
