@@ -958,6 +958,55 @@
       style="z-index: 1060"
     ></div>
 
+    <!-- Add this script before other scripts at the end of your HTML file -->
+    <script>
+      // Global image URL handler
+      window.getImageUrl = function(path) {
+        if (!path) return 'images/placeholder.jpg';
+        
+        // Already a full URL with production domain
+        if (path.includes('janypet.onrender.com')) {
+          return path;
+        }
+        
+        // Convert localhost URLs to production
+        if (path.includes('localhost:8080')) {
+          return path.replace('http://localhost:8080', 'https://janypet.onrender.com');
+        }
+        
+        // External URL (already has http/https)
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+          return path;
+        }
+        
+        // Handle /uploads/ paths specially
+        if (path.startsWith('/uploads/')) {
+          const baseUrl = window.location.hostname === 'localhost' ? 
+            'http://localhost:8080' : 'https://janypet.onrender.com';
+          return `${baseUrl}${path}`;
+        }
+        
+        // Relative paths - keep as is for local resources
+        return path.startsWith('/') ? path.substring(1) : path;
+      };
+      
+      // Apply this to all images on the page
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('img').forEach(img => {
+          const originalSrc = img.getAttribute('src');
+          if (originalSrc && !originalSrc.includes('data:image')) {
+            img.setAttribute('src', window.getImageUrl(originalSrc));
+          }
+          
+          // Also handle data-src attributes
+          const dataSrc = img.getAttribute('data-src');
+          if (dataSrc) {
+            img.setAttribute('data-src', window.getImageUrl(dataSrc));
+          }
+        });
+      });
+    </script>
+
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script
@@ -1081,6 +1130,62 @@
                 const productId = this.getAttribute("data-id");
                 if (window.addToCart && productId) {
                   window.addToCart(productId, 1);
+                } else {
+                  // Fallback implementation if window.addToCart isn't available
+                  fetch(`/api/products/${productId}`)
+                    .then((response) => response.json())
+                    .then((product) => {
+                      // Get or initialize cart
+                      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                      
+                      // Check if product is already in cart
+                      const existingItem = cart.find(item => item.id === productId);
+                      if (existingItem) {
+                        existingItem.quantity += 1;
+                      } else {
+                        // Add new item
+                        cart.push({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          imageUrl: window.getImageUrl(product.imageUrl || "images/placeholder.jpg"),
+                          quantity: 1
+                        });
+                      }
+                      
+                      // Save cart and update UI
+                      localStorage.setItem("cart", JSON.stringify(cart));
+                      
+                      // Update cart count badge
+                      const cartCountBadges = document.querySelectorAll(".cart-count");
+                      if (cartCountBadges) {
+                        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                        cartCountBadges.forEach(badge => {
+                          badge.textContent = totalItems;
+                        });
+                      }
+                      
+                      // Show success message using toastManager (consistent with wishlist)
+                      if (window.toastManager) {
+                        window.toastManager.showToast(
+                          "Đã thêm sản phẩm vào giỏ hàng",
+                          "success"
+                        );
+                      } else {
+                        alert("Đã thêm sản phẩm vào giỏ hàng");
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error adding to cart:", error);
+                      if (window.toastManager) {
+                        window.toastManager.showToast(
+                          "Có lỗi xảy ra khi thêm vào giỏ hàng",
+                          "error"
+                        );
+                      } else {
+                        alert("Có lỗi xảy ra khi thêm vào giỏ hàng");
+                      }
+                    });
                 }
               });
             });
@@ -1131,15 +1236,15 @@
                           el.textContent = wishlist.length;
                         });
 
-                      // Show success toast
-                      if (window.toastManager) {
-                        window.toastManager.showToast(
-                          "Đã thêm sản phẩm vào danh sách yêu thích",
-                          "success"
-                        );
-                      } else {
-                        alert("Đã thêm sản phẩm vào danh sách yêu thích");
-                      }
+                        // Show success toast
+                        if (window.toastManager) {
+                          window.toastManager.showToast(
+                            "Đã thêm sản phẩm vào danh sách yêu thích",
+                            "success"
+                          );
+                        } else {
+                          alert("Đã thêm sản phẩm vào danh sách yêu thích");
+                        }
                     })
                     .catch((error) => {
                       console.error("Error adding to wishlist:", error);
@@ -1170,6 +1275,19 @@
         }
       });
     </script>
+
+    <!-- Ensure images load correctly regardless of environment -->
+    <script>
+// Ensure images load correctly regardless of environment
+document.addEventListener('DOMContentLoaded', function() {
+    // Process all images with data-src attribute
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        if (window.getImageUrl) {
+            img.src = window.getImageUrl(img.getAttribute('data-src'));
+        }
+    });
+});
+</script>
 
     <!-- Chatbot Widget -->
     <div class="chatbot-container">
@@ -1218,5 +1336,217 @@
     </button>
     <script src="js/chatbot.js"></script>
     <!-- End Chatbot Widget -->
+
+    <!-- Fix add-to-cart functionality -->
+    <script>
+      document.addEventListener('click', function(event) {
+  // Use event delegation to handle all add-to-cart button clicks
+  if (event.target && (event.target.classList.contains('add-to-cart') || 
+     (event.target.parentElement && event.target.parentElement.classList.contains('add-to-cart')))) {
+    
+    // Get the button element
+    const button = event.target.classList.contains('add-to-cart') ? 
+      event.target : event.target.parentElement;
+    
+    // Get product ID
+    const productId = button.getAttribute('data-id');
+    console.log("Adding product to cart:", productId);
+    
+    if (!productId) {
+      console.error("No product ID found on button");
+      return;
+    }
+    
+    // Add visual feedback
+    button.classList.add('disabled');
+    const originalIcon = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    try {
+      fetch(`/api/products/${productId}`)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+          return response.json();
+        })
+        .then(product => {
+          // Get or initialize cart
+          let cart = [];
+          try {
+            cart = JSON.parse(localStorage.getItem("cart") || "[]");
+          } catch (e) {
+            console.error("Error parsing cart from localStorage:", e);
+            cart = [];
+          }
+          
+          // Process image URL properly
+          const imageUrl = product.imageUrl || 'images/placeholder.jpg';
+          let processedImageUrl = imageUrl;
+          
+          if (window.getImageUrl) {
+            processedImageUrl = window.getImageUrl(imageUrl);
+          }
+          
+          // Check if product is already in cart
+          const existingItem = cart.find(item => item.id === productId);
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            // Add new item - NOTE: using "image" property instead of "imageUrl"
+            cart.push({
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              image: processedImageUrl, // CHANGED FROM imageUrl to image
+              quantity: 1
+            });
+          }
+          
+          // Save cart
+          localStorage.setItem("cart", JSON.stringify(cart));
+          
+          // Update cart count badge
+          const cartCountBadges = document.querySelectorAll(".cart-count");
+          if (cartCountBadges) {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountBadges.forEach(badge => {
+              badge.textContent = totalItems;
+            });
+          }
+          
+          // Show success message
+          if (window.toastManager) {
+            window.toastManager.showToast("Đã thêm sản phẩm vào giỏ hàng", "success");
+          } else {
+            alert("Đã thêm sản phẩm vào giỏ hàng");
+          }
+          
+          // Restore button
+          setTimeout(() => {
+            button.innerHTML = originalIcon;
+            button.classList.remove('disabled');
+          }, 500);
+        })
+        .catch(error => {
+          console.error("Error adding to cart:", error);
+          button.innerHTML = originalIcon;
+          button.classList.remove('disabled');
+        });
+    } catch (e) {
+      console.error("Error in add-to-cart process:", e);
+      button.innerHTML = originalIcon;
+      button.classList.remove('disabled');
+    }
+  }
+});
+    </script>
+    <script>
+// Fix cart image display issue
+document.addEventListener('DOMContentLoaded', function() {
+  // Debug the add-to-cart functionality
+  console.log("Adding enhanced cart functionality");
+  
+  // Create a better addToCart function
+  window.addToCart = function(productId, quantity = 1) {
+    // Display loading feedback
+    const button = document.querySelector(`.add-to-cart[data-id="${productId}"]`);
+    if (button) {
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      button.disabled = true;
+    }
+    
+    console.log("Adding to cart, productId:", productId);
+    
+    // Fetch product data
+    fetch(`/api/products/${productId}`)
+      .then(response => {
+        if (!response.ok) throw new Error(`Error ${response.status}`);
+        return response.json();
+      })
+      .then(product => {
+        // Get current cart
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Log product image URL for debugging
+        console.log("Product image URL:", product.imageUrl);
+        
+        // Make sure imageUrl is properly formatted
+        const imageUrl = product.imageUrl || 'images/placeholder.jpg';
+        let processedImageUrl = imageUrl;
+        
+        // Make sure we have an absolute path for images
+        if (!imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
+          if (window.getImageUrl) {
+            processedImageUrl = window.getImageUrl(imageUrl);
+          } else if (imageUrl.startsWith('/')) {
+            // Convert absolute path to full URL
+            processedImageUrl = window.location.origin + imageUrl;
+          } else {
+            // Convert relative path to full URL
+            const basePath = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            processedImageUrl = basePath + imageUrl;
+          }
+        }
+        
+        console.log("Processed image URL:", processedImageUrl);
+        
+        // Find if product already exists in cart
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            imageUrl: processedImageUrl,
+            quantity: quantity
+          });
+        }
+        
+        // Save cart
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update cart count display
+        const cartCountBadges = document.querySelectorAll('.cart-count');
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountBadges.forEach(badge => {
+          badge.textContent = totalItems;
+        });
+        
+        // Show success message
+        if (window.toastManager) {
+          window.toastManager.showToast("Đã thêm sản phẩm vào giỏ hàng", "success");
+        } else {
+          alert("Đã thêm sản phẩm vào giỏ hàng");
+        }
+        
+        // Restore button state
+        if (button) {
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+          }, 500);
+        }
+      })
+      .catch(error => {
+        console.error("Error adding to cart:", error);
+        
+        // Show error message
+        if (window.toastManager) {
+          window.toastManager.showToast("Có lỗi xảy ra khi thêm vào giỏ hàng", "error");
+        } else {
+          alert("Có lỗi xảy ra khi thêm vào giỏ hàng");
+        }
+        
+        // Restore button state
+        if (button) {
+          button.innerHTML = originalHTML;
+          button.disabled = false;
+        }
+      });
+  };
+});
+    </script>
   </body>
 </html>

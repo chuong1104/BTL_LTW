@@ -4,7 +4,7 @@
  */
 
 // Configuration
-const API_URL = "https://nguyendangcong.onrender.com/api" // Already using the correct domain
+const API_URL = "https://janypet.onrender.com/api" // Already using the correct domain
 const TOKEN_NAME = "token"
 const DEBUG = true
 

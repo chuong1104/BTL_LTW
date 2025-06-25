@@ -380,7 +380,7 @@ function setupEventListeners() {
 async function renderProducts() {
   try {
     // Set the base API URL
-    const API_BASE = "https://nguyendangcong.onrender.com/api";
+    const API_BASE = "https://janypet.onrender.com/api";
     
     // Lấy sản phẩm từ API
     products = await productService.getAllProducts()

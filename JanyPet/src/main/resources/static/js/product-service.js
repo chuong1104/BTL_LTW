@@ -172,7 +172,7 @@ const ProductService = {
    */
   getImageUrl: function(imageUrl) {
     if (!imageUrl) {
-        return 'images/placeholder.jpg'; // Remove leading slash
+        return '/images/placeholder.jpg'; // Placeholder nên là đường dẫn tuyệt đối từ root
     }
 
     // Trả về URL đầy đủ nếu đã là URL hoàn chỉnh
@@ -180,8 +180,8 @@ const ProductService = {
         return imageUrl;
     }
 
-    // Remove any leading slash to ensure relative path from current location
-    return imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    // Đảm bảo đường dẫn luôn bắt đầu bằng '/' để nó là đường dẫn tuyệt đối từ root của trang web
+    return imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
   }
 };
 

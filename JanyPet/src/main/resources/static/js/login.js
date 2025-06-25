@@ -1,144 +1,199 @@
 /**
- * Login handler for JanyPet
- * Handles login form submission and authentication
+ * JanyPet Login, Registration, and Password Reset Script
  */
-document.addEventListener('DOMContentLoaded', function() {
-  // Login form handling
-  const loginForm = document.getElementById('loginForm');
+document.addEventListener("DOMContentLoaded", () => {
+  // Make sure authService is loaded
+  if (!window.authService) {
+    console.error("Auth Service not loaded!");
+    // Attempt to initialize if it was missed
+    if (window.initAuth) window.initAuth();
+    if (!window.authService) return;
+  }
+
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+
   if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Get form data
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const rememberMe = document.getElementById('remember-me')?.checked || false;
-      
-      // Basic validation
-      if (!username || !password) {
-        window.toastManager.showToast('Vui lòng nhập tên đăng nhập và mật khẩu', 'error');
-        return;
-      }
-      
-      // Simulate login API call
-      simulateLogin(username, password, rememberMe);
-    });
+    loginForm.addEventListener("submit", handleLogin);
   }
-  
-  // Register form handling
-  const registerForm = document.getElementById('registerForm');
   if (registerForm) {
-    registerForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Get form data
-      const fullname = document.getElementById('fullname').value;
-      const email = document.getElementById('email').value;
-      const username = document.getElementById('reg-username').value;
-      const password = document.getElementById('reg-password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
-      
-      // Basic validation
-      if (!fullname || !email || !username || !password) {
-        window.toastManager.showToast('Vui lòng điền đầy đủ thông tin', 'error');
-        return;
-      }
-      
-      if (password !== confirmPassword) {
-        window.toastManager.showToast('Mật khẩu không khớp', 'error');
-        return;
-      }
-      
-      // Simulate register API call
-      simulateRegister(fullname, email, username, password);
-    });
+    registerForm.addEventListener("submit", handleRegister);
   }
-  
-  /**
-   * Simulate login API call
-   * In a real application, this would be an API call to your backend
-   */
-  function simulateLogin(username, password, rememberMe) {
-    // Show loading state
-    const loginBtn = document.querySelector('#loginForm button[type="submit"]');
-    if (loginBtn) {
-      loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...';
-      loginBtn.disabled = true;
-    }
-    
-    // Simulate API delay
-    setTimeout(() => {
-      // For demo, we'll accept any username/password, but you would check against your backend
-      const user = {
-        id: 1,
-        username: username,
-        name: username,
-        email: `${username}@example.com`,
-        isAdmin: username.toLowerCase() === 'admin' // Make 'admin' an admin user
-      };
-      
-      // Login through auth service
-      if (window.authService) {
-        window.authService.login(user);
-        
-        // Show success message
-        if (window.toastManager) {
-          window.toastManager.showToast('Đăng nhập thành công!', 'success');
-        }
-        
-        // Redirect to home page
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
-      } else {
-        console.error('Auth service not available');
-        alert('Đăng nhập thành công!');
-        window.location.href = 'index.html';
-      }
-    }, 1500);
-  }
-  
-  /**
-   * Simulate register API call
-   * In a real application, this would be an API call to your backend
-   */
-  function simulateRegister(fullname, email, username, password) {
-    // Show loading state
-    const registerBtn = document.querySelector('#registerForm button[type="submit"]');
-    if (registerBtn) {
-      registerBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng ký...';
-      registerBtn.disabled = true;
-    }
-    
-    // Simulate API delay
-    setTimeout(() => {
-      // Create user object
-      const user = {
-        id: Date.now(),
-        username: username,
-        name: fullname,
-        email: email,
-        isAdmin: false
-      };
-      
-      // Login through auth service
-      if (window.authService) {
-        window.authService.login(user);
-        
-        // Show success message
-        if (window.toastManager) {
-          window.toastManager.showToast('Đăng ký thành công!', 'success');
-        }
-        
-        // Redirect to home page
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
-      } else {
-        console.error('Auth service not available');
-        alert('Đăng ký thành công!');
-        window.location.href = 'index.html';
-      }
-    }, 1500);
-  }
+  // Add handler for forgot password form if needed
+  // if (forgotPasswordForm) { ... }
+
+  // Generate initial captchas for all forms
+  generateCaptcha(); // For login form
+  generateCaptcha('register');
+  generateCaptcha('forgotPassword');
 });
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const form = e.target;
+  const username = form.querySelector('[name="username"]').value;
+  const password = form.querySelector('[name="password"]').value;
+  const rememberMe = form.querySelector('#rememberMe').checked;
+  const captchaInput = form.querySelector('[name="captcha"]').value;
+  const captchaText = document.getElementById('captchaText').textContent;
+
+  if (captchaInput.toLowerCase() !== captchaText.toLowerCase()) {
+    showAlert('loginAlert', 'Mã xác thực không đúng.', 'danger');
+    generateCaptcha();
+    return;
+  }
+
+  try {
+    const result = await window.authService.login(username, password, rememberMe);
+    if (result.success) {
+      showAlert('loginAlert', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');
+      setTimeout(() => {
+        const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+        window.location.href = redirectUrl;
+      }, 1000);
+    } else {
+      throw new Error(result.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
+    }
+  } catch (error) {
+    showAlert('loginAlert', error.message, 'danger');
+    generateCaptcha();
+  }
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const form = e.target;
+  const userData = {
+    userName: form.querySelector('[name="userName"]').value,
+    email: form.querySelector('[name="email"]').value,
+    phoneNumber: form.querySelector('[name="phoneNumber"]').value,
+    password: form.querySelector('[name="password"]').value,
+    confirmPassword: form.querySelector('[name="confirmPassword"]').value,
+  };
+  const captchaInput = form.querySelector('[name="captcha"]').value;
+  const captchaText = document.getElementById('registerCaptchaText').textContent;
+
+  if (userData.password !== userData.confirmPassword) {
+    showAlert('registerAlert', 'Mật khẩu xác nhận không khớp.', 'danger');
+    return;
+  }
+  if (captchaInput.toLowerCase() !== captchaText.toLowerCase()) {
+    showAlert('registerAlert', 'Mã xác thực không đúng.', 'danger');
+    generateCaptcha('register');
+    return;
+  }
+
+  try {
+    const result = await window.authService.register(userData);
+    if (result.success) {
+      showAlert('registerAlert', 'Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.', 'success');
+      setTimeout(() => toggleForms('login'), 2000);
+    } else {
+      throw new Error(result.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+    }
+  } catch (error) {
+    showAlert('registerAlert', error.message, 'danger');
+    generateCaptcha('register');
+  }
+}
+
+function showAlert(alertId, message, type = 'danger') {
+  const alertElement = document.getElementById(alertId);
+  if (!alertElement) return;
+
+  alertElement.className = `alert alert-${type}`;
+  alertElement.innerHTML = `${message} <span class="close-btn" onclick="this.parentElement.classList.add('hide')">&times;</span>`;
+  alertElement.classList.remove('hide');
+
+  setTimeout(() => {
+    if (alertElement) alertElement.classList.add('hide');
+  }, 5000);
+}
+
+function toggleForms(formToShow) {
+  const formsContainer = document.getElementById('formsContainer');
+  const forms = formsContainer.querySelectorAll('form');
+  forms.forEach(form => {
+    if (form.id === `${formToShow}Form`) {
+      form.classList.add('form-active');
+      form.classList.remove('hide');
+    } else {
+      form.classList.add('hide');
+      form.classList.remove('form-active');
+    }
+  });
+}
+
+function showForgotPassword() {
+  toggleForms('forgotPassword');
+}
+
+function togglePassword(iconElement) {
+  const input = iconElement.previousElementSibling;
+  if (input.type === 'password') {
+    input.type = 'text';
+    iconElement.classList.remove('fa-eye');
+    iconElement.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    iconElement.classList.remove('fa-eye-slash');
+    iconElement.classList.add('fa-eye');
+  }
+}
+
+function generateCaptcha(formPrefix = 'login') {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let captcha = '';
+  for (let i = 0; i < 6; i++) {
+    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  const captchaId = formPrefix === 'login' ? 'captchaText' : `${formPrefix}CaptchaText`;
+  const captchaTextElement = document.getElementById(captchaId);
+  if (captchaTextElement) {
+    captchaTextElement.textContent = captcha;
+  }
+}
+
+function checkPasswordStrength() {
+  const password = document.getElementById('registerPassword').value;
+  const meter = document.getElementById('passwordStrengthMeter');
+  const text = document.getElementById('passwordStrengthText');
+  if (!meter || !text) return;
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/[a-z]/.test(password)) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+  meter.className = 'password-strength-meter';
+  switch (score) {
+    case 0:
+    case 1:
+    case 2:
+      meter.classList.add('weak');
+      text.textContent = 'Mật khẩu yếu';
+      break;
+    case 3:
+    case 4:
+      meter.classList.add('medium');
+      text.textContent = 'Mật khẩu trung bình';
+      break;
+    case 5:
+      meter.classList.add('strong');
+      text.textContent = 'Mật khẩu mạnh';
+      break;
+    default:
+      text.textContent = '';
+  }
+}
+
+// Expose functions to global scope for HTML onclick handlers
+window.toggleForms = toggleForms;
+window.showForgotPassword = showForgotPassword;
+window.togglePassword = togglePassword;
+window.generateCaptcha = generateCaptcha;
+window.checkPasswordStrength = checkPasswordStrength;
+// Dummy function for the other password strength checker to avoid errors
+window.checkNewPasswordStrength = () => {};

@@ -1,5 +1,5 @@
 // Configuration
-const API_URL = "http://localhost:8080/api";
+const API_URL = "/api"; // Use relative path for portability
 const TOKEN_NAME = "token";
 const DEBUG = false;
 
@@ -235,3 +235,28 @@ window.authServiceAdmin = window.authServiceAdmin || {
   hasRole,
   getCurrentUser,
 };
+
+// Image URL utility function
+function getImageUrl(path) {
+    if (!path) return null;
+    
+    // If path is already a full URL with the correct domain, return it
+    if (path.includes('janypet.onrender.com')) {
+        return path;
+    }
+    
+    // If it's a localhost URL, replace with production URL
+    if (path.includes('localhost:8080')) {
+        return path.replace('http://localhost:8080', 'https://janypet.onrender.com');
+    }
+    
+    // If it's a relative path
+    if (path.startsWith('/')) {
+        return `${BASE_URL}${path}`;
+    } else {
+        return `${BASE_URL}/${path}`;
+    }
+}
+
+// Make the function globally available
+window.getImageUrl = getImageUrl;

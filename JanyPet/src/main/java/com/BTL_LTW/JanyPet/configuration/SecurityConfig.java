@@ -1,6 +1,5 @@
 package com.BTL_LTW.JanyPet.configuration;
 
-import com.BTL_LTW.JanyPet.common.Role;
 import com.BTL_LTW.JanyPet.security.AuthEntryPointJwt;
 import com.BTL_LTW.JanyPet.security.AuthTokenFilter;
 import com.BTL_LTW.JanyPet.service.implement.UserDetailsServiceImpl;
@@ -21,8 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -59,65 +58,41 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://localhost:5500", "http://127.0.0.1:5500","https://nguyendangcong.onrender.com"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/login",
-                                "/",
-                                "/index.html",
-                                "/login.html",
-                                "/register.html",
-                                "/favicon.ico",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/uploads/**",
-                                "/api/upload/files/**", // Cho phép truy cập công khai vào hình ảnh
-                                "/api/chatbot/**",
-                                "/chatbot-widget",
-                                "/chatbot-widget.html"
+                                // Static resources and public pages
+                                "/", "/login.html", "/index.html", "/shop.html", "/single-product.html",
+                                "/cart.html", "/checkout.html", "/booking.html", "/about.html",
+                                "/contact.html", "/thank-you.html", "/admin.html", "/login-admin.html",
+                                "/css/**", "/js/**", "/images/**", "/fonts/**", "/uploads/**",
+                                "/ws/**", "/chatbot-widget", "/chatbot-widget.html"
                         ).permitAll()
-                        .requestMatchers(
-                                "/**",
-                                "/api/auth/**",
-                                "/api/users/register-admin",
-                                "/api/users/init-admin",
-                                "/api/**",
-                                "/api/admin/**",
-                                "/api/ping",
-                                "/api/products/**/permanent"
-
-                        ).permitAll()
-                        .requestMatchers("/api/employee/**").hasAuthority("ROLE_EMPLOYEE")
-                        .requestMatchers("/api/users/**").hasAnyRole(
-                                Role.ADMIN.name(),
-                                Role.EMPLOYEE.name(),
-                                Role.CUSTOMER.name()
-                        )
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/**").permitAll() // Authentication APIs
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products/**", "/api/categories/**").permitAll() // Publicly viewable data
+                        .anyRequest().authenticated() // All other requests require authentication
                 );
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // IMPORTANT: Update this with your actual frontend URL for production
+        configuration.setAllowedOrigins(List.of("https://janypet.onrender.com", "http://localhost:8080", "http://127.0.0.1:5500"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

@@ -330,7 +330,7 @@ async function loadServices() {
     if (!window.apiService || typeof window.apiService.getServices !== 'function') {
       console.error("API Service not available. Attempting direct fetch.");
       // Fallback to direct API call if service isn't available
-      const response = await fetch('https://nguyendangcong.onrender.com/api/services');
+      const response = await fetch('https://janypet.onrender.com/api/services');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

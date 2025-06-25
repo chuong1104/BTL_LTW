@@ -89,7 +89,7 @@ function updateCartTable() {
       </td>
       <td>
         <div class="d-flex align-items-center">
-          <img src="${item.image || 'images/default-product.png'}" alt="${item.name}" class="cart-item-img rounded me-3" width="80">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-img rounded me-3" width="80">
           <div>
             <h6 class="mb-0">${item.name}</h6>
             <small class="text-muted">${item.variant || ''}</small>
@@ -244,7 +244,7 @@ function updateOffcanvasCart() {
     li.className = 'list-group-item d-flex justify-content-between lh-sm';
     li.innerHTML = `
       <div class="d-flex">
-        <img src="${item.image || 'images/default-product.png'}" alt="${item.name}" class="img-fluid me-2" style="width: 50px; height: 50px; object-fit: cover;">
+        <img src="${item.image}" alt="${item.name}" class="img-fluid me-2" style="width: 50px; height: 50px; object-fit: cover;">
         <div>
           <h6 class="my-0">${item.name}</h6>
           <small class="text-muted">${formatCurrency(item.price)} x ${item.quantity}</small>

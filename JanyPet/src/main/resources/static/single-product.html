@@ -1409,8 +1409,7 @@
                   <div class="text-center text-white">
                     <h4 class="mb-0 fw-bold">Thức ăn cho chó</h4>
                     <span class="small">25 sản phẩm</span>
-                  </div>
-                </div>
+                  </div                </div>
               </div>
             </div>
           </a>
@@ -1716,6 +1715,54 @@
   });
   </script>
 
+  <!-- Add this script before other scripts at the end of your HTML file -->
+  <script>
+  // Global image URL handler
+  window.getImageUrl = function(path) {
+    if (!path) return 'images/placeholder.jpg';
+    
+    // Already a full URL with production domain
+    if (path.includes('janypet.onrender.com')) {
+      return path;
+    }
+    
+    // Convert localhost URLs to production
+    if (path.includes('localhost:8080')) {
+      return path.replace('http://localhost:8080', 'https://janypet.onrender.com');
+    }
+    
+    // External URL (already has http/https)
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    
+    // Handle /uploads/ paths specially
+    if (path.startsWith('/uploads/')) {
+      const baseUrl = window.location.hostname === 'localhost' ? 
+        'http://localhost:8080' : 'https://janypet.onrender.com';
+      return `${baseUrl}${path}`;
+    }
+    
+    // Relative paths - keep as is for local resources
+    return path.startsWith('/') ? path.substring(1) : path;
+  };
+  
+  // Apply this to all images on the page
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('img').forEach(img => {
+      const originalSrc = img.getAttribute('src');
+      if (originalSrc && !originalSrc.includes('data:image')) {
+        img.setAttribute('src', window.getImageUrl(originalSrc));
+      }
+      
+      // Also handle data-src attributes
+      const dataSrc = img.getAttribute('data-src');
+      if (dataSrc) {
+        img.setAttribute('data-src', window.getImageUrl(dataSrc));
+      }
+    });
+  });
+  </script>
 </body>
 
 </html>

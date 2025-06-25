@@ -41,7 +41,7 @@ file:
   upload-dir: ./uploads
 
 app:
-  base-url: https://nguyendangcong.onrender.com
+  base-url: https://janypet.onrender.com  # Already correct
   jwtSecret: uHqYj4Pk3mZqKmJ9Y2Ey2K8MdGnM9N9uRPv4RYjUDe4GHZ3xJv1pUlWHez2WUkcFZyrK52xVbbFwCWXEtZxpWg==
   jwtExpirationMs: 86400000
   jwtRefreshExpirationMs: 604800000

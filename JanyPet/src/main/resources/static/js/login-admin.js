@@ -6,9 +6,6 @@ let formSubmitHandler = null
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // Set API base URL for admin services
-  window.API_BASE_URL = "https://nguyendangcong.onrender.com/api";
-  
   while (!window.authServiceAdmin) {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
@@ -24,13 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     sessionStorage.setItem("visitedLoginPage", "true")
   }
 
-  // Ki��m tra token hợp lệ - but only if we haven't just been redirected here
+  // Kim tra token hợp lệ - but only if we haven't just been redirected here
   if (visitedLoginPage && window.authServiceAdmin.isAuthenticated()) {
     const currentUser = window.authServiceAdmin.getCurrentUser()
     if (currentUser && window.authServiceAdmin.hasRole("ADMIN")) {
       // Delay redirect to prevent loop
       setTimeout(() => {
-        window.location.replace("admin.html")
+        window.location.replace("/admin.html")
       }, 300)
       return
     }

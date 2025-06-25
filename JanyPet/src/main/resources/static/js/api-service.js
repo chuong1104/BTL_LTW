@@ -1,6 +1,6 @@
 // Create the API service as a global object
 window.apiService = {
-    API_BASE_URL: '/api',
+    API_BASE_URL: 'https://janypet.onrender.com/api', // Change this line
     isAvailable: true,
 
     // Add the missing testConnection method
